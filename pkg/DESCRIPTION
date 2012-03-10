@@ -1,0 +1,10 @@
+Package: grainscape
+Type: Package
+Title: Patch-based landscape graph and grains of connectivity modelling
+Version: 0.1-0
+Date: 2012-02-14
+Author: Paul Galpern, Andrew Fall, Bronwyn Rayfield, Micheline Manseau
+Maintainer: Paul Galpern <pgalpern@gmail.com>
+Description: Build patch-based landscape graphs (e.g.complete graphs, minimum planar graphs, and grains of connectivity models) from landscape rasters.  Distributed with the 8MB Windows-only executable software SELES.
+License: GPL (>= 2)
+Depends: sp, raster, igraph, rgeos

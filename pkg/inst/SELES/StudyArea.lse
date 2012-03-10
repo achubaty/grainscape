@@ -1,0 +1,98 @@
+LSAGENT: StudyArea
+
+DEFINITIONS
+  LAYER: PatchLayer, StudyArea, ConvexHullPoints
+
+  GLOBAL VARIABLE: TRLoc, StartingEdgeLoc, StartingPivotLoc, Starting
+
+  GLOBAL VARIABLE: StudyAreaType
+  GLOBAL CONSTANT: cInput, cConvexHull, cEntireLandscape
+
+  AGENT VARIABLE: PivotLocation, EdgeLocation, EdgeRow, EdgeCol
+ENDDEF
+
+INITIALSTATE
+   IF StudyAreaType EQ cEntireLandscape
+      StudyArea = 1
+   ENDFN
+
+//   INITIALSTATE = 1
+   INITIALSTATE = StudyAreaType EQ cConvexHull
+
+   IF StudyAreaType EQ cEntireLandscape
+      StudyArea = 1
+   ELSE IF StudyAreaType EQ cConvexHull
+      // Find the top-right-most point
+      TRLoc = 0
+      StartingEdgeLoc = -1
+      OVER REGION WHOLE MAP
+         DECISION  PatchLayer > 0
+         TRLoc = MAX(TRLoc, Location)
+      ENDFN
+      Starting = TRUE
+      StudyArea = 1
+   ENDFN
+ENDIS
+
+// The remainder is only for computing the convex hull
+NUMAGENTS = IF StudyAreaType EQ cConvexHull THEN 1 ELSE 0
+
+AGENTLOCATION
+   REGION LOCATION(TRLoc)
+ENDAL
+
+PROBINIT
+  PROBINIT = 1
+
+  PivotLocation = Location
+  EdgeRow = NUMROWS-1
+  EdgeCol = COL(Location)
+  EdgeLocation = LOCATION(EdgeRow, EdgeCol)
+  StartingEdgeLoc = EdgeLocation
+  StartingPivotLoc = -1
+ENDPI
+
+TRANSITIONS
+  TRANSITIONS = Starting OR (PivotLocation NEQ StartingPivotLoc)
+
+  Starting = FALSE
+  ConvexHullPoints = 1
+
+  oldPivot = PivotLocation
+  hitPivot = FALSE
+
+  OVER REGION VECTOR(EdgeLocation, PivotLocation)
+     IF !hitPivot
+        IF (PatchLayer > 0)
+           hitPivot = TRUE
+           IF (StartingPivotLoc EQ -1) AND (Location NEQ PivotLocation)
+              StartingPivotLoc = PivotLocation
+           ENDFN
+           PivotLocation = Location
+        ELSE
+           StudyArea = 0
+        ENDFN
+     ENDFN
+  ENDFN
+
+  IF (EdgeRow EQ NUMROWS-1) AND (EdgeCol < NUMCOLS-1)
+     EdgeCol = EdgeCol + 1
+  ELSE IF (EdgeCol EQ NUMCOLS-1) AND (EdgeRow > 0)
+     EdgeRow = EdgeRow - 1
+  ELSE IF (EdgeRow EQ 0) AND (EdgeCol > 0)
+     EdgeCol = EdgeCol - 1
+  ELSE
+     EdgeRow = EdgeRow + 1
+  ENDFN
+  EdgeLocation = LOCATION(EdgeRow, EdgeCol)
+ENDTR
+
+
+POPULATIONTIME = 1/NUMCELLS
+
+// Spread to the four cardinal neighbours
+MOVELOCATION
+   REGION LOCATION(PivotLocation)
+ENDML
+
+MOVEPROB = 1
