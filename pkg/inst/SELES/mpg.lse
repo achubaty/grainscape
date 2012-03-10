@@ -1,0 +1,594 @@
+LSEVENT: MPG
+
+DEFINITIONS
+   GLOBAL CONSTANT: HaPerCell, CellWidth, MaxDist, MaxCost, MaxCostValue, CostRes, NeighbourLookup[]
+   GLOBAL VARIABLE: UseCost, CostFactor
+
+   // Nearest neighbour algorithm types
+   GLOBAL CONSTANT: rNN, rMST, rMPG, rMPG2
+
+   // Assume these layers are all defined
+   GLOBAL VARIABLE: nnId
+   LAYER: Cost, PatchId, StudyArea
+
+   // Output and scratch layers
+   LAYER: Voronoi, PreVoronoi, LinksMPG, LinkIdMPG, LCLinkCostMPG, LCLinkDistMPG, VoronoiCost, VoronoiPerim, MPGLoc
+   GLOBAL CONSTANT: MaxLoc
+   LAYER: Voronoi2, PreVoronoi2, VoronoiCost2, CorridorCostMPG
+   LAYER: CostSurface, LeastCostNeighbs, AnchorLoc
+LAYER: TimesTR, TimesSP, NumActive
+GLOBAL VARIABLE: NumActiveCells
+
+   // Assume these stats are defined
+   GLOBAL VARIABLE: Area, NumPatches, NumClusters
+
+   // Patch list: previously defined (except rNNSLDist and rNNPathDist, which are at MaxDist)
+   GLOBAL CONSTANT: NumPatchStats, rId, rArea, rPerim, rNNSLDist, rNNPathDist, rNNCost, rCentroid, rEffectiveId
+   GLOBAL LIST{NumPatchStats} VARIABLE: patchList
+   GLOBAL VARIABLE: patchVar[NumPatchStats]
+
+   GLOBAL VARIABLE: MaxVoronoiCost, SizeFactor
+
+   // Nearest Neighbour
+   GLOBAL VARIABLE: MeanMPG, MinNN, MaxNN, NNSD
+
+   // MST
+   GLOBAL VARIABLE: MST
+
+   // MPG
+   GLOBAL VARIABLE: MPG, nMPG, maxMPGCost
+
+   // NOTE: This variable must be resized to NP (which is unkown before running stats.lse)
+   GLOBAL VARIABLE: effectivePatchId[2], PosList[2]
+
+   // MPG graph
+   GLOBAL CONSTANT: NumLinkStats, rLinkType, rSLDist, rPathDist, rCost, rNumEdges, rNumSegments, rStartLoc, rEndLoc, rNode1Id, rNode2Id
+   GLOBAL GRAPH{NumPatchStats, NumLinkStats} VARIABLE: mpg
+   GLOBAL VARIABLE: linkVar[NumLinkStats]
+
+   EVENT VARIABLE: PatchesToConnect, ComponentsToConnect
+   CLUSTER VARIABLE: currPatchId, patchPos, currSizeFactor
+   CELL VARIABLE: currEffectivePid, newEffectivePid, startLocation
+   CELL VARIABLE: currDist, currCost, incrementalCost
+   CELL VARIABLE: lastAnchorLoc, lastAnchorCost, lastAnchorDist, currCostValue
+
+   MIN OUTPUT VARIABLE: LSStatsFile = "LSStatsMPG.txt"
+   MIN OUTPUT VARIABLE: PatchStatsFile = "PatchStatsMPG.txt"
+   MIN OUTPUT VARIABLE: LinkStatsFile = "LinkStatsMPG.txt"
+ENDDEF
+
+INITIALSTATE
+   nnId = 0
+   // The first instance extracts
+   // The second summarizes and outputs
+   INITIALSTATE = 2
+ENDIS
+
+
+RETURNTIME
+   // Process at steps 1000 and 2000
+   RETURNTIME = IF Time EQ 0 THEN (EventId * 1000) ELSE 0
+
+   // Finalize and output stats
+   IF EventId EQ 2
+      // Iterate over list of patches to compute stats
+      MeanNN = 0
+      MinNN = MaxDist
+      MaxNN = 0
+      NNSD = 0
+
+      MST = 0
+      MeanMST = 0
+      MPG = 0
+      MeanMPG = 0
+      nMPG = 0
+
+      pos = FIRST(mpg)
+      WHILE (pos)
+         patchVar [=] GET(mpg, pos)
+         pos = NEXT(mpg, pos)
+         MeanNN = MeanNN + patchVar[rNNCost]
+         IF (patchVar[rNNCost] > 0)
+            MinNN = MIN(patchVar[rNNCost], MinNN)
+            MaxNN = MAX(patchVar[rNNCost], MaxNN)
+         ENDFN
+         OUTPUT RECORD(PatchStatsFile)
+            patchId: patchVar[rId]
+            nnSLDist: patchVar[rNNSLDist] * CellWidth
+            nnDist: patchVar[rNNPathDist] * CellWidth
+            nnCost: patchVar[rNNCost] * CellWidth
+
+            Centroid: patchVar[rCentroid]
+            size: patchVar[rArea] * HaPerCell
+            edge: patchVar[rPerim] * CellWidth
+         ENDFN
+      ENDFN
+
+      // Iterate over list of links to compute stats
+      pos = FIRST LINK(mpg)
+      WHILE (pos)
+         linkVar [=] GET LINK(mpg, pos)
+         pos = NEXT LINK(mpg, pos)
+
+         IF (linkVar[rLinkType] EQ rNN) OR (linkVar[rLinkType] EQ rMST)
+            MST = MST + linkVar[rCost]
+         ENDFN
+         MPG = MPG + linkVar[rCost]
+         nMPG = nMPG + 1
+         maxMPGCost = MAX(maxMPGCost, linkVar[rCost] * CellWidth)
+
+         OUTPUT RECORD(LinkStatsFile)
+            DECISION linkVar[rLinkType] >= 0
+            linkId: linkVar[rId]
+            linkType: linkVar[rLinkType]
+            nodeId1: linkVar[rNode1Id]
+            nodeId2: linkVar[rNode2Id]
+            SLDist: linkVar[rSLDist] * CellWidth
+            Dist: linkVar[rPathDist] * CellWidth
+            Cost: linkVar[rCost] * CellWidth
+            NumEdges: linkVar[rNumEdges]
+            NumSegments: linkVar[rNumSegments]
+            StartLoc: linkVar[rStartLoc]
+            EndLoc: linkVar[rEndLoc]
+         ENDFN
+      ENDFN
+
+      IF (NumPatches > 1)
+         MeanMST = MST / (NumPatches - 1)
+         MeanNN = MeanNN / (NumPatches - 1)
+      ENDFN
+
+      IF (nMPG > 1)
+         MeanMPG = MPG / nMPG
+      ENDFN
+
+
+      // Compute stddev and second order stats
+      pos = FIRST(mpg)
+      WHILE (pos)
+         patchVar [=] GET(mpg, pos)
+         pos = NEXT(mpg, pos)
+         NNSD = NNSD + (patchVar[rCost] - MeanNN)^2
+      ENDFN
+
+      NNSD = IF (NumPatches EQ 0) THEN 0 ELSE (NNSD / NumPatches)^(1/2)
+
+      OUTPUT RECORD(LSStatsFile)
+         DECISION Area > 0
+         MNN: CellWidth * MeanNN
+         MinNN: CellWidth * MinNN
+         MaxNN: CellWidth * MaxNN
+         NNSD: CellWidth * NNSD
+         NNCV: 100 * NNSD / MeanNN
+         Dispersion: 2 * (NumPatches / Area)^(1/2) * MeanNN
+
+         MeanMST: CellWidth * MeanMST
+         tMST: CellWidth * MST
+
+         MeanMPG: CellWidth * MeanMPG
+         tMPG: CellWidth * MPG
+      ENDFN
+   ENDFN
+
+   IF ((EventId EQ 1) AND (NumPatches > 1))
+      MPGLoc = MaxLoc
+      PatchesToConnect = NumPatches
+      ComponentsToConnect = NumPatches - 1
+      NumClusters = NumPatches
+
+      // NOTE: BE very careful to be sure that variables shared with
+      // other events are valid (especially after initialization in INITIALSTATE!)
+      // Resize the effective patch id vector
+      RESIZE(effectivePatchId, NumPatches+1)
+      RESIZE(PosList, NumPatches+1)
+
+      tmpPid = 1
+      OVER INDEX SEQUENCE(0, NumPatches-1)
+         effectivePatchId[tmpPid] = tmpPid
+         tmpPid = tmpPid + 1
+      ENDFN
+   ENDFN
+ENDRT
+
+// Don't continue if this is the output instance
+NUMCLUSTERS  = IF (EventId EQ 2) OR (NumPatches <= 1) THEN 0 ELSE -1
+
+
+PROBINIT
+   PROBINIT = (PatchId > 0)
+
+   currPatchId = PatchId
+   startLocation = Location
+   currDist = 0
+   currCost = 0
+   incrementalCost = 0
+
+   lastAnchorLoc = Location
+   lastAnchorCost = 0
+   lastAnchorDist = 0
+   currCostValue = IF UseCost THEN Cost/CostFactor ELSE 1
+
+   IF (Voronoi EQ 0)
+      pos = FIND(patchList, patchVar, patchVar[rId] EQ currPatchId)
+      pos2 = FIND(mpg, patchVar, patchVar[rId] EQ currPatchId)
+      patchVar [=] GET(patchList, pos)
+      i = patchVar[rId]
+      IF (!pos2)
+         patchVar[rNNSLDist] = MaxDist
+         patchVar[rNNPathDist] = MaxDist
+         patchVar[rNNCost] = MaxCost
+         INSERT(mpg, patchVar)
+         PosList[i] = FIRST(mpg)
+      ENDFN
+      patchPos = PosList[i]
+      currSizeFactor = patchVar[rArea]^SizeFactor
+   ENDFN
+NumActive = MIN(10,NumActive+1)
+NumActiveCells = NumActiveCells + 1
+ENDPI
+
+
+
+TRANSITIONS
+NumActive = MAX(0,NumActive-1)
+NumActiveCells = NumActiveCells - 1
+
+   TRANSITIONS = IF (PreVoronoi EQ currPatchId)
+                 THEN (VoronoiCost > ROUND(currCost * CellWidth)) // Can overtake a cell from same patch (make a better offer)
+                 ELSE IF (PreVoronoi2 EQ currPatchId)
+                 THEN (VoronoiCost2 > ROUND(currCost * CellWidth)) // Can overtake a cell from same patch (make a better offer)
+                 ELSE  TRUE // not yet visited or another component
+
+TimesTR = MIN(15,TimesTR+1)
+NumActive = MIN(10,NumActive+1)
+NumActiveCells = NumActiveCells + 1
+   IF PreVoronoi EQ 0  // first visit to this cell
+      VoronoiCost = ROUND(currCost * CellWidth)
+      MaxVoronoiCost = MAX(MaxVoronoiCost,VoronoiCost)
+      PreVoronoi = currPatchId
+   ELSE IF (PreVoronoi EQ currPatchId) // subsequent visits from same patch: overtaking
+      VoronoiCost = MIN(VoronoiCost, ROUND(currCost * CellWidth))
+   ELSE IF PreVoronoi2 EQ 0 // first visit to this cell from second patch
+      PreVoronoi2 = currPatchId
+      VoronoiCost2 = ROUND(currCost * CellWidth)
+   ELSE IF (PreVoronoi2 EQ currPatchId)
+      VoronoiCost2 = MIN(VoronoiCost2, ROUND(currCost * CellWidth))
+   ENDFN
+ENDTR
+
+
+//SPREADTIMESTEP = (incrementalCost/MaxCost) * (1/MaxDist) / currSizeFactor
+SPREADTIMESTEP
+   SPREADTIMESTEP = incrementalCost* (CostRes/(MaxCost*currSizeFactor))
+
+   // Check if we meet another spreading component (after spreading instead of self-step: Jan04)
+   IF (VoronoiPerim EQ 1) AND (Voronoi2 EQ currPatchId)
+      IF (effectivePatchId[Voronoi] NEQ effectivePatchId[currPatchId])
+         // Find the patch nodes
+         nPos2 = PosList[Voronoi]
+
+         // Account for portion in cell
+         dir = DIRECTION(MPGLoc, startLocation) % 90
+         dir = IF dir > 45 THEN 90 - dir ELSE dir
+         reduction = 1/COS(dir)
+
+         d = DISTANCE(MPGLoc, startLocation) - reduction
+         NumClusters = NumClusters - 1
+
+         // Visit least cost path from here to both start points
+         endLoc = MPGLoc
+
+         PathCost = 0
+         PathDistance = 0
+         isDirect = TRUE
+         AT LOCATION(startLocation)
+            OVER REGION COST SURFACE(endLoc, MaxCost, CostSurface, LeastCostNeighbs, AnchorLoc)
+            COST IF (PatchId > 0) AND (Location NEQ startLocation) AND (Location NEQ endLoc) THEN MaxCost
+                ELSE IF (StudyArea <= 0) THEN MaxCost // jan 04
+                ELSE IF UseCost
+                THEN IF (Cost EQ 0) THEN MaxCost ELSE CostRes*MAX(1, Cost/CostFactor) 
+                ELSE CostRes
+            ENDFN
+
+            OVER REGION LEAST COST PATH(endLoc, startLocation, LeastCostNeighbs, AnchorLoc)
+               // Compute link stats
+               incrementalDist = sysTmp
+/*               PathCost = IF (PatchId EQ currPatchId) THEN PathCost ///+ incrementalDist/CostRes
+                          ELSE IF Cost EQ 0 THEN PathCost + incrementalDist * MaxCost 
+                               ELSE PathCost + incrementalDist * MAX(1, Cost/CostFactor)
+               PathDistance = IF (PatchId EQ currPatchId) THEN PathDistance
+                              ELSE PathDistance + incrementalDist
+*/
+               PathCost = IF (Location EQ startLocation) OR (SOURCE Location EQ endLoc) THEN PathCost + (incrementalDist/2) * MAX(1, Cost/CostFactor)
+//                          ELSE IF Cost EQ 0 THEN PathCost + incrementalDist * MaxCost 
+                          ELSE IF Cost EQ 0 THEN PathCost + incrementalDist * (MaxCostValue/CostFactor)
+                               ELSE PathCost + incrementalDist * MAX(1, Cost/CostFactor)
+               PathDistance = IF (Location EQ startLocation) OR (SOURCE Location EQ endLoc) THEN PathDistance + incrementalDist/2
+                              ELSE PathDistance + incrementalDist
+
+               IF (PatchId > 0) AND (Location NEQ startLocation) AND (Location NEQ endLoc)
+                  isDirect = FALSE
+               ENDFN
+            ENDFN
+         ENDFN
+
+         currD1 = GET(mpg, patchPos, rNNSLDist)
+         currD2 = GET(mpg, nPos2, rNNSLDist)
+         PatchesToConnect = PatchesToConnect - (currD1 EQ MaxDist) - (currD2 EQ MaxDist)
+         ComponentsToConnect = ComponentsToConnect - 1
+
+         isDirect = TRUE // MUST BE TRUE FOR MST/NN links
+         IF isDirect
+            // Add the patch to the list or update the distance if it is already there
+            // Set NN at patch level
+            IF d < currD1
+               SET(mpg, patchPos, rNNSLDist, d)
+            ENDFN
+
+            IF d < currD2
+              SET(mpg, nPos2, rNNSLDist, d)
+            ENDFN
+
+            currD1 = GET(mpg, patchPos, rNNPathDist)
+            IF PathDistance < currD1
+               SET(mpg, patchPos, rNNPathDist, PathDistance)
+            ENDFN
+
+            currD2 = GET(mpg, nPos2, rNNPathDist)
+            IF PathDistance < currD2
+               SET(mpg, nPos2, rNNPathDist, PathDistance)
+            ENDFN
+
+            currC1 = GET(mpg, patchPos, rNNCost)
+            IF PathCost < currC1
+               SET(mpg, patchPos, rNNCost, PathCost)
+            ENDFN
+
+            currC2 = GET(mpg, nPos2, rNNCost)
+            IF PathCost < currD2
+               SET(mpg, nPos2, rNNCost, PathCost)
+            ENDFN
+         ENDFN
+
+         // Create a link
+         nnId = nnId + 1
+         linkVar[rId] = nnId
+         linkVar[rLinkType] = IF !isDirect THEN -1 ELSE IF (currD1 EQ MaxDist) OR (currD2 EQ MaxDist) THEN rNN ELSE rMST
+         IF currPatchId <= Voronoi
+            linkVar[rNode1Id] = currPatchId
+            linkVar[rNode2Id] = Voronoi
+            linkVar[rStartLoc] = startLocation
+            linkVar[rEndLoc] = MPGLoc
+         ELSE
+            linkVar[rNode1Id] = Voronoi
+            linkVar[rNode2Id] = currPatchId
+            linkVar[rStartLoc] = MPGLoc
+            linkVar[rEndLoc] = startLocation
+         ENDFN
+         linkVar[rSLDist] = d
+         linkVar[rPathDist] = PathDistance
+         linkVar[rCost] = PathCost
+         linkVar[rNumEdges] = 0
+         linkVar[rNumSegments] = 0
+         INSERT LINK(mpg, patchPos, nPos2, linkVar)
+/*            OVER REGION VECTOR(startLocation,MPGoc)
+                LinksMPG = linkVar[rLinkType]+1
+            ENDFN
+*/
+         IF isDirect
+            linkCost = CLAMP(ROUND(PathCost * CellWidth),0,MaxCost)
+            linkDist = CLAMP(ROUND(PathDistance * CellWidth),0,MaxDist*CellWidth)
+            AT LOCATION(startLocation)
+               OVER REGION LEAST COST PATH(endLoc, startLocation, LeastCostNeighbs, AnchorLoc)
+                  LCLinkCostMPG = IF LCLinkCostMPG EQ 0 THEN linkCost ELSE MIN(LCLinkCostMPG, linkCost)
+                  LCLinkDistMPG = IF LCLinkDistMPG EQ 0 THEN linkDist ELSE MIN(LCLinkDistMPG, linkDist)
+                  LinksMPG = IF LinksMPG EQ 0 THEN linkVar[rLinkType]+1 ELSE MIN(LinksMPG,linkVar[rLinkType]+1)
+                  LinkIdMPG = linkVar[rId]
+               ENDFN
+            ENDFN
+
+         ELSE // should be commented out
+            AT LOCATION(startLocation)
+               OVER REGION LEAST COST PATH(endLoc, startLocation, LeastCostNeighbs, AnchorLoc)
+                  Visited = 3
+               ENDFN
+            ENDFN
+         ENDFN
+
+         // Need to update all effective id's
+         currEffectivePid = effectivePatchId[currPatchId]
+         newEffectivePid = effectivePatchId[Voronoi]
+         OVER INDEX SEQUENCE(1, NumPatches)
+            effectivePatchId[Index] = IF (effectivePatchId[Index] EQ currEffectivePid)
+                                      THEN newEffectivePid ELSE effectivePatchId[Index]
+         ENDFN
+
+      // Check if we meet another patch in the same component
+      ELSE IF (Voronoi NEQ currPatchId)
+         // Find the patch nodes
+         nPos2 = PosList[Voronoi]
+         endLoc = MPGLoc
+
+         // If these are not directly connected
+         IF (!LINKED(mpg, patchPos, nPos2, 0))
+            // Account for portion in cell
+            dir = DIRECTION(MPGLoc, startLocation) % 90
+            dir = IF dir > 45 THEN 90 - dir ELSE dir
+            reduction = 1/COS(dir)
+
+            d = DISTANCE(MPGLoc, startLocation) - reduction
+
+            PathCost = 0
+            PathDistance = 0
+            isDirect = TRUE
+            AT LOCATION(startLocation)
+               OVER REGION COST SURFACE(endLoc, MaxCost, CostSurface, LeastCostNeighbs, AnchorLoc)
+//jan04: check if not direct               COST IF (PatchId > 0) AND (Location NEQ startLocation) AND (Location NEQ endLoc) THEN MaxCost
+//                   ELSE IF (StudyArea <= 0) THEN MaxCost // jan04
+               COST IF (StudyArea <= 0) THEN MaxCost // jan04
+                   ELSE IF UseCost 
+                   THEN IF Cost EQ 0 THEN MaxCost ELSE CostRes*MAX(1, Cost/CostFactor) 
+                   ELSE CostRes
+               ENDFN
+
+               nNonDirectLocal2 = 0
+               nNonDirectLocal1 = 0
+               patchId2 = Voronoi
+               OVER REGION LEAST COST PATH(endLoc, startLocation, LeastCostNeighbs, AnchorLoc)
+                  // Compute link stats
+                  incrementalDist = sysTmp
+/*                  PathCost = IF (PatchId EQ currPatchId) THEN PathCost ///+ incrementalDist/CostRes
+                             ELSE IF Cost EQ 0 THEN PathCost + incrementalDist * MaxCost 
+                                  ELSE PathCost + incrementalDist * MAX(1, Cost/CostFactor)
+                  PathDistance = IF (PatchId EQ currPatchId) THEN PathDistance
+                                 ELSE PathDistance + incrementalDist
+*/
+                  PathCost = IF (Location EQ startLocation) OR (SOURCE Location EQ endLoc) THEN PathCost + (incrementalDist/2) * MAX(1, Cost/CostFactor)
+                             ELSE IF Cost EQ 0 THEN PathCost + incrementalDist * (MaxCostValue/CostFactor)
+                                  ELSE PathCost + incrementalDist * MAX(1, Cost/CostFactor)
+                  PathDistance = IF (Location EQ startLocation) OR (SOURCE Location EQ endLoc) THEN PathDistance + incrementalDist/2
+                                 ELSE PathDistance + incrementalDist
+
+                  IF (PatchId > 0) AND (Location NEQ startLocation) AND (Location NEQ endLoc)
+                     IF (PatchId EQ currPatchId)
+                        nNonDirectLocal1 = nNonDirectLocal1 + 1
+                     ELSE IF (PatchId EQ patchId2)
+                        nNonDirectLocal2 = nNonDirectLocal2 + 1
+                     ELSE
+                        isDirect = FALSE
+                     ENDFN
+                  ENDFN
+               ENDFN
+            ENDFN
+            isDirect = isDirect AND (nNonDirectLocal1 <= 1) AND (nNonDirectLocal2 <= 1) // allow minor errors within a cell or two
+
+            // Create a link
+            nnId = nnId + 1
+            linkVar[rId] = nnId
+
+            IF isDirect
+               n = 0
+               patchId2 = Voronoi
+               OVER REGION CENTRED(1,1.5)
+               DECISION (Voronoi > 0) AND (Voronoi NEQ currPatchId) AND (Voronoi NEQ patchId2) AND (StudyArea > 0)
+                  n = n + 1
+               ENDFN
+               linkVar[rLinkType] = IF n EQ 0 THEN rMPG ELSE rMPG2
+            ELSE
+               linkVar[rLinkType] = -1
+            ENDFN
+            IF currPatchId <= Voronoi
+               linkVar[rNode1Id] = currPatchId
+               linkVar[rNode2Id] = Voronoi
+               linkVar[rStartLoc] = startLocation
+               linkVar[rEndLoc] = MPGLoc
+            ELSE
+               linkVar[rNode1Id] = Voronoi
+               linkVar[rNode2Id] = currPatchId
+               linkVar[rStartLoc] = MPGLoc
+               linkVar[rEndLoc] = startLocation
+            ENDFN
+            linkVar[rSLDist] = d
+            linkVar[rPathDist] = PathDistance
+            linkVar[rCost] = PathCost
+            linkVar[rNumEdges] = 0
+            linkVar[rNumSegments] = 0
+            INSERT LINK(mpg, patchPos, nPos2, linkVar)
+
+            IF isDirect
+               linkCost = CLAMP(ROUND(PathCost * CellWidth),0,MaxCost)
+               linkDist = CLAMP(ROUND(PathDistance * CellWidth),0,MaxDist*CellWidth)
+               AT LOCATION(startLocation)
+                  OVER REGION LEAST COST PATH(endLoc, startLocation, LeastCostNeighbs, AnchorLoc)
+                     LCLinkCostMPG = IF LCLinkCostMPG EQ 0 THEN linkCost ELSE MIN(LCLinkCostMPG, linkCost)
+                     LCLinkDistMPG = IF LCLinkDistMPG EQ 0 THEN linkDist ELSE MIN(LCLinkDistMPG, linkDist)
+                     LinksMPG = IF LinksMPG EQ 0 THEN linkVar[rLinkType]+1 ELSE MIN(LinksMPG,linkVar[rLinkType]+1)
+                     LinkIdMPG = linkVar[rId]
+                  ENDFN
+               ENDFN
+            ENDFN
+         ENDFN
+      ENDFN
+   ENDFN
+
+NumActive = MAX(0,NumActive-1)
+NumActiveCells = NumActiveCells - 1
+ENDST
+
+// This will occur AFTER spread time step, and so will be ordered correctly
+NUMSPREADRECIPIENTS
+   continue = TRUE
+
+   IF (Voronoi EQ 0) // first to fully reach this cell
+      IF PreVoronoi2 EQ currPatchId
+         PreVoronoi2 = PreVoronoi
+         VoronoiCost2 = VoronoiCost
+         PreVoronoi = currPatchId
+      ENDFN
+      Voronoi = currPatchId
+      VoronoiCost = ROUND(currCost * CellWidth)
+      MPGLoc = startLocation
+   ELSE IF (Voronoi NEQ currPatchId) AND (Voronoi2 EQ 0)
+      IF PreVoronoi EQ currPatchId
+         PreVoronoi = PreVoronoi2
+         VoronoiCost = VoronoiCost2
+         PreVoronoi2 = currPatchId
+      ENDFN
+      Voronoi2 = currPatchId
+      VoronoiCost2 = ROUND(currCost * CellWidth)
+      CorridorCostMPG = VoronoiCost + VoronoiCost2
+   ELSE
+      continue = FALSE
+   ENDFN
+
+   NUMSPREADRECIPIENTS = IF continue THEN -1 ELSE 0
+ENDNS
+
+
+// Patches include diagonal neighbours
+SPREADLOCATION
+   REGION CENTRED(1, 1.5, EUCLIDEAN)
+//      DECISION (PatchId NEQ currPatchId) AND (Voronoi NEQ currPatchId) AND (Voronoi2 EQ 0) AND (VoronoiPerim NEQ 2) AND (StudyArea > 0)
+      DECISION (PatchId NEQ currPatchId) AND (Voronoi NEQ currPatchId) AND (Voronoi2 EQ 0) AND (StudyArea > 0)
+
+ENDSL
+
+SPREADPROB
+   notVPerim2 = TRUE
+   IF (SOURCE Voronoi EQ currPatchId) AND (PreVoronoi > 0) AND (PreVoronoi NEQ currPatchId)
+      VoronoiPerim = 1
+
+   ELSE IF (SOURCE Voronoi2 EQ currPatchId) AND (PreVoronoi2 > 0) AND (PreVoronoi2 NEQ currPatchId)
+      VoronoiPerim = IF (VoronoiPerim EQ 0) THEN 2 ELSE VoronoiPerim
+      notVPerim2 = FALSE
+   ENDFN
+
+   SPREADPROB = IF UseCost AND (Cost <= 0) AND (PatchId NEQ currPatchId) THEN FALSE ELSE notVPerim2
+
+   costValue = IF UseCost THEN Cost/CostFactor ELSE 1
+   IF (costValue NEQ SOURCE currCostValue) OR (SOURCE PatchId EQ currPatchId)
+      lastAnchorLoc = SOURCE Location
+      lastAnchorCost = SOURCE currCost
+      lastAnchorDist = SOURCE currDist
+      currCostValue = costValue
+   ELSE
+      lastAnchorLoc = SOURCE lastAnchorLoc
+      lastAnchorCost = SOURCE lastAnchorCost 
+      lastAnchorDist = SOURCE lastAnchorDist 
+      currCostValue = SOURCE currCostValue
+   ENDFN
+
+   startLocation = IF (SOURCE PatchId EQ currPatchId) THEN SOURCE Location ELSE SOURCE startLocation
+
+   currDist = lastAnchorDist + DISTANCE(lastAnchorLoc, Location)
+   currCost = lastAnchorCost + costValue * DISTANCE(lastAnchorLoc, Location)
+
+   incrementalCost = MAX(0,currCost - SOURCE currCost)
+//   incrementalCost = MAX(0.000000001,currCost - SOURCE currCost)  // tried Jan2004
+
+TimesSP = MIN(20,TimesSP+1)
+NumActive = MIN(10,NumActive+1)
+NumActiveCells = NumActiveCells + 1
+ENDSP
+
+

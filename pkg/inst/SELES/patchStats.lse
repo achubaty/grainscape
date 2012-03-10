@@ -1,0 +1,367 @@
+// Combination of stats from fragstats and apack
+// Note: A particular problem should decide on stats required
+// and adapt a custom stats event, which may include some of the
+// stats herein, and may include new or modified stats.
+// Apack stats are denoted using lower case identifiers.
+LSEVENT: PATCH_STATS
+
+DEFINITIONS
+   GLOBAL CONSTANT: HaPerCell, CellWidth
+   CONSTANT: pi = 3.141593
+
+   // Parameters
+   GLOBAL VARIABLE: ComputeCentroidStats
+
+   // Input layers
+   LAYER: PatchLayer, StudyArea
+
+   // Output layers
+   LAYER: PatchId, CoreAreaId, EdgeInterior
+   GLOBAL CONSTANT: cEdge, cInterior
+
+   // Area indices
+   GLOBAL VARIABLE: Area, LandscapeSize
+
+   // Patch indices
+   GLOBAL VARIABLE: NumPatches, MeanPS, MaxPS, PSSD
+
+   // Edge Indices
+   GLOBAL VARIABLE: TotalEdge, TotalEdgeArea, MSI, AWMSI
+
+   // related to inverse of MSI
+   GLOBAL VARIABLE: aan, paRatio
+
+   // Core Area Indices (e.g. Total core area, num core areas, mean core area size per core area and per patch)
+   GLOBAL VARIABLE: TCA, NumCA, MCA1, CASD1, MCA2, CASD2, MCAI
+
+   // For computing Contagion
+   GLOBAL VARIABLE: NumNeighbs, NumSameNeighbs
+
+   // Mean Connectivity between patches
+   GLOBAL VARIABLE: MeanCCE, MaxCCE, MeanCD
+
+   // Patch list
+   GLOBAL CONSTANT: NumPatchStats, rId, rArea, rCoreArea, rPerim, rCentroid, rMaxCCE, rNNPathDist, rAnyPos, MaxDist
+   GLOBAL LIST{NumPatchStats} VARIABLE: patchList, coreAreaList
+   GLOBAL VARIABLE: patchVar[NumPatchStats]
+
+
+   GLOBAL VARIABLE: pId, coreId
+   EVENT VARIABLE: isPatchEvent
+   CLUSTER VARIABLE: numActiveCells, currPatchSize, currPatchCoreSize, currPatchPerim, currPatchId
+   CLUSTER VARIABLE: rowTotal, colTotal
+
+   MIN OUTPUT VARIABLE: LSStatsFile = "LSStats.txt"
+   MIN OUTPUT VARIABLE: PatchStatsFile = "PatchStats.txt"
+//   MIN OUTPUT VARIABLE: LinkStatsCFile = "LinkStatsC.txt"
+ENDDEF
+
+INITIALSTATE
+   pId = 0
+   coreId = 0
+
+   LandscapeSize = 0
+   OVER REGION WHOLE MAP
+      DECISION StudyArea > 0
+      LandscapeSize = LandscapeSize + 1
+   ENDFN
+
+   // Three types of instances: the first instances identifies and computes first order stats for patches
+   //  (a separate instance is used per type so that the list is ordered by type)
+   // The second identifies  and computes first order stats for core areas
+   // The third computes second order stats and then summarizes and outputs
+   INITIALSTATE = 3
+   isPatchEvent = EventId EQ 1
+ENDIS
+
+RETURNTIME
+   RETURNTIME = IF Time EQ 0 THEN EventId+1 ELSE 0
+
+   // EventId 3 is to compute the final stats after the patches have been identified
+   IF (EventId EQ 3)
+      // First compute second order stats for patches and core areas
+      MeanPS = IF (NumPatches > 0) THEN (Area / NumPatches) ELSE 0
+      MCA1 = IF (NumPatches > 0) THEN (TCA / NumPatches) ELSE 0
+      MCA2 = IF (NumCA > 0) THEN (TCA / NumCA) ELSE 0
+
+      // Iterate over list of patches to compute stats
+      pos = HEAD(patchList)
+      WHILE (pos)
+         patchVar [=] GET(patchList, pos)
+         pos = NEXT(patchList, pos)
+
+         patchSize = patchVar[rArea]
+         patchCoreSize = patchVar[rCoreArea]
+         patchPerim = patchVar[rPerim]
+         MaxPS = MAX(MaxPS, patchSize)
+
+         // Sum square of different between patch size and mean patch size
+         PSSD = PSSD + (patchSize - MeanPS)^2
+         MSI = MSI + (0.25 * patchPerim / (patchSize ^ (1/2)))
+         AWMSI = AWMSI + (0.25 * patchPerim * (patchSize ^ (1/2)))
+
+         aan = aan + 16 * patchSize  / (patchPerim^2)
+         paRatio = paRatio + patchPerim / patchSize
+
+         CASD1 = CASD1 + (patchCoreSize - MCA1)^2
+
+         MCAI = IF (patchSize > 0) THEN (MCAI + patchCoreSize / patchSize) ELSE MCAI
+
+         OUTPUT RECORD(PatchStatsFile)
+            patchId: patchVar[rId]
+            size: patchVar[rArea] * HaPerCell
+            coreSize: patchVar[rCoreArea] * HaPerCell
+            edge: patchVar[rPerim] * CellWidth
+            centroid: patchVar[rCentroid]
+         ENDFN
+      ENDFN
+
+      // Iterate over list of core areas to compute stats
+      // Sum square of different between patch size and mean patch size
+      pos = HEAD(coreAreaList)
+      WHILE (pos)
+         patchVar [=] GET(coreAreaList, pos)
+         pos = NEXT(coreAreaList, pos)
+
+         patchSize = patchVar[rArea]
+         patchCoreSize = patchVar[rCoreArea]
+         patchPerim = patchVar[rPerim]
+
+         CASD2 = CASD2 + (patchCoreSize - MCA2)^2
+      ENDFN
+
+      // Finally summarize over patch types and output results
+      PSSD = IF (NumPatches > 0) THEN (PSSD / NumPatches)^(1/2) ELSE 0
+      MSI = IF (NumPatches > 0) THEN MSI / NumPatches ELSE 0
+      AWMSI = IF (Area > 0) THEN AWMSI / Area ELSE 0
+      aan = IF (NumPatches > 0) THEN aan / NumPatches ELSE 0
+      paRatio = IF (NumPatches > 0) THEN paRatio / NumPatches ELSE 0
+      CASD1 = IF (NumPatches > 0) THEN (CASD1 / NumPatches)^(1/2) ELSE 0
+      CASD2 = IF (NumCA > 0) THEN (CASD2 / NumCA)^(1/2) ELSE 0
+
+      // Assume that Pi < 0.5
+      Pi = Area / LandscapeSize
+      Contag2 = (NumSameNeighbs / NumNeighbs) - Pi
+      Contag2 = IF (Pi <= 0) OR (Pi >= 1) THEN 0
+                ELSE IF (Contag2 >= 0) THEN Contag2 / (1 - Pi) ELSE Contag2 / Pi
+
+      MeanCCE = 0
+      MaxCCE = 0
+      MeanCD = 0
+      IF ComputeCentroidStats
+         // Iterate over each pair of patches of the same type
+         pos1 = HEAD(patchList)
+         WHILE (pos1)
+            patchVar [=] GET(patchList, pos1)
+            id1 = patchVar[rId]
+            patchSize1 = patchVar[rArea]
+            centroid1 = patchVar[rCentroid]
+            maxCCE1 = patchVar[rMaxCCE]
+
+            nextPos = NEXT(patchList, pos1)
+            pos2 = nextPos
+            WHILE (pos2)
+               patchVar [=] GET(patchList, pos2)
+               patchSize2 = patchVar[rArea]
+               centroid2 = patchVar[rCentroid]
+               maxCCE2 = patchVar[rMaxCCE]
+
+               /* Determine the max patch CCE */
+               d = DISTANCE(centroid1, centroid2)
+               CCE = (patchSize1 * patchSize2) / d^2
+               MeanCCE = MeanCCE + CCE
+               maxCCE1 = MAX(CCE, maxCCE1)
+               maxCCE2 = MAX(CCE, maxCCE2)
+               MeanCD = MeanCD + d
+
+               // Update maxCCE in patches
+               SET(patchList, pos2, rMaxCCE, maxCCE2)
+/*
+               OUTPUT RECORD(LinkStatsCFile)
+                  patchId1: id1
+                  patchId2: patchVar[rId]
+                  d: d
+               ENDFN
+*/
+               pos2 = NEXT(patchList, pos2)
+            ENDFN
+
+            /* At this point, the patch CCE for p1 will be known */
+            SET(patchList, pos1, rMaxCCE, maxCCE1)
+            MaxCCE = MaxCCE + maxCCE1
+
+            pos1 = nextPos
+         ENDFN
+
+         MeanCCE = MeanCCE / (NumPatches * (NumPatches - 1) * 0.5)
+         MaxCCE = MaxCCE / (NumPatches - 1)
+         MeanCD = MeanCD / (NumPatches * (NumPatches - 1) * 0.5)
+      ENDFN
+
+      OUTPUT RECORD(LSStatsFile)
+         DECISION Area > 0
+
+         A: Area * HaPerCell
+         PCTLAND: 100 * Pi
+         LPI: 100 * MaxPS / LandscapeSize
+         NP: NumPatches
+         PD: 100 * NumPatches / (LandscapeSize * HaPerCell)
+         MPS: MeanPS * HaPerCell
+
+         PSSD: PSSD * HaPerCell
+         PSCV: 100 * PSSD/MeanPS
+
+         TE: CellWidth * TotalEdge
+         ED: CellWidth * TotalEdge / (LandscapeSize * HaPerCell)
+         ap: CellWidth * TotalEdge / NumPatches
+         TEA: TotalEdgeArea * HaPerCell
+         EDA: 100 * TotalEdgeArea / LandscapeSize
+         OPOE: (TotalEdgeArea *HaPerCell) / (TotalEdge * CellWidth * NumPatches)
+
+         LSI: 0.25 * TotalEdge / (Area^(1/2))
+         MSI: MSI
+         AWMSI: AWMSI
+
+         aan: aan
+
+         CPCTLAND: 100 * TCA / LandscapeSize
+         TCA: TCA * HaPerCell
+         NCA: NumCA
+         CAD: 100 * NumCA / (LandscapeSize * HaPerCell)
+
+         MCA1: MCA1 * HaPerCell
+         CASD1: CASD1 * HaPerCell
+         CACV1: 100 * CASD1/MCA1
+
+         MCA2: MCA2 * HaPerCell
+         CASD2: CASD2 * HaPerCell
+         CACV2: 100 * CASD2/MCA2
+
+         TCAI: 100 * TCA / Area
+         MCAI: 100 * MCAI / NumPatches
+
+         // Zero -> random adjacency (in [-1, 1]
+         // Positive -> more clumped than random
+         // Negative -> less clumped than random
+         CONTAG2: Contag2
+         NumNeighbs: NumNeighbs
+         NumSameNeighbs: NumSameNeighbs
+
+         // Centroid stats
+         CCE: MeanCCE
+         MaxCCE: MaxCCE
+         MeanCD: MeanCD
+      ENDFN
+   ENDFN
+ENDRT
+
+// Don't continue if this is the output instance
+NUMCLUSTERS = IF (EventId > 2) THEN 0 ELSE -1
+
+
+PROBINIT
+   PROBINIT = IF (isPatchEvent) THEN (PatchLayer > 0)
+              ELSE (PatchLayer > 0) AND (EdgeInterior EQ cInterior)
+
+   numActiveCells = 0
+   currPatchSize = 0
+   currPatchCoreSize = 0
+   currPatchPerim = 0
+   currPatchId = PatchLayer
+   rowTotal = 0
+   colTotal = 0
+
+   // For the patches ...
+   IF (isPatchEvent)
+      pId = pId + (PatchId EQ 0)
+      Area = Area + 1
+      NumPatches = NumPatches + (PatchId EQ 0)
+
+   // For the core areas ...
+   ELSE
+      coreId = coreId + (CoreAreaId EQ 0)
+      NumCA = NumCA + (CoreAreaId EQ 0)
+   ENDFN
+ENDPI
+
+
+TRANSITIONS
+   TRANSITIONS = IF isPatchEvent THEN (PatchId EQ 0) ELSE (CoreAreaId EQ 0)
+
+   // For the patches ...
+   IF isPatchEvent
+      numSimilarNeighbours = 0
+      numDifferentNeighbours = 0
+      OVER REGION CENTRED(1, 1)
+         DECISION StudyArea > 0
+         numSimilarNeighbours = numSimilarNeighbours + (PatchLayer EQ currPatchId)
+         numDifferentNeighbours = numDifferentNeighbours + (PatchLayer NEQ currPatchId)
+
+         NumNeighbs = NumNeighbs + 1
+         NumSameNeighbs = NumSameNeighbs + (PatchLayer EQ currPatchId)
+      ENDFN
+
+//      numNeighbours = numDifferentNeighbours + numSimilarNeighbours
+//      currPatchPerim = currPatchPerim + numDifferentNeighbours + (4 - numNeighbours)
+      currPatchPerim = currPatchPerim + 4 - numSimilarNeighbours
+      TotalEdge = TotalEdge + numDifferentNeighbours
+
+      // Add in the diagonal neighbours
+      OVER REGION CENTRED(1.1, 1.5, EUCLIDEAN)
+         DECISION StudyArea > 0
+         numSimilarNeighbours = numSimilarNeighbours + (PatchLayer EQ currPatchId)
+         numDifferentNeighbours = numDifferentNeighbours + (PatchLayer NEQ currPatchId)
+      ENDFN
+
+//      numNeighbours = numSimilarNeighbours + numDifferentNeighbours
+//      EdgeInterior = IF ((numDifferentNeighbours > 1) OR (numNeighbours < 8)) THEN cEdge ELSE cInterior
+      EdgeInterior = IF (numSimilarNeighbours < 8) THEN cEdge ELSE cInterior
+
+      TCA = TCA + (EdgeInterior EQ cInterior)
+      TotalEdgeArea = TotalEdgeArea + (EdgeInterior EQ cEdge)
+      PatchId = pId
+   ELSE
+      CoreAreaId = coreId
+   ENDFN
+
+   currPatchSize = currPatchSize + 1
+   currPatchCoreSize = currPatchCoreSize + (EdgeInterior EQ cInterior)
+
+   numActiveCells = numActiveCells + 1
+
+   rowTotal = rowTotal + ROW(Location)
+   colTotal = colTotal + COL(Location)
+ENDTR
+
+SPREADLOCATION
+   REGION CENTRED(1, 1.5, EUCLIDEAN)
+      DECISION IF isPatchEvent THEN (PatchId EQ 0) AND (PatchLayer EQ currPatchId)
+               ELSE (CoreAreaId EQ 0) AND (EdgeInterior EQ cInterior) AND (PatchLayer EQ currPatchId)
+ENDSL
+
+SPREADTIMESTEP
+   SPREADTIMESTEP = -2
+
+   // If numActiveCells becomes 0, then this patch is done
+   numActiveCells = numActiveCells - 1
+
+   IF (numActiveCells EQ 0)
+      // Add the patch to the list
+      patchVar[rArea] = currPatchSize
+      patchVar[rCoreArea] = currPatchCoreSize
+      patchVar[rPerim] = currPatchPerim
+      patchVar[rCentroid] = FLOOR(rowTotal/currPatchSize) * NUMCOLS + FLOOR(colTotal/currPatchSize)
+      patchVar[rMaxCCE] = 0
+      patchVar[rNNPathDist] = -1
+      patchVar[rAnyPos] = Location
+
+//      IF EventId EQ 1
+      IF isPatchEvent
+         patchVar[rId] = pId
+         INSERT TAIL(patchList, patchVar)
+      ELSE
+         patchVar[rId] = coreId
+         INSERT TAIL(coreAreaList, patchVar)
+      ENDFN
+   ENDFN
+ENDST

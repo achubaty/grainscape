@@ -1,0 +1,77 @@
+// Filter patches outside study area region and small patches out of a layer for analysis
+LSEVENT: Filter
+
+DEFINITIONS
+   GLOBAL CONSTANT: HaPerCell
+   LAYER: UnfilteredPatchLayer, PatchLayer, Visited 
+   GLOBAL VARIABLE: sizeThreshold, numFilteredPatches, numUnfilteredPatches
+   
+   EVENT VARIABLE: GrowingPatch
+   CLUSTER VARIABLE: numActiveCells, currPatchSize, currPatchId
+ENDDEF
+
+INITIALSTATE
+   PatchLayer = IF (UnfilteredPatchLayer > 0) THEN UnfilteredPatchLayer ELSE 0
+   INITIALSTATE = 2
+   GrowingPatch = (EventId EQ 1)
+ENDIS
+
+// Run once at time 1
+RETURNTIME 
+   RETURNTIME = IF Time EQ 0 THEN 1 ELSE 0
+   IF GrowingPatch
+      Visited = 0
+   ENDFN
+ENDRT
+
+PROBINIT
+   // First instance finds small patches (by marking the last cell visited as "Visited = 2")
+   // Second instance removes small patches
+   PROBINIT = IF GrowingPatch THEN (PatchLayer > 0) AND (Visited EQ 0) ELSE (Visited EQ 2)
+
+   numActiveCells = 0
+   currPatchSize = 0
+   currPatchId = PatchLayer
+
+   // For the "growing" (finding) instance, increment number of patches
+   IF GrowingPatch
+      numUnfilteredPatches = numUnfilteredPatches + (Visited EQ 0)
+   // For the "removal" instance: increment number of filtered patches identified
+   ELSE
+      numFilteredPatches = numFilteredPatches + 1
+      numUnfilteredPatches = numUnfilteredPatches - 1
+   ENDFN
+ENDPI
+
+
+TRANSITIONS
+   TRANSITIONS = (!GrowingPatch) OR (Visited EQ 0)
+
+   IF GrowingPatch
+      Visited = 1
+      currPatchSize = currPatchSize + HaPerCell
+      numActiveCells = numActiveCells + 1
+   ELSE
+      PatchLayer = 0
+      Visited = 2
+   ENDFN
+ENDTR
+
+// Only spread to cells in same patch that have not yet been visited by this instance
+SPREADLOCATION
+   REGION CENTRED(1, 1.5, EUCLIDEAN)
+      DECISION IF GrowingPatch THEN (Visited EQ 0) AND (PatchLayer EQ currPatchId)
+               ELSE (PatchLayer EQ currPatchId)
+ENDSL
+
+SPREADTIMESTEP
+   SPREADTIMESTEP = -2  // immediate spread (i.e. before next cell is initiated
+
+   // If numActiveCells becomes 0, then this patch is done
+   numActiveCells = numActiveCells - 1
+
+   // For the "growing" instance: if this is the last cell and the patch is too small, mark it
+   IF GrowingPatch AND (numActiveCells EQ 0) AND (sizeThreshold >= 0) AND (currPatchSize < sizeThreshold)
+      Visited = 2
+   ENDFN
+ENDST

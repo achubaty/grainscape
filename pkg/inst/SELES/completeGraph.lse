@@ -1,0 +1,555 @@
+LSEVENT: CompleteGraph
+
+DEFINITIONS
+   GLOBAL VARIABLE: UseCost, CostFactor, patchProcessed, maxInterpatchCost, MaxCostFromPatch, MaxCostApplied
+
+
+   // Nearest neighbour types
+   GLOBAL CONSTANT: rNN, rMST, rMPG, rDirect, rIndirect
+
+   // Assume these layers are all defined
+   GLOBAL VARIABLE: nId
+   LAYER: PatchLayer, Cost, PatchId, EdgeInterior, StudyArea
+
+   // Links and corridors
+   LAYER: LinksCG, LinkIdCG, LCLinksCG, LCDLinksCG, CorridorCostCG, CorridorCostCG2
+
+   GLOBAL CONSTANT: HaPerCell, CellWidth, MaxDist, MaxCost
+
+   // Assume these stats are defined
+   GLOBAL VARIABLE: Area, NumPatches
+
+   // Patch list: previously defined (except rNNPathDist, which is at MaxDist)
+   GLOBAL CONSTANT: NumPatchStats, rId, rArea, rPerim, rNNSLDist, rNNPathDist, rNNCost, rCentroid, rEffectiveId, rAnyPos
+   GLOBAL LIST{NumPatchStats} VARIABLE: patchList
+   GLOBAL VARIABLE: patchVar[NumPatchStats]
+
+
+   // Neighbours (complete graph)
+   GLOBAL VARIABLE: MeanN, MinN, MaxN, NSD
+
+   // Nearest Neighbour
+   GLOBAL VARIABLE: MeanNN1, MinNN1, MaxNN1, NNSD1
+
+
+   // NOTE: These variables must be resized to NumPatches (which is unkown before running stats.lse)
+   GLOBAL VARIABLE: connectedPatchLoc[2], PosList[2], anyPatchLoc[2]
+   GLOBAL VARIABLE: NonMin_LCLoc[NUMCELLS], NumNonMinLCLocs
+
+   // Complete graph 
+   GLOBAL CONSTANT: NumLinkStats, rLinkType, rSLDist, rPathDist, rCost, rNumEdges, rNumSegments, rStartLoc, rEndLoc, rNode1Id, rNode2Id
+   GLOBAL GRAPH{NumPatchStats, NumLinkStats} VARIABLE: nGraph
+   GLOBAL VARIABLE: linkVar[NumLinkStats]
+
+   EVENT VARIABLE: currPatchId, PatchesToConnect, activeFrontSize
+   CELL VARIABLE: corrCost
+
+   // For cost surface
+  LAYER: CostSurface, LeastCostNeighbs, AnchorLoc
+  GLOBAL CONSTANT: CostRes
+  GLOBAL LIST {2} VARIABLE: LinkCellList  // For computing least-cost stats over line segments
+  GLOBAL VARIABLE: LinkListElement[2]
+
+
+   MIN OUTPUT VARIABLE: LSStatsFile = "LSStatsCG.txt"
+   MIN OUTPUT VARIABLE: PatchStatsFile = "PatchStatsCG.txt"
+   MIN OUTPUT VARIABLE: LinkStatsFile = "LinkStatsCG.txt"
+   MIN OUTPUT VARIABLE: StatusFile = "StatusCG.txt"
+ENDDEF
+
+INITIALSTATE
+   INITIALSTATE = 1
+   nId = 0
+   MaxCostApplied = IF MaxCostFromPatch <= 0 THEN MaxCost ELSE MIN(CostRes*MaxCostFromPatch, MaxCost)
+ENDIS
+
+RETURNTIME
+   // The first NumPatches instances compute stats for each base patch
+   // The last summarizes and outputs
+   // Process at step 3000
+   RETURNTIME = IF Time EQ 0 THEN 3000 ELSE IF (EventId <= NumPatches+1) THEN 1 ELSE 0
+
+   patchProcessed = EventId
+
+   // Finalize and output stats
+   IF EventId  > NumPatches
+      // Iterate over list of patches to compute stats
+      MeanNN1 = 0
+      MinNN1 = MaxDist
+      MaxNN1 = 0
+      NNSD1 = 0
+
+      MeanN = 0
+      MinN = MaxDist
+      MaxN = 0
+      NSD = 0
+
+      pos = FIRST(nGraph)
+      WHILE (pos)
+         patchVar [=] GET(nGraph, pos)
+         pos = NEXT(nGraph, pos)
+
+         MeanNN1 = MeanNN1 + patchVar[rNNCost]
+         IF (patchVar[rNNCost] > 0)
+            MinNN1 = MIN(patchVar[rNNCost], MinNN1)
+            MaxNN1 = MAX(patchVar[rNNCost], MaxNN1)
+         ENDFN
+         OUTPUT RECORD(PatchStatsFile)
+            patchId: patchVar[rId]
+            nnSLDist: patchVar[rNNSLDist] * CellWidth
+            nnPathDist: patchVar[rNNPathDist] * CellWidth
+            nnCost: patchVar[rNNCost] * CellWidth
+            Centroid: patchVar[rCentroid]
+            size: patchVar[rArea] * HaPerCell
+            edge: patchVar[rPerim] * CellWidth
+         ENDFN
+      ENDFN
+
+      // Iterate over list of links to compute stats
+      pos = FIRST LINK(nGraph)
+      WHILE (pos)
+         linkVar [=] GET LINK(nGraph, pos)
+         pos = NEXT LINK(nGraph, pos)
+
+         MeanN = MeanN + linkVar[rCost]
+         IF (linkVar[rCost] > 0)
+            MinN = MIN(linkVar[rCost], MinN)
+            MaxN = MAX(linkVar[rCost], MaxN)
+         ENDFN
+
+         OUTPUT RECORD(LinkStatsFile)
+            linkId: linkVar[rId]
+            linkType: linkVar[rLinkType]
+            nodeId1: linkVar[rNode1Id]
+            nodeId2: linkVar[rNode2Id]
+            SLDist: linkVar[rSLDist] * CellWidth
+            PathDist: linkVar[rPathDist] * CellWidth
+            Cost: linkVar[rCost] * CellWidth
+            NumEdges: linkVar[rNumEdges]
+            NumSegments: linkVar[rNumSegments]
+            StartLoc: linkVar[rStartLoc]
+            EndLoc: linkVar[rEndLoc]
+         ENDFN
+      ENDFN
+
+      IF MinNN1 > 0
+         tMinNN1 = MIN(tMinNN1, MinNN1)
+      ENDFN
+      IF NumPatches > 0
+         MeanNN1 = MeanNN1 / NumPatches
+      ENDFN
+
+      IF MinN > 0
+         tMinN = MIN(tMinN, MinN)
+      ENDFN
+      nE = SIZE(nGraph)
+      IF nE > 0
+         MeanN = MeanN / nE
+      ENDFN
+
+      // Compute stddev and second order stats
+      pos = FIRST(nGraph)
+      WHILE (pos)
+         patchVar [=] GET(nGraph, pos)
+         pos = NEXT(nGraph, pos)
+         NNSD1 = NNSD1 + (patchVar[rNNCost] - MeanNN1)^2
+      ENDFN
+
+      pos = FIRST LINK(nGraph)
+      WHILE (pos)
+         linkVar [=] GET LINK(nGraph, pos)
+         pos = NEXT LINK(nGraph, pos)
+         NSD = NSD + (linkVar[rCost] - MeanN)^2
+      ENDFN
+
+      NNSD1 = IF (NumPatches EQ 0) THEN 0 ELSE (NNSD1 / NumPatches)^(1/2)
+
+      nE = SIZE(nGraph)
+      NSD = IF (nE EQ 0) THEN 0 ELSE (NSD / nE)^(1/2)
+
+      OUTPUT RECORD(LSStatsFile)
+         DECISION Area > 0
+         MNN: CellWidth * MeanNN1
+         MinNN: CellWidth * MinNN1
+         MaxNN: CellWidth * MaxNN1
+         NNSD: CellWidth * NNSD1
+         NNCV: 100 * NNSD1 / MeanNN1
+         Dispersion: 2 * (NumPatches / Area)^(1/2) * MeanNN1
+
+         MN: CellWidth * MeanN
+         MinN: CellWidth * MinN
+         MaxN: CellWidth * MaxN
+         NSD: CellWidth * NSD
+         NCV: 100 * NSD / MeanN
+      ENDFN
+   ENDFN
+
+
+   // NOTE: BE very careful to be sure that variables shared with
+   // other events are valid (especially after initialization in INITIALSTATE!)
+   currPatchId = EventId
+   IF (currPatchId EQ 1)
+      // Resize the effective patch id vector
+      RESIZE(connectedPatchLoc, NumPatches+1)
+      RESIZE(PosList, NumPatches+1)
+      RESIZE(anyPatchLoc, NumPatches+1)
+
+      // Copy nodes to graph.  Alternative: define patchList as a graph
+      pos = FIRST(patchList)
+      WHILE (pos)
+         patchVar [=] GET(patchList, pos)
+         pos = NEXT(patchList, pos)
+
+         patchVar[rNNSLDist] = MaxDist
+         patchVar[rNNPathDist] = MaxDist
+         patchVar[rNNCost] = MaxCost
+         INSERT(nGraph, patchVar)
+         i = patchVar[rId]
+         PosList[i] = FIRST(nGraph)
+
+         anyPatchLoc[patchVar[rId]] = patchVar[rAnyPos]
+      ENDFN
+   ENDFN
+
+   IF (currPatchId <= NumPatches) 
+      PatchesToConnect = NumPatches - 1
+
+      ComponentId = 0
+      OVER INDEX SEQUENCE(0, NumPatches)
+         connectedPatchLoc[Index] = -1
+      ENDFN
+
+      NumNonMinLCLocs = 0
+
+
+      // Process in any location in the patch
+      AT LOCATION(anyPatchLoc[currPatchId])
+         patchProcessed = currPatchId
+         patchPos = PosList[currPatchId]
+
+         ////////////////////////////////////////////////////////////////////////////////////////////
+         ////////////////////////////////////////////////////////////////////////////////////////////
+         // Compute cost surface from this patch
+         OUTPUT RECORD(StatusFile)
+            processingPatch: patchProcessed 
+            status: 1
+         ENDFN
+
+         NumEdgesCrossed = 0
+
+         OVER REGION COST SURFACE(0, MaxCostApplied, CostSurface, LeastCostNeighbs, AnchorLoc)
+           COST IF (PatchId EQ currPatchId) THEN 0 //1 //0
+                ELSE IF StudyArea <= 0 THEN MaxCost*CostRes
+                ELSE IF UseCost 
+                THEN IF Cost EQ 0 THEN CostRes*MaxCost ELSE CostRes*MAX(1, Cost/CostFactor) 
+                ELSE CostRes
+
+            // Check if we meet a previously unvisited patch
+//         IF (PatchId > 0) AND (connectedPatchLoc[PatchId] EQ 0)
+            IF (PatchLayer > 0) AND (PatchId NEQ currPatchId)
+               IF (connectedPatchLoc[PatchId] < 0) //AND (PatchId > currPatchId)
+                  connectedPatchLoc[PatchId] = Location
+                  PatchesToConnect = PatchesToConnect - 1
+               ENDFN
+//               ELSE IF (PatchId > currPatchId) AND (EdgeInterior EQ 1)
+               IF (EdgeInterior EQ 1)
+                  NonMin_LCLoc[NumNonMinLCLocs] = Location
+                  NumNonMinLCLocs = NumNonMinLCLocs + 1
+               ENDFN
+            ENDFN         ENDFN
+
+         ////////////////////////////////////////////////////////////////////////////////////////////
+         ////////////////////////////////////////////////////////////////////////////////////////////
+         // Now visit all other patches
+         OUTPUT RECORD(StatusFile)
+            processingPatch: patchProcessed 
+            status: 2
+         ENDFN
+
+         OVER INDEX SEQUENCE(currPatchId+1, NumPatches)
+            DECISION connectedPatchLoc[Index] >= 0
+            endPatchId = Index
+            REMOVE ALL(LinkCellList)
+
+            PathCost = 0
+            PathDistance = 0
+            numSegments = 0
+            NumEdges = 0
+            startLoc = Location
+            endLoc = connectedPatchLoc[endPatchId]
+
+            ////////////////////////////////////////////////////////////////////////////////////////////
+            // Follow LCP
+            reachedStartPatch = FALSE
+            prevTheta = 0
+            lastNodeLoc = endLoc
+            prevInPatch = TRUE
+            startPatchBoundaryLoc = -1
+            OVER REGION LEAST COST PATH(endLoc, startLoc, LeastCostNeighbs, AnchorLoc)
+               // At start and end points, or if we are re-entering a patch
+               IF !reachedStartPatch
+                  LinksCG = IF LinksCG EQ 1 THEN 2 ELSE 3
+                  LinkIdCG = nId + 1
+//                  IF (Location EQ endLoc) OR (Location EQ startLoc) //OR ((PatchLayer > 0) AND (SOURCE PatchLayer <= 0))
+                  IF (Location EQ endLoc) OR (PatchId EQ currPatchId)
+                     LinkListElement[0] = Location
+                     LinkListElement[1] = 0
+                     INSERT TAIL(LinkCellList, LinkListElement)
+                     lastNodeLoc = Location
+/*                  // If we are entering an open area
+                  ELSE IF ((PatchLayer <= 0) AND (SOURCE PatchLayer > 0)) //OR (Cost NEQ SOURCE Cost)
+                     LinkListElement[0] = SOURCE Location
+                     LinkListElement[1] = 0
+                     INSERT TAIL(LinkCellList, LinkListElement)
+                     lastNodeLoc = Location
+
+                   // Or we turn
+                  ELSE 
+                     theta = DIRECTION(lastNodeLoc, Location)
+                     stepDir = DIRECTION(prevLoc, Location)
+                     IF (SOURCE Location NEQ lastNodeLoc) AND (|theta - prevTheta| >= (90/DISTANCE(lastNodeLoc, Location)))
+//                     IF (SOURCE Location NEQ lastNodeLoc) AND (|stepDir - prevTheta| > 22.5
+                        LinkListElement[0] = Location
+                        LinkListElement[1] = 0
+                        INSERT TAIL(LinkCellList, LinkListElement)
+                        lastNodeLoc = Location
+                        prevD = 0
+                     ENDFN
+                     prevTheta = theta
+*/
+                  ENDFN   
+                  reachedStartPatch = reachedStartPatch OR (PatchId EQ currPatchId)
+
+                  IF reachedStartPatch
+                     startPatchBoundaryLoc = Location
+                  ENDFN
+
+                  // Compute patch stats
+                  incrementalDist = sysTmp
+                  PathCost = IF (PatchId EQ currPatchId) THEN PathCost ///+ incrementalDist/CostRes
+                             ELSE IF UseCost 
+                             THEN IF Cost EQ 0 THEN PathCost + incrementalDist * MaxCost 
+                                  ELSE PathCost + incrementalDist * MAX(1, Cost/CostFactor)
+                             ELSE PathCost + incrementalDist
+                  PathDistance = PathDistance + incrementalDist
+
+                  inPatch = PatchLayer > 0
+//                  IF (Location NEQ endLoc) AND (PatchLayer NEQ prevPatchLayer)
+                  IF (Location NEQ endLoc) AND (inPatch NEQ prevInPatch)
+                     NumEdges = NumEdges + 1
+                  ENDFN
+                  prevInPatch = inPatch
+               ENDFN
+            ENDFN
+
+            linkType = IF NumEdges > 2 THEN rIndirect ELSE rDirect
+            linkCost = CLAMP(ROUND(PathCost * CellWidth),0,MaxCost)
+
+            // Traverse path again to record correct cost
+            reachedStartPatch = FALSE
+            OVER REGION LEAST COST PATH(endLoc, startLoc, LeastCostNeighbs, AnchorLoc)
+               IF !reachedStartPatch
+                  LCLinksCG = IF LCLinksCG EQ 0 THEN linkCost ELSE MIN(LCLinksCG, linkCost)
+//                  IF (linkType EQ rDirect) AND (CorridorCostCG2 EQ 0) OR (LCLinksCG <CorridorCostCG2)
+//                     CorridorCostCG2 = LCLinksCG
+//                  ENDFN
+
+                  IF linkType EQ rDirect
+                     LCDLinksCG = IF LCDLinksCG EQ 0 THEN linkCost ELSE MIN(LCDLinksCG, linkCost)
+                  ENDFN
+                  reachedStartPatch = reachedStartPatch OR (PatchId EQ currPatchId)
+               ENDFN
+            ENDFN
+
+            ////////////////////////////////////////////////////////////////////////////////////////////
+            // Iterate over list of link points and compute stats using segments
+/*
+            pos = HEAD(LinkCellList)
+            LinkListElement [=] GET(LinkCellList, pos)
+            pos = NEXT(LinkCellList, pos)
+            nextLoc = LinkListElement[0]
+
+            WHILE (pos)
+               startLoc = nextLoc
+               LinkListElement [=] GET(LinkCellList, pos)
+               pos = NEXT(LinkCellList, pos)
+               nextLoc = LinkListElement[0]
+
+               IF LinkListElement[1] EQ 0
+                  prevDist = 0
+                  numSegments = numSegments + 1
+                  prevPatchLayer = PatchLayer
+                  OVER REGION VECTOR(startLoc, nextLoc)
+                     currDist = DISTANCE(Location, startLoc)
+                     incrementalDist = (currDist - prevDist)
+                     prevDist = currDist
+
+                     PathCost = IF (PatchId EQ currPatchId) THEN PathCost + incrementalDist/CostRes
+                                ELSE IF UseCost 
+                                THEN IF Cost EQ 0 THEN PathCost + incrementalDist * MaxCost 
+                                     ELSE PathCost + incrementalDist * MAX(1, Cost/CostFactor)
+                                ELSE PathCost + incrementalDist
+                     PathDistance = PathDistance + incrementalDist 
+
+                     IF (Location NEQ startLoc) AND (PatchLayer NEQ prevPatchLayer)
+                        NumEdges = NumEdges + 1
+                     ENDFN
+                     prevPatchLayer = PatchLayer
+                  ENDFN
+               ENDFN
+            ENDFN
+*/
+            // Iterate over list of link points again to draw
+            pos = HEAD(LinkCellList)
+            LinkListElement [=] GET(LinkCellList, pos)
+            pos = NEXT(LinkCellList, pos)
+            nextLoc = LinkListElement[0]
+
+            IF linkType EQ rDirect
+               WHILE (pos)
+                  startLoc = nextLoc
+                  LinkListElement [=] GET(LinkCellList, pos)
+                  pos = NEXT(LinkCellList, pos)
+                  nextLoc = LinkListElement[0]
+
+                  IF LinkListElement[1] EQ 0
+                     OVER REGION VECTOR(startLoc, nextLoc)
+                        LinksCG = IF LinksCG EQ 3 THEN 2 ELSE 1
+                        LinkIdCG =nId + 1
+                     ENDFN
+                  ENDFN
+               ENDFN
+            ENDFN
+
+
+            // Increment number of edges crossed
+            NumEdgesCrossed = NumEdgesCrossed + NumEdges
+
+            // Update NN info
+            // Find the patch nodes
+            nPos2 = PosList[endPatchId]
+            endLoc = connectedPatchLoc[endPatchId]
+            d = DISTANCE(endLoc, startPatchBoundaryLoc)
+
+            // Set NN at patch level
+            currD1 = GET(nGraph, patchPos, rNNSLDist)
+            IF d < currD1
+               SET(nGraph, patchPos, rNNSLDist, d)
+            ENDFN
+
+            currD2 = GET(nGraph, nPos2, rNNSLDist)
+            IF d < currD2
+               SET(nGraph, nPos2, rNNSLDist, d)
+            ENDFN
+
+            currD1 = GET(nGraph, patchPos, rNNPathDist)
+            IF PathDistance < currD1
+               SET(nGraph, patchPos, rNNPathDist, PathDistance)
+            ENDFN
+
+            currD2 = GET(nGraph, nPos2, rNNPathDist)
+            IF PathDistance < currD2
+               SET(nGraph, nPos2, rNNPathDist, PathDistance)
+            ENDFN
+
+            currC1 = GET(nGraph, patchPos, rNNCost)
+            IF PathCost < currC1
+               SET(nGraph, patchPos, rNNCost, PathCost)
+            ENDFN
+
+            currC2 = GET(nGraph, nPos2, rNNCost)
+            IF PathCost < currD2
+               SET(nGraph, nPos2, rNNCost, PathCost)
+            ENDFN
+
+            // Create a link
+            nId = nId + 1
+            linkVar[rId] = nId
+            linkVar[rLinkType] = linkType
+            linkVar[rNode1Id] = currPatchId
+            linkVar[rNode2Id] = endPatchId
+            linkVar[rSLDist] = d
+            linkVar[rPathDist] = PathDistance
+            linkVar[rCost] = PathCost
+            linkVar[rNumEdges] = NumEdges
+            linkVar[rNumSegments] = numSegments
+            linkVar[rStartLoc] = startPatchBoundaryLoc
+            linkVar[rEndLoc] = endLoc
+            INSERT LINK(nGraph, patchPos, nPos2, linkVar)
+
+            maxInterpatchCost = MAX(maxInterpatchCost, PathCost * CellWidth)
+         ENDFN
+
+
+         // Draw corridors for Non-min LCLinks
+         OVER INDEX SEQUENCE(0, NumNonMinLCLocs-1)
+            PathCost = 0
+            PathDistance = 0
+            NumEdges = 0
+            startLoc = Location
+            endLoc = NonMin_LCLoc[Index]
+
+            ////////////////////////////////////////////////////////////////////////////////////////////
+            // Follow LCP
+            reachedStartPatch = FALSE
+            prevInPatch = -1 //TRUE
+            OVER REGION LEAST COST PATH(endLoc, startLoc, LeastCostNeighbs, AnchorLoc)
+               // At start and end points, or if we are re-entering a patch
+               IF !reachedStartPatch
+                  reachedStartPatch = reachedStartPatch OR (PatchId EQ currPatchId)
+
+                  // Compute patch stats
+                  incrementalDist = sysTmp
+                  PathCost = IF (PatchId EQ currPatchId) THEN PathCost ///+ incrementalDist/CostRes
+                             ELSE IF UseCost 
+                             THEN IF Cost EQ 0 THEN PathCost + incrementalDist * MaxCost 
+                                  ELSE PathCost + incrementalDist * MAX(1, Cost/CostFactor)
+                             ELSE PathCost + incrementalDist
+                  PathDistance = PathDistance + incrementalDist 
+
+                  inPatch = PatchLayer > 0
+                  IF (Location NEQ endLoc) AND (inPatch NEQ prevInPatch)
+                     NumEdges = NumEdges + 1
+                  ENDFN
+                  prevInPatch = inPatch
+               ENDFN
+            ENDFN
+
+            linkType = IF NumEdges > 2 THEN rIndirect ELSE rDirect
+            linkCost = CLAMP(ROUND(PathCost * CellWidth),0,MaxCost)
+
+            // Traverse path again to record correct cost
+            IF linkType EQ rDirect
+               reachedStartPatch = FALSE
+               OVER REGION LEAST COST PATH(endLoc, startLoc, LeastCostNeighbs, AnchorLoc)
+                  IF !reachedStartPatch
+                     CorridorCostCG2 = IF CorridorCostCG2 EQ 0 THEN linkCost ELSE MIN(CorridorCostCG2, linkCost)
+                     reachedStartPatch = reachedStartPatch OR (PatchId EQ currPatchId)
+                  ENDFN
+               ENDFN
+            ENDFN
+         ENDFN
+      ENDFN
+   ENDFN
+ENDRT
+
+// Don't continue if this is the output instance
+NUMCLUSTERS
+   NUMCLUSTERS = IF (currPatchId > NumPatches) OR (NumPatches <= 1) THEN 0 ELSE -1
+   activeFrontSize = 0
+ENDNC
+
+// Start on edge of all patches except current patch
+PROBINIT
+   PROBINIT = (EdgeInterior EQ 1) AND (PatchId NEQ currPatchId)
+   activeFrontSize = activeFrontSize + 1
+ENDPI
+
+
+TRANSITIONS
+   // Continue until all cells processed
+   TRANSITIONS = (activeFrontSize > 0)
+///   CorridorCostCG = IF CorridorCostCG EQ 0 THEN linkCost ELSE MIN(CorridorCostCG, linkCost)
+
+ENDTR
+
