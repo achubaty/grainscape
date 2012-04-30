@@ -1,0 +1,226 @@
+Seles Model
+Time Units: Step KiloStep 1000 100000
+Landscape Events:
+   $SpatialGraphModels$\StudyArea.lse
+   $SpatialGraphModels$\filter.lse
+   $SpatialGraphModels$\patchStats.lse
+   $SpatialGraphModels$\mpg.lse
+   $SpatialGraphModels$\completeGraph.lse
+Variable-Input View Maps:
+   StudyArea
+   UnfilteredPatchLayer
+   PatchLayer = UnfilteredPatchLayer
+   Cost
+
+Variable-Output View Maps:
+   PatchLayer
+   Visited
+   ConvexHullPoints = Visited
+
+   // base stats
+   EdgeInterior
+   PatchId
+   CoreAreaId
+
+   // MPG AND CG
+   LeastCostNeighbs
+   AnchorLoc
+   CostSurface
+
+   // MPG
+   MPGLoc
+   LinksMPG
+   LinkIdMPG
+   LCLinkCostMPG
+   LCLinkDistMPG
+   Voronoi
+   Voronoi2
+   VoronoiCost
+   VoronoiCost2
+   PreVoronoi
+   PreVoronoi2
+   VoronoiPerim
+   CorridorCostMPG
+
+   // CG
+   LinksCG
+   LinkIdCG
+   LCLinksCG
+   LCDLinksCG
+   CorridorCostCG
+   CorridorCostCG2
+   DirectCG
+   CostCG
+
+TimesTR
+TimesSP
+NumActive
+
+Global Constants:
+  MaxDist = (NumRows^2 + NumCols^2)^(1/2) + 1
+  CostRes = XXcostResXX
+  MaxCost = CostRes * XXmaxCostXX * MaxDist
+  MaxCostValue = MAX(Cost)
+  
+  MaxPatchId = 40000
+
+  // For EdgeInterior layer
+  cEdge = 1
+  cInterior = 2
+
+  // Cell size in ha and width in m
+  CellWidth = CELL WIDTH(UnfilteredPatchLayer)
+  HaPerCell = XXhaPerCellXX
+
+Output Model Bounds:
+   Visited: 3 //2
+
+   EdgeInterior: 2
+   PatchId: MaxPatchId
+   CoreAreaId: MaxPatchId
+
+   LeastCostNeighbs: 256
+   AnchorLoc: -1
+   CostSurface: MaxCost
+
+   MPGLoc: -1
+   LinksMPG: 4
+   LinkIdMPG: -1
+   LCLinkCostMPG: MaxCost
+   LCLinkDistMPG: MaxDist * CellWidth
+   Voronoi: MaxPatchId
+   Voronoi2: MaxPatchId
+   PreVoronoi: MaxPatchId
+   PreVoronoi2: MaxPatchId
+   VoronoiCost: MaxCost
+   VoronoiCost2: MaxCost
+   VoronoiPerim: 2
+   CorridorCostMPG: MaxCost
+
+   CorridorCostCG: MaxCost
+   CorridorCostCG2: MaxCost
+   LinksCG: 4
+   LinkIdCG: -1
+   LCLinksCG: MaxCost
+   LCDLinksCG: MaxCost
+   DirectCG: 3
+   CostCG: MaxCost
+
+TimesTR:15
+TimesSP:20
+NumActive: 10
+
+Global Constants:
+  // Indices into patch stat vector
+  NumPatchStats = 11
+  rId = 0
+  rArea = 1
+  rCoreArea = 2
+  rPerim = 3
+  rCentroid = 4
+  rMaxCCE = 5
+  rNNSLDist = 6
+  rNNPathDist = 7
+  rNNCost = 8
+  rEffectiveId = 9
+  rAnyPos = 10
+
+  // Indices into link stat vector (for N and MPG)
+  NumLinkStats = 11
+  rLinkType = 1
+  rSLDist = 2
+  rPathDist = 3
+  rCost = 4
+  rNumEdges = 5
+  rNumSegments = 6
+  rStartLoc = 7
+  rEndLoc = 8
+  rNode1Id = 9
+  rNode2Id = 10
+
+  // Nearest neighbour algorithm types 
+  rNN = 0  rMST = 1
+  rMPG = 2
+  rMPG2 = 3
+
+  // These are least-cost patch link types
+  rDirect = 0
+  rIndirect = 1
+
+  MaxLoc = NumCells
+
+
+  NeighbourLookup = 1,0,0,7,7,6,6,5,5,4,4,3,3,2,2,1 // from hextant
+
+  // for study area
+  cInput = 0
+  cConvexHull = 1
+  cEntireLandscape = 2
+
+
+Global Variables:
+  // PARAMETERS
+
+  // For filtering: size threshold (in ha)
+  sizeThreshold = 100
+
+  // For stats
+  ComputeCentroidStats = TRUE
+  UseCost = TRUE
+  CostFactor = 1
+  MaxCostFromPatch = MaxCost
+  SizeFactor = 0
+
+  StudyAreaType = cEntireLandscape
+
+  // OUTPUT VARIABLES
+  // From filtering
+  numFilteredPatches = 0
+  numUnfilteredPatches = 0
+
+  patchProcessed = 0
+  maxInterpatchCost = 0
+  maxMPGCost = 0
+
+  Area = 0 OFF
+  LandscapeSize = 0 OFF
+  NumPatches = 0
+  MeanPS = 0 OFF
+  MaxPS = 0 OFF
+  PSSD = 0 OFF
+
+  TotalEdge = 0 OFF
+  TotalEdgeArea = 0 OFF
+  MSI = 0 OFF
+  AWMSI = 0 OFF
+
+  aan = 0 OFF
+  paRatio = 0 OFF
+
+  TCA = 0 OFF
+  NumCA = 0 OFF
+  MCA1 = 0 OFF
+  CASD1 = 0 OFF
+
+  MCA2 = 0 OFF
+  CASD2 = 0 OFF
+
+  MCAI = 0 OFF
+
+  NumNeighbs = 0 OFF
+  NumSameNeighbs = 0 OFF
+
+  NumClusters = 0
+  MaxVoronoiCostMPG = 0
+
+  // List variable for patches
+  patchList = 0 OFF
+
+  pId = 0
+  coreId = 0
+  nId = 0
+  nnId = 0
+
+  NumActiveCells = 0
+
+Output Frequency: 1000

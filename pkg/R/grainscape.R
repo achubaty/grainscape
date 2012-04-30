@@ -4,7 +4,7 @@
 
 ## gsMPG
 gsMPG <- function(cost, patch, sa=NULL, outputFolder=NULL, filterPatch=NULL, spreadFactor=0, selesPath=system.file("SELES", package="grainscape")) {
-    
+
     ## Check OS
     if (.Platform$OS.type != "windows") {
         stop("grainscape:  this function calls an executable (SELES) compiled for Windows.\nIt will not work on your OS.", call.=FALSE)
@@ -26,7 +26,7 @@ gsMPG <- function(cost, patch, sa=NULL, outputFolder=NULL, filterPatch=NULL, spr
     }
     
     ## Check projection
-    if ((!is.na(projection(cost))) && (!grepl("UTM", toupper(projection(cost))))) {
+    if ((projection(cost) != "NA") && (!grepl("UTM|utm", toupper(projection(cost))))) {
         warning("grainscape:  projection suggests that all cells may not be of equal area; assuming equal area", call.=FALSE)
     }
     
@@ -55,7 +55,7 @@ gsMPG <- function(cost, patch, sa=NULL, outputFolder=NULL, filterPatch=NULL, spr
         if (class(sa) != "RasterLayer") {
             stop("grainscape:  sa raster must be of class RasterLayer", call.=FALSE)
         }
-        if (!compare(patch, cost, res=TRUE, orig=TRUE, stopiffalse=FALSE)) {
+        if (!compare(cost, sa, res=TRUE, orig=TRUE, stopiffalse=FALSE)) {
             stop("grainscape: patch, cost and sa rasters must be identical in extent, projection, origin and resolution", call.=FALSE) 
         }
         rasSa[] <- getValues(sa)
@@ -67,7 +67,7 @@ gsMPG <- function(cost, patch, sa=NULL, outputFolder=NULL, filterPatch=NULL, spr
     }
         
     ## Check that patch raster is binary
-    if (!all(unique(rasPatch) %in% c(TRUE,FALSE))) {
+    if (!all(unique(rasPatch[]) %in% c(TRUE,FALSE))) {
         stop("grainscape:  patch must be a binary raster (=1 for patches; =0 for non-patches)", call.=FALSE)
     }
     
@@ -100,7 +100,7 @@ gsMPG <- function(cost, patch, sa=NULL, outputFolder=NULL, filterPatch=NULL, spr
                   "XXdoCGXX", "FALSE",
                   "XXselesFolderXX", paste("\"", gsub("/", "\\\\", selesPath), "\"", sep=""),
                   "XXcostResXX", format(res(rasCost)[1], scientific=FALSE),
-                  "XXmaxCostXX", format(max(unique(rasCost)), scientific=FALSE),
+                  "XXmaxCostXX", format(max(unique(rasCost[])),  scientific=FALSE),
                   "XXhaPerCellXX", format(prod(res(rasCost))/10000, scientific=FALSE))
                     
     subTable <- matrix(subTable, 7, 2, byrow=TRUE)
@@ -179,7 +179,7 @@ gsMPG <- function(cost, patch, sa=NULL, outputFolder=NULL, filterPatch=NULL, spr
         mpg$mpgPlot[rasPatch==1] <- 2
        
         ## Get additional patch information not done by SELES (code reproduced from gsPatch())
-        uniquePatches <- unique(mpg$voronoi)
+        uniquePatches <- unique(mpg$voronoi[])
     
         
         ## Patch edge
