@@ -1,0 +1,43 @@
+Scenario Information
+$analysisName$ = "."
+$patchSizeThreshold$ = XXfilterPatchXX 
+$ComputeCentroidStats$ = FALSE
+$MPGSpreadSizeFactor$ = XXspreadFactorXX  
+$ExtractCompleteGraph$ = XXdoCGXX
+$StudyAreaType$ = cInput 
+$UseDistanceFactor$ = TRUE
+$DistFactor_LoadMult$ = 1   
+$DistFactor_UsageMult$ = 1  
+$srcDir$ = "."
+$PatchLayer$ = "$srcDir$\patch.asc"
+$StudyArea$ = "$srcDir$\sa.asc"
+$DistanceFactor$ = "$srcDir$\cost.asc"
+$SpatialGraphModels$ = XXselesFolderXX
+UnfilteredPatchLayer = $PatchLayer$
+Cost = $DistanceFactor$ * $DistFactor_LoadMult$
+StudyArea = $StudyArea$
+
+Model Dimensions: UnfilteredPatchLayer
+eg.sel
+completeGraph.lse $ExtractCompleteGraph$
+sizeThreshold = $patchSizeThreshold$
+ComputeCentroidStats = $ComputeCentroidStats$
+SizeFactor = $MPGSpreadSizeFactor$
+StudyAreaType = $StudyAreaType$
+UseCost = $UseDistanceFactor$
+CostFactor = $DistFactor_UsageMult$
+cwd $analysisName$
+
+
+SimStart 10000 1
+
+Save PatchId patchid.asc ARC ASCII
+Save LinkIdMPG linkidmpg.asc ARC ASCII
+Save LCLinkCostMPG linkWeightMPG.asc ARC ASCII
+Save Voronoi voronoi.asc ARC ASCII
+Save LinksMPG linktype.asc ARC ASCII
+
+
+
+
+
