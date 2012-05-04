@@ -10,10 +10,30 @@ gsMPG <- function(cost, patch, sa=NULL, outputFolder=NULL, filterPatch=NULL, spr
         stop("grainscape:  this function calls an executable (SELES) compiled for Windows.\nIt will not work on your OS.", call.=FALSE)
     }
 
-    ## Check that input rasters are of class RasterLayer
-    if ((class(cost) != "RasterLayer") || (class(patch) != "RasterLayer")) {
-        stop("grainscape: patch and cost rasters must be of class RasterLayer", call.=FALSE)
+    ## Check that cost raster is of class RasterLayer
+    if ((class(cost) != "RasterLayer")) {
+        stop("grainscape: cost raster must be of class RasterLayer", call.=FALSE)
     }
+    
+    ## Prepare a lattice patch if patch is numeric
+    if (class(patch) == "numeric") {
+        ## Produce the lattice patch rasters
+        focalPointDistFreq <- patch
+        patch <- cost
+        patch[] <- 0
+        patch[cellFromRowColCombine(patch, seq(1,nrow(patch), by=focalPointDistFreq)+focalPointDistFreq/2, seq(1, ncol(patch), by=focalPointDistFreq)+focalPointDistFreq/2)] <- 1
+        ## Remove lattice points that fall on NA cost cells
+        patch[is.na(cost)] <- 0
+    }
+    else if ((class(patch) != "RasterLayer")) {
+        stop("grainscape: patch must be a raster (patch-based model) OR an integer (lattice model)", call.=FALSE)
+    }
+
+    ## Check that input rasters are of class RasterLayer
+    if ((class(cost) != "RasterLayer")) {
+        stop("grainscape: cost raster must be of class RasterLayer", call.=FALSE)
+    }
+    
     
     ## Check patch and cost are comparable
     if (!compare(patch, cost, res=TRUE, orig=TRUE, stopiffalse=FALSE)) {
@@ -27,7 +47,7 @@ gsMPG <- function(cost, patch, sa=NULL, outputFolder=NULL, filterPatch=NULL, spr
     
     ## Check projection
     if ((projection(cost) != "NA") && (!grepl("UTM|utm", toupper(projection(cost))))) {
-        warning("grainscape:  projection suggests that all cells may not be of equal area; assuming equal area", call.=FALSE)
+        warning("grainscape:  projection suggests that all cells may not be of equal area; Note that grainscape assumes equal area in all calculations", call.=FALSE)
     }
     
 
@@ -65,10 +85,10 @@ gsMPG <- function(cost, patch, sa=NULL, outputFolder=NULL, filterPatch=NULL, spr
     else {
         rasSa[] <- 1
     }
-        
+
     ## Check that patch raster is binary
     if (!all(unique(rasPatch[]) %in% c(TRUE,FALSE))) {
-        stop("grainscape:  patch must be a binary raster (=1 for patches; =0 for non-patches)", call.=FALSE)
+        stop("grainscape:  patch must be a binary raster (=1 for patches; =0 for non-patches).  Missing values (NA) should be set to 0.", call.=FALSE)
     }
     
     ## Check that cost raster is not equal to NA at patches
@@ -118,13 +138,13 @@ gsMPG <- function(cost, patch, sa=NULL, outputFolder=NULL, filterPatch=NULL, spr
     
 
     ## Call SELES
-    system(paste(normalizePath(selesPath), "\\seles3_4 -p ", outputFolder, "\\eg.scn", sep=""), wait=TRUE)
+    system(paste(shQuote(paste(normalizePath(selesPath), "\\seles3_4", sep="")), " -p ", shQuote(paste(outputFolder, "\\eg.scn", sep="")), sep=""), wait=TRUE)
 
 
     ## Import SELES output
-    selesGraph <- read.table(paste(outputFolder, "\\linkstatsmpg.txt", sep=""), header=TRUE)
+    selesGraph <- suppressWarnings(try(read.table(paste(outputFolder, "\\linkstatsmpg.txt", sep=""), header=TRUE), silent=TRUE))
     
-    if (nrow(selesGraph)==0) {
+    if ((class(selesGraph) == "try-error") ||(nrow(selesGraph)==0)) {
         
         if (!keepOutput) unlink(outputFolder, recursive=TRUE)
 
@@ -143,8 +163,8 @@ gsMPG <- function(cost, patch, sa=NULL, outputFolder=NULL, filterPatch=NULL, spr
         mpg$lcpLinkId <- rasCost
         mpg$lcpPerimWeight <-rasCost
         mpg$lcpPerimType <- rasCost
-        mpg$eucLinkId <- rasCost
-        mpg$eucPerimWeight <- rasCost
+        #mpg$eucLinkId <- rasCost
+        #mpg$eucPerimWeight <- rasCost
         mpg$mpgPlot <- rasCost
         mpg$runTime <- NA
     
@@ -179,7 +199,7 @@ gsMPG <- function(cost, patch, sa=NULL, outputFolder=NULL, filterPatch=NULL, spr
         mpg$mpgPlot[rasPatch==1] <- 2
        
         ## Get additional patch information not done by SELES (code reproduced from gsPatch())
-        uniquePatches <- unique(mpg$voronoi[])
+        uniquePatches <- sort(unique(mpg$voronoi[]))
     
         
         ## Patch edge
@@ -210,7 +230,7 @@ gsMPG <- function(cost, patch, sa=NULL, outputFolder=NULL, filterPatch=NULL, spr
         toGraphV <- cbind(patch, centroidX=centroids[,2], centroidY=centroids[,3])
         
         
-        ## How to convert SELES cells to rsater cell numbers
+        ## How to convert SELES cells to raster cell numbers
         .selesCellToRasterXY <- function(ras, loc) {
             x <- ncol(ras)
             xyFromCell(ras, cellFromRowCol(ras, x-(trunc(loc/x)), x*((loc/x) - trunc(loc/x)))+1)
@@ -242,28 +262,21 @@ gsMPG <- function(cost, patch, sa=NULL, outputFolder=NULL, filterPatch=NULL, spr
     }
     
 }
-## gsCG 
-gsCG <- function(patch, filterPatch=NULL) {
-  
-  ## To be written.  
-  
-  return(NULL)
-}
+
 ## gsThreshold
-gsThreshold <- function(gsGraph, weight, nThresh=NULL, doThresh=NULL)   {
+gsThreshold <- function(gsMPG, weight="lcpPerimWeight", nThresh=NULL, doThresh=NULL)   {
   
-    if ((class(gsGraph) != "gsMPG") && (class(gsGraph) != "gsCG")) {
-        stop("grainscape: graph must be a 'gsMPG' or a 'gsCG' object")
+    if ((class(gsMPG) != "gsMPG")) {
+        stop("grainscape: gsMPG must be a 'gsMPG' object")
     }
     
-    if (class(gsGraph) == "gsMPG")  baseGraph <- gsGraph$mpg
-    else baseGraph <- gsGraph$cg
+    baseGraph <- gsMPG$mpg
     
     threshGraph <- vector("list")
     
     linkWeight <- try(get.edge.attribute(baseGraph, weight), silent=TRUE)
     if (class(linkWeight) == "try-error") {
-        stop("grainscape: weight must be the name of an existing link attribute to threshold (e.g. 'eucCentroidWeight')", call.=FALSE)
+        stop("grainscape: weight must be the name of an existing link attribute to threshold (e.g. 'lcpPerimWeight')", call.=FALSE)
     }
     
     if (is.null(nThresh) && is.null(doThresh)) {
@@ -286,12 +299,15 @@ gsThreshold <- function(gsGraph, weight, nThresh=NULL, doThresh=NULL)   {
 
     return(threshGraph)  
 }
-
 ## gsGOC
 gsGOC <- function(gsMPG, nThresh=NULL, doThresh=NULL, weight="lcpPerimWeight", sp=FALSE, verbose=3) {
 
     if (class(gsMPG) != "gsMPG") {
         stop("grainscape: graph must be a gsMPG object", call.=FALSE)
+    }
+    
+    if (sp) {
+        if (!require(rgeos)) stop("grainscape:  rgeos package must be installed to use sp=TRUE")
     }
     
     threshGraph <- vector("list")
@@ -328,40 +344,37 @@ gsGOC <- function(gsMPG, nThresh=NULL, doThresh=NULL, weight="lcpPerimWeight", s
     ## That can later be used to create larger grains by aggregation
     if (sp) {
         if (verbose>=2) cat("Creating SpatialPolygons for smallest grain\n")
-        threshGraph$voronoiSP <- rasterToPolygons(threshGraph$voronoi, dissolve=T)   
+        if (verbose>=3) {
+            cat("  Time for completion is dependent on the number of patches and the dimensions of the raster\n")
+            cat("  Occasional failures caused by memory errors are due to an as-yet uncorrected bug in the GEOS library (rgeos).  See manual.\n")
+        }
+        threshGraph$voronoiSP <- rasterToPolygons(threshGraph$voronoi, dissolve=TRUE)   
     }
     
     
     allLinks <- get.edges(baseGraph, E(baseGraph)) + 1
     
     ## Check MPG for orphaned patches
-    ## Rarely with very small patches the MPG algorithm fails to connect them to an adjacent patch.
-    ## This is a complex function of their shape and configuration with respect to other patches
-    ## and the cost surface.  It is not easily predictable, although increasing the
-    ## adjacency to 8 when looking for boundaries seems to reduce their frequency.
-    ## However, this causes a problem for GOC related analyses.
-    ## The following is a workaround that removes them from the graph as well as the Voronoi raster
-    ## and issues a warning.
+    ## A workaround has not yet been implemented
     unlinkedPatches <- as.integer(V(baseGraph)$name[which(sapply(V(baseGraph)$name, function(x) sum(allLinks==as.integer(x)))==0)])
     if (length(unlinkedPatches) > 0) {
     
         for (iPatch in unlinkedPatches) {
             ## Identify the largest adjacent Voronoi region
-            adjacentVor <- unique(threshGraph$voronoi[adjacent(threshGraph$voronoi, cells=which(threshGraph$voronoi[]==iPatch), target=which(threshGraph$voronoi[]!=iPatch), directions=8, pairs=T)[,2]])
-            largestAdjacentVor <- adjacentVor[which.max(sapply(adjacentVor, function(x) sum(threshGraph$voronoi[]==x, na.rm=TRUE)))]
+            #adjacentVor <- unique(threshGraph$voronoi[adjacent(threshGraph$voronoi, cells=which(threshGraph$voronoi[]==iPatch), target=which(threshGraph$voronoi[]!=iPatch), directions=8, pairs=TRUE)[,2]])
+            #largestAdjacentVor <- adjacentVor[which.max(sapply(adjacentVor, function(x) sum(threshGraph$voronoi[]==x, na.rm=TRUE)))]
             
-            if (!is.null(largestAdjacentVor)) {
-                threshGraph$voronoi[threshGraph$voronoi==iPatch] <- largestAdjacentVor
+            #if (!is.null(largestAdjacentVor)) {
+            #    threshGraph$voronoi[threshGraph$voronoi==iPatch] <- largestAdjacentVor
             
-                cat("WARNING:  patchId=", iPatch, " has no connecting links in the MPG.  Its Voronoi region has been assigned to the largest adjacent region (patchId="
-                    , largestAdjacentVor, ").  It will be ignored for GOC-related analyses.  See manual for explanation.\n", sep="")
-            }
-            else {
-                cat("WARNING:  patchId=", iPatch, " has no connecting links in the MPG.  This may be a case where a patch is surrounded by NA cells.",
-                    "It will be ignored for GOC-related analyses, and will not influence Voronoi polygons.\n", sep="")
-            }
+            #    warning(paste("patchId=", iPatch, " has no connecting links in the MPG.  Its Voronoi region has been assigned to the largest adjacent region (patchId="
+            #        , largestAdjacentVor, ").  It will be ignored for GOC-related analyses.\n", sep=""), call.=FALSE)
+            #}
+            #else {
+            warning(paste("patchId=", iPatch, " has no connecting links in the MPG.  This is likely caused by a patch surrounded in missing values (NA cells).\n",
+                 "  At present, all patches must be linked to at least on other patch in the MPG for GOC analyses.\n  Replacing NA cells in the cost or sa rasters may be required\n", sep=""), call.=FALSE)
         }
-        stop("Not implemented yet with missing patches!")
+        stop("grainscape:  cost, patch and/or sa rasters used to create the MPG present a limit case for GOC analyses.  Generated warnings may indicated cause.\nWorkaround for these cases has not yet been implemented.  Please contact the package author for more information.", call.=FALSE)
         ## Remove the vertices representing these patches from the mpg
         #baseGraph <- delete.vertices(baseGraph, which(V(baseGraph)$name %in% as.character(unlinkedPatches))-1)
         #allLinks <- get.edges(baseGraph, E(baseGraph)) + 1
@@ -371,8 +384,6 @@ gsGOC <- function(gsMPG, nThresh=NULL, doThresh=NULL, weight="lcpPerimWeight", s
     
     linkId <- get.edge.attribute(baseGraph, "linkId")
        
-    
-    
     cellXY <- coordinates(threshGraph$voronoi)
     
     threshGraph$th <- vector("list", length(doThresh))
@@ -651,73 +662,21 @@ gsGOCDistance <- function(gsGOC, coords, weight="meanWeight") {
     }
     return(results)
 }
-## gsGOCInfluence
-gsGOCInfluence <- function(gsGOC, gsMPG, feature, featureCostLookup, featureNames=NULL) {
-    
-    if (class(gsGOC) != "gsGOC") {
-        stop("grainscape:  input object must be of class 'gsGOC'.  Run gsGOC() first.", call.=FALSE)
-    }
-    if (class(gsMPG) != "gsMPG") {
-        stop("grainscape:  input object must be of class 'gsMPG'.  Run gsMPG() first.", call.=FALSE)
-    }
-    
-    if (!compare(mpg$lcpLinkId, feature, orig=TRUE, res=TRUE)) {
-        stop("grainscape:  mpg rasters and feature raster must be identical in extent.", call.=FALSE)
-    }
-    
-    if (length(dim(featureCostLookup)) != 2) {
-        stop("grainscape:  featureCostLookup must be a two column matrix", call.=FALSE)
-    }
-    
-    if (!all(unique(feature) %in% featureCostLookup[, 1])) {
-        stop("grainscape:  featureCostLookup must contain entries for all classes on feature raster in the first column, and costs in the second.", call.=FALSE)
-    }
-    
-    if (is.null(featureNames)) {
-        featureNames <- as.character(featureCostLookup[,1])
-    }
-    
-    if (length(featureNames) != nrow(featureCostLookup)) {
-        stop("grainscape:  featureNames must have the same length as the number of feature classes on the feature raster.", call.=FALSE)
-    }
 
-    linkId <- gsMPG$lcpLinkId
-    goc <- lapply(gsGOC$th, function(x) x$goc)
-    infl <- matrix(0, length(goc), nrow(featureCostLookup)+4)
-    dimnames(infl)[[2]] <- c("th", "maxLink", "nPolygon", "meanPolygonArea", as.character(featureNames))
-    
-    for (iThresh in 1:length(goc)) {
-        cat("Threshold:", iThresh, "of", length(goc), "\n")
-        if (is.igraph(goc[[iThresh]])) {
-            findLinks <- as.integer(unlist(strsplit(E(goc[[iThresh]])$linkIdAll, ", ")))
-            freqLinks <- table(feature[linkId[] %in% findLinks])
-            thisInfluence <- rep(0, nrow(featureCostLookup))
-            for (iFeature in 1:nrow(featureCostLookup)) {
-                if (!is.na(freqLinks[as.character(featureCostLookup[iFeature, 1])])) {
-                    thisInfluence[iFeature] <- freqLinks[as.character(featureCostLookup[iFeature, 1])]*featureCostLookup[iFeature, 2]
-                }
-            }
-            thisInfluence <- thisInfluence/sum(thisInfluence)
-            infl[iThresh, ] <- c(iThresh, as.numeric(gsGOC$summary[iThresh, c("maxLink", "nPolygon", "meanPolygonArea")]), thisInfluence)
-
-        }
-        else {
-            infl[iThresh, ] <- NA
-        }
-    }
-    
-    return(infl)
-}
 ## gsGOCVisualize
-gsGOCVisualize <- function(gsGOC, doThresh, sp=FALSE) {
+gsGOCVisualize <- function(gsGOC, whichThresh, sp=FALSE) {
     
     if (class(gsGOC) != "gsGOC") {
         stop("grainscape:  input object must be of class 'gsGOC'.  Run gsGOC() first.", call.=FALSE)
     }
     
-    ## Check doThresh
-    if ((length(doThresh) > 1) || (!(doThresh %in% 1:length(gsGOC$th)))) {
-        stop("grainscape:  doThresh must index a single threshold existing in the gsGOC object", call.=FALSE)
+    if (sp) {
+        if (!require(rgeos)) stop("grainscape:  rgeos package must be installed to use sp=TRUE")
+    }
+    
+    ## Check whichThresh
+    if ((length(whichThresh) > 1) || (!(whichThresh %in% 1:length(gsGOC$th)))) {
+        stop("grainscape:  whichThresh must index a single threshold existing in the gsGOC object", call.=FALSE)
     }
     
     if (sp && is.null(gsGOC$voronoiSP)) {
@@ -726,10 +685,10 @@ gsGOCVisualize <- function(gsGOC, doThresh, sp=FALSE) {
     
     results <- list()
 
-    results$summary <- gsGOC$summary[doThresh, ]
+    results$summary <- gsGOC$summary[whichThresh, ]
     
-    if (is.igraph(gsGOC$th[[doThresh]]$goc)) {
-        threshGraph <- gsGOC$th[[doThresh]]$goc
+    if (is.igraph(gsGOC$th[[whichThresh]]$goc)) {
+        threshGraph <- gsGOC$th[[whichThresh]]$goc
   
         ## Produce is-becomes reclassification table for voronoi raster
         rclTable <-  matrix(0, 1, 2)
