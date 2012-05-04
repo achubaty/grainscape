@@ -1,10 +1,12 @@
 Package: grainscape
 Type: Package
-Title: Grains of connectivity and minimum planar graph modelling of landscape connectivity using resistance surfaces
-Version: 0.1-0
-Date: 2012-02-14
+Title: Grains of connectivity and minimum planar graph modelling of landscape connectivity (Windows only)
+Version: 0.1
+Date: 2012-05-15
 Author: Paul Galpern, Andrew Fall, Micheline Manseau
 Maintainer: Paul Galpern <pgalpern@gmail.com>
 Description: Given a landscape resistance surface, creates grains of connectivity and minimum planar graph models that can be used to calculate effective distances for landscape connectivity at multiple scales.  Distributed with SELES (Spatially Explicit Landscape Event Simulator) software.  The package will currently run only on a Windows-based platform.
 License: GPL (>= 2)
-Depends: sp, raster, igraph, rgeos
+Depends: sp, raster, igraph
+Suggests: rgeos
+OS_type: windows
