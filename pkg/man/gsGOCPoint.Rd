@@ -4,7 +4,7 @@
 Identify the polygons containing locations in grains of connectivity (GOC) tessellations
 }
 \description{
-Given a \code{link{gsGOC}} object identify the polygon containing a location at multiple scales.  
+Given a \code{\link{gsGOC}} object identify the polygon containing a location at multiple scales.  
 }
 \usage{
 gsGOCPoint(gsGOC, coords)
