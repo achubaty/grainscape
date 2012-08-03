@@ -8,7 +8,7 @@ Given a series of GOC models built at different scales in a \code{gsGOC} object,
 Visualization is by default in raster format.  Vector based visualization is also possible.
 }
 \usage{
-gsGOCVisualize(gsGOC, whichThresh, sp = FALSE)
+gsGOCVisualize(gsGOC, whichThresh, sp = FALSE, doPlot=FALSE)
 }
 \arguments{
   \item{gsGOC}{
@@ -21,6 +21,10 @@ gsGOCVisualize(gsGOC, whichThresh, sp = FALSE)
   Logical.  If \code{TRUE} then produce a \code{\link{SpatialPolygonsDataFrame}} representation of the selected threshold.  Requires also running \code{\link{gsGOC}} with
   \code{sp=TRUE}, and that the \code{rgeos} package is installed.
 }
+  \item{doPlot}{
+  Logical.  If \code{TRUE} plots a raster (or vector if \code{sp=TRUE}) of the Voronoi tessellation at \code{whichThresh} for quick visualizations.  For full
+  control, manually produce plots using the \code{$voronoi} or \code{$voronoiSP} objects created by this function.
+  }
 }
 
 \value{
@@ -58,7 +62,12 @@ tinyPatchMPG <- gsMPG(cost=tinyCost, patch=tinyCost==1)
 ## Extract a representative subset of 5 grains of connectivity
 tinyPatchGOC <- gsGOC(tinyPatchMPG, nThresh=5)
 
+## Very quick visualization at the finest scale/grain/threshold
+## Producing plot on the default graphics device
+gsGOCVisualize(tinyPatchGOC, whichThresh=1, doPlot=TRUE)
+
 ## Visualize the model at the finest scale/grain/threshold
+## Manual control of plotting
 plot(gsGOCVisualize(tinyPatchGOC, whichThresh=1)$voronoi,
    col=sample(rainbow(100)), legend=FALSE)
 
