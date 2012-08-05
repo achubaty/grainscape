@@ -581,8 +581,10 @@ gsGOCPoint <- function(gsGOC, coords) {
     
     ## Remove points that fall in NA locations
     cellPoints <- cellFromXY(gsGOC$voronoi, coords)
-    cellPoints <- suppressWarnings(cellPoints[!is.na(gsGOC$voronoi[cellPoints])])
-    
+    if (suppressWarnings(sum(is.na(gsGOC$voronoi[cellPoints]))) > 0) {
+        cellPoints <- suppressWarnings(cellPoints[!is.na(gsGOC$voronoi[cellPoints])])
+        stop("grainscape:  there are coords that are not defined on the raster.\n", call.=FALSE)
+    }
     
     grainPoints <- matrix(NA, nrow=length(cellPoints), ncol=length(gsGOC$th))
     totalPatchAreaPoints <- grainPoints
