@@ -243,12 +243,13 @@ echo '<?xml version="1.0" encoding="UTF-8"?>';
                                                         
                                                         <td width=500><span style="font-size:12px"><br>At the R prompt:<br>
                                                         <strong><code>install.packages("raster")<br>
-                                                                      install.packages("igraph")<br>
+                                                                      install.packages("igraph0")<br>
                                                                       install.packages("rgeos")</code></strong></span><br><br></td>
                                                        
                                                 </tr>
                                                 <tr>
-                                                        <td width=500>The first and second lines are required.  <br>The third is optional. (<code>rgeos</code>
+                                                        <td width=500>The first and second lines are required.  <br>Note that <code>igraph0</code> and not <code>igraph</code> must be used for now.<br>
+                                                        The third package is optional. (<code>rgeos</code>
                                                         is used for optional visualizations.)<br> R will download and install these packages (and dependencies) from the CRAN repository.</td>
                                                 </tr>
                                             
