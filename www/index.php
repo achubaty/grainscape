@@ -213,6 +213,9 @@ echo '<?xml version="1.0" encoding="UTF-8"?>';
                                                                 
                                                                 <br>
                                                                 <br>
+                                                                <span style="color:red; font-size=12pt">grainscape is broken at present due to changes in the raster and igraph packages (January 4th, 2013).  I will repair ASAP.  Please contact pgalpern@gmail.com for more information.</span>
+                                                                <br>
+                                                                <br>
                                                                 <a href="grainscape.pdf" target="_blank">Manual</a> (PDF)<br>
                                                                 Tutorial vignette (PDF)  (In preparation)<br><br>
                                                                 <a href="https://r-forge.r-project.org/projects/grainscape/" target="_blank">R-Forge project page</a><br><br>
