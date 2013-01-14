@@ -14,7 +14,7 @@ Landscape connectivity modelling to understand the movement and dispersal of org
 
 SELES software (http://seles.info/ Fall and Fall, 2001) is distributed with the package, and is used to produce the MPG and perform a generalization of the Voronoi tessellation used in GOC models.  Routines also depend on the \code{sp}, \code{raster}, \code{igraph} and optionally \code{rgeos} packages (Pebesma and Bivand, 2005, Csardi and Nepusz, 2006, Hijmans and van Etten, 2011, Bivand and Rundel, 2012).\cr\cr
 An R vignette detailing the use of this package for landscape connectivity modelling is in preparation.\cr\cr
-Please cite this package using the Galpern et al. (2010) reference below.
+Please cite this package using the Galpern et al. (2012) reference below.
 }
 \author{
 Paul Galpern, Andrew Fall, Micheline Manseau
@@ -25,7 +25,7 @@ Maintainer: Paul Galpern <pgalpern@gmail.com>
 Primary references:\cr
 
 Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien.  Spatial graphs:  Principles and applications for habitat connectivity.  Ecosystems.  10:448:461.\cr\cr
-Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis at multiple spatial scales in landscape genetics.  Molecular Ecology.  In press.\cr\cr
+Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis at multiple spatial scales in landscape genetics.  Molecular Ecology. 21:3996-4009.\cr\cr
 Supporting packages and software:\cr
 
 Bivand, R.S. and C. Rundel. (2012). rgeos: Interface to Geometry Engine - Open Source (GEOS). R package version 0.2-1.\cr\cr

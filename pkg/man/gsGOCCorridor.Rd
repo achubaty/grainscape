@@ -26,7 +26,7 @@ gsGOCCorridor(gsGOC, whichThresh, coords, doPlot=FALSE, weight="meanWeight")
   Logical.  If \code{TRUE} plots a vector visualization of the corridor at the given scale.  For full
   control, manually produce plots using the outputs of this function.
   }
-  item{weight}{
+  \item{weight}{
   The GOC graph link weight to use in calculating the distance.  Please see details in \code{\link{gsGOCDistance}}.
 }
   
@@ -44,7 +44,7 @@ A list object:\cr\cr
 }
 \references{
 Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien.  (2007) Spatial graphs:  Principles and applications for habitat connectivity.  Ecosystems.  10:448:461\cr\cr
-Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis at multiple spatial scales in landscape genetics.  Molecular Ecology.  In press.\cr
+Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis at multiple spatial scales in landscape genetics.  Molecular Ecology 21:3996-4009.\cr
 
 }
 \author{
@@ -52,7 +52,7 @@ Paul Galpern (\email{pgalpern@gmail.com})
 }
 
 \seealso{
-\code{\link{gsGOC} \code{\link{gsGOCVisualize}}}
+\code{\link{gsGOC}} \code{\link{gsGOCVisualize}}
 }
 \examples{
 
@@ -61,7 +61,7 @@ Paul Galpern (\email{pgalpern@gmail.com})
 tiny <- raster(system.file("extdata/tiny.asc", package="grainscape"))
 
 ## Create a resistance surface from a raster using an is-becomes reclassification
-tinyCost <- reclass(tiny, rcl=cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
+tinyCost <- reclassify(tiny, rcl=cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
 
 
 ## Produce a patch-based MPG where patches are resistance features=1

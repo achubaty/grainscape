@@ -213,11 +213,11 @@ echo '<?xml version="1.0" encoding="UTF-8"?>';
                                                                 
                                                                 <br>
                                                                 <br>
-                                                                <span style="color:red; font-size=12pt">grainscape is broken at present due to changes in the raster and igraph packages (January 4th, 2013).  I will repair ASAP.  Please contact pgalpern@gmail.com for more information.</span>
+                                                                <span style="color:green; font-size=12pt">grainscape now works correctly with R 2.15.2 and current versions of igraph and raster.  (igraph0 is no longer required)</span>
                                                                 <br>
                                                                 <br>
                                                                 <a href="grainscape.pdf" target="_blank">Manual</a> (PDF)<br>
-                                                                Tutorial vignette (PDF)  (In preparation)<br><br>
+                                                                Tutorial vignette (PDF)  (Coming very soon...)<br><br>
                                                                 <a href="https://r-forge.r-project.org/projects/grainscape/" target="_blank">R-Forge project page</a><br><br>
                                                                 </span>
                                                                 </td>
@@ -246,7 +246,7 @@ echo '<?xml version="1.0" encoding="UTF-8"?>';
                                                         
                                                         <td width=500><span style="font-size:12px"><br>At the R prompt:<br>
                                                         <strong><code>install.packages("raster")<br>
-                                                                      install.packages("igraph0")<br>
+                                                                      install.packages("igraph")<br>
                                                                       install.packages("rgeos")</code></strong></span><br><br></td>
                                                        
                                                 </tr>
@@ -300,10 +300,10 @@ echo '<?xml version="1.0" encoding="UTF-8"?>';
                                                 
                                                <tr>
                                                         
-                                                    <td width=500><span style="font-size:12px"><br>1. Download the grainscape binary (ZIP) package from <a href="http://download.r-forge.r-project.org/bin/windows/contrib/latest/grainscape_0.1.zip">here</a>.<br><br>
+                                                    <td width=500><span style="font-size:12px"><br>1. Download the grainscape binary (ZIP) package from <a href="http://download.r-forge.r-project.org/bin/windows/contrib/latest/grainscape_0.2.zip">here</a>.<br><br>
                                                     2. Save it to some location (e.g. <code>c:\users\yourname\downloads\)</code>)<br><br>
                                                     3. At the R prompt:<br>
-                                                    <strong><code>install.packages("c:/users/yourname/downloads/grainscape_0.1.zip")</code></span><br><br>
+                                                    <strong><code>install.packages("c:/users/yourname/downloads/grainscape_0.2.zip")</code></span><br><br>
                                                        
                                                 </tr>
                                                 <tr>
