@@ -28,7 +28,7 @@ A list object with elements:
 }
 \references{
 Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien.  (2007) Spatial graphs:  Principles and applications for habitat connectivity.  Ecosystems.  10:448:461\cr\cr
-Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis at multiple spatial scales in landscape genetics.  Molecular Ecology.  In press.\cr\cr
+Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis at multiple spatial scales in landscape genetics.  Molecular Ecology 21:3996-4009.\cr\cr
 O'Brien, D., M. Manseau, A. Fall, and M.-J. Fortin. (2006) Testing the importance of spatial configuration of winter habitat for woodland caribou: An application of graph theory. Biological Conservation 130:70-83.\cr
 
 }
@@ -48,7 +48,7 @@ See \code{\link{gsMPG}} for warning related to areal measurements.
 tiny <- raster(system.file("extdata/tiny.asc", package="grainscape"))
 
 ## Create a resistance surface from a raster using an is-becomes reclassification
-tinyCost <- reclass(tiny, rcl=cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
+tinyCost <- reclassify(tiny, rcl=cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
 
 ## Produce a patch-based MPG where patches are resistance features=1
 tinyPatchMPG <- gsMPG(cost=tinyCost, patch=tinyCost==1)
@@ -59,8 +59,8 @@ tinyPatchGOC <- gsGOC(tinyPatchMPG, nThresh=5)
 ## Three sets of coordinates in the study area
 loc <- cbind(c(30, 60, 90), c(30, 60, 90))
 
-## Find various GOC polygon related measures associated with these coordinates
+## Find the GOC polygon containing these three locations
 ## for each of the 5 grains of connectivity
-tinyDist <- gsGOCDistance(tinyPatchGOC, loc)
+tinyPts <- gsGOCPoint(tinyPatchGOC, loc)
 }
 }

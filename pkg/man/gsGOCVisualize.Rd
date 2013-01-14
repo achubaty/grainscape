@@ -36,7 +36,7 @@ A list object:\cr\cr
 }
 \references{
 Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien.  (2007) Spatial graphs:  Principles and applications for habitat connectivity.  Ecosystems.  10:448:461\cr\cr
-Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis at multiple spatial scales in landscape genetics.  Molecular Ecology.  In press.\cr
+Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis at multiple spatial scales in landscape genetics.  Molecular Ecology 21:3996-4009.\cr
 
 }
 \author{
@@ -53,7 +53,7 @@ Paul Galpern (\email{pgalpern@gmail.com})
 tiny <- raster(system.file("extdata/tiny.asc", package="grainscape"))
 
 ## Create a resistance surface from a raster using an is-becomes reclassification
-tinyCost <- reclass(tiny, rcl=cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
+tinyCost <- reclassify(tiny, rcl=cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
 
 
 ## Produce a patch-based MPG where patches are resistance features=1
@@ -69,7 +69,7 @@ gsGOCVisualize(tinyPatchGOC, whichThresh=1, doPlot=TRUE)
 ## Visualize the model at the finest scale/grain/threshold
 ## Manual control of plotting
 plot(gsGOCVisualize(tinyPatchGOC, whichThresh=1)$voronoi,
-   col=sample(rainbow(100)), legend=FALSE)
+   col=sample(rainbow(100)), legend=FALSE, main="Threshold 1")
 
 ## Extract a representative subset of 5 grains of connectivity for vector visualization
 tinyPatchGOC <- gsGOC(tinyPatchMPG, nThresh=5, sp=TRUE)

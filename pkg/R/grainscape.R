@@ -35,7 +35,7 @@ gsMPG <- function(cost, patch, sa=NULL, outputFolder=NULL, filterPatch=NULL, spr
     
     
     ## Check patch and cost are comparable
-    if (!compare(patch, cost, res=TRUE, orig=TRUE, stopiffalse=FALSE)) {
+    if (!compareRaster(patch, cost, res=TRUE, orig=TRUE, stopiffalse=FALSE)) {
         stop("grainscape: patch and cost rasters must be identical in extent, projection, origin and resolution", call.=FALSE)
     }
     
@@ -74,7 +74,7 @@ gsMPG <- function(cost, patch, sa=NULL, outputFolder=NULL, filterPatch=NULL, spr
         if (class(sa) != "RasterLayer") {
             stop("grainscape:  sa raster must be of class RasterLayer", call.=FALSE)
         }
-        if (!compare(cost, sa, res=TRUE, orig=TRUE, stopiffalse=FALSE)) {
+        if (!compareRaster(cost, sa, res=TRUE, orig=TRUE, stopiffalse=FALSE)) {
             stop("grainscape: patch, cost and sa rasters must be identical in extent, projection, origin and resolution", call.=FALSE) 
         }
         rasSa[] <- getValues(sa)
@@ -200,11 +200,10 @@ gsMPG <- function(cost, patch, sa=NULL, outputFolder=NULL, filterPatch=NULL, spr
         ## Get additional patch information not done by SELES (code reproduced from gsPatch())
         uniquePatches <- sort(unique(mpg$voronoi[]))
     
-        
         ## Patch edge
         patchEdge <- !is.na(mpg$patchId)
         patchEdge[patchEdge==0] <- NA
-        patchEdge <- edge(patchEdge, type="inner")
+        patchEdge <- raster::edge(patchEdge, type="inner")
         patchEdge[patchEdge==0] <- NA
         patchEdge <- mask(mpg$patchId, patchEdge)
     
@@ -246,7 +245,6 @@ gsMPG <- function(cost, patch, sa=NULL, outputFolder=NULL, filterPatch=NULL, spr
                                startPerimX=startPerim[,1], startPerimY=startPerim[,2],
                                endPerimX=endPerim[,1], endPerimY=endPerim[,2],
                                linkType=selesGraph[, "linkType"])
-    
         mpg$mpg <- graph.data.frame(toGraphE, directed=FALSE, vertices=toGraphV)
         
         class(mpg) <- "gsMPG"
@@ -289,9 +287,9 @@ gsThreshold <- function(gsMPG, weight="lcpPerimWeight", nThresh=NULL, doThresh=N
     }
     
     threshGraph$summary <- data.frame(maxLink=doThresh)
-    
+
     threshGraph$th <- lapply(1:length(doThresh), function(i) {
-        delete.edges(baseGraph, which(linkWeight > doThresh[i])-1)
+        delete.edges(baseGraph, which(linkWeight > doThresh[i]))
     })
     
     threshGraph$summary$nComponents <- unlist(lapply(threshGraph$th, function(x) clusters(x)$no))
@@ -327,7 +325,7 @@ gsGOC <- function(gsMPG, nThresh=NULL, doThresh=NULL, weight="lcpPerimWeight", s
        ## Determine nThresh unique thresholds covering the full range of possibilities in terms of the number
        ## of polygons
 
-        allUniqueThresh <- t(sapply(sort(c(0,unique(linkWeight))), function(x) cbind(x, clusters(delete.edges(gsMPG$mpg, which(linkWeight > x)-1))$no)))
+        allUniqueThresh <- t(sapply(sort(c(0,unique(linkWeight))), function(x) cbind(x, clusters(delete.edges(gsMPG$mpg, which(linkWeight > x)))$no)))
         doThresh <- allUniqueThresh[!duplicated(allUniqueThresh[,2]), 1]
         doThresh <- doThresh[round(seq(1, length(doThresh), length=nThresh))]
     }
@@ -351,7 +349,7 @@ gsGOC <- function(gsMPG, nThresh=NULL, doThresh=NULL, weight="lcpPerimWeight", s
     }
     
     
-    allLinks <- get.edges(baseGraph, E(baseGraph)) + 1
+    allLinks <- get.edges(baseGraph, E(baseGraph))
     
     ## Check MPG for orphaned patches
     ## A workaround has not yet been implemented
@@ -390,7 +388,7 @@ gsGOC <- function(gsMPG, nThresh=NULL, doThresh=NULL, weight="lcpPerimWeight", s
     for (iThresh in 1:length(doThresh)) {
         
         if (verbose>=1) cat("Threshold", iThresh, "of", length(doThresh), "\n")
-        tGraph <- delete.edges(baseGraph, which(linkWeight > doThresh[iThresh])-1)
+        tGraph <- delete.edges(baseGraph, which(linkWeight > doThresh[iThresh]))
  
         ## Determine the component structure of the threshold graph
         componentList <- clusters(tGraph)
@@ -473,14 +471,14 @@ gsGOC <- function(gsMPG, nThresh=NULL, doThresh=NULL, weight="lcpPerimWeight", s
                 gocRaster <- threshGraph$voronoi
               
 
-                rawReclassVor <- cbind(sourcePatchId, V(componentGraph)$polygonId)
-                reclassVor <- matrix(0, 1, 2)
-                for (j in 1:nrow(rawReclassVor)) {
-                    reclassVor <- rbind(reclassVor, cbind(as.integer(strsplit(rawReclassVor[j,1], ", ")[[1]]), as.integer(rawReclassVor[j,2])))
+                rawreclassifyVor <- cbind(sourcePatchId, V(componentGraph)$polygonId)
+                reclassifyVor <- matrix(0, 1, 2)
+                for (j in 1:nrow(rawreclassifyVor)) {
+                    reclassifyVor <- rbind(reclassifyVor, cbind(as.integer(strsplit(rawreclassifyVor[j,1], ", ")[[1]]), as.integer(rawreclassifyVor[j,2])))
                 }
-                reclassVor <- reclassVor[2:nrow(reclassVor), ]
+                reclassifyVor <- reclassifyVor[2:nrow(reclassifyVor), ]
 
-                gocRaster <- reclass(gocRaster, rcl=reclassVor)
+                gocRaster <- reclassify(gocRaster, rcl=reclassifyVor)
 
                 ## Find centroids of each polygon and add as vertex attributes
                 uniquePolygons <- V(componentGraph)$polygonId
@@ -492,7 +490,7 @@ gsGOC <- function(gsMPG, nThresh=NULL, doThresh=NULL, weight="lcpPerimWeight", s
       
                 centroids <- cbind(zonal(rasX, gocRaster, stat='mean'), zonal(rasY, gocRaster, stat='mean')[,2])
                 centroids <- centroids[centroids[,1]>=0, 2:3]
-                centroids <- centroids[as.integer(uniquePolygons)+1, ]
+                centroids <- centroids[as.integer(uniquePolygons), ]
                 
                 V(componentGraph)$centroidX <- centroids[,1]
                 V(componentGraph)$centroidY <- centroids[,2]
@@ -501,7 +499,7 @@ gsGOC <- function(gsMPG, nThresh=NULL, doThresh=NULL, weight="lcpPerimWeight", s
                 ## Find areas of each polygon and add as a vertex attribute
                 polygonArea <- freq(gocRaster)
                 polygonArea <- polygonArea[polygonArea[,1]>=0, 2]
-                polygonArea <- polygonArea[as.integer(uniquePolygons)+1]
+                polygonArea <- polygonArea[as.integer(uniquePolygons)]
                 
                 V(componentGraph)$polygonArea <- polygonArea
                
@@ -654,8 +652,8 @@ gsGOCDistance <- function(gsGOC, coords, weight="meanWeight") {
         
         if (is.igraph(threshGraph)) {
             E(threshGraph)$weight <- get.edge.attribute(threshGraph, weight)
-            vertices <- sapply(whichGrain[,iThresh], function(x) which(V(threshGraph)$polygonId==x))-1
-            results$th[[iThresh]]$grainD <- shortest.paths(threshGraph, v=vertices)[, vertices+1]
+            vertices <- sapply(whichGrain[,iThresh], function(x) which(V(threshGraph)$polygonId==x))
+            results$th[[iThresh]]$grainD <- shortest.paths(threshGraph, v=vertices)[, vertices]
         }
         else {
             results$th[[iThresh]] <- NA
@@ -691,13 +689,13 @@ gsGOCVisualize <- function(gsGOC, whichThresh, sp=FALSE, doPlot=FALSE) {
     if (is.igraph(gsGOC$th[[whichThresh]]$goc)) {
         threshGraph <- gsGOC$th[[whichThresh]]$goc
   
-        ## Produce is-becomes reclassification table for voronoi raster
+        ## Produce is-becomes reclassifyification table for voronoi raster
         rclTable <-  matrix(0, 1, 2)
         for (i in 1:length(V(threshGraph)$polygonId)) {
             rclTable <- rbind(rclTable, cbind(as.integer(unlist(strsplit(V(threshGraph)$patchId[i], ", "))), as.integer(V(threshGraph)$polygonId[i])))
         }
         rclTable <- rclTable[2:nrow(rclTable), ]
-        results$voronoi <- reclass(gsGOC$voronoi, rcl=rclTable)
+        results$voronoi <- reclassify(gsGOC$voronoi, rcl=rclTable)
         
         results$centroids <- SpatialPoints(cbind(V(threshGraph)$centroidX, V(threshGraph)$centroidY))
         
@@ -740,7 +738,7 @@ gsGOCVisualize <- function(gsGOC, whichThresh, sp=FALSE, doPlot=FALSE) {
                 plot(results$voronoiSP)
             }
             else {
-                plot(results$voronoi)
+                plot(results$voronoi, main=paste(c("whichThresh=", whichThresh), collapse=""))
             }
         }
     }
@@ -800,12 +798,12 @@ gsGOCCorridor <- function(gsGOC, whichThresh, coords, doPlot=FALSE, weight="mean
     ## Shortest path      
     startEndPolygons <- gsGOCPoint(gsGOC, coords)$pointPolygon[, whichThresh]
     startEndPath <- get.shortest.paths(gsGOC$th[[whichThresh]]$goc,
-                                       which(V(gsGOC$th[[whichThresh]]$goc)$polygonId==startEndPolygons[1])-1,
-                                       which(V(gsGOC$th[[whichThresh]]$goc)$polygonId==startEndPolygons[2])-1,
-                                       weights=V(gsGOC$th[[whichThresh]]$goc)$meanWeight)[[1]]+1
+                                       which(V(gsGOC$th[[whichThresh]]$goc)$polygonId==startEndPolygons[1]),
+                                       which(V(gsGOC$th[[whichThresh]]$goc)$polygonId==startEndPolygons[2]),
+                                       weights=V(gsGOC$th[[whichThresh]]$goc)$meanWeight)[[1]]
     shortestPathEdges <- SpatialLines(list(Lines(Line(cbind(V(gsGOC$th[[whichThresh]]$goc)$centroidX[startEndPath], V(gsGOC$th[[whichThresh]]$goc)$centroidY[startEndPath])), ID="1")))
     shortestPathVertices <- SpatialPoints(cbind(V(gsGOC$th[[whichThresh]]$goc)$centroidX[startEndPath], V(gsGOC$th[[whichThresh]]$goc)$centroidY[startEndPath]))
-    pathDist <- shortest.paths(gsGOC$th[[whichThresh]]$goc, v=V(gsGOC$th[[whichThresh]]$goc)[startEndPath[1]-1], weights=get.edge.attribute(gsGOC$th[[whichThresh]]$goc, weight))[startEndPath[length(startEndPath)]]
+    pathDist <- shortest.paths(gsGOC$th[[whichThresh]]$goc, v=V(gsGOC$th[[whichThresh]]$goc)[startEndPath[1]], weights=get.edge.attribute(gsGOC$th[[whichThresh]]$goc, weight))[startEndPath[length(startEndPath)]]
     
     voronoiSP <- gsGOCVisualize(gsGOC, whichThresh, sp=TRUE)$voronoiSP
     
@@ -835,4 +833,50 @@ gsGOCCorridor <- function(gsGOC, whichThresh, coords, doPlot=FALSE, weight="mean
     result$corridorLength <- pathDist
     return(result)
     
+}
+## gsGraphDataFrame
+gsGraphDataFrame <- function(gsObj) {
+    if (!(class(gsObj) %in% c("gsMPG", "gsGOC", "igraph"))) {
+        stop("grainscape: gsObj must be a gsMPG, gsGOC or igraph object", call.=FALSE)
+    }
+    
+    if (class(gsObj) == "gsMPG") {
+        theseGraphs <- vector("list", 1)
+        theseGraphs[[1]] <- gsObj$mpg
+    }
+    else if (class(gsObj) == "igraph") {
+        theseGraphs <- vector("list", 1)
+        theseGraphs[[1]] <- gsObj
+    }
+    else {
+        theseGraphs <- lapply(gsObj$th, function(x) x$goc)
+    }
+    
+    results <- vector("list", length(theseGraphs))
+    
+    for (i in 1:length(theseGraphs)) {
+        thisGraph <- theseGraphs[[i]]
+        
+        if (is.igraph(thisGraph))  {
+            results[[i]] <- list()
+            results[[i]]$v <- data.frame(sapply(list.vertex.attributes(thisGraph), function(x) get.vertex.attribute(thisGraph, x)), stringsAsFactors=FALSE)
+            results[[i]]$e <- data.frame(get.edgelist(thisGraph), sapply(list.edge.attributes(thisGraph), function(x) get.edge.attribute(thisGraph, x)), stringsAsFactors=FALSE)
+            edgeDfNames <- names(results[[i]]$e)
+            names(results[[i]]$e) <- c("e1", "e2", edgeDfNames[3:length(edgeDfNames)])
+            
+            ## Clean-up storage mode structure of data.frames
+            results[[i]]$e <- as.data.frame(sapply(results[[i]]$e, as.character), stringsAsFactors=FALSE)
+            results[[i]]$v <- as.data.frame(sapply(results[[i]]$v, as.character), stringsAsFactors=FALSE)
+            results[[i]]$e <- as.data.frame(lapply(results[[i]]$e, function(x) type.convert(x, as.is=TRUE)), stringsAsFactors=FALSE)
+            results[[i]]$v <- as.data.frame(lapply(results[[i]]$v, function(x) type.convert(x, as.is=TRUE)), stringsAsFactors=FALSE)
+
+        }
+        else {
+            results[[i]]$v <- NA
+            results[[i]]$e <- NA
+        }
+    }
+    
+    return(results)
+
 }

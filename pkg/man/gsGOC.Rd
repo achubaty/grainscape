@@ -66,7 +66,7 @@ See \code{\link{gsMPG}} for warning related to areal measurements.
 }
 \references{
 Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien.  (2007) Spatial graphs:  Principles and applications for habitat connectivity.  Ecosystems.  10:448:461\cr\cr
-Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis at multiple spatial scales in landscape genetics.  Molecular Ecology.  In press.\cr
+Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis at multiple spatial scales in landscape genetics.  Molecular Ecology 21:3996-4009.\cr
 }
 \author{
 Paul Galpern (\email{pgalpern@gmail.com})
@@ -83,8 +83,8 @@ Paul Galpern (\email{pgalpern@gmail.com})
 ## Load raster landscape
 tiny <- raster(system.file("extdata/tiny.asc", package="grainscape"))
 
-## Create a resistance surface from a raster using an is-becomes reclassification
-tinyCost <- reclass(tiny, rcl=cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
+## Create a resistance surface from a raster using an is-becomes reclassifyifyification
+tinyCost <- reclassifyify(tiny, rcl=cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
 
 ## Produce a patch-based MPG where patches are resistance features=1
 tinyPatchMPG <- gsMPG(cost=tinyCost, patch=tinyCost==1)
