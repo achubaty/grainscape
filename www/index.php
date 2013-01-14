@@ -251,7 +251,7 @@ echo '<?xml version="1.0" encoding="UTF-8"?>';
                                                        
                                                 </tr>
                                                 <tr>
-                                                        <td width=500>The first and second lines are required.  <br>Note that <code>igraph0</code> and not <code>igraph</code> must be used for now.<br>
+                                                        <td width=500>The first and second lines are required.  <br>
                                                         The third package is optional. (<code>rgeos</code>
                                                         is used for optional visualizations.)<br> R will download and install these packages (and dependencies) from the CRAN repository.</td>
                                                 </tr>
