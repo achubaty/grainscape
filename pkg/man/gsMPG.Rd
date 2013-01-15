@@ -111,11 +111,8 @@ tinyCost <- reclassify(tiny, rcl=cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
 ## Produce a patch-based MPG where patches are resistance features=1
 tinyPatchMPG <- gsMPG(cost=tinyCost, patch=tinyCost==1)
 
-## Explore the graph structure and link attributes
-print(tinyPatchMPG$mpg, edge=TRUE)
-
-## Explore the patch/node attributes
-print(tinyPatchMPG$mpg, vertex=TRUE)
+## Explore the graph structure and node/link attributes
+gsGraphDataFrame(tinyPatchMPG)
 
 ## Find the mean patch area (see igraph manual for use of V() and E())
 mean(V(tinyPatchMPG$mpg)$patchArea)
