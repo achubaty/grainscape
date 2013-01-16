@@ -15,6 +15,9 @@ Landscape connectivity modelling to understand the movement and dispersal of org
 SELES software (http://seles.info/ Fall and Fall, 2001) is distributed with the package, and is used to produce the MPG and perform a generalization of the Voronoi tessellation used in GOC models.  Routines also depend on the \code{sp}, \code{raster}, \code{igraph} and optionally \code{rgeos} packages (Pebesma and Bivand, 2005, Csardi and Nepusz, 2006, Hijmans and van Etten, 2011, Bivand and Rundel, 2012).\cr\cr
 An R vignette detailing the use of this package for landscape connectivity modelling is in preparation.\cr\cr
 Please cite this package using the Galpern et al. (2012) reference below.
+
+A detailed tutorial is available as a vignette.  If it is not attached with your package install, you can download it at http://grainscape.r-forge.r-project.org/.)
+
 }
 \author{
 Paul Galpern, Andrew Fall, Micheline Manseau
