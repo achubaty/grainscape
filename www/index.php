@@ -335,7 +335,7 @@ echo '<?xml version="1.0" encoding="UTF-8"?>';
                                                        
                                                 </tr>
                                                 <tr>
-                                                        <td width=500>Review the manual and the vignette tutorial (not yet available)</td>
+                                                        <td width=500>Review the manual and the vignette tutorial</td>
                                                 </tr>
                                             
                                         </table>
