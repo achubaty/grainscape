@@ -217,7 +217,7 @@ echo '<?xml version="1.0" encoding="UTF-8"?>';
                                                                 <br>
                                                                 <br>
                                                                 <a href="grainscape.pdf" target="_blank">Manual</a> (PDF)<br>
-                                                                Tutorial vignette (PDF)  (Coming very soon...)<br><br>
+                                                                <a href="grainscape_vignette.pdf" target="_blank">Tutorial</a> (PDF)<br><br>
                                                                 <a href="https://r-forge.r-project.org/projects/grainscape/" target="_blank">R-Forge project page</a><br><br>
                                                                 </span>
                                                                 </td>
