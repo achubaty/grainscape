@@ -880,8 +880,9 @@ gsGraphDataFrame <- function(gsObj) {
     return(results)
 
 }
-## gsMPGstitch
-gsMPGstitchDOESNTWORK <- function(cost, patchid, numStrips, percentOverlap, disttype="Cost", cpu=1, outputFolder=NULL, filterPatch=NULL, spreadFactor=0, selesPath = system.file("SELES", package = "grainscape")){
+## gsMPGstitch DOES NOT WORK AT PRESENT
+gsMPGstitch <- function(cost, patchid, numStrips, percentOverlap, disttype="Cost", cpu=1, outputFolder=NULL, filterPatch=NULL, spreadFactor=0, selesPath = system.file("SELES", package = "grainscape")){
+  stop("gsMPGstitch is currently in revision.  It does not work at this time.  Please contact the authors for more information. ", call.=FALSE)
   rasCost <- cost
   rasPatchid <- patchid
   rasCost[] <- getValues(cost)

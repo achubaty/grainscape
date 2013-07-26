@@ -84,7 +84,7 @@ Paul Galpern (\email{pgalpern@gmail.com})
 tiny <- raster(system.file("extdata/tiny.asc", package="grainscape"))
 
 ## Create a resistance surface from a raster using an is-becomes reclassifyifyification
-tinyCost <- reclassifyify(tiny, rcl=cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
+tinyCost <- reclassify(tiny, rcl=cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
 
 ## Produce a patch-based MPG where patches are resistance features=1
 tinyPatchMPG <- gsMPG(cost=tinyCost, patch=tinyCost==1)
