@@ -20,7 +20,7 @@ A detailed tutorial is available as a vignette.  If it is not attached with your
 
 }
 \author{
-Paul Galpern, Andrew Fall, Micheline Manseau
+Paul Galpern, Bronwyn Rayfield, Andrew Fall, Micheline Manseau
 
 Maintainer: Paul Galpern <pgalpern@gmail.com>
 }
