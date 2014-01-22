@@ -45,7 +45,7 @@ gsMPG <- function(cost, patch, sa=NULL, outputFolder=NULL, filterPatch=NULL, spr
     }
     
     ## Check projection
-    if ((projection(cost) != "NA") && (!grepl("UTM|utm", toupper(projection(cost))))) {
+    if (!is.na(projection(cost)) && (!grepl("UTM|utm", toupper(projection(cost))))) {
         warning("grainscape:  projection suggests that all cells may not be of equal area; Note that grainscape assumes equal area in all calculations", call.=FALSE)
     }
     
@@ -203,7 +203,7 @@ gsMPG <- function(cost, patch, sa=NULL, outputFolder=NULL, filterPatch=NULL, spr
         ## Patch edge
         patchEdge <- !is.na(mpg$patchId)
         patchEdge[patchEdge==0] <- NA
-        patchEdge <- raster::edge(patchEdge, type="inner")
+        patchEdge <- raster::boundaries(patchEdge, type="inner")
         patchEdge[patchEdge==0] <- NA
         patchEdge <- mask(mpg$patchId, patchEdge)
     
@@ -907,7 +907,7 @@ gsMPGstitch <- function(cost, patchid, numStrips, percentOverlap, disttype="Cost
     warning(paste("grainscape:  raster cells are not square;  assuming a square cell of ", 
                   res(cost)[1], " units", sep = ""), call. = FALSE)
   }
-  if ((projection(cost) != "NA") && (!grepl("UTM|utm", toupper(projection(cost))))) {
+  if (!is.na(projection(cost)) && (!grepl("UTM|utm", toupper(projection(cost))))) {
     warning("grainscape:  projection suggests that all cells may not be of equal area; Note that grainscape assumes equal area in all calculations", 
             call. = FALSE)
   }
@@ -1395,7 +1395,7 @@ gsMPGstitch <- function(cost, patchid, numStrips, percentOverlap, disttype="Cost
   uniquePatches<-unique(mpgstitch$patchId[])[!is.na(unique(mpgstitch$patchId[]))]
   patchEdge<-!is.na(mpgstitch$patchId)
   patchEdge[patchEdge == 0]<-NA
-  patchEdge<-raster::edge(patchEdge, type = "inner")
+  patchEdge<-raster::boundaries(patchEdge, type = "inner")
   patchEdge[patchEdge == 0]<-NA
   patchEdge<-mask(mpgstitch$patchId, patchEdge)
   patchArea<-freq(mpgstitch$patchId)
