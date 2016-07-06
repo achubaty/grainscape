@@ -1,12 +1,31 @@
 Package: grainscape
 Type: Package
-Title: Grains of connectivity and minimum planar graph modelling of landscape connectivity (Windows only)
-Version: 0.3
-Date: 2013-07-26
-Author: Paul Galpern, Bronwyn Rayfield, Andrew Fall, Micheline Manseau
-Maintainer: Paul Galpern <pgalpern@gmail.com>
-Description: Given a landscape resistance surface, creates grains of connectivity and minimum planar graph models that can be used to calculate effective distances for landscape connectivity at multiple scales.  Distributed with SELES (Spatially Explicit Landscape Event Simulator) software.  The package will currently run only on a Windows-based platform.
+Title: Grains of connectivity and minimum planar graph modelling of landscape connectivity
+Description: Given a landscape resistance surface, creates grains of connectivity
+  and minimum planar graph models that can be used to calculate effective distances
+  for landscape connectivity at multiple scales. This is a cross-platform reimplementation
+  of the `grainscape` package (https://r-forge.r-project.org/projects/grainscape/).
+URL: https://github.com/achubaty/grainscape2
+Version: 0.3.0.9000
+Date: 2016-07-06
+Authors@R: c(
+    person("Paul", "Galpern", email="pgalpern@gmail.com", role=c("aut", "cph", "cre")),
+    person("Bronwyn", "Rayfield", role="aut"),
+    person("Andrew", "Fall", role="aut"),
+    person("Micheline", "Manseau", role="aut"),
+    person("Sam", "Doctolero", email="sam.doctolero@gmail.com", role="aut"),
+    person(c("Alex", "M"), "Chubaty", email="alexander.chubaty@canada.ca", role="ctb"),
+)
 License: GPL (>= 2)
-Depends: sp, raster, igraph
-Suggests: rgeos, parallel
-OS_type: windows
+Depends:
+  igraph,
+  sp,
+  raster
+Imports: Rcpp (>= 0.12.5)
+LinkingTo: Rcpp
+Suggests:
+  parallel,
+  rgeos
+VignetteBuilder: knitr, rmarkdown
+BugReports: https://github.com/achubaty/grainscape2/issues
+ByteCompile: yes

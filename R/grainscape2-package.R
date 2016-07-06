@@ -1,0 +1,77 @@
+#' Grains of connectivity and minimum planar graph modelling of landscape connectivity using resistance surfaces
+#'
+#' @description
+#'
+#' Given a landscape resistance surface, creates grains of connectivity and minimum
+#' planar graph models that can be used to calculate effective distances for
+#' landscape connectivity at multiple scales.
+#'
+#' @details
+#'
+#' Landscape connectivity modelling to understand the movement and dispersal of
+#' organisms has been done using raster resistance surfaces and landscape graph methods.
+#' Grains of connectivity (GOC) models combine elements of both approaches to produce
+#' a continuous and scalable tool that can be applied in a variety of study systems.
+#' The purpose of this package is to implement grains of connectivity analyses.
+#' Routines accept raster-based resistance surfaces as input and return raster,
+#' vector and graph-based data structures to represent connectivity at multiple scales.
+#' Effective distances describing connectivity between geographic locations can
+#' be determined at multiple scales.
+#' Analyses of this sort can contribute to corridor identification, landscape genetics,
+#' as well as other connectivity assessments.
+#' Minimum planar graph (MPG; Fall et al., 2007) models of resource patches on
+#' landscapes can also be generated using the software.\cr\cr
+#'
+#' MPG calculations and generalization of the Voronoi tessellation used in GOC models
+#' is based on the routines in SELES software (\url{http://seles.info/}; Fall and Fall, 2001).
+#' Routines also depend on the \code{sp} (Pebesma and Bivand, 2005),
+#' \code{raster} (Hijmans and van Etten, 2011), \code{igraph} (Csardi and Nepusz, 2006), and optionally
+#' \code{rgeos} packages (Bivand and Rundel, 2012).\cr\cr
+#'
+#' An R vignette detailing the use of this package for landscape connectivity modelling is in preparation.\cr\cr
+#'
+#' Please cite this package using the Galpern et al. (2012) reference below.
+#'
+#' A detailed tutorial is available as a vignette.
+#'
+#' @references
+#'
+#' Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien.  Spatial graphs:  Principles and applications for habitat connectivity.  Ecosystems.  10:448:461.
+#'
+#' Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis at multiple spatial scales in landscape genetics.  Molecular Ecology. 21:3996-4009.
+#'
+#' Bivand, R.S. and C. Rundel. (2016). rgeos: Interface to Geometry Engine - Open Source (GEOS). R package version 0.3-19, \url{https://CRAN.R-project.org/package=rgeos}.
+#'
+#' Csardi, G. and T. Nepusz. (2006). The igraph software package for complex network research. InterJournal Complex Systems 1695. \url{http://igraph.org}.
+#'
+#' Fall, A. and J. Fall. (2001). A domain-specific language for models of landscape dynamics. Ecological Modelling 141:1-18.
+#' Hijmans, R.J. and J. van Etten. (2016). raster: Geographic analysis and modeling with raster data. R package version 2.5-8, \url{https://CRAN.R-project.org/package=raster}.
+#'
+#' Pebesma, E.J. and R.S. Bivand. (2005). Classes and methods for spatial data in R. R News 5 (2), \url{http://cran.r-project.org/doc/Rnews/}.
+#'
+#' @name grainscape2-package
+#' @aliases grainscape2
+#' @docType package
+#' @keywords connectivity, minimum planar graph, spatial graph
+#'
+#' @author Paul Galpern
+#' @author Bronwyn Rayfield
+#' @author Andrew Fall
+#' @author Micheline Manseau
+#' @author Sam Doctolero
+#' @author Alex M. Chubaty
+NULL
+
+#' Test maps included with \code{grainscape2}
+#'
+#' @details
+#' \code{fragmented.asc}: DESCRIPTION NEEDED
+#' \code{patchy.asc}: DESCRIPTION NEEDED
+#' \code{tiny.asc}: DESCRIPTION NEEDED
+#'
+#' @docType data
+#' @keywords maps
+#' @name grainscape2-maps
+#' @rdname grainscape2-maps
+#' @format raster
+NULL

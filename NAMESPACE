@@ -1,1 +1,3 @@
+useDynLib(grainscape2)
 exportPattern("^[[:alpha:]]+")
+importFrom(Rcpp, evalCpp)
