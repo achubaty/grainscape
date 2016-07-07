@@ -53,6 +53,8 @@
 #' @aliases grainscape2
 #' @docType package
 #' @keywords connectivity, minimum planar graph, spatial graph
+#' @importFrom Rcpp evalCpp
+#' @useDynLib grainscape2
 #'
 #' @author Paul Galpern
 #' @author Bronwyn Rayfield

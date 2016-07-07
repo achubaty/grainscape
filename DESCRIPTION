@@ -1,4 +1,4 @@
-Package: grainscape
+Package: grainscape2
 Type: Package
 Title: Grains of connectivity and minimum planar graph modelling of landscape connectivity
 Description: Given a landscape resistance surface, creates grains of connectivity
@@ -7,21 +7,22 @@ Description: Given a landscape resistance surface, creates grains of connectivit
   of the `grainscape` package (https://r-forge.r-project.org/projects/grainscape/).
 URL: https://github.com/achubaty/grainscape2
 Version: 0.3.0.9000
-Date: 2016-07-06
+Date: 2016-07-07
 Authors@R: c(
-    person("Paul", "Galpern", email="pgalpern@gmail.com", role=c("aut", "cph", "cre")),
-    person("Bronwyn", "Rayfield", role="aut"),
-    person("Andrew", "Fall", role="aut"),
-    person("Micheline", "Manseau", role="aut"),
-    person("Sam", "Doctolero", email="sam.doctolero@gmail.com", role="aut"),
-    person(c("Alex", "M"), "Chubaty", email="alexander.chubaty@canada.ca", role="ctb"),
+  person("Paul", "Galpern", email = "pgalpern@gmail.com", role = c("aut", "cph", "cre")),
+  person("Bronwyn", "Rayfield", email = "bronwyn.rayfield@mail.mcgill.ca", role = "aut"),
+  person("Andrew", "Fall", role = "aut"),
+  person("Micheline", "Manseau", role = "aut"),
+  person("Sam", "Doctolero", email = "sam.doctolero@gmail.com", role = "aut"),
+  person(c("Alex", "M"), "Chubaty", email = "alexander.chubaty@canada.ca", role = "ctb"),
 )
 License: GPL (>= 2)
-Depends:
+Imports:
   igraph,
   sp,
-  raster
-Imports: Rcpp (>= 0.12.5)
+  raster,
+  Rcpp (>= 0.12.5),
+  utils
 LinkingTo: Rcpp
 Suggests:
   parallel,
