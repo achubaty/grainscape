@@ -1,10 +1,12 @@
 Package: grainscape2
 Type: Package
-Title: Grains of connectivity and minimum planar graph modelling of landscape connectivity
-Description: Given a landscape resistance surface, creates grains of connectivity
-  and minimum planar graph models that can be used to calculate effective distances
-  for landscape connectivity at multiple scales. This is a cross-platform reimplementation
-  of the `grainscape` package (https://r-forge.r-project.org/projects/grainscape/).
+Title: Grains of connectivity and minimum planar graph modelling of landscape
+    connectivity
+Description: Given a landscape resistance surface, creates grains of
+    connectivity and minimum planar graph models that can be used to calculate
+    effective distances for landscape connectivity at multiple scales. This is a
+    cross-platform reimplementation of the `grainscape` package (https://r-forge.r-
+    project.org/projects/grainscape/).
 URL: https://github.com/achubaty/grainscape2
 Version: 0.3.0.9000
 Date: 2016-07-07
@@ -14,19 +16,31 @@ Authors@R: c(
   person("Andrew", "Fall", role = "aut"),
   person("Micheline", "Manseau", role = "aut"),
   person("Sam", "Doctolero", email = "sam.doctolero@gmail.com", role = "aut"),
-  person(c("Alex", "M"), "Chubaty", email = "alexander.chubaty@canada.ca", role = "ctb"),
-)
+  person(c("Alex", "M"), "Chubaty", email = "alexander.chubaty@canada.ca", role = "ctb"))
 License: GPL (>= 2)
 Imports:
-  igraph,
-  sp,
-  raster,
-  Rcpp (>= 0.12.5),
-  utils
+    igraph,
+    sp,
+    raster,
+    Rcpp (>= 0.12.5),
+    utils
 LinkingTo: Rcpp
 Suggests:
-  parallel,
-  rgeos
+    parallel,
+    rgeos
 VignetteBuilder: knitr, rmarkdown
 BugReports: https://github.com/achubaty/grainscape2/issues
 ByteCompile: yes
+Collate:
+    'RcppExports.R'
+    'grainscape2-package.R'
+    'gsGOC.R'
+    'gsGOCVisualize.R'
+    'gsGOCCorridor.R'
+    'gsGOCDistance.R'
+    'gsGOCPoint.R'
+    'gsGraphDataFrame.R'
+    'gsMPG.R'
+    'gsMPGstitch.R'
+    'gsThreshold.R'
+RoxygenNote: 5.0.1
