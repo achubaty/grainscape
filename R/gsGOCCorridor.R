@@ -75,7 +75,9 @@ gsGOCCorridor <- function(gsGOC, whichThresh, coords, doPlot = FALSE, weight = "
     stop("grainscape2:  input object must be of class 'gsGOC'.  Run gsGOC() first using sp=TRUE.", call. = FALSE)
   }
 
-  if (!require(rgeos)) stop("grainscape2:  rgeos package must be installed to use gsGOCCorridor()")
+  if (!requireNamespace("rgeos", quietly = TRUE)) {
+    stop("grainscape2:  rgeos package must be installed to use sp = TRUE")
+  }
 
   if (is.null(gsGOC$voronoiSP)) {
     stop("grainscape2:  gsGOC object must be produced using sp=TRUE", call. = FALSE)

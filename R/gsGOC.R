@@ -102,8 +102,8 @@ gsGOC <- function(gsMPG, nThresh = NULL, doThresh = NULL, weight = "lcpPerimWeig
     stop("grainscape2: graph must be a gsMPG object", call. = FALSE)
   }
 
-  if (sp) {
-    if (!require(rgeos)) stop("grainscape2:  rgeos package must be installed to use sp = TRUE")
+  if (sp && !requireNamespace("rgeos", quietly = TRUE)) {
+    stop("grainscape2:  rgeos package must be installed to use sp = TRUE")
   }
 
   threshGraph <- vector("list")

@@ -75,8 +75,8 @@ gsGOCVisualize <- function(gsGOC, whichThresh, sp = FALSE, doPlot = FALSE) {
     stop("grainscape2:  input object must be of class 'gsGOC'.  Run gsGOC() first.", call. = FALSE)
   }
 
-  if (sp) {
-    if (!require(rgeos)) stop("grainscape2:  rgeos package must be installed to use sp=TRUE")
+  if (sp && !requireNamespace("rgeos", quietly = TRUE)) {
+    stop("grainscape2:  rgeos package must be installed to use sp = TRUE")
   }
 
   ## Check whichThresh
