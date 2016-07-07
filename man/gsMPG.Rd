@@ -58,11 +58,11 @@ To reduce accuracy and increase speed, set this as
 \item{patchid}{DESCRIPTION NEEDED - PLEASE WRITE.
 Note that it is different from gsMPG which requires a binary patch raster as input.}
 
-\item{numStrips}{}
+\item{numStrips}{DESCRIPTION NEEDED - PLEASE WRITE.}
 
-\item{percentOverlap}{}
+\item{percentOverlap}{DESCRIPTION NEEDED - PLEASE WRITE.}
 
-\item{disttype}{}
+\item{disttype}{DESCRIPTION NEEDED - PLEASE WRITE.}
 
 \item{cpu}{For parallel computation of each MPG strip.
 If \code{cpu = 1} serial computation is used.

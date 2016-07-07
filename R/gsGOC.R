@@ -69,8 +69,8 @@
 #' @author Paul Galpern
 #' @docType methods
 #' @export
-#' @importFrom igraph clusters delete.edges E get.edge.attribute get.edges graph.data.frame V vcount zonal
-#' @importFrom raster freq rasterToPolygons reclassify
+#' @importFrom igraph clusters delete.edges E get.edge.attribute get.edges graph.data.frame V vcount
+#' @importFrom raster freq rasterToPolygons reclassify zonal
 #' @rdname gsGOC
 #' @seealso \code{\link{gsMPG}}, \code{\link{gsGOCVisualize}}, \code{\link{gsGOCDistance}}, \code{\link{gsGOCPoint}}
 #'

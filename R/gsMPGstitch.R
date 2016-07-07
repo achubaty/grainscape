@@ -39,11 +39,11 @@
 #' @param patchid  DESCRIPTION NEEDED - PLEASE WRITE.
 #'                 Note that it is different from gsMPG which requires a binary patch raster as input.
 #'
-#' @param numStrips
+#' @param numStrips  DESCRIPTION NEEDED - PLEASE WRITE.
 #'
-#' @param percentOverlap
+#' @param percentOverlap  DESCRIPTION NEEDED - PLEASE WRITE.
 #'
-#' @param disttype
+#' @param disttype  DESCRIPTION NEEDED - PLEASE WRITE.
 #'
 #' @param cpu  For parallel computation of each MPG strip.
 #'             If \code{cpu = 1} serial computation is used.

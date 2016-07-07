@@ -9,9 +9,9 @@
 Test maps included with \code{grainscape2}
 }
 \details{
-\code{fragmented.asc}: DESCRIPTION NEEDED
-\code{patchy.asc}: DESCRIPTION NEEDED
-\code{tiny.asc}: DESCRIPTION NEEDED
+\code{fragmented.asc}: DESCRIPTION NEEDED - PLEASE WRITE
+\code{patchy.asc}: DESCRIPTION NEEDED - PLEASE WRITE
+\code{tiny.asc}: DESCRIPTION NEEDED - PLEASE WRITE
 }
 \keyword{maps}
 
