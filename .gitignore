@@ -1,3 +1,8 @@
+# c++ files
+*.o
+*.so
+
+# R files
 .Rproj.user
 .Rhistory
 .RData

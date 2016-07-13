@@ -5,13 +5,21 @@
 
 using namespace Rcpp;
 
-// rcpp_hello_world
-List rcpp_hello_world();
-RcppExport SEXP anRpackage_rcpp_hello_world() {
+// HabConnEngine
+SEXP HabConnEngine(SEXP cost, SEXP nrow, SEXP ncol, SEXP hab, SEXP no_data, SEXP voronoi_map, SEXP link_map, SEXP patch_map);
+RcppExport SEXP grainscape2_HabConnEngine(SEXP costSEXP, SEXP nrowSEXP, SEXP ncolSEXP, SEXP habSEXP, SEXP no_dataSEXP, SEXP voronoi_mapSEXP, SEXP link_mapSEXP, SEXP patch_mapSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
-    __result = Rcpp::wrap(rcpp_hello_world());
+    Rcpp::traits::input_parameter< SEXP >::type cost(costSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type nrow(nrowSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type ncol(ncolSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type hab(habSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type no_data(no_dataSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type voronoi_map(voronoi_mapSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type link_map(link_mapSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type patch_map(patch_mapSEXP);
+    __result = Rcpp::wrap(HabConnEngine(cost, nrow, ncol, hab, no_data, voronoi_map, link_map, patch_map));
     return __result;
 END_RCPP
 }
