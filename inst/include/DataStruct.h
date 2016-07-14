@@ -48,14 +48,15 @@ struct ActiveCell
 //interface input data
 struct InputData
 {
-	std::vector<int> cost_vec;
-	int nrow, ncol, habitat, nodata;
+	std::vector<float> cost_vec;
+	int nrow, ncol;
+	float habitat, nodata;
 };
 
 //interface output data
 struct OutputData
 {
-	std::vector<int> voronoi_map, link_map, patch_map;
+	std::vector<float> voronoi_map, link_map, patch_map;
 	std::vector<Link> link_data;
 	std::vector<Patch> patch_list;
 };

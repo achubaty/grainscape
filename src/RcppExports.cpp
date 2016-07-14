@@ -5,21 +5,19 @@
 
 using namespace Rcpp;
 
-// HabConnEngine
-SEXP HabConnEngine(SEXP cost, SEXP nrow, SEXP ncol, SEXP hab, SEXP no_data, SEXP voronoi_map, SEXP link_map, SEXP patch_map);
-RcppExport SEXP grainscape2_HabConnEngine(SEXP costSEXP, SEXP nrowSEXP, SEXP ncolSEXP, SEXP habSEXP, SEXP no_dataSEXP, SEXP voronoi_mapSEXP, SEXP link_mapSEXP, SEXP patch_mapSEXP) {
+// habConnRcpp
+List habConnRcpp(NumericVector cost, int nrow, int ncol, double hab, double no_data, double increment);
+RcppExport SEXP grainscape2_habConnRcpp(SEXP costSEXP, SEXP nrowSEXP, SEXP ncolSEXP, SEXP habSEXP, SEXP no_dataSEXP, SEXP incrementSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
-    Rcpp::traits::input_parameter< SEXP >::type cost(costSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type nrow(nrowSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type ncol(ncolSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type hab(habSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type no_data(no_dataSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type voronoi_map(voronoi_mapSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type link_map(link_mapSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type patch_map(patch_mapSEXP);
-    __result = Rcpp::wrap(HabConnEngine(cost, nrow, ncol, hab, no_data, voronoi_map, link_map, patch_map));
+    Rcpp::traits::input_parameter< NumericVector >::type cost(costSEXP);
+    Rcpp::traits::input_parameter< int >::type nrow(nrowSEXP);
+    Rcpp::traits::input_parameter< int >::type ncol(ncolSEXP);
+    Rcpp::traits::input_parameter< double >::type hab(habSEXP);
+    Rcpp::traits::input_parameter< double >::type no_data(no_dataSEXP);
+    Rcpp::traits::input_parameter< double >::type increment(incrementSEXP);
+    __result = Rcpp::wrap(habConnRcpp(cost, nrow, ncol, hab, no_data, increment));
     return __result;
 END_RCPP
 }

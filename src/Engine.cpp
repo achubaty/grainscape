@@ -171,14 +171,14 @@ void Engine::start()
 	updateOutputMap(out_data->voronoi_map, voronoi_map);
 }
 
-void Engine::updateOutputMap(std::vector<int> & vm, flMap mm)
+void Engine::updateOutputMap(std::vector<float> & vm, flMap mm)
 {
-	vm = std::vector<int>(in_data->nrow*in_data->ncol, 0);
+	vm = std::vector<float>(in_data->nrow*in_data->ncol, 0);
 	for (int i = 0; i < in_data->nrow; i++)
 	{
 		for (int j = 0; j < in_data->ncol; j++)
 		{
-			vm[i*in_data->ncol + j] = (int)mm[i][j];
+			vm[i*in_data->ncol + j] = mm[i][j];
 		}
 	}
 }

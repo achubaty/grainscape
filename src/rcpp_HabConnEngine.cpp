@@ -3,10 +3,75 @@
 #include <R.h>
 #include <Rinternals.h>
 #include <Rcpp.h>
+#include <igraph/igraph.h>
+
 using namespace std;
 using namespace Rcpp;
 
 // [[Rcpp::export]]
+List habConnRcpp(NumericVector cost, int nrow, int ncol, double hab, double no_data, double increment = 1.0)
+{
+	//create instances of inputdata and output data
+	InputData in_data;
+	OutputData out_data;
+
+	//initialize the input data
+	//cost vector
+	in_data.cost_vec.resize(cost.size());
+	for (unsigned int i = 0; i < in_data.cost_vec.size(); i++)
+	{
+		in_data.cost_vec[i] = cost[i];
+	}
+	//other properties of input data
+	in_data.nrow = nrow;
+	in_data.ncol = ncol;
+	in_data.habitat = (float)hab;
+	in_data.nodata = (float)no_data;
+
+	//call the interface function CalcEngine
+	bool success = CalcEngine(in_data, out_data, (float)increment);
+	if (!success)
+	{
+		Rprintf("Engine not successful.\n");
+		return R_NilValue;
+	}
+	
+	//create NumericVector values for vector values of out_data
+	NumericVector nmvor(cost.size());
+	NumericVector nmlink(cost.size());
+	NumericVector nmpatch(cost.size());
+	//transfer the vector datat to the numericvector variables
+	for (unsigned int i = 0; i < cost.size(); i++)
+	{
+		nmvor[i] = (double)out_data.voronoi_map[i];
+		nmlink[i] = (double)out_data.link_map[i];
+		nmpatch[i] = (double)out_data.patch_map[i];
+	}
+
+	//create the returned data structure
+	List link_data_vec(out_data.link_data.size());
+	for (unsigned int i = 0; i < out_data.link_data.size(); i++)
+	{
+		link_data_vec[i] = List::create(Named("StartId", out_data.link_data[i].start.id),
+			Named("StartRow", out_data.link_data[i].start.row),
+			Named("StartColumn", out_data.link_data[i].start.column),
+			Named("EndId", out_data.link_data[i].end.id),
+			Named("EndRow", out_data.link_data[i].end.row),
+			Named("EndColumn", out_data.link_data[i].end.column),
+			Named("Cost", out_data.link_data[i].cost));
+	}
+	
+
+
+
+	return List::create(Named("VoronoiVector", nmvor),
+		Named("PatchVector", nmpatch),
+		Named("LinkVector", nmlink),
+		Named("LinkData", link_data_vec));
+}
+
+
+/*
 SEXP HabConnEngine(SEXP cost, SEXP nrow, SEXP ncol, SEXP hab, SEXP no_data, SEXP voronoi_map, SEXP link_map, SEXP patch_map)
 {
   Rprintf("************* Engine Called ***************\n");
@@ -90,4 +155,4 @@ SEXP HabConnEngine(SEXP cost, SEXP nrow, SEXP ncol, SEXP hab, SEXP no_data, SEXP
   UNPROTECT(1);
   Rprintf("Engine Finished\n\n\n");
   return ret;
-}
+}*/

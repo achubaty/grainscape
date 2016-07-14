@@ -29,7 +29,7 @@ private:
 	bool cellIsZero(int row, int col);
 	void activeCellSpreadChecker(ActiveCell * ac);
 	void createActiveCell(ActiveCell * ac, int row, int col);
-	void updateOutputMap(std::vector<int> & vm, flMap mm);
+	void updateOutputMap(std::vector<float> & vm, flMap mm);
 public:
 	Engine(InputData * in_d, OutputData * out_d, float increment);
 	Engine();
