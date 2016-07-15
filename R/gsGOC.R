@@ -10,7 +10,7 @@
 #'
 #' @param nThresh  Optional.  An integer giving the number of thresholds (or scales)
 #'                 at which to create GOC models.  Thresholds are selected to produce
-#'                 a maximum number of unique grains (i.e. models).
+#'                 a maximum number of unique grains (i.e., models).
 #'                 \code{nThresh} thresholds are also approximately evenly spread
 #'                 between 0 and the threshold at which all patches or focal points
 #'                 on the landscape are connected.  This is a simple way to get
@@ -208,7 +208,7 @@ gsGOC <- function(gsMPG, nThresh = NULL, doThresh = NULL,
 
       ## Exclude cases when there are patches that have no edges
       if (nrow(linkComponentLookup) > 0) {
-        ## Standardize component link names (i.e. give a link from component 2 to component 1
+        ## Standardize component link names (i.e., give a link from component 2 to component 1
         ## the same name as a link from component 1 to component 2)
         linkComponentLookup <- cbind(linkComponentLookup, matrix(NA, nrow(linkComponentLookup), 1))
         names(linkComponentLookup) <- c("linkId", "linkWeight", "node1", "node2",

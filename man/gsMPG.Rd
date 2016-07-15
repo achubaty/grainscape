@@ -14,7 +14,7 @@ the resistance to movement, dispersal, or gene flow for an organism
 in the landscape feature they represent.
 Missing values \code{NA} are acceptable (but see below).
 Negative values are not.
-To extract an MPG with Euclidean links (i.e. and not least-cost
+To extract an MPG with Euclidean links (i.e., and not least-cost
 path links) set \code{cost[] <- 1}.}
 
 \item{patch}{A raster of class \code{RasterLayer} for a patch-based analysis

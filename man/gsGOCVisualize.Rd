@@ -31,7 +31,7 @@ A list object:\cr\cr
 }
 \description{
 Given a series of GOC models built at different scales in a \code{gsGOC} object,
-visualize one the tessellations (i.e. scales) in these models.
+visualize one the tessellations (i.e., scales) in these models.
 Visualization is by default in raster format.
 Vector based visualization is also possible.
 }

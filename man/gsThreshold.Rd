@@ -19,7 +19,7 @@ perimeters of patches as the link weight.}
 
 \item{nThresh}{Optional.  An integer giving the number of thresholds (or scales)
 at which to create GOC models.
-Thresholds are selected to produce a maximum number of unique grains (i.e. models).
+Thresholds are selected to produce a maximum number of unique grains (i.e., models).
 \code{nThresh} thresholds are also approximately evenly spread between 0 and
 the threshold at which all patches or focal points on the landscape are connected.
 This is a simple way to get a representative subset of all possible GOC models.
