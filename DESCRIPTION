@@ -29,7 +29,8 @@ Imports:
 LinkingTo: Rcpp
 Suggests:
     parallel,
-    rgeos
+    rgeos,
+    testthat
 VinetteBuilder: knitr, rmarkdown
 BugReports: https://github.com/achubaty/grainscape2/issues
 ByteCompile: yes
