@@ -6,7 +6,7 @@
 \title{Extract a minimum planar graph (MPG) model from a landscape resistance surface}
 \usage{
 gsMPG(cost, patch, sa = NULL, outputFolder = NULL, filterPatch = NULL,
-  spreadFactor = 0, selesPath = NULL)
+  spreadFactor = 0)
 }
 \arguments{
 \item{cost}{A raster of class \code{RasterLayer} giving a landscape resistance
@@ -47,8 +47,6 @@ than a given number of cells.}
 \item{spreadFactor}{Optional.  Fine-grained control over the accuracy of Voronoi polygons.
 To reduce accuracy and increase speed, set this as
 \code{spreadFactor=10} or \code{spreadFactor=100}.}
-
-\item{selesPath}{Not used (maintained for backwards compatibility only).}
 }
 \value{
 A \code{gsMPG} object, consisting of a list of objects.\cr\cr

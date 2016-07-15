@@ -60,8 +60,6 @@
 #'                      To reduce accuracy and increase speed, set this as
 #'                      \code{spreadFactor=10} or \code{spreadFactor=100}.
 #'
-#' @param selesPath  Not used (maintained for backwards compatibility only).
-#'
 #' @return A \code{gsMPG} object, consisting of a list of objects.\cr\cr
 #'         The main elements:\cr
 #'         \code{$mpg} is the minimum planar graph as class \code{igraph}\cr
@@ -135,12 +133,7 @@
 #' }
 #'
 gsMPG <- function(cost, patch, sa = NULL, outputFolder = NULL, filterPatch = NULL,
-                  spreadFactor = 0, selesPath = NULL) {
-  ## Check OS
-  if (.Platform$OS.type != "windows") {
-    stop("grainscape2:  this function calls an executable (SELES) compiled for Windows.\nIt will not work on your OS.", call. = FALSE)
-  }
-
+                  spreadFactor = 0) {
   ## Check that cost raster is of class RasterLayer
   if ((class(cost) != "RasterLayer")) {
     stop("grainscape2: cost raster must be of class RasterLayer", call. = FALSE)
@@ -157,8 +150,7 @@ gsMPG <- function(cost, patch, sa = NULL, outputFolder = NULL, filterPatch = NUL
                                 seq(1, ncol(patch), by = focalPointDistFreq) + focalPointDistFreq/2)] <- 1
     ## Remove lattice points that fall on NA cost cells
     patch[is.na(cost)] <- 0
-  }
-  else if ((class(patch) != "RasterLayer")) {
+  } else if ((class(patch) != "RasterLayer")) {
     stop("grainscape2: patch must be a raster (patch-based model) OR an integer (lattice model)", call. = FALSE)
   }
 
@@ -263,7 +255,6 @@ gsMPG <- function(cost, patch, sa = NULL, outputFolder = NULL, filterPatch = NUL
   writeRaster(rasPatch, paste(outputFolder, "/patch.asc", sep = ""), format = "ascii")
   writeRaster(rasCost, paste(outputFolder, "/cost.asc", sep = ""), format = "ascii")
   writeRaster(rasSa, paste(outputFolder, "/sa.asc", sep = ""), format = "ascii")
-
 
   ## Call SELES
   system(paste(shQuote(paste(normalizePath(selesPath), "\\seles3_4", sep = "")),
