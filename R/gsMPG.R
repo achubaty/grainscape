@@ -93,7 +93,7 @@
 #' @author Paul Galpern, Sam Doctolero, Alex Chubaty
 #' @docType methods
 #' @export
-#' @importFrom raster boundaries cellFromRowCol cellFromRowColCombine compareRaster projection res xyFromCell
+#' @importFrom raster boundaries cellFromRowCol cellFromRowColCombine compareRaster getValues mask projection raster res writeRaster xyFromCell
 #' @importFrom sp coordinates
 #' @importFrom utils read.table
 #' @rdname gsMPG
