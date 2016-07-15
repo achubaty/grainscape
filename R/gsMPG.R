@@ -17,7 +17,7 @@
 #' 2=Minimum spanning tree; 3=Gabriel; 4=Delaunay;)\cr
 #' Areal measurements are given as raster cell counts.  If the raster projection
 #' is one where cell sizes are approximately constant in area (e.g., UTM),
-#' or the raster covers a relatively small geographic extent (e.g. < 1000 km in dimension)
+#' or the raster covers a relatively small geographic extent (e.g., < 1000 km in dimension)
 #' areal measurements will often be adequate.  Reprojection of rasters should be
 #' considered to minimize these effects in other cases (see \code{\link{projectRaster}}).
 #'

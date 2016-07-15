@@ -114,7 +114,7 @@ gsGOC <- function(gsMPG, nThresh = NULL, doThresh = NULL,
   linkWeight <- try(get.edge.attribute(baseGraph, weight), silent = TRUE)
 
   if (class(linkWeight) == "try-error") {
-    stop("grainscape2: weight must be the name of an existing link attribute to threshold (e.g. 'lcpPerimWeight')", call. = FALSE)
+    stop("grainscape2: weight must be the name of an existing link attribute to threshold (e.g., 'lcpPerimWeight')", call. = FALSE)
   }
 
   if (is.null(nThresh) && is.null(doThresh)) {
