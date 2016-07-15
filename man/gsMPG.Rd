@@ -5,8 +5,7 @@
 \alias{gsMPG}
 \title{Extract a minimum planar graph (MPG) model from a landscape resistance surface}
 \usage{
-gsMPG(cost, patch, sa = NULL, outputFolder = NULL, filterPatch = NULL,
-  spreadFactor = 0)
+gsMPG(cost, patch, sa = NULL, filterPatch = NULL, spreadFactor = 0)
 }
 \arguments{
 \item{cost}{A raster of class \code{RasterLayer} giving a landscape resistance
@@ -33,13 +32,6 @@ If not supplied \code{sa} is the full extent of \code{cost}.
 To mask out areas of the landscape to exclude from analysis
 (e.g., at the edges of a map), supply a binary raster where
 included cells=1 and excluded cells=0.}
-
-\item{outputFolder}{Optional.  If not supplied this function creates files
-for use by \code{SELES} in a temporary folder placed in the
-R working directory that is deleted following successful execution.
-Another location may be specified instead.
-If supplied the location is not deleted after the analysis completes.
-This can be useful for debugging purposes.}
 
 \item{filterPatch}{Optional.  Remove patches from the analysis that are smaller
 than a given number of cells.}

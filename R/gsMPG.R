@@ -46,13 +46,6 @@
 #'            (e.g., at the edges of a map), supply a binary raster where
 #'            included cells=1 and excluded cells=0.
 #'
-#' @param outputFolder  Optional.  If not supplied this function creates files
-#'                      for use by \code{SELES} in a temporary folder placed in the
-#'                      R working directory that is deleted following successful execution.
-#'                      Another location may be specified instead.
-#'                      If supplied the location is not deleted after the analysis completes.
-#'                      This can be useful for debugging purposes.
-#'
 #' @param filterPatch  Optional.  Remove patches from the analysis that are smaller
 #'                     than a given number of cells.
 #'
@@ -132,8 +125,7 @@
 #' tinyPatchMPG <- gsMPG(cost = tinyCost, patch = tinyCost == 1, sa = tinySa)
 #' }
 #'
-gsMPG <- function(cost, patch, sa = NULL, outputFolder = NULL, filterPatch = NULL,
-                  spreadFactor = 0) {
+gsMPG <- function(cost, patch, sa = NULL, filterPatch = NULL, spreadFactor = 0) {
   ## Check that cost raster is of class RasterLayer
   if ((class(cost) != "RasterLayer")) {
     stop("grainscape2: cost raster must be of class RasterLayer", call. = FALSE)
