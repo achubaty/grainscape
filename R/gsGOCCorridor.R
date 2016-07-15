@@ -34,6 +34,7 @@
 #' @author Paul Galpern
 #' @docType methods
 #' @export
+#' @importFrom graphics plot
 #' @importFrom igraph get.edge.attribute get.edgelist get.shortest.paths V
 #' @importFrom sp Line Lines SpatialLines SpatialLinesDataFrame SpatialPoints
 #' @include gsGOCVisualize.R

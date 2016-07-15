@@ -97,8 +97,10 @@
 #' @author Bronwyn Rayfield, Paul Galpern, Andrew Fall
 #' @docType methods
 #' @export
-#' @importFrom raster boundaries cellStats crop crosstab extent 'extent<-' getValues mask match merge raster reclassify stack writeRaster xmax xmin ymax ymin zonal
-#' @rdname gsMPG
+#' @importFrom raster boundaries cellFromRowCol cellStats crop crosstab extent 'extent<-' getValues mask match merge projection raster reclassify res stack writeRaster xmax xmin xyFromCell ymax ymin zonal
+#' @importFrom sp coordinates
+#' @importFrom utils read.table write.table
+#' @rdname gsMPGstitch
 #' @seealso \code{\link{gsGOC}, \link{gsThreshold}}
 #'
 #' @examples

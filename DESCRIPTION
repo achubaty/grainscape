@@ -19,28 +19,32 @@ Authors@R: c(
   person(c("Alex", "M"), "Chubaty", email = "alexander.chubaty@canada.ca", role = "ctb"))
 License: GPL (>= 2)
 Imports:
-    igraph,
-    sp,
-    raster,
-    Rcpp (>= 0.12.5),
-    utils
+  graphics,
+  igraph,
+  knitr,
+  methods,
+  sp,
+  raster,
+  Rcpp (>= 0.12.5),
+  rmarkdown,
+  utils
 LinkingTo: Rcpp
 Suggests:
-    parallel,
-    rgeos
-VignetteBuilder: knitr, rmarkdown
+  parallel,
+  rgeos
+VinetteBuilder: knitr, rmarkdown
 BugReports: https://github.com/achubaty/grainscape2/issues
 ByteCompile: yes
 Collate:
-    'RcppExports.R'
-    'grainscape2-package.R'
-    'gsGOC.R'
-    'gsGOCVisualize.R'
-    'gsGOCCorridor.R'
-    'gsGOCDistance.R'
-    'gsGOCPoint.R'
-    'gsGraphDataFrame.R'
-    'gsMPG.R'
-    'gsMPGstitch.R'
-    'gsThreshold.R'
+  'RcppExports.R'
+  'grainscape2-package.R'
+  'gsGOC.R'
+  'gsGOCVisualize.R'
+  'gsGOCCorridor.R'
+  'gsGOCDistance.R'
+  'gsGOCPoint.R'
+  'gsGraphDataFrame.R'
+  'gsMPG.R'
+  'gsMPGstitch.R'
+  'gsThreshold.R'
 RoxygenNote: 5.0.1

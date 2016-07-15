@@ -33,9 +33,11 @@
 #' @author Paul Galpern
 #' @docType methods
 #' @export
-#' @importFrom igraph V
+#' @importFrom graphics plot
+#' @importFrom igraph 'E<-' is.igraph V
+#' @importFrom methods as
 #' @importFrom raster reclassify
-#' @importFrom sp SpatialPoints SpatialPolygonsDataFrame
+#' @importFrom sp geometry SpatialPoints SpatialPolygonsDataFrame spChFIDs
 #' @rdname gsGOCVisualize
 #' @seealso \code{\link{gsGOC}}
 #'
@@ -121,10 +123,10 @@ gsGOCVisualize <- function(gsGOC, whichThresh, sp = FALSE, doPlot = FALSE) {
           thisPolygon <- NULL
           for (iFrom in 2:length(fromId)) {
             if (is.null(thisPolygon)) {
-              thisPolygon <- gUnion(voronoiSP[which(indexSP == fromId[iFrom - 1])],
-                                    voronoiSP[which(indexSP == fromId[iFrom])], id = toId)
+              thisPolygon <- rgeos::gUnion(voronoiSP[which(indexSP == fromId[iFrom - 1])],
+                                           voronoiSP[which(indexSP == fromId[iFrom])], id = toId)
             } else {
-              thisPolygon <- gUnion(thisPolygon, voronoiSP[which(indexSP == fromId[iFrom])], id = toId)
+              thisPolygon <- rgeos::gUnion(thisPolygon, voronoiSP[which(indexSP == fromId[iFrom])], id = toId)
             }
           }
         } else {

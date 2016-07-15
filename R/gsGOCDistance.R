@@ -23,7 +23,7 @@
 #' @author Paul Galpern
 #' @docType methods
 #' @export
-#' @importFrom igraph get.edge.attribute shortest.paths
+#' @importFrom igraph 'E<-' get.edge.attribute is.igraph shortest.paths
 #' @rdname gsGOCDistance
 #' @seealso  \code{\link{gsGOC}}, \code{\link{gsGOCPoint}}
 #'

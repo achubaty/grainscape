@@ -93,7 +93,9 @@
 #' @author Paul Galpern and Andrew Fall
 #' @docType methods
 #' @export
-#' @importFrom raster boundaries cellFromRowColCombine
+#' @importFrom raster boundaries cellFromRowCol cellFromRowColCombine compareRaster projection res xyFromCell
+#' @importFrom sp coordinates
+#' @importFrom utils read.table
 #' @rdname gsMPG
 #' @seealso \code{\link{gsGOC}, \link{gsThreshold}}
 #'

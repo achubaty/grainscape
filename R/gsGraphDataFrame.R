@@ -23,7 +23,7 @@
 #' @author Paul Galpern
 #' @docType methods
 #' @export
-#' @importFrom igraph get.edge.attribute get.edgelist get.vertex.attribute list.edge.attributes
+#' @importFrom igraph get.edge.attribute get.edgelist get.vertex.attribute is.igraph list.edge.attributes list.vertex.attributes
 #' @importFrom utils type.convert
 #' @rdname gsGraphDataFrame
 #' @seealso \code{\link{gsMPG}}, \code{\link{gsGOC}}

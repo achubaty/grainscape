@@ -25,7 +25,8 @@
 #' @author Paul Galpern
 #' @docType methods
 #' @export
-#' @importFrom igraph V
+#' @importFrom igraph is.igraph V
+#' @importFrom raster cellFromXY
 #' @rdname gsGOCPoint
 #' @seealso \code{\link{gsGOC}}, \code{\link{gsGOCDistance}}
 #' @examples

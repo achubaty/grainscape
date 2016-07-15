@@ -69,8 +69,10 @@
 #' @author Paul Galpern
 #' @docType methods
 #' @export
-#' @importFrom igraph clusters delete.edges E get.edge.attribute get.edges graph.data.frame V vcount
+#' @importFrom igraph clusters delete.edges E 'E<-' get.edge.attribute get.edges graph.data.frame is.igraph V 'V<-' vcount
 #' @importFrom raster freq rasterToPolygons reclassify zonal
+#' @importFrom sp coordinates
+#' @importFrom stats median
 #' @rdname gsGOC
 #' @seealso \code{\link{gsMPG}}, \code{\link{gsGOCVisualize}}, \code{\link{gsGOCDistance}}, \code{\link{gsGOCPoint}}
 #'
@@ -96,8 +98,8 @@
 #' tinyPatchGOC <- gsGOC(tinyPatchMPG, doThresh = c(0, 20, 40), sp = TRUE)
 #' }
 #'
-gsGOC <- function(gsMPG, nThresh = NULL, doThresh = NULL, weight = "lcpPerimWeight",
-                  sp = FALSE, verbose = 3) {
+gsGOC <- function(gsMPG, nThresh = NULL, doThresh = NULL,
+                  weight = "lcpPerimWeight", sp = FALSE, verbose = 3) {
   if (class(gsMPG) != "gsMPG") {
     stop("grainscape2: graph must be a gsMPG object", call. = FALSE)
   }
