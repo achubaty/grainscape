@@ -40,8 +40,6 @@ A detailed tutorial is available as a vignette.
 \author{
 Paul Galpern
 
-Micheline Manseau
-
 Sam Doctolero
 
 Alex M. Chubaty

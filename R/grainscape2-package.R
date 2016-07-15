@@ -57,7 +57,6 @@
 #' @useDynLib grainscape2
 #'
 #' @author Paul Galpern
-#' @author Micheline Manseau
 #' @author Sam Doctolero
 #' @author Alex M. Chubaty
 NULL
