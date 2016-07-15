@@ -3,7 +3,6 @@
 #include <R.h>
 #include <Rinternals.h>
 #include <Rcpp.h>
-#include <igraph/igraph.h>
 
 using namespace std;
 using namespace Rcpp;
