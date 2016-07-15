@@ -12,7 +12,6 @@ Version: 0.3.0.9000
 Date: 2016-07-13
 Authors@R: c(
     person("Paul", "Galpern", email = "pgalpern@gmail.com", role = c("aut", "cph", "cre")),
-    person("Andrew", "Fall", role = "aut"),
     person("Micheline", "Manseau", role = "aut"),
     person("Sam", "Doctolero", email = "sam.doctolero@gmail.com", role = "aut"),
     person(c("Alex", "M"), "Chubaty", email = "alexander.chubaty@canada.ca", role = "ctb"))

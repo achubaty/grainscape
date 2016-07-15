@@ -136,7 +136,7 @@ tinyPatchMPG <- gsMPG(cost = tinyCost, patch = tinyCost == 1, sa = tinySa)
 
 }
 \author{
-Paul Galpern and Andrew Fall
+Paul Galpern
 }
 \references{
 Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien.  (2007) Spatial graphs:  Principles and applications for habitat connectivity.  Ecosystems.  10:448:461\cr
