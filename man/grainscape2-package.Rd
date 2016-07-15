@@ -40,8 +40,6 @@ A detailed tutorial is available as a vignette.
 \author{
 Paul Galpern
 
-Bronwyn Rayfield
-
 Andrew Fall
 
 Micheline Manseau

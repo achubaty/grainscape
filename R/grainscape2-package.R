@@ -57,7 +57,6 @@
 #' @useDynLib grainscape2
 #'
 #' @author Paul Galpern
-#' @author Bronwyn Rayfield
 #' @author Andrew Fall
 #' @author Micheline Manseau
 #' @author Sam Doctolero

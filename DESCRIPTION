@@ -11,40 +11,38 @@ URL: https://github.com/achubaty/grainscape2
 Version: 0.3.0.9000
 Date: 2016-07-13
 Authors@R: c(
-  person("Paul", "Galpern", email = "pgalpern@gmail.com", role = c("aut", "cph", "cre")),
-  person("Bronwyn", "Rayfield", email = "bronwyn.rayfield@mail.mcgill.ca", role = "aut"),
-  person("Andrew", "Fall", role = "aut"),
-  person("Micheline", "Manseau", role = "aut"),
-  person("Sam", "Doctolero", email = "sam.doctolero@gmail.com", role = "aut"),
-  person(c("Alex", "M"), "Chubaty", email = "alexander.chubaty@canada.ca", role = "ctb"))
+    person("Paul", "Galpern", email = "pgalpern@gmail.com", role = c("aut", "cph", "cre")),
+    person("Andrew", "Fall", role = "aut"),
+    person("Micheline", "Manseau", role = "aut"),
+    person("Sam", "Doctolero", email = "sam.doctolero@gmail.com", role = "aut"),
+    person(c("Alex", "M"), "Chubaty", email = "alexander.chubaty@canada.ca", role = "ctb"))
 License: GPL (>= 2)
 Imports:
-  graphics,
-  igraph,
-  knitr,
-  methods,
-  sp,
-  raster,
-  Rcpp (>= 0.12.5),
-  rmarkdown,
-  utils
+    graphics,
+    igraph,
+    knitr,
+    methods,
+    sp,
+    raster,
+    Rcpp (>= 0.12.5),
+    rmarkdown,
+    utils
 LinkingTo: Rcpp
 Suggests:
-  parallel,
-  rgeos
+    parallel,
+    rgeos
 VinetteBuilder: knitr, rmarkdown
 BugReports: https://github.com/achubaty/grainscape2/issues
 ByteCompile: yes
 Collate:
-  'RcppExports.R'
-  'grainscape2-package.R'
-  'gsGOC.R'
-  'gsGOCVisualize.R'
-  'gsGOCCorridor.R'
-  'gsGOCDistance.R'
-  'gsGOCPoint.R'
-  'gsGraphDataFrame.R'
-  'gsMPG.R'
-  'gsMPGstitch.R'
-  'gsThreshold.R'
+    'RcppExports.R'
+    'grainscape2-package.R'
+    'gsGOC.R'
+    'gsGOCVisualize.R'
+    'gsGOCCorridor.R'
+    'gsGOCDistance.R'
+    'gsGOCPoint.R'
+    'gsGraphDataFrame.R'
+    'gsMPG.R'
+    'gsThreshold.R'
 RoxygenNote: 5.0.1
