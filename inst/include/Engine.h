@@ -1,7 +1,11 @@
 #pragma once
 #include "Calculation.h"
 #include "DataStruct.h"
+#include <cstring>
 
+#include <Rinternals.h>
+
+#define MAX_CHAR_SIZE 1024
 
 class Engine
 {
@@ -25,13 +29,15 @@ private:
 
 	bool initialized;
 
+	char * error_message;
 	//functions
 	bool cellIsZero(int row, int col);
 	void activeCellSpreadChecker(ActiveCell * ac);
 	void createActiveCell(ActiveCell * ac, int row, int col);
 	void updateOutputMap(std::vector<float> & vm, flMap mm);
+	void writeErrorMessage(char* msg);
 public:
-	Engine(InputData * in_d, OutputData * out_d, float increment);
+	Engine(InputData * in_d, OutputData * out_d, float increment, char * errmsg);
 	Engine();
 	~Engine();
 

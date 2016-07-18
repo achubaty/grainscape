@@ -1,7 +1,7 @@
 #include "../inst/include/Engine.h"
 
-Engine::Engine(InputData * in_d, OutputData * out_d, float increment)
-{
+Engine::Engine(InputData * in_d, OutputData * out_d, float increment,char * errmsg)
+{ 
 	in_data = in_d;
 	out_data = out_d;
 	time_increment = increment;
@@ -10,6 +10,7 @@ Engine::Engine(InputData * in_d, OutputData * out_d, float increment)
 	voronoi_map = flMap(in_d->nrow, flCol(in_d->ncol, 0.0f));
 	link_map = flMap(in_d->nrow, flCol(in_d->ncol, 0.0f));
 	cost_map = flMap(in_data->nrow, flCol(in_data->ncol, 0.0f));
+	error_message = errmsg;
 }
 
 Engine::Engine()
@@ -26,10 +27,12 @@ Engine::~Engine()
 
 bool Engine::initialize()
 {
+	Rprintf("Initializing...\n");
 	unsigned int size = in_data->nrow * in_data->ncol;
 	if (size != in_data->cost_vec.size())
 	{
-		//put error log here
+		char msg[] = "Product of number of rows and columns did not match cost/resistance vector size\n";
+		writeErrorMessage(msg);
 		return false;
 	}
 
@@ -44,6 +47,13 @@ bool Engine::initialize()
 
 	//find the patches first
 	out_data->patch_list = findPatches(cost_map, in_data->nrow, in_data->ncol, in_data->habitat, voronoi_map);
+	if (out_data->patch_list.size() <= 0)
+	{
+		char msg[] = "No patches found\n";
+		writeErrorMessage(msg);
+		return false;
+	}
+	Rprintf("Found %d patches\n", out_data->patch_list.size());
 
 	//update the output patch vector
 	updateOutputMap(out_data->patch_map, voronoi_map);
@@ -106,10 +116,12 @@ bool Engine::initialize()
 
 	if (active_cell_holder.size() <= 0)
 	{
-		//insert log error
+		char msg[] = "No initial active cells found\n";
+		writeErrorMessage(msg);
 		return false;
 	}
 
+	Rprintf("Found %d active cells\n", active_cell_holder.holder_list[0].size());
 	//resize link map and initialize the cells
 	iLinkMap = LinkMap(in_data->nrow, lcCol(in_data->ncol));
 	for (unsigned int i = 0; i < active_cell_holder.size(); i++)
@@ -287,5 +299,19 @@ void Engine::createActiveCell(ActiveCell * ac, int row, int col)
 	if (!outOfBounds(row, col, in_data->nrow, in_data->ncol) && voronoi_map[row][col] != 0.0f && voronoi_map[row][col] != ac->id && cost_map[row][col] != in_data->nodata)
 	{
 		findPath(&iLinkMap[ac->row][ac->column], &iLinkMap[row][col], out_data->link_data, iLinkMap);
+	}
+}
+
+void Engine::writeErrorMessage(char* msg)
+{
+	if (strlen(msg) > strlen(error_message))
+		return;
+
+	for (unsigned int i = 0; i < strlen(error_message); i++)
+	{
+		if (i < strlen(msg))
+			error_message[i] = msg[i];
+		else
+			error_message[i] = 0;
 	}
 }
