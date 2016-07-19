@@ -1,4 +1,5 @@
 # c++ files
+*.dll
 *.o
 *.so
 
