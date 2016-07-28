@@ -8,7 +8,7 @@ using namespace std;
 using namespace Rcpp;
 
 // [[Rcpp::export]]
-List habConnRcpp(NumericVector cost, int nrow, int ncol, double hab, double no_data, double increment = 1.0)
+List habConnRcpp(NumericVector cost, int nrow, int ncol, double hab, double no_data, NumericVector distinctValues,double increment = 1.0)
 {
 	//create instances of inputdata and output data
 	InputData in_data;
@@ -22,6 +22,13 @@ List habConnRcpp(NumericVector cost, int nrow, int ncol, double hab, double no_d
 	{
 		in_data.cost_vec[i] = cost[i];
 	}
+	//distinct values
+	in_data.distinctValues.resize(distinctValues.size());
+	for (unsigned int i = 0; i < in_data.distinctValues.size(); i++)
+	{
+		in_data.distinctValues[i] = distinctValues[i];
+	}
+
 	//other properties of input data
 	in_data.nrow = nrow;
 	in_data.ncol = ncol;

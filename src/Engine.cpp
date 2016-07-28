@@ -1,4 +1,5 @@
 #include "../inst/include/Engine.h"
+#include <algorithm>
 
 Engine::Engine(InputData * in_d, OutputData * out_d, float increment,char * errmsg)
 { 
@@ -11,6 +12,8 @@ Engine::Engine(InputData * in_d, OutputData * out_d, float increment,char * errm
 	link_map = flMap(in_d->nrow, flCol(in_d->ncol, 0.0f));
 	cost_map = flMap(in_data->nrow, flCol(in_data->ncol, 0.0f));
 	error_message = errmsg;
+	maxCost = emax(in_d->distinctValues);
+	costRes = in_d->distinctValues[0];
 }
 
 Engine::Engine()
@@ -20,6 +23,7 @@ Engine::Engine()
 	initialized = false;
 	internal_time = 0.0f;
 	time_increment = 1.0f;
+	maxCost = 0.0f;
 }
 
 Engine::~Engine()
@@ -107,6 +111,7 @@ bool Engine::initialize()
 					ac.originCell = c;
 					ac.row = i;
 					ac.column = j;
+					ac.parentResistance = 0.0f;
 					holder_t.add(ac);
 					active_cell_holder.insertH(holder_t);
 				}
@@ -147,6 +152,7 @@ void Engine::start()
 	while (active_cell_holder.size() > 0)
 	{
 		//update the time
+		/*
 		internal_time += time_increment;
 
 		//seperate the first elements of active_cell_holder from the rest
@@ -174,7 +180,34 @@ void Engine::start()
 		spread_list.clear();
 
 		active_cell_holder = temporary_active_cell_holder;
+		*/
 
+		//Rprintf("Number of active cells: %d\n", active_cell_holder.size());
+		temporary_active_cell_holder.holder_list.clear();
+		for (unsigned int i = 0; i < active_cell_holder.size(); i++)
+		{
+			std::vector<ActiveCell> ac_to_check = active_cell_holder.holder_list[i].list;
+			for (unsigned int j = 0; j < ac_to_check.size(); j++)
+			{
+				activeCellSpreadChecker(&ac_to_check[j]);
+			}
+		}
+
+		//Rprintf("Number of spreading cells: %d\n", spread_list.size());
+
+		for (unsigned int i = 0; i < spread_list.size(); i++)
+		{
+			//top
+			createActiveCell(&spread_list[i], spread_list[i].row - 1, spread_list[i].column);
+			//bottom
+			createActiveCell(&spread_list[i], spread_list[i].row + 1, spread_list[i].column);
+			//left
+			createActiveCell(&spread_list[i], spread_list[i].row, spread_list[i].column - 1);
+			//right
+			createActiveCell(&spread_list[i], spread_list[i].row, spread_list[i].column + 1);
+		}
+		spread_list.clear();
+		active_cell_holder = temporary_active_cell_holder;
 	}
 
 	//fill the link map
@@ -206,7 +239,8 @@ void Engine::activeCellSpreadChecker(ActiveCell * ac)
 {
 	//if the time difference is greater than the resistance value at cell c
 	//include it in the spread_list
-	if ((internal_time - ac->time) >= ac->resistance)
+	//if ((internal_time - ac->time) >= ac->resistance)
+	if (ac->time >= ac->resistance)
 	{
 		//include the list in spread list in an order
 		if (spread_list.size() <= 0)
@@ -232,6 +266,7 @@ void Engine::activeCellSpreadChecker(ActiveCell * ac)
 		//if the time difference is still smaller than the resistance value
 		//include it in the temporary_active_cell_holder
 		//find the proper queue that the active cell belongs to
+		ac->time += std::max(time_increment, (ac->resistance - ac->parentResistance) * costRes / maxCost);
 		holder h_temp;
 		h_temp.value = ac->distance;
 		h_temp.list.push_back(*ac);
@@ -258,13 +293,14 @@ void Engine::createActiveCell(ActiveCell * ac, int row, int col)
 		c.id = ac->id;
 		float dist = calcDistance(ac->originCell, c);
 		ActiveCell new_ac;
-		new_ac.time = internal_time;
+		new_ac.time = 0.0f;
 		new_ac.distance = dist;
 		new_ac.resistance = cost_map[row][col];
 		new_ac.originCell = ac->originCell;
 		new_ac.id = c.id;
 		new_ac.row = c.row;
 		new_ac.column = c.column;
+		new_ac.parentResistance = ac->resistance;
 
 		if (cost_map[row][col] == in_data->nodata) //handle no data values
 		{
@@ -314,4 +350,16 @@ void Engine::writeErrorMessage(char* msg)
 		else
 			error_message[i] = 0;
 	}
+}
+
+
+float Engine::emax(std::vector<float> vec)
+{
+	float ret = vec[0];
+	for (unsigned int i = 1; i < vec.size(); i++)
+	{
+		if (ret < vec[i])
+			ret = vec[i];
+	}
+	return ret;
 }

@@ -41,7 +41,7 @@ typedef std::vector<lcCol> LinkMap;
 struct ActiveCell
 	:Cell	//inherits the cell structure
 {
-	float time, distance, resistance;
+	float time, distance, resistance, parentResistance;
 	Cell originCell;
 };
 
@@ -49,6 +49,7 @@ struct ActiveCell
 struct InputData
 {
 	std::vector<float> cost_vec;
+	std::vector<float> distinctValues;
 	int nrow, ncol;
 	float habitat, nodata;
 };

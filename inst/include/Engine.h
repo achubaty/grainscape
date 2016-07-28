@@ -17,6 +17,9 @@ private:
 	float internal_time;			//engine's internal time
 	float time_increment;			//engine's internal time increment
 
+	float maxCost;
+	float costRes;
+
 	queue active_cell_holder;
 	queue temporary_active_cell_holder;
 	std::vector<ActiveCell> spread_list;
@@ -43,5 +46,7 @@ public:
 
 	bool initialize();
 	void start();
+
+	static float emax(std::vector<float> vec);
 };
 
