@@ -1,19 +1,18 @@
 #include "../inst/include/Engine.h"
 #include <algorithm>
 
-Engine::Engine(InputData * in_d, OutputData * out_d, float increment,char * errmsg)
+Engine::Engine(InputData * in_d, OutputData * out_d,char * errmsg, float threshold)
 { 
 	in_data = in_d;
-	out_data = out_d;
-	time_increment = increment;
-	internal_time = 0.0f;
+	out_data = out_d;;
 	initialized = false;
 	voronoi_map = flMap(in_d->nrow, flCol(in_d->ncol, 0.0f));
 	link_map = flMap(in_d->nrow, flCol(in_d->ncol, 0.0f));
-	cost_map = flMap(in_data->nrow, flCol(in_data->ncol, 0.0f));
+	cost_map = flMap(in_d->nrow, flCol(in_d->ncol, 0.0f));
 	error_message = errmsg;
 	maxCost = emax(in_d->distinctValues);
 	costRes = in_d->distinctValues[0];
+	zeroThreshold = threshold;
 }
 
 Engine::Engine()
@@ -21,8 +20,6 @@ Engine::Engine()
 	in_data = 0;
 	out_data = 0;
 	initialized = false;
-	internal_time = 0.0f;
-	time_increment = 1.0f;
 	maxCost = 0.0f;
 }
 
@@ -31,7 +28,6 @@ Engine::~Engine()
 
 bool Engine::initialize()
 {
-	Rprintf("Initializing...\n");
 	unsigned int size = in_data->nrow * in_data->ncol;
 	if (size != in_data->cost_vec.size())
 	{
@@ -46,6 +42,8 @@ bool Engine::initialize()
 		for (unsigned int j = 0; j < cost_map[0].size(); j++)
 		{
 			cost_map[i][j] = (float)in_data->cost_vec[i*in_data->ncol + j];
+			if ((float)in_data->cost_vec[i*in_data->ncol + j] <= 0.0001f)
+				Rprintf("Zero at element %d or (%d, %d)\n", i*in_data->ncol + j, i, j);
 		}
 	}
 
@@ -57,7 +55,6 @@ bool Engine::initialize()
 		writeErrorMessage(msg);
 		return false;
 	}
-	Rprintf("Found %d patches\n", out_data->patch_list.size());
 
 	//update the output patch vector
 	updateOutputMap(out_data->patch_map, voronoi_map);
@@ -67,7 +64,7 @@ bool Engine::initialize()
 	{
 		for (int j = 0; j < in_data->ncol; j++)
 		{
-			if (voronoi_map[i][j] > 0)
+			if (voronoi_map[i][j] > 0.0f)
 			{
 				link_map[i][j] = 1.0f;
 			}
@@ -95,6 +92,8 @@ bool Engine::initialize()
 				if (!isActive && cellIsZero(i - 1, j))
 					isActive = true;
 
+				//if the cell is supposed to be an active cell then add it to the 
+				//active cell holder
 				if (isActive)
 				{
 					holder holder_t;
@@ -104,7 +103,7 @@ bool Engine::initialize()
 					c.column = j;
 					c.id = (int)(voronoi_map[i][j]);
 					ActiveCell ac;
-					ac.time = internal_time;
+					ac.time = 0.0f;
 					ac.id = c.id;
 					ac.distance = 0.0f;
 					ac.resistance = cost_map[i][j];
@@ -125,8 +124,6 @@ bool Engine::initialize()
 		writeErrorMessage(msg);
 		return false;
 	}
-
-	Rprintf("Found %d active cells\n", active_cell_holder.holder_list[0].size());
 	//resize link map and initialize the cells
 	iLinkMap = LinkMap(in_data->nrow, lcCol(in_data->ncol));
 	for (unsigned int i = 0; i < active_cell_holder.size(); i++)
@@ -150,40 +147,13 @@ bool Engine::initialize()
 void Engine::start()
 {
 	while (active_cell_holder.size() > 0)
-	{
-		//update the time
-		/*
-		internal_time += time_increment;
-
-		//seperate the first elements of active_cell_holder from the rest
-		std::vector<ActiveCell> ac_to_check = active_cell_holder.holder_list[0].list;
-		temporary_active_cell_holder = active_cell_holder;
-		//erase the first element from the temporary active_cell_holder
-		temporary_active_cell_holder.holder_list.erase(temporary_active_cell_holder.holder_list.begin());
-		//go through each of the active cells to see if they need to spread
-		for (unsigned int i = 0; i < ac_to_check.size(); i++)
-		{
-			activeCellSpreadChecker(&ac_to_check[i]);
-		}
-		//go hrough spread list to start spreading by 1 through the voronoi map
-		for (unsigned int i = 0; i < spread_list.size(); i++)
-		{
-			//top
-			createActiveCell(&spread_list[i], spread_list[i].row - 1, spread_list[i].column);
-			//bottom
-			createActiveCell(&spread_list[i], spread_list[i].row + 1, spread_list[i].column);
-			//left
-			createActiveCell(&spread_list[i], spread_list[i].row, spread_list[i].column - 1);
-			//right
-			createActiveCell(&spread_list[i], spread_list[i].row, spread_list[i].column + 1);
-		}
-		spread_list.clear();
-
-		active_cell_holder = temporary_active_cell_holder;
-		*/
-
-		//Rprintf("Number of active cells: %d\n", active_cell_holder.size());
+	{	
+		//clear the temporary active cell holder
 		temporary_active_cell_holder.holder_list.clear();
+
+		//go through each active cell to see if any of them are ready to spread
+		//if they are ready to spread then add them to the spread_list
+		//if not then include that active cell in the temporary active cell holder
 		for (unsigned int i = 0; i < active_cell_holder.size(); i++)
 		{
 			std::vector<ActiveCell> ac_to_check = active_cell_holder.holder_list[i].list;
@@ -193,8 +163,7 @@ void Engine::start()
 			}
 		}
 
-		//Rprintf("Number of spreading cells: %d\n", spread_list.size());
-
+		//go through each spreading cell and check all the adjacent cells if they can be conquered
 		for (unsigned int i = 0; i < spread_list.size(); i++)
 		{
 			//top
@@ -206,7 +175,9 @@ void Engine::start()
 			//right
 			createActiveCell(&spread_list[i], spread_list[i].row, spread_list[i].column + 1);
 		}
+		//clear the spread list
 		spread_list.clear();
+		//set the new active cells
 		active_cell_holder = temporary_active_cell_holder;
 	}
 
@@ -266,7 +237,7 @@ void Engine::activeCellSpreadChecker(ActiveCell * ac)
 		//if the time difference is still smaller than the resistance value
 		//include it in the temporary_active_cell_holder
 		//find the proper queue that the active cell belongs to
-		ac->time += std::max(time_increment, (ac->resistance - ac->parentResistance) * costRes / maxCost);
+		ac->time += std::max(1.0f, (ac->resistance - ac->parentResistance) * costRes / maxCost);
 		holder h_temp;
 		h_temp.value = ac->distance;
 		h_temp.list.push_back(*ac);
@@ -286,7 +257,6 @@ void Engine::createActiveCell(ActiveCell * ac, int row, int col)
 	//if not out of bounds and have not been conquered by other patches then create a new active cell
 	if (!outOfBounds(row, col, in_data->nrow, in_data->ncol) && voronoi_map[row][col] == 0.0f)
 	{
-
 		Cell c;
 		c.row = row;
 		c.column = col;
@@ -302,20 +272,22 @@ void Engine::createActiveCell(ActiveCell * ac, int row, int col)
 		new_ac.column = c.column;
 		new_ac.parentResistance = ac->resistance;
 
-		if (cost_map[row][col] == in_data->nodata) //handle no data values
+		voronoi_map[row][col] = (float)(ac->id);
+
+		if (abs(cost_map[row][col] - in_data->nodata) <= zeroThreshold)//handle no data values
 		{
-			new_ac.time = internal_time;
 			new_ac.distance = dist;
 			new_ac.resistance = 0.0f;
 			new_ac.originCell = ac->originCell;
 			new_ac.id = c.id;
 			new_ac.row = c.row;
 			new_ac.column = c.column;
+			new_ac.parentResistance = 0.0f;
 		}
 		else //connect cells
 			connectCell(ac, row, col, cost_map[row][col], iLinkMap);
 
-		voronoi_map[row][col] = (float)(ac->id);
+		
 
 		holder h_temp;
 		h_temp.value = dist;
@@ -332,9 +304,15 @@ void Engine::createActiveCell(ActiveCell * ac, int row, int col)
 
 
 	//create the links
-	if (!outOfBounds(row, col, in_data->nrow, in_data->ncol) && voronoi_map[row][col] != 0.0f && voronoi_map[row][col] != ac->id && cost_map[row][col] != in_data->nodata)
+	if (!outOfBounds(row, col, in_data->nrow, in_data->ncol) && voronoi_map[row][col] != 0.0f && voronoi_map[row][col] != ac->id )
 	{
-		findPath(&iLinkMap[ac->row][ac->column], &iLinkMap[row][col], out_data->link_data, iLinkMap);
+		if (abs(cost_map[row][col] - in_data->nodata) <= zeroThreshold)
+		{
+			//Rprintf("Not a valid link\n");
+			return;
+		}
+		else
+			findPath(&iLinkMap[ac->row][ac->column], &iLinkMap[row][col], out_data->link_data, iLinkMap);
 	}
 }
 

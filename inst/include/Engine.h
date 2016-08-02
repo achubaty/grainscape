@@ -14,11 +14,9 @@ private:
 	InputData * in_data;			//stores the data given by the user
 	OutputData * out_data;			//stores the data that's given to the user
 
-	float internal_time;			//engine's internal time
-	float time_increment;			//engine's internal time increment
-
 	float maxCost;
 	float costRes;
+	float zeroThreshold;
 
 	queue active_cell_holder;
 	queue temporary_active_cell_holder;
@@ -40,7 +38,7 @@ private:
 	void updateOutputMap(std::vector<float> & vm, flMap mm);
 	void writeErrorMessage(char* msg);
 public:
-	Engine(InputData * in_d, OutputData * out_d, float increment, char * errmsg);
+	Engine(InputData * in_d, OutputData * out_d, char * errmsg, float threshold = 0.000f);
 	Engine();
 	~Engine();
 

@@ -8,14 +8,12 @@ using namespace std;
 using namespace Rcpp;
 
 // [[Rcpp::export]]
-List habConnRcpp(NumericVector cost, int nrow, int ncol, double hab, double no_data, NumericVector distinctValues,double increment = 1.0)
+List habConnRcpp(NumericVector cost, int nrow, int ncol, double hab, double no_data, NumericVector distinctValues,double threshold = 0.0001)
 {
 	//create instances of inputdata and output data
 	InputData in_data;
 	OutputData out_data;
-
 	//initialize the input data
-	Rprintf("Initializing input data\n");
 	//cost vector
 	in_data.cost_vec.resize(cost.size());
 	for (unsigned int i = 0; i < in_data.cost_vec.size(); i++)
@@ -35,18 +33,18 @@ List habConnRcpp(NumericVector cost, int nrow, int ncol, double hab, double no_d
 	in_data.habitat = (float)hab;
 	in_data.nodata = (float)no_data;
 
+	//Rprintf("No Data Value: %d\n", in_data.nodata);
+
 	char error_msg[MAX_CHAR_SIZE] = "Pass in this variable to the engine as an error message holder\n";
 
 	//call the interface function CalcEngine
-	Rprintf("Engine started\n");
-	bool success = CalcEngine(in_data, out_data, (float)increment, error_msg);
+	bool success = CalcEngine(in_data, out_data, error_msg, (float)threshold);
 	if (!success)
 	{
 		Rprintf(error_msg);
 		return R_NilValue;
 	}
-	Rprintf("Engine finished\n");
-	Rprintf("Modifying voronoi, link, and patch vectors\n");
+
 	//create NumericVector values for vector values of out_data
 	NumericVector nmvor(cost.size());
 	NumericVector nmlink(cost.size());
@@ -59,7 +57,6 @@ List habConnRcpp(NumericVector cost, int nrow, int ncol, double hab, double no_d
 		nmpatch[i] = (double)out_data.patch_map[i];
 	}
 
-	Rprintf("Modifying least cost link information\n");
 	//create numeric vectors for lcpPerimWeight and lcpLinkId
 	NumericVector lcpPW(cost.size());	//numericvector variable for lcpPerimWeight map
 	NumericVector lcpLI(cost.size());	//numericvector variable for lcpLinkId
