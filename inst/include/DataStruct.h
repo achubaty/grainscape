@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 
-//base structure
+//base cell or pixel structure
 struct Cell
 {
 	int row, column;
