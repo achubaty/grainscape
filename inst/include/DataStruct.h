@@ -63,7 +63,7 @@ struct OutputData
 };
 
 //queue for active cell holders used for spreading
-struct holder
+struct ActiveCellHolder
 {
 	float value;
 	std::vector<ActiveCell> list;
@@ -91,11 +91,11 @@ struct holder
 	}
 };
 
-struct queue
+struct ActiveCellQueue
 {
-	std::vector<holder> holder_list;
+	std::vector<ActiveCellHolder> holder_list;
 
-	void insertH(holder h)
+	void insertH(ActiveCellHolder h)
 	{
 		int index = 0;
 		bool found = false;

@@ -1,5 +1,5 @@
 #include "../inst/include/Engine.h"
-#include "../inst/include/Interface.h"
+//#include "../inst/include/Interface.h"
 #include <R.h>
 #include <Rinternals.h>
 #include <Rcpp.h>
@@ -37,13 +37,21 @@ List habConnRcpp(NumericVector cost, int nrow, int ncol, double hab, double no_d
 
 	char error_msg[MAX_CHAR_SIZE] = "Pass in this variable to the engine as an error message holder\n";
 
-	//call the interface function CalcEngine
+	/*//call the interface function CalcEngine
 	bool success = CalcEngine(in_data, out_data, error_msg, (float)threshold);
 	if (!success)
 	{
 		Rprintf(error_msg);
 		return R_NilValue;
+	}*/
+
+	Engine habConnCalculator(&in_data, &out_data, error_msg, (float)threshold);
+	if (!habConnCalculator.initialize())
+	{
+		Rprintf("Engine did not initialize due to %s\n", error_msg);
+		return R_NilValue;
 	}
+	habConnCalculator.start();
 
 	//create NumericVector values for vector values of out_data
 	NumericVector nmvor(cost.size());
