@@ -1,7 +1,6 @@
 #define R_NO_REMAP
 
 #include "../inst/include/Engine.h"
-//#include "../inst/include/Interface.h"
 #include <R.h>
 #include <Rinternals.h>
 #include <Rcpp.h>
@@ -35,17 +34,7 @@ List habConnRcpp(NumericVector cost, int nrow, int ncol, double hab, double no_d
   in_data.habitat = (float)hab;
   in_data.nodata = (float)no_data;
 
-  //Rprintf("No Data Value: %d\n", in_data.nodata);
-
   char error_msg[MAX_CHAR_SIZE] = "Pass in this variable to the engine as an error message holder\n";
-
-  /*//call the interface function CalcEngine
-  bool success = CalcEngine(in_data, out_data, error_msg, (float)threshold);
-  if (!success)
-  {
-    Rprintf(error_msg);
-    return R_NilValue;
-  }*/
 
   Engine habConnCalculator(&in_data, &out_data, error_msg, (float)threshold);
   if (!habConnCalculator.initialize())
