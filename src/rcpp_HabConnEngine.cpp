@@ -34,8 +34,8 @@ List habConnRcpp(NumericVector cost, int nrow, int ncol, double hab, double no_d
   in_data.habitat = (float)hab;
   in_data.nodata = (float)no_data;
 
-  char error_msg[MAX_CHAR_SIZE] = "Pass in this variable to the engine as an error message holder\n";
-
+  //char error_msg[MAX_CHAR_SIZE] = "Pass in this variable to the engine as an error message holder\n";
+  char error_msg[MAX_CHAR_SIZE] = "success\n";
   Engine habConnCalculator(&in_data, &out_data, error_msg, (float)threshold);
   if (!habConnCalculator.initialize())
   {
@@ -43,6 +43,7 @@ List habConnRcpp(NumericVector cost, int nrow, int ncol, double hab, double no_d
     return R_NilValue;
   }
   habConnCalculator.start();
+  Rprintf("%s\n", error_msg);
 
   //create NumericVector values for vector values of out_data
   NumericVector nmvor(cost.size());

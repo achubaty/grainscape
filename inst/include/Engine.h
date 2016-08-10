@@ -63,22 +63,21 @@ private:
 
     //Patch Finding Functions
     //combines two patches if they are contiguous
-    int combinePatches(int & ind1, int & ind2, std::vector<Patch> & list, flMap & pachMap);
+    int combinePatches(int & ind1, int & ind2, std::vector<Patch> & list);
     //finds the appropriate index of the sough patch based on the given ID
     int getIndexFromList(float & id, std::vector<Patch> & patches);
-
     //called from the initialization step to find all the patches in the map
-    std::vector<Patch> findPatches(flMap & cost, int nrow, int ncol, int habitat, flMap & map);
+    std::vector<Patch> findPatches(int nrow, int ncol, int habitat);
 
     //Linking functions
     //connects two cells together
-    void connectCell(ActiveCell * ac, int row, int col, float cost, LinkMap & link_map);
+    void connectCell(ActiveCell * ac, int row, int col, float cost);
     //finds the least cost path between two cells, only called when boundaries meet
-    void findPath(LinkCell * ac1, LinkCell * ac2, std::vector<Link> & path_list, LinkMap & link_map);
+    void findPath(LinkCell * ac1, LinkCell * ac2, std::vector<Link> & path_list);
     //fills the link map that contains floating point values
     void fillLinkMap(flMap & map, std::vector<Link> path_list);
     //finds all the cells that create the link
-    Cell parseMap(LinkCell lc, Link & path, LinkMap & link_map);
+    Cell parseMap(LinkCell lc, Link & path);
     //it looks for indirect path that's "cheaper" than the direct path and gives the new path the indirect path if found
     void lookForIndirectPath(std::vector<Link> & path_list, Link & path);
     

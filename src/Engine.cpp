@@ -27,6 +27,7 @@ Engine::~Engine()
 
 bool Engine::initialize()
 {
+	//check to see if the input vector is equal to the number of cells in a map
   unsigned int size = in_data->nrow * in_data->ncol;
   if (size != in_data->cost_vec.size())
   {
@@ -45,7 +46,7 @@ bool Engine::initialize()
   }
 
   //find the patches first
-  out_data->patch_list = findPatches(cost_map, in_data->nrow, in_data->ncol, in_data->habitat, voronoi_map);
+  out_data->patch_list = findPatches(in_data->nrow, in_data->ncol, in_data->habitat);
   if (out_data->patch_list.size() <= 0)
   {
     char msg[] = "No patches found\n";
@@ -115,6 +116,7 @@ bool Engine::initialize()
     }
   }
 
+  //if the initial active cell holder is zero then there's no need for the engine to start
   if (active_cell_holder.size() <= 0)
   {
     char msg[] = "No initial active cells found\n";
@@ -143,6 +145,15 @@ bool Engine::initialize()
 
 void Engine::start()
 {
+
+	if (!initialized)
+	{
+		char msg[] = "Engine is not initialized. Failed";
+		writeErrorMessage(msg);
+		return;
+	}
+
+	//keep looping until there aren't any more active cells
   while (active_cell_holder.size() > 0)
   {
     //clear the temporary active cell holder
@@ -282,9 +293,7 @@ void Engine::createActiveCell(ActiveCell * ac, int row, int col)
       new_ac.parentResistance = 0.0f;
     }
     else //connect cells
-      connectCell(ac, row, col, cost_map[row][col], iLinkMap);
-
-
+      connectCell(ac, row, col, cost_map[row][col]);
 
     ActiveCellHolder h_temp;
     h_temp.value = dist;
@@ -304,11 +313,10 @@ void Engine::createActiveCell(ActiveCell * ac, int row, int col)
   {
     if (fabs(cost_map[row][col] - in_data->nodata) <= zeroThreshold)
     {
-      //Rprintf("Not a valid link\n");
       return;
     }
     else
-      findPath(&iLinkMap[ac->row][ac->column], &iLinkMap[row][col], out_data->link_data, iLinkMap);
+      findPath(&iLinkMap[ac->row][ac->column], &iLinkMap[row][col], out_data->link_data);
   }
 }
 
@@ -359,7 +367,77 @@ bool Engine::cellsEqual(Cell c1, Cell c2)
 }
 
 //Patch Finding Functions
-int Engine::combinePatches(int & ind1, int & ind2, std::vector<Patch> & list, flMap & patchMap)
+std::vector<Patch> Engine::findPatches(int nrow, int ncol, int habitat)
+{
+	std::vector<Patch> ret;
+	int idCount = 5;
+
+	//row loop
+	for (int row = 0; row < nrow; row++)
+	{
+		for (int col = 0; col < ncol; col++)
+		{
+			if (cost_map[row][col] == (float)habitat)
+			{
+				int ind1 = -1;
+				//top left
+				if (!outOfBounds(row - 1, col - 1, nrow, ncol) && cost_map[row - 1][col - 1] == habitat)
+				{
+					ind1 = getIndexFromList(voronoi_map[row - 1][col - 1], ret);
+				}
+				//left
+				if (!outOfBounds(row, col - 1, nrow, ncol) && cost_map[row][col - 1] == habitat)
+				{
+					ind1 = getIndexFromList(voronoi_map[row][col - 1], ret);
+				}
+
+				//top and top right will be in the same patch
+				int ind2 = -1;
+				//top right
+				if (!outOfBounds(row - 1, col + 1, ncol, nrow) && cost_map[row - 1][col + 1] == habitat)
+				{
+					ind2 = getIndexFromList(voronoi_map[row - 1][col + 1], ret);
+				}
+				//top
+				if (!outOfBounds(row - 1, col, ncol, nrow) && cost_map[row - 1][col] == habitat)
+				{
+					ind2 = getIndexFromList(voronoi_map[row - 1][col], ret);
+				}
+
+				int finalInd = -1;
+				//Go through cases
+				if (ind1 == ind2) finalInd = ind1;
+				else if (ind1 == -1 && ind2 != -1) finalInd = ind2;
+				else if (ind1 != -1 && ind2 == -1) finalInd = ind1;
+				else if (ind1 != -1 && ind2 != -1)
+				{
+					finalInd = combinePatches(ind1, ind2, ret);
+				}
+				else finalInd = -1;
+
+				if (finalInd == -1)
+				{
+					//No index found then create a new patch
+					Patch temp;
+					temp.id = idCount++;
+					Cell c = { row, col, temp.id };
+					voronoi_map[row][col] = (float)(temp.id);
+					temp.body.push_back(c);
+					ret.push_back(temp);
+				}
+				else
+				{
+					Cell c = { row, col, ret[finalInd].id };
+					ret[finalInd].body.push_back(c);
+					voronoi_map[row][col] = (float)(ret[finalInd].id);
+				}
+			}
+		}
+	}
+	return ret;
+}
+
+int Engine::combinePatches(int & ind1, int & ind2, std::vector<Patch> & list)
 {
   int ret = -1;
   Patch * p1 = &list[ind1];
@@ -377,7 +455,7 @@ int Engine::combinePatches(int & ind1, int & ind2, std::vector<Patch> & list, fl
     for (unsigned int i = 0; i < cList.size(); i++)
     {
       p1->body.push_back(cList[i]);
-      patchMap[cList[i].row][cList[i].column] = (float)id;
+      voronoi_map[cList[i].row][cList[i].column] = (float)id;
     }
     list.erase(list.begin() + ind2);
   }
@@ -394,7 +472,7 @@ int Engine::combinePatches(int & ind1, int & ind2, std::vector<Patch> & list, fl
     for (unsigned int i = 0; i < cList.size(); i++)
     {
       p2->body.push_back(cList[i]);
-      patchMap[cList[i].row][cList[i].column] = (float)id;
+	  voronoi_map[cList[i].row][cList[i].column] = (float)id;
     }
     list.erase(list.begin() + ind1);
   }
@@ -411,78 +489,8 @@ int Engine::getIndexFromList(float & id, std::vector<Patch> & patches)
   return -1;
 }
 
-std::vector<Patch> Engine::findPatches(flMap & cost, int nrow, int ncol, int habitat, flMap & map)
-{
-  std::vector<Patch> ret;
-  int idCount = 5;
-
-  //row loop
-  for (int row = 0; row < nrow; row++)
-  {
-    for (int col = 0; col < ncol; col++)
-    {
-      if ((cost)[row][col] == (float)habitat)
-      {
-        int ind1 = -1;
-        //top left
-        if (!outOfBounds(row - 1, col - 1, nrow, ncol) && cost[row - 1][col - 1] == habitat)
-        {
-          ind1 = getIndexFromList((map)[row - 1][col - 1], ret);
-        }
-        //left
-        if (!outOfBounds(row, col - 1, nrow, ncol) && cost[row][col - 1] == habitat)
-        {
-          ind1 = getIndexFromList((map)[row][col - 1], ret);
-        }
-
-        //top and top right will be in the same patch
-        int ind2 = -1;
-        //top right
-        if (!outOfBounds(row - 1, col + 1, ncol, nrow) && cost[row - 1][col + 1] == habitat)
-        {
-          ind2 = getIndexFromList((map)[row - 1][col + 1], ret);
-        }
-        //top
-        if (!outOfBounds(row - 1, col, ncol, nrow) && cost[row - 1][col] == habitat)
-        {
-          ind2 = getIndexFromList((map)[row - 1][col], ret);
-        }
-
-        int finalInd = -1;
-        //Go through cases
-        if (ind1 == ind2) finalInd = ind1;
-        else if (ind1 == -1 && ind2 != -1) finalInd = ind2;
-        else if (ind1 != -1 && ind2 == -1) finalInd = ind1;
-        else if (ind1 != -1 && ind2 != -1)
-        {
-          finalInd = combinePatches(ind1, ind2, ret, (map));
-        }
-        else finalInd = -1;
-
-        if (finalInd == -1)
-        {
-          //No index found then create a new patch
-          Patch temp;
-          temp.id = idCount++;
-          Cell c = { row, col, temp.id };
-          (map)[row][col] = (float)(temp.id);
-          temp.body.push_back(c);
-          ret.push_back(temp);
-        }
-        else
-        {
-          Cell c = { row, col, ret[finalInd].id };
-          ret[finalInd].body.push_back(c);
-          (map)[row][col] = (float)(ret[finalInd].id);
-        }
-      }
-    }
-  }
-  return ret;
-}
-
 //Linking Functions
-void Engine::connectCell(ActiveCell * ac, int row, int col, float cost, LinkMap & link_map)
+void Engine::connectCell(ActiveCell * ac, int row, int col, float cost)
 {
   LinkCell lc;
   lc.row = row;
@@ -494,10 +502,10 @@ void Engine::connectCell(ActiveCell * ac, int row, int col, float cost, LinkMap 
   lc.fromCell.id = lc.id;
   lc.originCell = ac->originCell;
   lc.cost = cost;
-  link_map[row][col] = lc;
+  iLinkMap[row][col] = lc;
 }
 
-void Engine::findPath(LinkCell * ac1, LinkCell * ac2, std::vector<Link> & path_list, LinkMap & link_map)
+void Engine::findPath(LinkCell * ac1, LinkCell * ac2, std::vector<Link> & path_list)
 {
   //check if the path already exists in the path_list
   for (unsigned int i = 0; i < path_list.size(); i++)
@@ -512,11 +520,11 @@ void Engine::findPath(LinkCell * ac1, LinkCell * ac2, std::vector<Link> & path_l
   Link path;
   path.cost = 0.0f;
   //start cell
-  LinkCell lc_temp = link_map[ac1->row][ac1->column];
-  path.start = parseMap(lc_temp, path, link_map);
+  LinkCell lc_temp = iLinkMap[ac1->row][ac1->column];
+  path.start = parseMap(lc_temp, path);
   //end cell
-  lc_temp = link_map[ac2->row][ac2->column];
-  path.end = parseMap(lc_temp, path, link_map);
+  lc_temp = iLinkMap[ac2->row][ac2->column];
+  path.end = parseMap(lc_temp, path);
 
   //check if a cheaper indirect path is available
   lookForIndirectPath(path_list, path);
@@ -536,7 +544,7 @@ void Engine::fillLinkMap(flMap & map, std::vector<Link> path_list)
   }
 }
 
-Cell Engine::parseMap(LinkCell lc, Link & path, LinkMap & link_map)
+Cell Engine::parseMap(LinkCell lc, Link & path)
 {
   Cell ret;
   Cell c1 = { lc.row, lc.column, lc.id };
@@ -546,7 +554,7 @@ Cell Engine::parseMap(LinkCell lc, Link & path, LinkMap & link_map)
     path.connection.push_back(c1);
     ret = lc;
     Cell from = lc.fromCell;
-    lc = link_map[from.row][from.column];
+	lc = iLinkMap[from.row][from.column];
     c1.row = lc.row;
     c1.column = lc.column;
     c1.id = lc.id;
