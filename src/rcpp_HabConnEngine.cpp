@@ -65,7 +65,7 @@ List habConnRcpp(NumericVector cost, int nrow, int ncol, double hab, double no_d
   List link_data_vec(out_data.link_data.size());
   for (unsigned int i = 0; i < out_data.link_data.size(); i++)
   {
-    link_data_vec[i] = List::create(Named("LinkId",i+1),
+    link_data_vec[i] = List::create(Named("LinkId", i+1),
       Named("StartId", out_data.link_data[i].start.id),
       Named("StartRow", out_data.link_data[i].start.row),
       Named("StartColumn", out_data.link_data[i].start.column),
@@ -88,6 +88,6 @@ List habConnRcpp(NumericVector cost, int nrow, int ncol, double hab, double no_d
     Named("PatchVector", nmpatch),
     Named("LinkVector", nmlink),
     Named("lcpPerimWeight", lcpPW),
-    Named("lcpLinkId",lcpLI),
+    Named("lcpLinkId", lcpLI),
     Named("LinkData", link_data_vec));
 }

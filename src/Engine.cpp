@@ -81,7 +81,7 @@ bool Engine::initialize()
       if (cost_map[i][j] == in_data->habitat)
       {
         bool isActive = false;
-        //look at all teh 4 adjacent cells
+        //look at all the 4 adjacent cells
         //left
         isActive = cellIsZero(i, j - 1);
         //right
