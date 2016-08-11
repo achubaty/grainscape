@@ -11,19 +11,19 @@ using namespace Rcpp;
 //'
 //' DESCRIPTION NEEDED
 //'
-//' @param cost              DESCRIPTION NEEDED
+//' @param cost              Vector form of the resistance map
 //'
-//' @param nrow              DESCRIPTION NEEDED
+//' @param nrow              Number of rows in the resistance map
 //'
-//' @param ncol              DESCRIPTION NEEDED
+//' @param ncol              Number of columns in the resistance map
 //'
-//' @param hab               DESCRIPTION NEEDED
+//' @param hab               Habitat ID number in the resistance map(i.e. 1 may correspond to a habitat cell)
 //'
-//' @param no_data           DESCRIPTION NEEDED
+//' @param no_data           Value of no data or unknown cells in the resistance map (i.e. -9999 for cells that have no record in them)
 //'
-//' @param distinctValues    DESCRIPTION NEEDED
+//' @param distinctValues    All the distince numbers in the resistance map in a vector form (i.e. the resistance map may include 1,2,3,5,9,200 as its resistances)
 //'
-//' @param threshold         DESCRIPTION NEEDED (default \code{1e-4}).
+//' @param threshold         Optional parameter to compare floating point zeros (default \code{1e-4}).
 //'
 //' @author Sam Doctolero
 //' @docType methods
@@ -54,8 +54,7 @@ List habConnRcpp(NumericVector cost, int nrow, int ncol, double hab, double no_d
   in_data.habitat = (float)hab;
   in_data.nodata = (float)no_data;
 
-  //char error_msg[MAX_CHAR_SIZE] = "Pass in this variable to the engine as an error message holder\n";
-  char error_msg[MAX_CHAR_SIZE] = "success\n";
+  char error_msg[MAX_CHAR_SIZE] = "Pass in this variable to the engine as an error message holder\n";
   Engine habConnCalculator(&in_data, &out_data, error_msg, (float)threshold);
   if (!habConnCalculator.initialize())
   {
@@ -63,29 +62,22 @@ List habConnRcpp(NumericVector cost, int nrow, int ncol, double hab, double no_d
     return R_NilValue;
   }
   habConnCalculator.start();
-  Rprintf("%s\n", error_msg);
 
   //create NumericVector values for vector values of out_data
   NumericVector nmvor(cost.size());
-  NumericVector nmlink(cost.size());
   NumericVector nmpatch(cost.size());
   //transfer the vector datat to the numericvector variables
   for (unsigned int i = 0; i < cost.size(); i++)
   {
     nmvor[i] = (double)out_data.voronoi_map[i];
-    nmlink[i] = (double)out_data.link_map[i];
     nmpatch[i] = (double)out_data.patch_map[i];
   }
-
-  //create numeric vectors for lcpPerimWeight and lcpLinkId
-  NumericVector lcpPW(cost.size());  //numericvector variable for lcpPerimWeight map
-  NumericVector lcpLI(cost.size());  //numericvector variable for lcpLinkId
 
   //create the returned data structure
   List link_data_vec(out_data.link_data.size());
   for (unsigned int i = 0; i < out_data.link_data.size(); i++)
   {
-    link_data_vec[i] = List::create(Named("LinkId", i+1),
+    link_data_vec[i] = List::create(Named("LinkId", (double)(i + 1)*(-1.0)),
       Named("StartId", out_data.link_data[i].start.id),
       Named("StartRow", out_data.link_data[i].start.row),
       Named("StartColumn", out_data.link_data[i].start.column),
@@ -99,15 +91,11 @@ List habConnRcpp(NumericVector cost, int nrow, int ncol, double hab, double no_d
     {
       int row = out_data.link_data[i].connection[j].row;
       int col = out_data.link_data[i].connection[j].column;
-      lcpPW[row*in_data.ncol + col] = out_data.link_data[i].cost;
-      lcpLI[row*in_data.ncol + col] = i;
+      nmpatch[row*in_data.ncol + col] = (double)(i + 1)*(-1.0);
     }
   }
 
   return List::create(Named("VoronoiVector", nmvor),
-    Named("PatchVector", nmpatch),
-    Named("LinkVector", nmlink),
-    Named("lcpPerimWeight", lcpPW),
-    Named("lcpLinkId", lcpLI),
+    Named("PatchLinkIDsVector", nmpatch),
     Named("LinkData", link_data_vec));
 }
