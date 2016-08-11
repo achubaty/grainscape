@@ -35,8 +35,7 @@ List habConnRcpp(NumericVector cost, int nrow, int ncol, double hab, double no_d
   //create instances of inputdata and output data
   InputData in_data;
   OutputData out_data;
-  //initialize the input data
-  //cost vector
+  //initialize the input data cost vector
   in_data.cost_vec.resize(cost.size());
   for (unsigned int i = 0; i < in_data.cost_vec.size(); i++)
   {
