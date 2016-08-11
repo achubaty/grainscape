@@ -83,7 +83,7 @@ private:
     
 public:
     //constructor that takes in a pointer to the input data, pointer to the output data, pointer to a character, and a zero threshold (which is defaulted to 0.0001)
-    Engine(InputData * in_d, OutputData * out_d, char * errmsg, float threshold = 0.000001f);
+    Engine(InputData * in_d, OutputData * out_d, char * errmsg, float threshold = 0.0001f);
 
     //default constructor
     Engine();

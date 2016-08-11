@@ -1,5 +1,9 @@
 #include "../inst/include/Engine.h"
 
+#include <Rcpp.h>
+
+using namespace Rcpp;
+
 Engine::Engine(InputData * in_d, OutputData * out_d,char * errmsg, float threshold)
 {
   in_data = in_d;
@@ -282,7 +286,7 @@ void Engine::createActiveCell(ActiveCell * ac, int row, int col)
 
     voronoi_map[row][col] = (float)(ac->id);
 
-    if (fabs(cost_map[row][col] - in_data->nodata) <= zeroThreshold)//handle no data values
+    if (abs(cost_map[row][col] - in_data->nodata) <= zeroThreshold)//handle no data values
     {
       new_ac.distance = dist;
       new_ac.resistance = 0.0f;
@@ -311,12 +315,10 @@ void Engine::createActiveCell(ActiveCell * ac, int row, int col)
   //create the links
   if (!outOfBounds(row, col, in_data->nrow, in_data->ncol) && voronoi_map[row][col] != 0.0f && voronoi_map[row][col] != ac->id )
   {
-    if (fabs(cost_map[row][col] - in_data->nodata) <= zeroThreshold)
+    if (abs(cost_map[row][col] - in_data->nodata) > zeroThreshold)
     {
-      return;
-    }
-    else
-      findPath(&iLinkMap[ac->row][ac->column], &iLinkMap[row][col], out_data->link_data);
+		findPath(&iLinkMap[ac->row][ac->column], &iLinkMap[row][col], out_data->link_data);
+    } 
   }
 }
 
