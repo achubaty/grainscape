@@ -83,11 +83,12 @@ a resource patch.  Lattice models can be used as a generalized and functional
 approach to scaling resistance surfaces.\cr
 Four types of links are identified in the MPG (1=Nearest neighbour;
 2=Minimum spanning tree; 3=Gabriel; 4=Delaunay;)\cr
-Areal measurements are given as raster cell counts.  If the raster projection
-is one where cell sizes are approximately constant in area (e.g., UTM),
+Areal measurements are given as raster cell counts.
+If the raster projection is one where cell sizes are approximately constant in area (e.g., UTM),
 or the raster covers a relatively small geographic extent (e.g., < 1000 km in dimension)
-areal measurements will often be adequate.  Reprojection of rasters should be
-considered to minimize these effects in other cases (see \code{\link{projectRaster}}).
+areal measurements will often be adequate.
+Reprojection of rasters should be considered to minimize these effects in
+other cases (see \code{\link{projectRaster}}).
 }
 \examples{
 \dontrun{
