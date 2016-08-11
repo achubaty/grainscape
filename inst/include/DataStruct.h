@@ -4,7 +4,7 @@
 struct Cell
 {
       int row, column;
-      int id;
+      float id;
 };
 
 struct Link
@@ -17,7 +17,7 @@ struct Link
 struct Patch
 {
       std::vector<Cell> body;           //body of the patch
-      int id;                           //id of the patch
+      float id;                           //id of the patch
 };
 
 //Map/Matrix container of type float - used to contain the output data (voronoi, link, and patches) as well as the cost map

@@ -1,41 +1,42 @@
 #include "../inst/include/Engine.h"
 
-#include <Rcpp.h>
-
-using namespace Rcpp;
-
+//Constructor that sets the values for its internal variables
 Engine::Engine(InputData * in_d, OutputData * out_d, char * errmsg, float threshold)
 {
-  in_data = in_d;
-  out_data = out_d;;
-  initialized = false;
-  voronoi_map = flMap(in_d->nrow, flCol(in_d->ncol, 0.0f));
-  link_map = flMap(in_d->nrow, flCol(in_d->ncol, 0.0f));
-  cost_map = flMap(in_d->nrow, flCol(in_d->ncol, 0.0f));
-  error_message = errmsg;
-  maxCost = emax(in_d->distinctValues);
-  costRes = in_d->distinctValues[0];
-  zeroThreshold = threshold;
+  in_data = in_d;							//give input data's pointer (or the address of what it is pointing to)
+  out_data = out_d;							//give output data's pointer (or the address of what it is pointing to)
+  initialized = false;						//set initialized to falze
+  voronoi_map = flMap(in_d->nrow, flCol(in_d->ncol, 0.0f));		//Create a map with floating point zero in each cell for the voronoi map
+  link_map = flMap(in_d->nrow, flCol(in_d->ncol, 0.0f));		//Create a map with floating point zero in each cell for the link map
+  cost_map = flMap(in_d->nrow, flCol(in_d->ncol, 0.0f));		//Create a map with floating point zero in each cell for the cost/resistance map
+  error_message = errmsg;					//give the errmsg's pointer value to the error_message  variable
+  maxCost = emax(in_d->distinctValues);		//find the maximum value from the distinct value vector (pretty much find the highest number in the cost/resistance map)
+  costRes = emin(in_d->distinctValues);		//give the lowest value from the distinct value vector
+  zeroThreshold = threshold;				//give a floating point zero threshold
 }
 
+//Default constructor
 Engine::Engine()
 {
-  in_data = 0;
-  out_data = 0;
-  initialized = false;
-  maxCost = 0.0f;
+  in_data = 0;				//give the pointer a null
+  out_data = 0;				//give the pointer a null
+  initialized = false;		//initialized is set to false
+  maxCost = 0.0f;			//let maxCost be zero
 }
 
+//Destructor that does nothing, since there aren't any dynamic memory allocation
 Engine::~Engine()
 {}
 
+
+//initialization function (this function should be called before running the engine)
 bool Engine::initialize()
 {
   //check to see if the input vector is equal to the number of cells in a map
   unsigned int size = in_data->nrow * in_data->ncol;
   if (size != in_data->cost_vec.size())
   {
-    char msg[] = "Product of number of rows and columns did not match cost/resistance vector size\n";
+    char msg[] = "product of number of rows and columns did not match cost/resistance vector size\n";
     writeErrorMessage(msg);
     return false;
   }
@@ -95,26 +96,26 @@ bool Engine::initialize()
           isActive = true;
 
         //if the cell is supposed to be an active cell then add it to the
-        //active cell holder
+        //active_cell_holder internal variable/property of the engine object
         if (isActive)
         {
-          ActiveCellHolder holder_t;
-          holder_t.value = 0.0f;
-          Cell c;
-          c.row = i;
-          c.column = j;
-          c.id = (int)(voronoi_map[i][j]);
-          ActiveCell ac;
-          ac.time = 0.0f;
-          ac.id = c.id;
-          ac.distance = 0.0f;
-          ac.resistance = cost_map[i][j];
-          ac.originCell = c;
-          ac.row = i;
-          ac.column = j;
-          ac.parentResistance = 0.0f;
-          holder_t.add(ac);
-          active_cell_holder.insertH(holder_t);
+          ActiveCellHolder holder_t;		//create an instance of an ActiveCellHolder called 'holder_t'
+          holder_t.value = 0.0f;			//set the property "value" to zero
+          Cell c;							//create an instance of a Cell called 'c'
+          c.row = i;						//set the row variable of Cell 'c' to i's current value
+          c.column = j;						//set the columb variable of Cell 'c' to 'j' current value
+          c.id = (voronoi_map[i][j]);		//give Cell 'c' an id, which corresponds to the voronoi map's i'th and j'th element
+          ActiveCell ac;					//create an instance of an ActiveCell called 'ac'
+          ac.time = 0.0f;					//set the time inside 'ac' to zero
+          ac.id = c.id;						//set the id of 'ac' to 'c' id
+          ac.distance = 0.0f;				//set the eucledian distance from this element/cell to its origin element/cell to to zero
+          ac.resistance = cost_map[i][j];	//set the resistance of 'ac' to the value in the cost map's i'th and j'th element
+          ac.originCell = c;				//set the origin cell of 'ac' to c's properties
+          ac.row = i;						//set ac's row to i's value
+          ac.column = j;					//set ac's column to i's value
+          ac.parentResistance = 0.0f;		//set the parentResistance to zero
+          holder_t.add(ac);						//add the ActiveCell 'ac' to the ActiveCellHolder 'holder_t' by calling the add function
+          active_cell_holder.insertH(holder_t);	//insert holder_t in the active_cell_holder variable of the engine object
         }
       }
     }
@@ -127,29 +128,33 @@ bool Engine::initialize()
     writeErrorMessage(msg);
     return false;
   }
+
   //resize link map and initialize the cells
-  iLinkMap = LinkMap(in_data->nrow, lcCol(in_data->ncol));
-  for (unsigned int i = 0; i < active_cell_holder.size(); i++)
+  iLinkMap = LinkMap(in_data->nrow, lcCol(in_data->ncol)); //give the map nrow rows and ncol columns
+  for (unsigned int i = 0; i < active_cell_holder.size(); i++) //parse through each ActiveCell in the active_cell_holder
   {
-    ActiveCell ac = active_cell_holder.holder_list[0].list[i];
-    LinkCell lc;
-    lc.row = ac.row;
-    lc.column = ac.column;
-    lc.fromCell = ac.originCell;
-    lc.originCell = ac.originCell;
-    lc.distance = 0.0f;
-    lc.id = ac.id;
-    lc.cost = 0.0f;
-    iLinkMap[lc.row][lc.column] = lc;
+	//at this point the active_cell_holder will only have one list element
+    ActiveCell ac = active_cell_holder.holder_list[0].list[i];	//grab the i'th ActiveCell in the list and call it 'ac'
+    LinkCell lc;						//create an instance of a LinkCell called 'lc'
+    lc.row = ac.row;					//set lc's row to ac's row
+    lc.column = ac.column;				//set lc's column to ac's column
+    lc.fromCell = ac.originCell;		//set lc's fromCell property to ac's originCell property
+    lc.originCell = ac.originCell;		//set lc's originCell property to ac's originCell property
+    lc.distance = 0.0f;					//set the euclidian distance to zero
+    lc.id = ac.id;						//set lc's id to ac's id
+    lc.cost = 0.0f;						//set the cost to zero
+    iLinkMap[lc.row][lc.column] = lc;	//insert lc to the appropriate element in the iLinkMap property of the engine
   }
 
+  //once all the initiaization parameters are done set the initialized property to true
   initialized = true;
+  //then return true
   return initialized;
 }
 
 void Engine::start()
 {
-
+	//if the engine object is not properly initialized then do not run the engine and just return
   if (!initialized)
   {
     char msg[] = "Engine is not initialized. Failed";
@@ -171,6 +176,7 @@ void Engine::start()
       std::vector<ActiveCell> ac_to_check = active_cell_holder.holder_list[i].list;
       for (unsigned int j = 0; j < ac_to_check.size(); j++)
       {
+		  //give the address of the element to the activeCellSpreadChecker function
         activeCellSpreadChecker(&ac_to_check[j]);
       }
     }
@@ -195,13 +201,18 @@ void Engine::start()
 
   //fill the link map
   fillLinkMap(link_map, out_data->link_data);
+  //fill the output's link vector with the engine's link_map values
   updateOutputMap(out_data->link_map, link_map);
+  //fill the output's voronoi vector with the engine's voronoi_map values
   updateOutputMap(out_data->voronoi_map, voronoi_map);
 }
 
 void Engine::updateOutputMap(std::vector<float> & vm, flMap mm)
 {
+	//resize vm and allocate nrow*ncol number of floating point elements
   vm = std::vector<float>(in_data->nrow*in_data->ncol, 0);
+  //parse through each element in the map 'mm' that has floating point values in it
+  //and assign those values to the appropriate element in the 'vm' vector
   for (int i = 0; i < in_data->nrow; i++)
   {
     for (int j = 0; j < in_data->ncol; j++)
@@ -213,6 +224,8 @@ void Engine::updateOutputMap(std::vector<float> & vm, flMap mm)
 
 bool Engine::cellIsZero(int row, int col)
 {
+	//check if the row and column values are not out of bounds and the voronoi_map's row'th and col'th 
+	//element is zero if both are true then return true otherwise false
   if (!outOfBounds(row, col, in_data->nrow, in_data->ncol) && voronoi_map[row][col] == 0.0f)
     return true;
   return false;
@@ -220,12 +233,11 @@ bool Engine::cellIsZero(int row, int col)
 
 void Engine::activeCellSpreadChecker(ActiveCell * ac)
 {
-  //if the time difference is greater than the resistance value at cell c
+  //if the time or number of iteration since the ActiveCell is instantiated is greater than the resistance value at cell c
   //include it in the spread_list
-  //if ((internal_time - ac->time) >= ac->resistance)
   if (ac->time >= ac->resistance)
   {
-    //include the list in spread list in an order
+    //include the list in spread list in an order by increasing distance
     if (spread_list.size() <= 0)
       spread_list.push_back(*ac);
     else
@@ -249,14 +261,18 @@ void Engine::activeCellSpreadChecker(ActiveCell * ac)
     //if the time difference is still smaller than the resistance value
     //include it in the temporary_active_cell_holder
     //find the proper queue that the active cell belongs to
+	 
+	  //increment the time property by either 1.0 or the equation below (whichever one is the largest)
     ac->time += std::max(1.0f, (ac->resistance - ac->parentResistance) * costRes / maxCost);
-    ActiveCellHolder h_temp;
-    h_temp.value = ac->distance;
-    h_temp.list.push_back(*ac);
-    if (temporary_active_cell_holder.size() <= 0)
+    ActiveCellHolder h_temp;			//create an instance of an ActiveCellHolder called 'h_temp'
+    h_temp.value = ac->distance;		//set h_temp's value to ac's distance
+    h_temp.list.push_back(*ac);			//insert the ActiveCell that ac is pointing to at the end of h_temp's list property (a vector of ActiveCells)
+    //if the temporary_active_cell_holder is empty then just include h_temp in it since no sorting is needed
+	if (temporary_active_cell_holder.size() <= 0)
     {
       temporary_active_cell_holder.holder_list.push_back(h_temp);
     }
+	//otherwise call the function insertH to handle sorting h_temp in the temporary_active_cell_holder
     else
     {
       temporary_active_cell_holder.insertH(h_temp);
@@ -269,43 +285,44 @@ void Engine::createActiveCell(ActiveCell * ac, int row, int col)
   //if not out of bounds and have not been conquered by other patches then create a new active cell
   if (!outOfBounds(row, col, in_data->nrow, in_data->ncol) && voronoi_map[row][col] == 0.0f)
   {
-    Cell c;
-    c.row = row;
-    c.column = col;
-    c.id = ac->id;
-    float dist = calcDistance(ac->originCell, c);
-    ActiveCell new_ac;
-    new_ac.time = 0.0f;
-    new_ac.distance = dist;
-    new_ac.resistance = cost_map[row][col];
-    new_ac.originCell = ac->originCell;
-    new_ac.id = c.id;
-    new_ac.row = c.row;
-    new_ac.column = c.column;
-    new_ac.parentResistance = ac->resistance;
+    Cell c;					//create an instance of Cell called 'c'
+    c.row = row;			//set c's row to the parameter row
+    c.column = col;			//set c's column to the parameter col
+    c.id = ac->id;			//set c's id to the id of the ActiveCell that the parameter 'ac' is pointing to
+    float dist = calcDistance(ac->originCell, c);	//create a variable distance and calculate the distance between 'c' and ac's originCell
+    ActiveCell new_ac;							//create an instance of ActiveCell called 'new_ac'
+    new_ac.time = 0.0f;							//set the time to zero in new_ac
+    new_ac.distance = dist;						//set new_ac's distance to dist
+    new_ac.resistance = cost_map[row][col];		//set new_ac's resistance to cost_map's row'th and col'th element
+    new_ac.originCell = ac->originCell;			//set new_ac's originCell to ac's originCell
+    new_ac.id = c.id;							//set new_ac's id to c's id
+    new_ac.row = c.row;							//set new_ac's row to c's row
+    new_ac.column = c.column;					//set new_ac's column to c's column
+    new_ac.parentResistance = ac->resistance;	//set new_ac's parentResistance to ac's resistance
 
-    voronoi_map[row][col] = (float)(ac->id);
+	//this is the actual spreading move
+    voronoi_map[row][col] = ac->id;	//then set voronoi_map's row'th and col'th element to ac's id
 
+	//if a no_data value in the cost_map is encountered then set the resistance and parent resistances to zero
+	//this will cause the engine to automatically spread into the no_data cells and not connect them
     if (fabs(cost_map[row][col] - in_data->nodata) <= zeroThreshold)//handle no data values
     {
-      new_ac.distance = dist;
       new_ac.resistance = 0.0f;
-      new_ac.originCell = ac->originCell;
-      new_ac.id = c.id;
-      new_ac.row = c.row;
-      new_ac.column = c.column;
       new_ac.parentResistance = 0.0f;
     }
-    else //connect cells
+    else //however if no no_data cells are encountered create a link between the old active cell (ac) to the cell that it is spreading to (new_ac)
       connectCell(ac, row, col, cost_map[row][col]);
 
-    ActiveCellHolder h_temp;
-    h_temp.value = dist;
-    h_temp.list.push_back(new_ac);
+	//insert new_ac to the temporary_active_cell_holder as a new ActiveCell
+    ActiveCellHolder h_temp;			//create an instance of ActiveCellHolder called 'h_temp'
+    h_temp.value = dist;				//set h_temp's value to dist
+    h_temp.list.push_back(new_ac);		//insert new_ac into h_temp's list property
+	//if the temporary_active_cell holder is empty then include h_temp at the end of the list
     if (temporary_active_cell_holder.size() <= 0)
     {
       temporary_active_cell_holder.holder_list.push_back(h_temp);
     }
+	//otherwise call the insertH function to properly order or sort the elements
     else
     {
       temporary_active_cell_holder.insertH(h_temp);
@@ -313,20 +330,29 @@ void Engine::createActiveCell(ActiveCell * ac, int row, int col)
   }
 
   //create the links
+  //check if the row and col arguments are not out of bounds, voronoi_map's row'th and col'th element is not zero and not ac's id then this is a voronoi boundary
   if (!outOfBounds(row, col, in_data->nrow, in_data->ncol) && voronoi_map[row][col] != 0.0f && voronoi_map[row][col] != ac->id )
   {
+	  //if the cost_map's row'th and col'th element is not a no_data element then create the link
+	  //otherwise ignore it
+	  //no_data cells should not be included in the link or path between habitats or patches
     if (fabs(cost_map[row][col] - in_data->nodata) > zeroThreshold)
     {
-    findPath(&iLinkMap[ac->row][ac->column], &iLinkMap[row][col], out_data->link_data);
+		findPath(&iLinkMap[ac->row][ac->column], &iLinkMap[row][col], out_data->link_data);
     }
   }
 }
 
 void Engine::writeErrorMessage(char* msg)
 {
+	//if the msg's number of characters is greater than the allocated memory for error_message
+	//then characters in msg cannot be inserted into error_message due to insufficient allocated space
+	//therefore do not alter error_message
   if (strlen(msg) > strlen(error_message))
     return;
 
+  //otherwise, insert all the characters of msg into error_message
+  //once all of msg has been transferred then set the rest of error_message to null
   for (unsigned int i = 0; i < strlen(error_message); i++)
   {
     if (i < strlen(msg))
@@ -338,17 +364,34 @@ void Engine::writeErrorMessage(char* msg)
 
 float Engine::emax(std::vector<float> vec)
 {
+	//set the first element to the instantiated floating point variable called 'ret'
   float ret = vec[0];
+  //parse through the rest of the vector
   for (unsigned int i = 1; i < vec.size(); i++)
   {
+	  //if ret's value is less than the i'th element of vec then set ret to that element
     if (ret < vec[i])
       ret = vec[i];
   }
   return ret;
 }
 
+float Engine::emin(std::vector<float> vec)
+{
+	//set the first element to the instantiated floating point variable called 'ret'
+	float ret = vec[0];
+	//if ret's value is greater than the i'th element of vec then set ret to that element
+	for (unsigned int i = 1; i < vec.size(); i++)
+	{
+		if (ret > vec[i])
+			ret = vec[i];
+	}
+	return ret;
+}
+
 bool Engine::outOfBounds(int row, int col, int nrow, int ncol)
 {
+	//if row or col is outside the map's boundaries then return false
   if (row < 0 || row >= nrow || col < 0 || col >= ncol)
     return true;
   return false;
@@ -356,6 +399,8 @@ bool Engine::outOfBounds(int row, int col, int nrow, int ncol)
 
 float Engine::calcDistance(Cell c1, Cell c2)
 {
+	//euclidean distance between two cells 
+	//assuming square cells
   int dr = c1.row - c2.row;
   int dc = c1.column - c2.column;
   return sqrt((float)(dr*dr) + (float)(dc*dc));
@@ -363,90 +408,111 @@ float Engine::calcDistance(Cell c1, Cell c2)
 
 bool Engine::cellsEqual(Cell c1, Cell c2)
 {
+	//if the rows and columns of c1 and c2 match then return true
+	//otherwise false
   if (c1.row == c2.row && c1.column == c2.column)
     return true;
   return false;
 }
 
 //Patch Finding Functions
-std::vector<Patch> Engine::findPatches(int nrow, int ncol, int habitat)
+std::vector<Patch> Engine::findPatches(int nrow, int ncol, float habitat)
 {
+	//declare a vector of Patches called 'ret'
   std::vector<Patch> ret;
+  //declare and initiate an idCount and set it to 5
   int idCount = 5;
 
   //row loop
   for (int row = 0; row < nrow; row++)
   {
+	  //column loop
     for (int col = 0; col < ncol; col++)
     {
-      if (cost_map[row][col] == (float)habitat)
+		//if the row'th and col'th element of the cost_map is equal to the habitat then it is a patch or part of a patch
+      if (cost_map[row][col] == habitat)
       {
-        int ind1 = -1;
+		  //go through the adjacent cells and check if this is a new patch or just part of a patch
+        int ind1 = -1;	//set an index to -1 called 'ind1'
         //top left
         if (!outOfBounds(row - 1, col - 1, nrow, ncol) && cost_map[row - 1][col - 1] == habitat)
         {
+			//find the index of the patch from the patch list (ret) given the value of the voronoi_map on the top left of the row'th and col'th element
           ind1 = getIndexFromList(voronoi_map[row - 1][col - 1], ret);
         }
         //left
         if (!outOfBounds(row, col - 1, nrow, ncol) && cost_map[row][col - 1] == habitat)
         {
+			//find the index of the patch from the patch list (ret) given the value of the voronoi_map on the left of the row'th and col'th element
           ind1 = getIndexFromList(voronoi_map[row][col - 1], ret);
         }
 
         //top and top right will be in the same patch
-        int ind2 = -1;
+        int ind2 = -1;	//set the index to -1 called 'ind2'
         //top right
         if (!outOfBounds(row - 1, col + 1, ncol, nrow) && cost_map[row - 1][col + 1] == habitat)
         {
+			//find the index of the patch from the patch list (ret) given the value of the voronoi_map on the top right of the row'th and col'th element
           ind2 = getIndexFromList(voronoi_map[row - 1][col + 1], ret);
         }
         //top
         if (!outOfBounds(row - 1, col, ncol, nrow) && cost_map[row - 1][col] == habitat)
         {
+			//find the index of the patch from the patch list (ret) given the value of the voronoi_map on the top of the row'th and col'th element
           ind2 = getIndexFromList(voronoi_map[row - 1][col], ret);
         }
 
+		//declare and initiate another index variable called 'finalInd'
         int finalInd = -1;
         //Go through cases
+		//if index1 and index 2 are equal then the set finalInd to either one (I chose ind1)
         if (ind1 == ind2) finalInd = ind1;
+		//if ind1 == -1 and ind2 is some other number other than -1 then the cell (row'th and col'th) belongs to the patch at the ind2 element of the patch list (ret)
         else if (ind1 == -1 && ind2 != -1) finalInd = ind2;
+		//if ind1 is some other number other than -1 and ind2 is -1 then the cell (row'th and col'th) belongs to the patch at the ind1 element of the patch list (ret)
         else if (ind1 != -1 && ind2 == -1) finalInd = ind1;
+		//if ind1 and ind2 aren't -1 then the cell (row'th and col'th) belongs to two different patches. 
         else if (ind1 != -1 && ind2 != -1)
         {
+			//combine the two patches and return the index of the combined patch
           finalInd = combinePatches(ind1, ind2, ret);
         }
+		//else set finaInd to -1, meaning a new patch must be created
         else finalInd = -1;
 
         if (finalInd == -1)
         {
           //No index found then create a new patch
-          Patch temp;
-          temp.id = idCount++;
-          Cell c = { row, col, temp.id };
-          voronoi_map[row][col] = (float)(temp.id);
-          temp.body.push_back(c);
-          ret.push_back(temp);
+          Patch temp;					//create an instance of a Patch called 'temp'
+          temp.id = (float)idCount++;	//give temp an id of idCount then increment idCount
+          Cell c = { row, col, temp.id };	//set Cell c's properties to row, col, and temp's id 
+          voronoi_map[row][col] = temp.id;	//set the row'th and col'th element of the voronoi_map to temp's id
+          temp.body.push_back(c);		//insert Cell c in temp's property called body (vector of Cells)
+          ret.push_back(temp);			//insert temp in ret ( a vector of Patches)
         }
         else
         {
-          Cell c = { row, col, ret[finalInd].id };
-          ret[finalInd].body.push_back(c);
-          voronoi_map[row][col] = (float)(ret[finalInd].id);
+			//otherwise insert the cell (row'th and col'th) in the patch
+          Cell c = { row, col, ret[finalInd].id };	//set Cell c's properties to row, col , and ret's id at the finalInd'th element
+          ret[finalInd].body.push_back(c);			//insert Cell c inside the property body of ret at the finalInd'th element
+          voronoi_map[row][col] = ret[finalInd].id;	//set the row'th and col'th element of the voronoi_map to ret's id at the finalInd'th element
         }
       }
     }
   }
+  //return a vector of Patches (which is ret)
   return ret;
 }
 
 int Engine::combinePatches(int & ind1, int & ind2, std::vector<Patch> & list)
 {
-  int ret = -1;
-  Patch * p1 = &list[ind1];
-  Patch * p2 = &list[ind2];
-  if (p1->body.size() > p2->body.size())
-  {
-    if (ind1 > ind2)
+  int ret = -1;				//create an instance of an indexing integer and set it to -1
+  Patch * p1 = &list[ind1];	//create an instance of a pointer to a Patch called 'p1' and set it to list's element at index == ind1
+  Patch * p2 = &list[ind2];	//create an instance of a pointer to a Patch called 'p1' and set it to list's element at index == ind2
+  if (p1->body.size() > p2->body.size())	//if the Patch at p1 has a larger are or number of cells than the Patch at p2
+  {											//then transfer all of p2's cells to p1
+    //set ret to ind1 - 1 if ind1 is greater than ind2 (because the list will decrease in size and this is to take that into account)
+	  if (ind1 > ind2)
       ret = ind1 - 1;
     else
       ret = ind1;
@@ -459,10 +525,14 @@ int Engine::combinePatches(int & ind1, int & ind2, std::vector<Patch> & list)
       p1->body.push_back(cList[i]);
       voronoi_map[cList[i].row][cList[i].column] = (float)id;
     }
+	//remove the element at ind2 of list
     list.erase(list.begin() + ind2);
   }
+  //else if the Patch at p2 has a larger are or number of cells than the Patch at p1
+  //then transfer all of p1's cells to p2
   else
   {
+	  //if ind2 is greater than ind1 then set ret to ind2 minus 1 due to the list's number of elements decreasing later on
     if (ind2 > ind1)
       ret = (ind2 - 1);
     else
@@ -476,8 +546,10 @@ int Engine::combinePatches(int & ind1, int & ind2, std::vector<Patch> & list)
       p2->body.push_back(cList[i]);
     voronoi_map[cList[i].row][cList[i].column] = (float)id;
     }
+	//remove the element at ind1 of list
     list.erase(list.begin() + ind1);
   }
+  //return the index of the combined patch
   return ret;
 }
 

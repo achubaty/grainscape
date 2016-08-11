@@ -21,7 +21,7 @@ using namespace Rcpp;
 //'
 //' @param no_data           Value of no data or unknown cells in the resistance map (i.e. -9999 for cells that have no record in them)
 //'
-//' @param distinctValues    All the distince numbers in the resistance map in a vector form (i.e. the resistance map may include 1,2,3,5,9,200 as its resistances)
+//' @param distinctValues    All the distince numbers in the resistance map in a vector form. Make sure that the values are in an increasing order (i.e. the resistance map may include 1,2,3,5,9,200 as its resistances)
 //'
 //' @param threshold         Optional parameter to compare floating point zeros (default \code{1e-4}).
 //'

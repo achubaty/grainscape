@@ -66,7 +66,7 @@ private:
     //finds the appropriate index of the sough patch based on the given ID
     int getIndexFromList(float & id, std::vector<Patch> & patches);
     //called from the initialization step to find all the patches in the map
-    std::vector<Patch> findPatches(int nrow, int ncol, int habitat);
+    std::vector<Patch> findPatches(int nrow, int ncol, float habitat);
 
     //Linking functions
     //connects two cells together
@@ -98,6 +98,9 @@ public:
 
     //finds the maximum value in the vector of values
     static float emax(std::vector<float> vec);
+
+	//find the lowest value in the vector of values
+	static float emin(std::vector<float> vec);
 
     //finds the euclidean distance between two cells
     static float calcDistance(Cell c1, Cell c2);
