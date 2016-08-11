@@ -7,9 +7,30 @@
 
 using namespace std;
 using namespace Rcpp;
-
+//' Habitat connectivity
+//'
+//' DESCRIPTION NEEDED
+//'
+//' @param cost              DESCRIPTION NEEDED
+//'
+//' @param nrow              DESCRIPTION NEEDED
+//'
+//' @param ncol              DESCRIPTION NEEDED
+//'
+//' @param hab               DESCRIPTION NEEDED
+//'
+//' @param no_data           DESCRIPTION NEEDED
+//'
+//' @param distinctValues    DESCRIPTION NEEDED
+//'
+//' @param threshold         DESCRIPTION NEEDED (default \code{1e-4}).
+//'
+//' @author Sam Doctolero
+//' @docType methods
+//' @export
+//' @rdname habConnRcpp
 // [[Rcpp::export]]
-List habConnRcpp(NumericVector cost, int nrow, int ncol, double hab, double no_data, NumericVector distinctValues,double threshold = 0.0001)
+List habConnRcpp(NumericVector cost, int nrow, int ncol, double hab, double no_data, NumericVector distinctValues, double threshold = 0.0001)
 {
   //create instances of inputdata and output data
   InputData in_data;
