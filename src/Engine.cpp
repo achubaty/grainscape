@@ -4,7 +4,7 @@
 
 using namespace Rcpp;
 
-Engine::Engine(InputData * in_d, OutputData * out_d,char * errmsg, float threshold)
+Engine::Engine(InputData * in_d, OutputData * out_d, char * errmsg, float threshold)
 {
   in_data = in_d;
   out_data = out_d;;
@@ -31,7 +31,7 @@ Engine::~Engine()
 
 bool Engine::initialize()
 {
-	//check to see if the input vector is equal to the number of cells in a map
+  //check to see if the input vector is equal to the number of cells in a map
   unsigned int size = in_data->nrow * in_data->ncol;
   if (size != in_data->cost_vec.size())
   {
@@ -150,14 +150,14 @@ bool Engine::initialize()
 void Engine::start()
 {
 
-	if (!initialized)
-	{
-		char msg[] = "Engine is not initialized. Failed";
-		writeErrorMessage(msg);
-		return;
-	}
+  if (!initialized)
+  {
+    char msg[] = "Engine is not initialized. Failed";
+    writeErrorMessage(msg);
+    return;
+  }
 
-	//keep looping until there aren't any more active cells
+  //keep looping until there aren't any more active cells
   while (active_cell_holder.size() > 0)
   {
     //clear the temporary active cell holder
@@ -317,8 +317,8 @@ void Engine::createActiveCell(ActiveCell * ac, int row, int col)
   {
     if (abs(cost_map[row][col] - in_data->nodata) > zeroThreshold)
     {
-		findPath(&iLinkMap[ac->row][ac->column], &iLinkMap[row][col], out_data->link_data);
-    } 
+    findPath(&iLinkMap[ac->row][ac->column], &iLinkMap[row][col], out_data->link_data);
+    }
   }
 }
 
@@ -371,72 +371,72 @@ bool Engine::cellsEqual(Cell c1, Cell c2)
 //Patch Finding Functions
 std::vector<Patch> Engine::findPatches(int nrow, int ncol, int habitat)
 {
-	std::vector<Patch> ret;
-	int idCount = 5;
+  std::vector<Patch> ret;
+  int idCount = 5;
 
-	//row loop
-	for (int row = 0; row < nrow; row++)
-	{
-		for (int col = 0; col < ncol; col++)
-		{
-			if (cost_map[row][col] == (float)habitat)
-			{
-				int ind1 = -1;
-				//top left
-				if (!outOfBounds(row - 1, col - 1, nrow, ncol) && cost_map[row - 1][col - 1] == habitat)
-				{
-					ind1 = getIndexFromList(voronoi_map[row - 1][col - 1], ret);
-				}
-				//left
-				if (!outOfBounds(row, col - 1, nrow, ncol) && cost_map[row][col - 1] == habitat)
-				{
-					ind1 = getIndexFromList(voronoi_map[row][col - 1], ret);
-				}
+  //row loop
+  for (int row = 0; row < nrow; row++)
+  {
+    for (int col = 0; col < ncol; col++)
+    {
+      if (cost_map[row][col] == (float)habitat)
+      {
+        int ind1 = -1;
+        //top left
+        if (!outOfBounds(row - 1, col - 1, nrow, ncol) && cost_map[row - 1][col - 1] == habitat)
+        {
+          ind1 = getIndexFromList(voronoi_map[row - 1][col - 1], ret);
+        }
+        //left
+        if (!outOfBounds(row, col - 1, nrow, ncol) && cost_map[row][col - 1] == habitat)
+        {
+          ind1 = getIndexFromList(voronoi_map[row][col - 1], ret);
+        }
 
-				//top and top right will be in the same patch
-				int ind2 = -1;
-				//top right
-				if (!outOfBounds(row - 1, col + 1, ncol, nrow) && cost_map[row - 1][col + 1] == habitat)
-				{
-					ind2 = getIndexFromList(voronoi_map[row - 1][col + 1], ret);
-				}
-				//top
-				if (!outOfBounds(row - 1, col, ncol, nrow) && cost_map[row - 1][col] == habitat)
-				{
-					ind2 = getIndexFromList(voronoi_map[row - 1][col], ret);
-				}
+        //top and top right will be in the same patch
+        int ind2 = -1;
+        //top right
+        if (!outOfBounds(row - 1, col + 1, ncol, nrow) && cost_map[row - 1][col + 1] == habitat)
+        {
+          ind2 = getIndexFromList(voronoi_map[row - 1][col + 1], ret);
+        }
+        //top
+        if (!outOfBounds(row - 1, col, ncol, nrow) && cost_map[row - 1][col] == habitat)
+        {
+          ind2 = getIndexFromList(voronoi_map[row - 1][col], ret);
+        }
 
-				int finalInd = -1;
-				//Go through cases
-				if (ind1 == ind2) finalInd = ind1;
-				else if (ind1 == -1 && ind2 != -1) finalInd = ind2;
-				else if (ind1 != -1 && ind2 == -1) finalInd = ind1;
-				else if (ind1 != -1 && ind2 != -1)
-				{
-					finalInd = combinePatches(ind1, ind2, ret);
-				}
-				else finalInd = -1;
+        int finalInd = -1;
+        //Go through cases
+        if (ind1 == ind2) finalInd = ind1;
+        else if (ind1 == -1 && ind2 != -1) finalInd = ind2;
+        else if (ind1 != -1 && ind2 == -1) finalInd = ind1;
+        else if (ind1 != -1 && ind2 != -1)
+        {
+          finalInd = combinePatches(ind1, ind2, ret);
+        }
+        else finalInd = -1;
 
-				if (finalInd == -1)
-				{
-					//No index found then create a new patch
-					Patch temp;
-					temp.id = idCount++;
-					Cell c = { row, col, temp.id };
-					voronoi_map[row][col] = (float)(temp.id);
-					temp.body.push_back(c);
-					ret.push_back(temp);
-				}
-				else
-				{
-					Cell c = { row, col, ret[finalInd].id };
-					ret[finalInd].body.push_back(c);
-					voronoi_map[row][col] = (float)(ret[finalInd].id);
-				}
-			}
-		}
-	}
-	return ret;
+        if (finalInd == -1)
+        {
+          //No index found then create a new patch
+          Patch temp;
+          temp.id = idCount++;
+          Cell c = { row, col, temp.id };
+          voronoi_map[row][col] = (float)(temp.id);
+          temp.body.push_back(c);
+          ret.push_back(temp);
+        }
+        else
+        {
+          Cell c = { row, col, ret[finalInd].id };
+          ret[finalInd].body.push_back(c);
+          voronoi_map[row][col] = (float)(ret[finalInd].id);
+        }
+      }
+    }
+  }
+  return ret;
 }
 
 int Engine::combinePatches(int & ind1, int & ind2, std::vector<Patch> & list)
@@ -474,7 +474,7 @@ int Engine::combinePatches(int & ind1, int & ind2, std::vector<Patch> & list)
     for (unsigned int i = 0; i < cList.size(); i++)
     {
       p2->body.push_back(cList[i]);
-	  voronoi_map[cList[i].row][cList[i].column] = (float)id;
+    voronoi_map[cList[i].row][cList[i].column] = (float)id;
     }
     list.erase(list.begin() + ind1);
   }
@@ -556,7 +556,7 @@ Cell Engine::parseMap(LinkCell lc, Link & path)
     path.connection.push_back(c1);
     ret = lc;
     Cell from = lc.fromCell;
-	lc = iLinkMap[from.row][from.column];
+  lc = iLinkMap[from.row][from.column];
     c1.row = lc.row;
     c1.column = lc.column;
     c1.id = lc.id;

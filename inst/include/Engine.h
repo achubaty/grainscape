@@ -1,29 +1,28 @@
 /** Engine Class
  * The engine class is specifically created to spread and find connections between habitats given a cost vector and the habitat id or number.
  * The engine is initialized by converting the cost vector into a map, it then finds the habitats or patches that correspond to the habitat id, and
- * finds the initial active cells. Any errors or misbehaviours in the engine is recorded and sent to the interface for diagnostic purposes. 
+ * finds the initial active cells. Any errors or misbehaviours in the engine is recorded and sent to the interface for diagnostic purposes.
 */
 
-#pragma once
-#include "DataStruct.h"                //Contains data structures necessary for the engine to work
-#include <cstring>        
+#include "DataStruct.h"         //Contains data structures necessary for the engine to work
+#include <cstring>
 #include <algorithm>
 #include <cmath>
 
-#define MAX_CHAR_SIZE 1024            //Serves as the maximum amount of letters that can or should be stored for the error message
+#define MAX_CHAR_SIZE 1024      //Serves as the maximum amount of letters that can or should be stored for the error message
 
 class Engine
 {
 private:
     //properties
-    InputData * in_data;                //stores the data given by the user
-    OutputData * out_data;                //stores the data that's given to the user
+    InputData * in_data;        //stores the data given by the user
+    OutputData * out_data;      //stores the data that's given to the user
 
-    float maxCost;                        //maximum cost in the cost vector
-    float costRes;                        //cost resolution
-    float zeroThreshold;                //degree of error for the floating point zero value (floating point have both +ve and -ve values)
+    float maxCost;              //maximum cost in the cost vector
+    float costRes;              //cost resolution
+    float zeroThreshold;        //degree of error for the floating point zero value (floating point have both +ve and -ve values)
 
-    ActiveCellQueue active_cell_holder;                //active cells holder
+    ActiveCellQueue active_cell_holder;              //active cells holder
     ActiveCellQueue temporary_active_cell_holder;    //a temporary active cell holder when the active cell holder is being modified
     std::vector<ActiveCell> spread_list;            //stores the active cells that are ready to spread to their adjacent cells
 
@@ -39,7 +38,7 @@ private:
 
     //Functions://
     //indicates if the cell or pixel has a zero value in the voronoi map
-    bool cellIsZero(int row, int col);                            
+    bool cellIsZero(int row, int col);
 
     //checks if the given active cell is ready to spread.If the cell can spread, it is added to the spread list
     void activeCellSpreadChecker(ActiveCell * ac);
@@ -80,7 +79,7 @@ private:
     Cell parseMap(LinkCell lc, Link & path);
     //it looks for indirect path that's "cheaper" than the direct path and gives the new path the indirect path if found
     void lookForIndirectPath(std::vector<Link> & path_list, Link & path);
-    
+
 public:
     //constructor that takes in a pointer to the input data, pointer to the output data, pointer to a character, and a zero threshold (which is defaulted to 0.0001)
     Engine(InputData * in_d, OutputData * out_d, char * errmsg, float threshold = 0.0001f);
