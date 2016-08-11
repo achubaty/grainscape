@@ -286,7 +286,7 @@ void Engine::createActiveCell(ActiveCell * ac, int row, int col)
 
     voronoi_map[row][col] = (float)(ac->id);
 
-    if (abs(cost_map[row][col] - in_data->nodata) <= zeroThreshold)//handle no data values
+    if (fabs(cost_map[row][col] - in_data->nodata) <= zeroThreshold)//handle no data values
     {
       new_ac.distance = dist;
       new_ac.resistance = 0.0f;
@@ -315,7 +315,7 @@ void Engine::createActiveCell(ActiveCell * ac, int row, int col)
   //create the links
   if (!outOfBounds(row, col, in_data->nrow, in_data->ncol) && voronoi_map[row][col] != 0.0f && voronoi_map[row][col] != ac->id )
   {
-    if (abs(cost_map[row][col] - in_data->nodata) > zeroThreshold)
+    if (fabs(cost_map[row][col] - in_data->nodata) > zeroThreshold)
     {
     findPath(&iLinkMap[ac->row][ac->column], &iLinkMap[row][col], out_data->link_data);
     }
