@@ -1,7 +1,7 @@
 # c++ files
-*.dll
-*.o
-*.so
+src/*.dll
+src/*.o
+src/*.so
 
 # R files
 .Rproj.user
