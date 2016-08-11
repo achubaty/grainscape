@@ -24,17 +24,17 @@ private:
 
     ActiveCellQueue active_cell_holder;              //active cells holder
     ActiveCellQueue temporary_active_cell_holder;    //a temporary active cell holder when the active cell holder is being modified
-    std::vector<ActiveCell> spread_list;            //stores the active cells that are ready to spread to their adjacent cells
+    std::vector<ActiveCell> spread_list;             //stores the active cells that are ready to spread to their adjacent cells
 
-    LinkMap iLinkMap;                //A map that has all the cell connections
+    LinkMap iLinkMap;           //A map that has all the cell connections
 
-    flMap voronoi_map;                //A voronoi map that contains float numbers in each cell
-    flMap link_map;                    //A link map that contains float numbers in each cell
-    flMap cost_map;                    //A map taht contains all the costs/resistances per cell
+    flMap voronoi_map;          //A voronoi map that contains float numbers in each cell
+    flMap link_map;             //A link map that contains float numbers in each cell
+    flMap cost_map;             //A map taht contains all the costs/resistances per cell
 
-    bool initialized;                //indicates if the engine is ready to run or begin
+    bool initialized;           //indicates if the engine is ready to run or begin
 
-    char * error_message;            //a pointer to a character, the contents of this variable is modified if the engine does not work properly
+    char * error_message;       //a pointer to a character, the contents of this variable is modified if the engine does not work properly
 
     //Functions://
     //indicates if the cell or pixel has a zero value in the voronoi map

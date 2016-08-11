@@ -141,5 +141,4 @@ struct ActiveCellQueue
       {
             return holder_list.size();
       }
-
 };
