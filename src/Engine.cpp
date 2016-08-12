@@ -8,9 +8,7 @@ Engine::Engine(InputData * in_d, OutputData * out_d, char * errmsg, float thresh
   initialized = false;						//set initialized to falze
   voronoi_map = flMap(in_d->nrow, flCol(in_d->ncol, 0.0f));		//Create a map with floating point zero in each cell for the voronoi map
   cost_map = flMap(in_d->nrow, flCol(in_d->ncol, 0.0f));		//Create a map with floating point zero in each cell for the cost/resistance map
-  error_message = errmsg;					//give the errmsg's pointer value to the error_message  variable
-  maxCost = emax(in_d->distinctValues);		//find the maximum value from the distinct value vector (pretty much find the highest number in the cost/resistance map)
-  costRes = emin(in_d->distinctValues);		//give the lowest value from the distinct value vector
+  error_message = errmsg;					//give the errmsg's pointer value to the error_message  variable	
   zeroThreshold = threshold;				//give a floating point zero threshold
 }
 
@@ -38,6 +36,20 @@ bool Engine::initialize()
     char msg[] = "product of number of rows and columns did not match cost/resistance vector size\n";
     writeErrorMessage(msg);
     return false;
+  }
+
+  //initialize maxCost and costRes (maxCost is the maximum resistance value in the raster and costRes is the minimum)
+  costRes = in_data->cost_vec[0];
+  maxCost = in_data->cost_vec[0];
+  for (unsigned int i = 1; i < in_data->cost_vec.size(); i++)
+  {
+	  //if the i'th element of cost_vec is smaller than costRes then give that to costRes
+	  if (costRes > in_data->cost_vec[i])
+		  costRes = in_data->cost_vec[i];
+
+	  //if the i'th element of cost_vec is larger than maxCost then give that to maxCost
+	  if (maxCost < in_data->cost_vec[i])
+		  maxCost = in_data->cost_vec[i];
   }
 
   //insert the cost values in the actual cost map

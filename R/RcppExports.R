@@ -6,21 +6,6 @@
 #' Internal function, not intended to be called directly.
 #' DESCRIPTION NEEDED
 #'
-<<<<<<< HEAD
-#' @param cost              Vector form of the resistance map
-#'
-#' @param nrow              Number of rows in the resistance map
-#'
-#' @param ncol              Number of columns in the resistance map
-#'
-#' @param hab               Habitat ID number in the resistance map(i.e. 1 may correspond to a habitat cell)
-#'
-#' @param no_data           Value of no data or unknown cells in the resistance map (i.e. -9999 for cells that have no record in them)
-#'
-#' @param distinctValues    All the distince numbers in the resistance map in a vector form. Make sure that the values are in an increasing order (i.e. the resistance map may include 1,2,3,5,9,200 as its resistances)
-#'
-#' @param threshold         Optional parameter to compare floating point zeros (default \code{1e-4}).
-=======
 #' @param cost              A numeric vector of habitat cost (resistance) values
 #'                          extracted from a raster cost map.
 #'
@@ -35,12 +20,11 @@
 #' @param distinctValues    A sorted (ascending) numeric vector of unique cost values.
 #'
 #' @param threshold         (Optional) threshold value for comparisons of floating point numbers (default \code{1e-4}).
->>>>>>> aaee700705b311024be6bba9d6ed324af35c6d97
 #'
 #' @author Sam Doctolero
 #' @docType methods
 #' @rdname habConnRcpp
-.habConnRcpp <- function(cost, nrow, ncol, hab, no_data, distinctValues, threshold = 0.0001) {
-    .Call('grainscape2_habConnRcpp', PACKAGE = 'grainscape2', cost, nrow, ncol, hab, no_data, distinctValues, threshold)
+.habConnRcpp <- function(cost, nrow, ncol, hab, no_data, threshold = 0.0001) {
+    .Call('grainscape2_habConnRcpp', PACKAGE = 'grainscape2', cost, nrow, ncol, hab, no_data, threshold)
 }
 

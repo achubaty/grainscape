@@ -48,7 +48,6 @@ struct ActiveCell
 struct InputData
 {
       std::vector<float> cost_vec;
-      std::vector<float> distinctValues;
       int nrow, ncol;
       float habitat, nodata;
 };

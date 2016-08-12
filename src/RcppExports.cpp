@@ -6,8 +6,8 @@
 using namespace Rcpp;
 
 // habConnRcpp
-List habConnRcpp(NumericVector cost, int nrow, int ncol, double hab, double no_data, NumericVector distinctValues, double threshold);
-RcppExport SEXP grainscape2_habConnRcpp(SEXP costSEXP, SEXP nrowSEXP, SEXP ncolSEXP, SEXP habSEXP, SEXP no_dataSEXP, SEXP distinctValuesSEXP, SEXP thresholdSEXP) {
+List habConnRcpp(NumericVector cost, int nrow, int ncol, double hab, double no_data, double threshold);
+RcppExport SEXP grainscape2_habConnRcpp(SEXP costSEXP, SEXP nrowSEXP, SEXP ncolSEXP, SEXP habSEXP, SEXP no_dataSEXP, SEXP thresholdSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
@@ -16,9 +16,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int >::type ncol(ncolSEXP);
     Rcpp::traits::input_parameter< double >::type hab(habSEXP);
     Rcpp::traits::input_parameter< double >::type no_data(no_dataSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type distinctValues(distinctValuesSEXP);
     Rcpp::traits::input_parameter< double >::type threshold(thresholdSEXP);
-    __result = Rcpp::wrap(habConnRcpp(cost, nrow, ncol, hab, no_data, distinctValues, threshold));
+    __result = Rcpp::wrap(habConnRcpp(cost, nrow, ncol, hab, no_data, threshold));
     return __result;
 END_RCPP
 }

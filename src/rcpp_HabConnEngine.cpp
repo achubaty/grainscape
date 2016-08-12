@@ -31,7 +31,7 @@ using namespace Rcpp;
 //' @docType methods
 //' @rdname habConnRcpp
 // [[Rcpp::export(name = ".habConnRcpp")]]
-List habConnRcpp(NumericVector cost, int nrow, int ncol, double hab, double no_data, NumericVector distinctValues, double threshold = 0.0001)
+List habConnRcpp(NumericVector cost, int nrow, int ncol, double hab, double no_data, double threshold = 0.0001)
 {
   //create instances of inputdata and output data
   InputData in_data;
@@ -41,12 +41,6 @@ List habConnRcpp(NumericVector cost, int nrow, int ncol, double hab, double no_d
   for (unsigned int i = 0; i < in_data.cost_vec.size(); i++)
   {
     in_data.cost_vec[i] = cost[i];
-  }
-  //distinct values
-  in_data.distinctValues.resize(distinctValues.size());
-  for (unsigned int i = 0; i < in_data.distinctValues.size(); i++)
-  {
-    in_data.distinctValues[i] = distinctValues[i];
   }
 
   //other properties of input data
