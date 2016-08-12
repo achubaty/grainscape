@@ -29,7 +29,6 @@ private:
     LinkMap iLinkMap;           //A map that has all the cell connections
 
     flMap voronoi_map;          //A voronoi map that contains float numbers in each cell
-    flMap link_map;             //A link map that contains float numbers in each cell
     flMap cost_map;             //A map taht contains all the costs/resistances per cell
 
     bool initialized;           //indicates if the engine is ready to run or begin
@@ -73,8 +72,6 @@ private:
     void connectCell(ActiveCell * ac, int row, int col, float cost);
     //finds the least cost path between two cells, only called when boundaries meet
     void findPath(LinkCell * ac1, LinkCell * ac2, std::vector<Link> & path_list);
-    //fills the link map that contains floating point values
-    void fillLinkMap(flMap & map, std::vector<Link> path_list);
     //finds all the cells that create the link
     Cell parseMap(LinkCell lc, Link & path);
     //it looks for indirect path that's "cheaper" than the direct path and gives the new path the indirect path if found

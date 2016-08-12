@@ -5,19 +5,19 @@
 #'
 #' DESCRIPTION NEEDED
 #'
-#' @param cost              DESCRIPTION NEEDED
+#' @param cost              Vector form of the resistance map
 #'
-#' @param nrow              DESCRIPTION NEEDED
+#' @param nrow              Number of rows in the resistance map
 #'
-#' @param ncol              DESCRIPTION NEEDED
+#' @param ncol              Number of columns in the resistance map
 #'
-#' @param hab               DESCRIPTION NEEDED
+#' @param hab               Habitat ID number in the resistance map(i.e. 1 may correspond to a habitat cell)
 #'
-#' @param no_data           DESCRIPTION NEEDED
+#' @param no_data           Value of no data or unknown cells in the resistance map (i.e. -9999 for cells that have no record in them)
 #'
-#' @param distinctValues    DESCRIPTION NEEDED
+#' @param distinctValues    All the distince numbers in the resistance map in a vector form. Make sure that the values are in an increasing order (i.e. the resistance map may include 1,2,3,5,9,200 as its resistances)
 #'
-#' @param threshold         DESCRIPTION NEEDED (default \code{1e-4}).
+#' @param threshold         Optional parameter to compare floating point zeros (default \code{1e-4}).
 #'
 #' @author Sam Doctolero
 #' @docType methods

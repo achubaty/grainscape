@@ -7,7 +7,6 @@ Engine::Engine(InputData * in_d, OutputData * out_d, char * errmsg, float thresh
   out_data = out_d;							//give output data's pointer (or the address of what it is pointing to)
   initialized = false;						//set initialized to falze
   voronoi_map = flMap(in_d->nrow, flCol(in_d->ncol, 0.0f));		//Create a map with floating point zero in each cell for the voronoi map
-  link_map = flMap(in_d->nrow, flCol(in_d->ncol, 0.0f));		//Create a map with floating point zero in each cell for the link map
   cost_map = flMap(in_d->nrow, flCol(in_d->ncol, 0.0f));		//Create a map with floating point zero in each cell for the cost/resistance map
   error_message = errmsg;					//give the errmsg's pointer value to the error_message  variable
   maxCost = emax(in_d->distinctValues);		//find the maximum value from the distinct value vector (pretty much find the highest number in the cost/resistance map)
@@ -61,18 +60,6 @@ bool Engine::initialize()
 
   //update the output patch vector
   updateOutputMap(out_data->patch_map, voronoi_map);
-
-  //update link map
-  for (int i = 0; i < in_data->nrow; i++)
-  {
-    for (int j = 0; j < in_data->ncol; j++)
-    {
-      if (voronoi_map[i][j] > 0.0f)
-      {
-        link_map[i][j] = 1.0f;
-      }
-    }
-  }
 
   //get the initial active/spread cells
   for (int i = 0; i < in_data->nrow; i++)
@@ -199,10 +186,6 @@ void Engine::start()
     active_cell_holder = temporary_active_cell_holder;
   }
 
-  //fill the link map
-  fillLinkMap(link_map, out_data->link_data);
-  //fill the output's link vector with the engine's link_map values
-  updateOutputMap(out_data->link_map, link_map);
   //fill the output's voronoi vector with the engine's voronoi_map values
   updateOutputMap(out_data->voronoi_map, voronoi_map);
 }
@@ -555,6 +538,8 @@ int Engine::combinePatches(int & ind1, int & ind2, std::vector<Patch> & list)
 
 int Engine::getIndexFromList(float & id, std::vector<Patch> & patches)
 {
+	//go through all the patches in memory and check if the parameter 'id' is equal to any of the patches
+	//if not, then return -1 to indicate the absence of that patch
   for (unsigned int i = 0; i < patches.size(); i++)
   {
     if (patches[i].id == id)
@@ -566,17 +551,19 @@ int Engine::getIndexFromList(float & id, std::vector<Patch> & patches)
 //Linking Functions
 void Engine::connectCell(ActiveCell * ac, int row, int col, float cost)
 {
-  LinkCell lc;
-  lc.row = row;
-  lc.column = col;
-  lc.distance = ac->distance;
-  lc.id = ac->id;
-  lc.fromCell.row = ac->row;
-  lc.fromCell.column = ac->column;
-  lc.fromCell.id = lc.id;
-  lc.originCell = ac->originCell;
-  lc.cost = cost;
-  iLinkMap[row][col] = lc;
+	//given ac (a pointer to an ActiveCell) as the parent cell and the integer parameters row and col as the child cell and cost as the child cell's resistance value
+	//create a connection between the parent cell and the child cell. 
+  LinkCell lc;						//create an instance of a LinkCell called 'lc'
+  lc.row = row;						//set lc's row to the paremeter row
+  lc.column = col;					//set lc's column to the parameter col
+  lc.distance = ac->distance;		//set lc's distance to ac's distance
+  lc.id = ac->id;					//set lc's id to ac's id
+  lc.fromCell.row = ac->row;		//set lc's fromCell's row to ac's row
+  lc.fromCell.column = ac->column;	//set lc's fromCell's column to ac's column
+  lc.fromCell.id = lc.id;			//set lc's id to ac's id
+  lc.originCell = ac->originCell;	//set lc's origin cell to ac's originCell
+  lc.cost = cost;					//set lc's cost to the parameter cost
+  iLinkMap[row][col] = lc;			//set the row'th an col'th element of iLinkMap to lc
 }
 
 void Engine::findPath(LinkCell * ac1, LinkCell * ac2, std::vector<Link> & path_list)
@@ -584,6 +571,7 @@ void Engine::findPath(LinkCell * ac1, LinkCell * ac2, std::vector<Link> & path_l
   //check if the path already exists in the path_list
   for (unsigned int i = 0; i < path_list.size(); i++)
   {
+	  //if the end id and start id correspond to ac1's id and ac2's id OR if the start id and end id correspond to ac1's id and ac2's id then the link already exists
     if ((path_list[i].end.id == ac1->id && path_list[i].start.id == ac2->id) || (path_list[i].start.id == ac1->id && path_list[i].end.id == ac2->id))
     {
       return;
@@ -591,84 +579,76 @@ void Engine::findPath(LinkCell * ac1, LinkCell * ac2, std::vector<Link> & path_l
   }
 
   //create the path
-  Link path;
-  path.cost = 0.0f;
+  Link path;			//create a Link instance and name it path
+  path.cost = 0.0f;		//set the initial cost to zero	
   //start cell
-  LinkCell lc_temp = iLinkMap[ac1->row][ac1->column];
-  path.start = parseMap(lc_temp, path);
+  LinkCell lc_temp = iLinkMap[ac1->row][ac1->column]; //get the LinkCell from iLinkMap using ac1's location (row and column)
+  path.start = parseMap(lc_temp, path);					//from ac1's location (or lc_temp's location) follow its connections until it reaches a patch
   //end cell
-  lc_temp = iLinkMap[ac2->row][ac2->column];
-  path.end = parseMap(lc_temp, path);
+  lc_temp = iLinkMap[ac2->row][ac2->column];		//get the LinkCell from iLinkMap using ac2's location (row and column)
+  path.end = parseMap(lc_temp, path);				//from ac2's location (or lc_temp's location) follow its connections until it reaches a path
 
   //check if a cheaper indirect path is available
-  lookForIndirectPath(path_list, path);
-  path_list.push_back(path);
-}
-
-void Engine::fillLinkMap(flMap & map, std::vector<Link> path_list)
-{
-  for (unsigned int i = 0; i < path_list.size(); i++)
-  {
-    for (unsigned int j = 0; j < path_list[i].connection.size(); j++)
-    {
-      int row = path_list[i].connection[j].row;
-      int col = path_list[i].connection[j].column;
-      map[row][col] = 1.0f;
-    }
-  }
+  lookForIndirectPath(path_list, path);				//if a cheaper inderect path exists the function updates the Link called 'path'
+  path_list.push_back(path);			//insert the new Link (path) in the path_list property of the Engine object
 }
 
 Cell Engine::parseMap(LinkCell lc, Link & path)
 {
-  Cell ret;
-  Cell c1 = { lc.row, lc.column, lc.id };
-  while (!cellsEqual(c1, lc.originCell))
+	//go through all the connections starting from the input parameter lc's location in the iLinkMap property of the Engine object
+  Cell ret;		//create an instance of Cell called ret (this will be returned)
+  Cell c1 = { lc.row, lc.column, lc.id };	//create an instance of a Cell, c1, and set the properties as lc's row, column, and id
+  while (!cellsEqual(c1, lc.originCell))	//as long as c1 does not equal lc's originCell (a cell as part of a patch)
   {
-    path.cost += lc.cost;
-    path.connection.push_back(c1);
-    ret = lc;
-    Cell from = lc.fromCell;
-  lc = iLinkMap[from.row][from.column];
-    c1.row = lc.row;
+    path.cost += lc.cost;			//increment the cost by lc's cost
+    path.connection.push_back(c1);	//insert the Cell c1 to path (a referenced Link parameter)
+    ret = lc;						//set ret to be lc
+    Cell from = lc.fromCell;			//create an instance of a Cell called from and set it to lc's fromCell (which is the parentCell or the next cell to process)
+  lc = iLinkMap[from.row][from.column];	//set lc to the next LinkCell from the iLinkMap
+    c1.row = lc.row;					//set c1's paremeters to lc's new parameters
     c1.column = lc.column;
     c1.id = lc.id;
   }
+  //return the final Cell that was processed (this is the start or end of the Link)
   return ret;
 }
 
 void Engine::lookForIndirectPath(std::vector<Link> & path_list, Link & path)
 {
-  //if path_list is empty then automatically return false
+  //if path_list is empty then no indirect paths are available to search therefore just return (don't do anything)
   if (path_list.size() <= 0)
   {
     return;
   }
 
+  //otherwise parse through all the paths currently in the memory and check for 
   for (unsigned int i = 0; i < path_list.size(); i++)
   {
+	  //if the i'th path_list's start or end id equal to path's start id then this may be a possible indirect Link
     if (path_list[i].start.id == path.start.id || path_list[i].end.id == path.start.id)
     {
-      Link * pPath1 = &path_list[i];
-      float cost = pPath1->cost;
-      std::vector<Link> connection;
-      for (unsigned int j = 0; j < path_list.size(); j++)
+      Link * pPath1 = &path_list[i];	//create an instance of a pointer to a Link called pPath1 and set it to the address of the i'th Link in the path_list
+      float cost = pPath1->cost;		//create a floating point variable called cost and initialize it with pPath1's cost
+      std::vector<Link> connection;		//create a vector of Links called connection (this will serve as the new indirect list of cells that create the Link)
+      for (unsigned int j = 0; j < path_list.size(); j++)	//create another loop to go through all the Links in path_list
       {
-        Link * pPath2 = &path_list[j];
-        if (pPath1 != pPath2)
+        Link * pPath2 = &path_list[j];		//create an instance of a pointer to a Link called pPath2 set it to the j'th Link in the path_list
+        if (pPath1 != pPath2)				//proceed if pPath1 and pPath2 do not point to the same address (same Link)
         {
-
-          cost += pPath2->cost;
-          if (cost > path.cost)
+          cost += pPath2->cost;				//increment the cost variable with pPath2's cost
+          if (cost > path.cost)				//if the cost is greater than the parameter path's cost then the current indirect link is not valid
           {
-            cost -= pPath2->cost;
+            cost -= pPath2->cost;			//decrement the cost variable with pPath2's cost and exit the inner loop
             break;
           }
-          connection.push_back(*pPath1);
-          pPath1 = pPath2;
+          connection.push_back(*pPath1);	//otherwise, insert pPath1's Link in connection
+          pPath1 = pPath2;					//set pPath2 to pPath1 
+		  //if the path's end patch is reached then this is the end of the processing and a proper indirect Link is found
           if (pPath2->end.id == path.end.id || pPath2->start.id == path.end.id)
           {
             path.cost = cost;
             path.connection = connection[0].connection;
+			//parese through all the Links in connection to create a new Link then update path with that new Link
             for (unsigned int k = 1; k < connection.size(); k++)
             {
               for (unsigned int m = 0; m < connection[k].connection.size(); m++)

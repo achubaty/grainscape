@@ -56,7 +56,7 @@ struct InputData
 //interface output data
 struct OutputData
 {
-      std::vector<float> voronoi_map, link_map, patch_map;
+      std::vector<float> voronoi_map, patch_map;
       std::vector<Link> link_data;
       std::vector<Patch> patch_list;
 };
