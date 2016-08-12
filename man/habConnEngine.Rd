@@ -5,7 +5,7 @@
 \alias{habConnEngine}
 \title{Habitat connectivity engine}
 \usage{
-habConnEngine(cost, hab, nodata = as.integer(NA), fpthresh = 1e-04)
+habConnEngine(cost, hab, nodata = as.integer(NA))
 }
 \arguments{
 \item{cost}{Raster cost (resistance) map.}
@@ -13,8 +13,6 @@ habConnEngine(cost, hab, nodata = as.integer(NA), fpthresh = 1e-04)
 \item{hab}{Numeric value corresponding to habitat cells.}
 
 \item{nodata}{Numeric value corresponding to 'no data' or \code{NA}.}
-
-\item{fpthresh}{Threshold value for making comparisons of floating point numbers.}
 }
 \value{
 An object of class \code{hce} containing the following components:\cr
