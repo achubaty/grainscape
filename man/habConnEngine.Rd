@@ -34,6 +34,12 @@ if (interactive()) plot(cost)
 # cell in raster `cost` with value -9999 should be interpreted as NA (no data)
 links <- habConnEngine(cost, hab = 1, nodata = -9999)
 
+
+if (interactive()) {
+  links                  # examine the object
+  plot(links$voronoi)    # plot the voronoi tesselation
+  plot(links$patchLinks) # plot the patches and links
+}
 }
 \author{
 Alex Chubaty

@@ -28,6 +28,12 @@
 #' # cell in raster `cost` with value -9999 should be interpreted as NA (no data)
 #' links <- habConnEngine(cost, hab = 1, nodata = -9999)
 #'
+#'
+#' if (interactive()) {
+#'   links                  # examine the object
+#'   plot(links$voronoi)    # plot the voronoi tesselation
+#'   plot(links$patchLinks) # plot the patches and links
+#' }
 habConnEngine <- function(cost, hab, nodata = as.integer(NA), fpthresh = 1e-4) {
   stopifnot(class(cost) == "RasterLayer",
             length(hab) == 1)
