@@ -7,29 +7,30 @@
 
 using namespace std;
 using namespace Rcpp;
-//' Habitat connectivity
+//' Habitat connectivity engine (C++)
 //'
+//' Internal function, not intended to be called directly.
 //' DESCRIPTION NEEDED
 //'
-//' @param cost              Vector form of the resistance map
+//' @param cost              A numeric vector of habitat cost (resistance) values
+//'                          extracted from a raster cost map.
 //'
-//' @param nrow              Number of rows in the resistance map
+//' @param nrow              Number of rows in the raster cost/patch map.
 //'
-//' @param ncol              Number of columns in the resistance map
+//' @param ncol              Number of columns in the raster cost/patch map.
 //'
-//' @param hab               Habitat ID number in the resistance map(i.e. 1 may correspond to a habitat cell)
+//' @param hab               Numeric value corresponding to habitat cells in the cost map.
 //'
-//' @param no_data           Value of no data or unknown cells in the resistance map (i.e. -9999 for cells that have no record in them)
+//' @param no_data           Numeric value corresponding to 'no data' or \code{NA}.
 //'
-//' @param distinctValues    All the distince numbers in the resistance map in a vector form. Make sure that the values are in an increasing order (i.e. the resistance map may include 1,2,3,5,9,200 as its resistances)
+//' @param distinctValues    A sorted (ascending) numeric vector of unique cost values.
 //'
-//' @param threshold         Optional parameter to compare floating point zeros (default \code{1e-4}).
+//' @param threshold         (Optional) threshold value for comparisons of floating point numbers (default \code{1e-4}).
 //'
 //' @author Sam Doctolero
 //' @docType methods
-//' @export
 //' @rdname habConnRcpp
-// [[Rcpp::export]]
+// [[Rcpp::export(name = ".habConnRcpp")]]
 List habConnRcpp(NumericVector cost, int nrow, int ncol, double hab, double no_data, NumericVector distinctValues, double threshold = 0.0001)
 {
   //create instances of inputdata and output data

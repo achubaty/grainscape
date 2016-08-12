@@ -42,6 +42,7 @@ Collate:
     'gsGOCDistance.R'
     'gsGOCPoint.R'
     'gsGraphDataFrame.R'
+    'gsHabConnEngine.R'
     'gsMPG.R'
     'gsThreshold.R'
     'zzz.R'

@@ -85,6 +85,7 @@
 #' @author Paul Galpern, Sam Doctolero, Alex Chubaty
 #' @docType methods
 #' @export
+#' @importFrom igraph '%>%'
 #' @importFrom raster boundaries cellFromRowCol cellFromRowColCombine compareRaster getValues mask projection raster res writeRaster xyFromCell
 #' @importFrom sp coordinates
 #' @importFrom utils read.table
@@ -144,33 +145,32 @@ gsMPG <- function(cost, patch, sa = NULL, filterPatch = NULL, spreadFactor = 0) 
     ## Remove lattice points that fall on NA cost cells
     patch[is.na(cost)] <- 0
   } else if ((class(patch) != "RasterLayer")) {
-    stop("grainscape2: patch must be a raster (patch-based model) OR an integer (lattice model)", call. = FALSE)
+    stop("grainscape2: patch must be a raster (patch-based model) OR an integer (lattice model).", call. = FALSE)
   }
 
   ## Check that input rasters are of class RasterLayer
   if ((class(cost) != "RasterLayer")) {
-    stop("grainscape2: cost raster must be of class RasterLayer", call. = FALSE)
+    stop("grainscape2: cost raster must be of class RasterLayer.", call. = FALSE)
   }
 
   ## Check patch and cost are comparable
   if (!compareRaster(patch, cost, res = TRUE, orig = TRUE, stopiffalse = FALSE)) {
-    stop("grainscape2: patch and cost rasters must be identical in extent, projection, origin and resolution", call. = FALSE)
+    stop("grainscape2: patch and cost rasters must be identical in extent, projection, origin and resolution.", call. = FALSE)
   }
 
   ## Check additional geographic features of input rasters
   if (res(cost)[1] != res(cost)[2]) {
-    warning(paste("grainscape2:  raster cells are not square;  assuming a square cell of ", res(cost)[1], " units", sep = ""), call. = FALSE)
+    warning(paste0("grainscape2:  raster cells are not square;  assuming a square cell of ",
+                   res(cost)[1], " units."), call. = FALSE)
   }
 
   ## Check projection
   if (!is.na(projection(cost)) && (!grepl("UTM|utm", toupper(projection(cost))))) {
-    warning("grainscape2:  projection suggests that all cells may not be of equal area; Note that grainscape assumes equal area in all calculations", call. = FALSE)
+    warning("grainscape2:  projection suggests that all cells may not be of equal area; Note that grainscape2 assumes equal area in all calculations.", call. = FALSE)
   }
 
-  st <- proc.time()
-  rasCost <- cost
-  rasPatch <- cost
-  rasSa <- cost
+  ## use `cost` raster as template for `rasCost`, `rasPatch`, and `rasSa`
+  rasCost <- rasPatch <- rasSa <- cost
 
   rasCost[] <- getValues(cost)
   rasPatch[] <- getValues(patch)
@@ -178,11 +178,10 @@ gsMPG <- function(cost, patch, sa = NULL, filterPatch = NULL, spreadFactor = 0) 
   ## Check filterPatch
   if (is.null(filterPatch)) {
     ## Set filterPatch smaller than area of cell
-    filterPatch <- (prod(res(rasCost))/10000)*0.01
-  }
-  else {
+    filterPatch <- (prod(res(rasCost))/10000) * 0.01
+  } else {
     ## Set filterPatch as area in hectares
-    filterPatch <- (prod(res(rasCost))/10000)*abs(filterPatch)
+    filterPatch <- (prod(res(rasCost))/10000) * abs(filterPatch)
   }
 
   ## Check sa is comparable with other rasters
@@ -196,13 +195,12 @@ gsMPG <- function(cost, patch, sa = NULL, filterPatch = NULL, spreadFactor = 0) 
     rasSa[] <- getValues(sa)
     rasCost[is.na(rasSa)] <- NA
     rasPatch[is.na(rasSa)] <- NA
-  }
-  else {
+  } else {
     rasSa[] <- 1
   }
 
   ## Check that patch raster is binary
-  if (!all(unique(rasPatch[]) %in% c(TRUE,FALSE))) {
+  if (!all(unique(rasPatch[]) %in% c(TRUE, FALSE))) {
     stop("grainscape2:  patch must be a binary raster (=1 for patches; =0 for non-patches).  Missing values (NA) should be set to 0.", call. = FALSE)
   }
 
@@ -211,159 +209,87 @@ gsMPG <- function(cost, patch, sa = NULL, filterPatch = NULL, spreadFactor = 0) 
     stop("grainscape2:  cost raster must not contain missing values at patch cells", call. = FALSE)
   }
 
-  ## Create outputFolder
-  if (!is.null(outputFolder)) {
-    if (!file.exists(outputFolder)) {
-      dir.create(outputFolder)
-    }
-    outputFolder <- normalizePath(outputFolder)
-    keepOutput <- TRUE
-  } else {
-    outputFolder <- paste(c("gs", sample(LETTERS)[1:6]), collapse = "")
-    dir.create(outputFolder)
-    outputFolder <- normalizePath(outputFolder)
-    keepOutput <- FALSE
-  }
-
-  extractGraphSCN <- readLines(paste(selesPath, "/extractgraph.scn", sep = ""), n = -1)
-  extractGraphSEL <- readLines(paste(selesPath, "/extractgraph.sel", sep = ""), n = -1)
-
-  subTable <- c("XXfilterPatchXX", format(filterPatch, scientific = FALSE),
-                "XXspreadFactorXX", format(spreadFactor, scientific = FALSE),
-                "XXdoCGXX", "FALSE",
-                "XXselesFolderXX", paste("\"", gsub("/", "\\\\", selesPath), "\"", sep = ""),
-                "XXcostResXX", format(res(rasCost)[1], scientific = FALSE),
-                "XXmaxCostXX", format(max(unique(rasCost[]), na.rm = TRUE),  scientific = FALSE),
-                "XXhaPerCellXX", format(prod(res(rasCost))/10000, scientific = FALSE))
-
-  subTable <- matrix(subTable, 7, 2, byrow = TRUE)
-
-  for (i in 1:nrow(subTable)) {
-    extractGraphSCN <- sub(subTable[i, 1], subTable[i, 2], extractGraphSCN, fixed = TRUE)
-    extractGraphSEL <- sub(subTable[i, 1], subTable[i, 2], extractGraphSEL, fixed = TRUE)
-  }
-  writeLines(extractGraphSCN, paste(outputFolder, "/eg.scn", sep = ""))
-  writeLines(extractGraphSEL, paste(outputFolder, "/eg.sel", sep = ""))
-
-  writeRaster(rasPatch, paste(outputFolder, "/patch.asc", sep = ""), format = "ascii")
-  writeRaster(rasCost, paste(outputFolder, "/cost.asc", sep = ""), format = "ascii")
-  writeRaster(rasSa, paste(outputFolder, "/sa.asc", sep = ""), format = "ascii")
-
-  ## Call SELES
-  system(paste(shQuote(paste(normalizePath(selesPath), "\\seles3_4", sep = "")),
-               " -p ", shQuote(paste(outputFolder, "\\eg.scn", sep = "")), sep = ""), wait = TRUE)
-
   ## Import SELES output
-  selesGraph <- suppressWarnings(try(read.table(paste(outputFolder, "\\linkstatsmpg.txt", sep = ""),
-                                                header = TRUE), silent = TRUE))
+  #selesGraph <- suppressWarnings(try(read.table(paste(outputFolder, "\\linkstatsmpg.txt", sep = ""),
+  #                                              header = TRUE), silent = TRUE))
 
-  if ((class(selesGraph) == "try-error") || (nrow(selesGraph) == 0)) {
-    if (!keepOutput) unlink(outputFolder, recursive = TRUE)
+  ## Call the habitat connectivity engine
+  hce <- habConnEngine(rasCost, hab = 1, nodata = -9999)  ## NEEDS user-supplied hab and nodata values
 
-    stop("grainscape2:  SELES failed to extract MPG.  Please check that input cost, patch and sa rasters are suitable, and that filterPatch is not set too high.", call. = FALSE)
-  } else {
-    ## Establish mpg object
-    mpg <- list()
-    mpg$mpg <- NA
-    mpg$landscapeType <- "cost"
-    mpg$landscape <- rasCost
-    mpg$patchId <- rasCost
-    mpg$voronoi <- rasCost
-    mpg$lcpLinkId <- rasCost
-    mpg$lcpPerimWeight <- rasCost
-    mpg$lcpPerimType <- rasCost
-    #mpg$eucLinkId <- rasCost
-    #mpg$eucPerimWeight <- rasCost
-    mpg$mpgPlot <- rasCost
-    mpg$runTime <- NA
+  ## Establish mpg object
+  mpg <- list()
+  mpg$mpg <- NA                           # *** fill in with igraph object later
+  mpg$landscapeType <- "cost"             # OK
+  mpg$landscape <- rasCost                # OK
 
-    ## Load and force rasters into memory, storing them in mpg object
-    rasTmp <- raster(paste(outputFolder, "\\patchid.asc", sep = ""))
-    mpg$patchId[] <- getValues(rasTmp)
+  mpg$patchId <- hce$patchLinks           # OK
+  mpg$patchId[hce$patchLinks < 0] <- 0    # OK
 
-    rasTmp <- raster(paste(outputFolder, "\\voronoi.asc", sep = ""))
-    mpg$voronoi[] <- getValues(rasTmp)
+  mpg$voronoi <- hce$voronoi              # OK
 
-    rasTmp <- raster(paste(outputFolder, "\\linkidmpg.asc", sep = ""))
-    mpg$lcpLinkId[] <- getValues(rasTmp)
+  mpg$lcpLinkId <- hce$patchLinks         # OK
+  mpg$lcpLinkId[hce$patchLinks > 0] <- 0  # OK
 
-    rasTmp <- raster(paste(outputFolder, "\\linkweightmpg.asc", sep = ""))
-    mpg$lcpPerimWeight[] <- getValues(rasTmp)
+  mpg$lcpPerimWeight <- reclassify(mpg$lcpLinkId, rcl = matrix(c(
+    unlist(hce$linkData$LinkId), unlist(hce$linkData$PerimWeight)), ncol = 2)) ## OK -- but remove unlist once fixed
 
-    rasTmp <- raster(paste(outputFolder, "\\linktype.asc", sep = ""))
-    mpg$lcpPerimType[] <- getValues(rasTmp)
+  mpg$mpgPlot <- rasCost                     # TO BE REMOVED
+  mpg$mpgPlot <- !is.na(mpg$lcpPerimWeight)  # TO BE REMOVED
+  mpg$mpgPlot[mpg$mpgPlot == 0] <- NA        # TO BE REMOVED
+  mpg$mpgPlot[rasPatch == 1] <- 2            # TO BE REMOVED
 
-    rasTmp <- raster(paste(outputFolder, "\\linktype.asc", sep = ""))
-    mpg$lcpPerimType[] <- getValues(rasTmp)
+  ## Get additional patch information not done by SELES (code reproduced from gsPatch())
+  uniquePatches <- sort(unique(mpg$voronoi[]))
 
-    #rasTmp <- raster(paste(outputFolder, "\\euclinkid.asc", sep=""))
-    #mpg$eucLinkId[] <- getValues(rasTmp)
+  ## Patch edge
+  patchEdge <- !is.na(mpg$patchId)
+  patchEdge[patchEdge == 0] <- NA
+  patchEdge <- raster::boundaries(patchEdge, type = "inner")
+  patchEdge[patchEdge == 0] <- NA
+  patchEdge <- mask(mpg$patchId, patchEdge)
 
-    #rasTmp <- raster(paste(outputFolder, "\\eucperimweight.asc", sep=""))
-    #mpg$eucPerimWeight[] <- getValues(rasTmp)
+  ## Patch area and core area
+  patchArea <- freq(mpg$patchId)
+  patchArea <- patchArea[!is.na(patchArea[, 1]), 2]
+  patchEdgeArea <- freq(patchEdge)
+  patchEdgeArea <- patchEdgeArea[!is.na(patchEdgeArea[, 1]), 2]
+  patch <- data.frame(name = uniquePatches, patchId = uniquePatches,
+                      patchArea = patchArea, patchEdgeArea = patchEdgeArea,
+                      coreArea = patchArea - patchEdgeArea)
 
-    mpg$mpgPlot <- !is.na(mpg$lcpPerimWeight)
-    mpg$mpgPlot[mpg$mpgPlot == 0] <- NA
-    mpg$mpgPlot[rasPatch == 1] <- 2
+  ## Find centroids of each patch
+  cellXY <- coordinates(mpg$patchId)
+  rasX <- mpg$patchId
+  rasY <- rasX
+  rasX[] <- cellXY[, 1]
+  rasY[] <- cellXY[, 2]
+  centroids <- cbind(zonal(rasX, mpg$patchId, fun = 'mean'),
+                     zonal(rasY, mpg$patchId, fun = 'mean')[, 2])
 
-    ## Get additional patch information not done by SELES (code reproduced from gsPatch())
-    uniquePatches <- sort(unique(mpg$voronoi[]))
+  toGraphV <- cbind(patch, centroidX = centroids[, 2], centroidY = centroids[, 3])
 
-    ## Patch edge
-    patchEdge <- !is.na(mpg$patchId)
-    patchEdge[patchEdge == 0] <- NA
-    patchEdge <- raster::boundaries(patchEdge, type = "inner")
-    patchEdge[patchEdge == 0] <- NA
-    patchEdge <- mask(mpg$patchId, patchEdge)
-
-    ## Patch area and core area
-    patchArea <- freq(mpg$patchId)
-    patchArea <- patchArea[!is.na(patchArea[, 1]), 2]
-    patchEdgeArea <- freq(patchEdge)
-    patchEdgeArea <- patchEdgeArea[!is.na(patchEdgeArea[, 1]), 2]
-    patch <- data.frame(name = uniquePatches, patchId = uniquePatches,
-                        patchArea = patchArea, patchEdgeArea = patchEdgeArea,
-                        coreArea = patchArea - patchEdgeArea)
-
-    ## Find centroids of each patch
-    cellXY <- coordinates(mpg$patchId)
-    rasX <- mpg$patchId
-    rasY <- rasX
-    rasX[] <- cellXY[, 1]
-    rasY[] <- cellXY[, 2]
-    centroids <- cbind(zonal(rasX, mpg$patchId, fun = 'mean'), zonal(rasY, mpg$patchId, fun = 'mean')[, 2])
-
-    toGraphV <- cbind(patch, centroidX = centroids[, 2], centroidY = centroids[, 3])
-
-    ## How to convert SELES cells to raster cell numbers
-    .selesCellToRasterXY <- function(ras, loc) {
-      x <- ncol(ras)
-      xyFromCell(ras, cellFromRowCol(ras, x - (trunc(loc/x)), x*((loc/x) - trunc(loc/x))) + 1)
-    }
-
-    startPerim <- .selesCellToRasterXY(rasCost, selesGraph[, "StartLoc"])
-    endPerim <- .selesCellToRasterXY(rasCost, selesGraph[, "EndLoc"])
-
-    toGraphE <- data.frame(v1 = selesGraph[, "nodeId1"],
-                           v2 = selesGraph[, "nodeId2"],
-                           linkId = selesGraph[, "linkId"],
-                           lcpPerimWeight = selesGraph[, "Cost"],
-                           eucPerimWeight = selesGraph[, "SLDist"],
-                           startPerimX = startPerim[, 1],
-                           startPerimY = startPerim[, 2],
-                           endPerimX = endPerim[, 1],
-                           endPerimY = endPerim[, 2],
-                           linkType = selesGraph[, "linkType"])
-    mpg$mpg <- graph.data.frame(toGraphE, directed = FALSE, vertices = toGraphV)
-
-    class(mpg) <- "gsMPG"
-
-    mpg$runTime <- paste(signif((proc.time() - st)[3], 2), " seconds", sep = "")
-
-    cat("Elapsed:", mpg$runTime, "\n")
-
-    if (!keepOutput) unlink(outputFolder, recursive = TRUE)
-
-    return(mpg)
+  ## How to convert SELES cells to raster cell numbers
+  .selesCellToRasterXY <- function(ras, loc) {
+    x <- ncol(ras)
+    xyFromCell(ras, cellFromRowCol(ras, x - (trunc(loc/x)), x*((loc/x) - trunc(loc/x))) + 1)
   }
+
+  startPerim <- .selesCellToRasterXY(rasCost, selesGraph[, "StartLoc"])
+  endPerim <- .selesCellToRasterXY(rasCost, selesGraph[, "EndLoc"])
+
+  toGraphE <- data.frame(v1 = selesGraph[, "nodeId1"],
+                         v2 = selesGraph[, "nodeId2"],
+                         linkId = selesGraph[, "linkId"],
+                         lcpPerimWeight = selesGraph[, "Cost"],
+                         eucPerimWeight = selesGraph[, "SLDist"],
+                         startPerimX = startPerim[, 1],
+                         startPerimY = startPerim[, 2],
+                         endPerimX = endPerim[, 1],
+                         endPerimY = endPerim[, 2],
+                         linkType = selesGraph[, "linkType"])
+  mpg$mpg <- graph.data.frame(toGraphE, directed = FALSE, vertices = toGraphV)
+
+  class(mpg) <- "gsMPG"
+
+  return(mpg)
 }
