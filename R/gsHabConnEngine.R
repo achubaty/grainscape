@@ -50,7 +50,7 @@ habConnEngine <- function(cost, hab, nodata = as.integer(NA)) {
   patchLinks[] <- hce$PatchLinkIDsVector
 
   # convert `LinkData` to a data.frame
-  linkData <- do.call(rbind, hce$LinkData)
+  linkData <- do.call(rbind, hce$LinkData) %>% as.data.frame()
 
   out <- list(voronoi = voronoi, patchLinks = patchLinks, linkData = linkData)
   class(out) <- "hce"
