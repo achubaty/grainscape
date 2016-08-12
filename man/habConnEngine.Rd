@@ -16,6 +16,13 @@ habConnEngine(cost, hab, nodata = as.integer(NA), fpthresh = 1e-04)
 
 \item{fpthresh}{Threshold value for making comparisons of floating point numbers.}
 }
+\value{
+An object of class \code{hce} containing the following components:\cr
+        1. \code{voronoi}: a raster whose values indicate the voronoi tesselation;\cr
+        2. \code{patchLinks}: a raster whose values indicate patch ids (positive integers)
+           and link ids (negative integers);\cr
+        3. \code{linkData}: data.frame of link attributes.
+}
 \description{
 DESCRIPTION NEEDED
 }
@@ -25,7 +32,7 @@ if (interactive()) plot(cost)
 
 # cells in raster `cost` with value of 1 are habitat (patch) cells
 # cell in raster `cost` with value -9999 should be interpreted as NA (no data)
-habConnEngine(cost, hab = 1, nodata = -9999)
+links <- habConnEngine(cost, hab = 1, nodata = -9999)
 
 }
 \author{
