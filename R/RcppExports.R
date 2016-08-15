@@ -17,8 +17,6 @@
 #'
 #' @param no_data           Numeric value corresponding to 'no data' or \code{NA}.
 #'
-#' @param distinctValues    A sorted (ascending) numeric vector of unique cost values.
-#'
 #' @param threshold         (Optional) threshold value for comparisons of floating point numbers (default \code{1e-4}).
 #'
 #' @author Sam Doctolero
