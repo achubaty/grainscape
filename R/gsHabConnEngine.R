@@ -38,7 +38,6 @@ habConnEngine <- function(cost, hab, nodata = as.integer(NA)) {
             length(hab) == 1)
   hce <- .habConnRcpp(cost = getValues(cost), nrow = nrow(cost), ncol = ncol(cost),
                       hab = hab, no_data = as.numeric(nodata),
-                      distinctValues = sort(unique(cost)),
                       threshold = getOption("gs.fpthresh"))
 
   # convert `VoronoiVector` to a raster of identical dimensions etc. as `cost`
