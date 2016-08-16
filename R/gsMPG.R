@@ -218,7 +218,7 @@ gsMPG <- function(cost, patch, sa = NULL, filterPatch = NULL, spreadFactor = 0) 
   mpg$landscape <- rasCost
 
   mpg$patchId <- hce$patchLinks
-  mpg$patchId[hce$patchLinks < 0] <- 0
+  mpg$patchId[hce$patchLinks < 0] <- NA
 
   mpg$voronoi <- hce$voronoi
 
@@ -226,7 +226,7 @@ gsMPG <- function(cost, patch, sa = NULL, filterPatch = NULL, spreadFactor = 0) 
   mpg$lcpLinkId[hce$patchLinks >= 0] <- NA
 
   mpg$lcpPerimWeight <- reclassify(mpg$lcpLinkId, rcl = matrix(c(
-    unlist(hce$linkData$LinkId), unlist(hce$linkData$PerimWeight)), ncol = 2)) ## remove unlist once fixed
+    hce$linkData$LinkId, hce$linkData$PerimWeight), ncol = 2))
 
   mpg$mpgPlot <- rasCost                     # TO BE REMOVED
   mpg$mpgPlot <- !is.na(mpg$lcpPerimWeight)  # TO BE REMOVED
@@ -244,10 +244,8 @@ gsMPG <- function(cost, patch, sa = NULL, filterPatch = NULL, spreadFactor = 0) 
   patchEdge <- mask(mpg$patchId, patchEdge)
 
   ## Patch area and core area
-  patchArea <- freq(mpg$patchId)
-  patchArea <- patchArea[-which(patchArea[, 1] == 0), 2]
-  patchEdgeArea <- freq(patchEdge)
-  patchEdgeArea <- patchEdgeArea[!is.na(patchEdgeArea[, 1]), 2]
+  patchArea <- freq(mpg$patchId, useNA = "no")
+  patchEdgeArea <- freq(patchEdge, useNA = "no")
   patch <- data.frame(name = uniquePatches, patchId = uniquePatches,
                       patchArea = patchArea, patchEdgeArea = patchEdgeArea,
                       coreArea = patchArea - patchEdgeArea)
@@ -264,14 +262,14 @@ gsMPG <- function(cost, patch, sa = NULL, filterPatch = NULL, spreadFactor = 0) 
 
   toGraphV <- cbind(patch, centroidX = centroids[, 2], centroidY = centroids[, 3])
 
-  toGraphE <- data.frame(v1 = unlist(hce$linkData$StartId), ## remove unlist once fixed
-                         v2 = unlist(hce$linkData$EndId), ## remove unlist once fixed
-                         linkId = unlist(hce$linkData$LinkId) * -1L, ## remove unlist once fixed
-                         lcpPerimWeight = unlist(hce$linkData$PerimWeight), ## remove unlist once fixed
-                         startPerimX = unlist(hce$linkData$StartRow), ## remove unlist once fixed
-                         startPerimY = unlist(hce$linkData$StartColumn), ## remove unlist once fixed
-                         endPerimX = unlist(hce$linkData$EndRow), ## remove unlist once fixed
-                         endPerimY = unlist(hce$linkData$EndColumn)) ## remove unlist once fixed
+  toGraphE <- data.frame(v1 = hce$linkData$StartId,
+                         v2 = hce$linkData$EndId,
+                         linkId = hce$linkData$LinkId * -1L,
+                         lcpPerimWeight = hce$linkData$PerimWeight,
+                         startPerimX = hce$linkData$StartRow,
+                         startPerimY = hce$linkData$StartColumn,
+                         endPerimX = hce$linkData$EndRow,
+                         endPerimY = hce$linkData$EndColumn)
   mpg$mpg <- graph_from_data_frame(toGraphE, directed = FALSE, vertices = toGraphV)
 
   class(mpg) <- "gsMPG"

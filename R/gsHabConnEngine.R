@@ -32,8 +32,7 @@
 #'   plot(links$patchLinks) # plot the patches and links
 #' }
 habConnEngine <- function(cost, hab) {
-  stopifnot(class(cost) == "RasterLayer",
-            length(hab) == 1)
+  stopifnot(class(cost) == "RasterLayer", length(hab) == 1)
   hce <- .habConnRcpp(cost = getValues(cost), nrow = nrow(cost), ncol = ncol(cost),
                       hab = hab, threshold = getOption("gs.fpthresh"))
 
@@ -44,9 +43,10 @@ habConnEngine <- function(cost, hab) {
   # convert `PatchLinkIDsVector` to a raster of identical dimensions etc. as `cost`
   patchLinks <- cost
   patchLinks[] <- hce$PatchLinkIDsVector
+  patchLinks[patchLinks == 0] <- NA
 
   # convert `LinkData` to a data.frame
-  linkData <- do.call(rbind, hce$LinkData) %>% as.data.frame()
+  linkData <- lapply(hce$LinkData, data.frame) %>% do.call(rbind, .)
 
   out <- list(voronoi = voronoi, patchLinks = patchLinks, linkData = linkData)
   class(out) <- "hce"
