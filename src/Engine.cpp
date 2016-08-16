@@ -1,4 +1,11 @@
 #include "../inst/include/Engine.h"
+
+#include <R.h>
+#include <Rinternals.h>
+#include <Rcpp.h>
+
+using namespace Rcpp;
+
 //Constructor that sets the values for its internal variables
 Engine::Engine(InputData * in_d, OutputData * out_d, char * errmsg, float threshold)
 {
@@ -301,7 +308,7 @@ void Engine::createActiveCell(ActiveCell * ac, int row, int col)
 
   //if a no_data value in the cost_map is encountered then set the resistance and parent resistances to zero
   //this will cause the engine to automatically spread into the no_data cells and not connect them
-    if (fabs(cost_map[row][col] - in_data->nodata) <= zeroThreshold)//handle no data values
+    if (R_IsNA(cost_map[row][col]))//handle no data values
     {
       new_ac.resistance = 0.0f;
       new_ac.parentResistance = 0.0f;
@@ -309,16 +316,17 @@ void Engine::createActiveCell(ActiveCell * ac, int row, int col)
     else //however if no no_data cells are encountered create a link between the old active cell (ac) to the cell that it is spreading to (new_ac)
       connectCell(ac, row, col, cost_map[row][col]);
 
-  //insert new_ac to the temporary_active_cell_holder as a new ActiveCell
+    //insert new_ac to the temporary_active_cell_holder as a new ActiveCell
     ActiveCellHolder h_temp;      //create an instance of ActiveCellHolder called 'h_temp'
     h_temp.value = dist;        //set h_temp's value to dist
     h_temp.list.push_back(new_ac);    //insert new_ac into h_temp's list property
-  //if the temporary_active_cell holder is empty then include h_temp at the end of the list
+
+    //if the temporary_active_cell holder is empty then include h_temp at the end of the list
     if (temporary_active_cell_holder.size() <= 0)
     {
       temporary_active_cell_holder.holder_list.push_back(h_temp);
     }
-  //otherwise call the insertH function to properly order or sort the elements
+    //otherwise call the insertH function to properly order or sort the elements
     else
     {
       temporary_active_cell_holder.insertH(h_temp);
@@ -332,9 +340,9 @@ void Engine::createActiveCell(ActiveCell * ac, int row, int col)
     //if the cost_map's row'th and col'th element is not a no_data element then create the link
     //otherwise ignore it
     //no_data cells should not be included in the link or path between habitats or patches
-    if (fabs(cost_map[row][col] - in_data->nodata) > zeroThreshold)
+    if (!R_IsNA(cost_map[row][col]))
     {
-    findPath(iLinkMap[(ac->row)][(ac->column)], iLinkMap[row][col], out_data->link_data);
+      findPath(iLinkMap[(ac->row)][(ac->column)], iLinkMap[row][col], out_data->link_data);
     }
   }
 }

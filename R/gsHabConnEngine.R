@@ -4,7 +4,6 @@
 #'
 #' @param cost      Raster cost (resistance) map.
 #' @param hab       Numeric value corresponding to habitat cells.
-#' @param nodata    Numeric value corresponding to 'no data' or \code{NA}.
 #'
 #' @return An object of class \code{hce} containing the following components:\cr
 #'         1. \code{voronoi}: a raster whose values indicate the voronoi tesselation;\cr
@@ -32,12 +31,11 @@
 #'   plot(links$voronoi)    # plot the voronoi tesselation
 #'   plot(links$patchLinks) # plot the patches and links
 #' }
-habConnEngine <- function(cost, hab, nodata = NA) {
+habConnEngine <- function(cost, hab) {
   stopifnot(class(cost) == "RasterLayer",
             length(hab) == 1)
   hce <- .habConnRcpp(cost = getValues(cost), nrow = nrow(cost), ncol = ncol(cost),
-                      hab = hab, no_data = as.numeric(nodata),
-                      threshold = getOption("gs.fpthresh"))
+                      hab = hab, threshold = getOption("gs.fpthresh"))
 
   # convert `VoronoiVector` to a raster of identical dimensions etc. as `cost`
   voronoi <- cost

@@ -5,14 +5,12 @@
 \alias{habConnEngine}
 \title{Habitat connectivity engine}
 \usage{
-habConnEngine(cost, hab, nodata = NA)
+habConnEngine(cost, hab)
 }
 \arguments{
 \item{cost}{Raster cost (resistance) map.}
 
 \item{hab}{Numeric value corresponding to habitat cells.}
-
-\item{nodata}{Numeric value corresponding to 'no data' or \code{NA}.}
 }
 \value{
 An object of class \code{hce} containing the following components:\cr

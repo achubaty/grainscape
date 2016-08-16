@@ -15,14 +15,12 @@
 #'
 #' @param hab               Numeric value corresponding to habitat cells in the cost map.
 #'
-#' @param no_data           Numeric value corresponding to 'no data' or \code{NA}.
-#'
 #' @param threshold         (Optional) threshold value for comparisons of floating point numbers (default \code{1e-4}).
 #'
 #' @author Sam Doctolero
 #' @docType methods
 #' @rdname habConnRcpp
-.habConnRcpp <- function(cost, nrow, ncol, hab, no_data, threshold = 0.0001) {
-    .Call('grainscape2_habConnRcpp', PACKAGE = 'grainscape2', cost, nrow, ncol, hab, no_data, threshold)
+.habConnRcpp <- function(cost, nrow, ncol, hab, threshold = 0.0001) {
+    .Call('grainscape2_habConnRcpp', PACKAGE = 'grainscape2', cost, nrow, ncol, hab, threshold)
 }
 

@@ -21,15 +21,13 @@ using namespace Rcpp;
 //'
 //' @param hab               Numeric value corresponding to habitat cells in the cost map.
 //'
-//' @param no_data           Numeric value corresponding to 'no data' or \code{NA}.
-//'
 //' @param threshold         (Optional) threshold value for comparisons of floating point numbers (default \code{1e-4}).
 //'
 //' @author Sam Doctolero
 //' @docType methods
 //' @rdname habConnRcpp
 // [[Rcpp::export(name = ".habConnRcpp")]]
-List habConnRcpp(NumericVector cost, int nrow, int ncol, double hab, double no_data, double threshold = 0.0001)
+List habConnRcpp(NumericVector cost, int nrow, int ncol, double hab, double threshold = 0.0001)
 {
   //create instances of inputdata and output data
   InputData in_data;
@@ -45,7 +43,7 @@ List habConnRcpp(NumericVector cost, int nrow, int ncol, double hab, double no_d
   in_data.nrow = nrow;
   in_data.ncol = ncol;
   in_data.habitat = (float)hab;
-  in_data.nodata = (float)no_data;
+  in_data.nodata = NA_REAL;
 
   char error_msg[MAX_CHAR_SIZE] = "Pass in this variable to the engine as an error message holder\n";
   Engine habConnCalculator(&in_data, &out_data, error_msg, (float)threshold);
