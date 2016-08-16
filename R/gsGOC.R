@@ -69,7 +69,7 @@
 #' @author Paul Galpern
 #' @docType methods
 #' @export
-#' @importFrom igraph clusters delete.edges E 'E<-' get.edge.attribute get.edges graph.data.frame is.igraph V 'V<-' vcount
+#' @importFrom igraph clusters delete.edges E 'E<-' get.edge.attribute get.edges graph_from_data_frame is.igraph V 'V<-' vcount
 #' @importFrom raster freq rasterToPolygons reclassify zonal
 #' @importFrom sp coordinates
 #' @importFrom stats median
@@ -253,16 +253,10 @@ gsGOC <- function(gsMPG, nThresh = NULL, doThresh = NULL,
         componentGraphNodes <- do.call(rbind,strsplit(unique(linkComponentLookup$compLinkId), "_"))
 
         ## Produce component graph with all edge attributes, and vertex attributes containing a comma-delimited string of vertex names
-        componentGraph <- graph.data.frame(data.frame(componentGraphNodes,
-                                                      maxWeight,
-                                                      linkIdMaxWeight,
-                                                      minWeight,
-                                                      linkIdMinWeight,
-                                                      medianWeight,
-                                                      meanWeight,
-                                                      numEdgesWeight,
-                                                      linkIdAll),
-                                           directed = FALSE)
+        componentGraph <- data.frame(componentGraphNodes, maxWeight, linkIdMaxWeight,
+                                     minWeight, linkIdMinWeight, medianWeight,
+                                     meanWeight, numEdgesWeight, linkIdAll) %>%
+          graph_from_data_frame(directed = FALSE)
 
         V(componentGraph)$polygonId <- V(componentGraph)$name
         sourcePatchId <- sapply(as.numeric(as.character(V(componentGraph)$polygonId)), function(x)

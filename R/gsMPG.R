@@ -85,7 +85,7 @@
 #' @author Paul Galpern, Sam Doctolero, Alex Chubaty
 #' @docType methods
 #' @export
-#' @importFrom igraph '%>%'
+#' @importFrom igraph '%>%' graph_from_data_frame
 #' @importFrom raster boundaries cellFromRowCol cellFromRowColCombine compareRaster getValues mask projection raster res writeRaster xyFromCell
 #' @importFrom sp coordinates
 #' @importFrom utils read.table
@@ -287,7 +287,7 @@ gsMPG <- function(cost, patch, sa = NULL, filterPatch = NULL, spreadFactor = 0) 
                          endPerimX = endPerim[, 1],
                          endPerimY = endPerim[, 2],
                          linkType = selesGraph[, "linkType"])
-  mpg$mpg <- graph.data.frame(toGraphE, directed = FALSE, vertices = toGraphV)
+  mpg$mpg <- graph_from_data_frame(toGraphE, directed = FALSE, vertices = toGraphV)
 
   class(mpg) <- "gsMPG"
 
