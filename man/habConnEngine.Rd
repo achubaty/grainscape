@@ -5,7 +5,7 @@
 \alias{habConnEngine}
 \title{Habitat connectivity engine}
 \usage{
-habConnEngine(cost, hab, nodata = as.integer(NA))
+habConnEngine(cost, hab, nodata = NA)
 }
 \arguments{
 \item{cost}{Raster cost (resistance) map.}
@@ -29,8 +29,7 @@ cost <- raster(system.file("extdata/fragmented.asc", package = "grainscape2"))
 if (interactive()) plot(cost)
 
 # cells in raster `cost` with value of 1 are habitat (patch) cells
-# cell in raster `cost` with value -9999 should be interpreted as NA (no data)
-links <- habConnEngine(cost, hab = 1, nodata = -9999)
+links <- habConnEngine(cost, hab = 1)
 
 
 if (interactive()) {

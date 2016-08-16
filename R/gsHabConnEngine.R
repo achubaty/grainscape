@@ -24,8 +24,7 @@
 #' if (interactive()) plot(cost)
 #'
 #' # cells in raster `cost` with value of 1 are habitat (patch) cells
-#' # cell in raster `cost` with value -9999 should be interpreted as NA (no data)
-#' links <- habConnEngine(cost, hab = 1, nodata = -9999)
+#' links <- habConnEngine(cost, hab = 1)
 #'
 #'
 #' if (interactive()) {
@@ -33,7 +32,7 @@
 #'   plot(links$voronoi)    # plot the voronoi tesselation
 #'   plot(links$patchLinks) # plot the patches and links
 #' }
-habConnEngine <- function(cost, hab, nodata = as.integer(NA)) {
+habConnEngine <- function(cost, hab, nodata = NA) {
   stopifnot(class(cost) == "RasterLayer",
             length(hab) == 1)
   hce <- .habConnRcpp(cost = getValues(cost), nrow = nrow(cost), ncol = ncol(cost),
