@@ -1,5 +1,15 @@
 #include "../inst/include/Engine.h"
+/*
+#include <iostream>
+#include <opencv2/core/core.hpp>
+#include <opencv2/highgui/highgui.hpp>
 
+using namespace cv;
+using namespace std;
+//#include <Rcpp.h>
+
+//using namespace Rcpp;
+*/
 //Constructor that sets the values for its internal variables
 Engine::Engine(InputData * in_d, OutputData * out_d, char * errmsg, float threshold)
 {
@@ -130,7 +140,8 @@ bool Engine::initialize()
 
   //resize link map and initialize the cells
   iLinkMap = LinkMap(in_data->nrow, lcCol(in_data->ncol)); //give the map nrow rows and ncol columns
-  for (unsigned int i = 0; i < active_cell_holder.size(); i++) //parse through each ActiveCell in the active_cell_holder
+
+  for (unsigned int i = 0; i < active_cell_holder.holder_list[0].size(); i++) //parse through each ActiveCell in the active_cell_holder
   {
 	//at this point the active_cell_holder will only have one list element
     ActiveCell ac = active_cell_holder.holder_list[0].list[i];	//grab the i'th ActiveCell in the list and call it 'ac'
@@ -166,7 +177,7 @@ void Engine::start()
   {
     //clear the temporary active cell holder
     temporary_active_cell_holder.holder_list.clear();
-
+	//Rprintf("Size %d\n", active_cell_holder.size());
     //go through each active cell to see if any of them are ready to spread
     //if they are ready to spread then add them to the spread_list
     //if not then include that active cell in the temporary active cell holder
@@ -196,6 +207,18 @@ void Engine::start()
     spread_list.clear();
     //set the new active cells
     active_cell_holder = temporary_active_cell_holder;
+
+	/*Mat map(in_data->ncol, in_data->nrow, CV_8UC3, Scalar(0, 0, 0));
+	for (int i = 0; i < in_data->nrow; i++)
+	{
+		for (int j = 0; j < in_data->ncol; j++)
+		{
+			map.at<Vec3b>(Point(j, i)) = Vec3b(iLinkMap[i][j].id, iLinkMap[i][j].id*2.0f, iLinkMap[i][j].id * 1.5f);
+		}
+	}
+
+	imshow("Voronoi", map);
+	waitKey(5);*/
   }
 
   //fill the output's voronoi vector with the engine's voronoi_map values
@@ -291,8 +314,8 @@ void Engine::createActiveCell(ActiveCell * ac, int row, int col)
     new_ac.resistance = cost_map[row][col];		//set new_ac's resistance to cost_map's row'th and col'th element
     new_ac.originCell = ac->originCell;			//set new_ac's originCell to ac's originCell
     new_ac.id = c.id;							//set new_ac's id to c's id
-    new_ac.row = c.row;							//set new_ac's row to c's row
-    new_ac.column = c.column;					//set new_ac's column to c's column
+    new_ac.row = row;							//set new_ac's row to c's row
+    new_ac.column = col;					//set new_ac's column to c's column
     new_ac.parentResistance = ac->resistance;	//set new_ac's parentResistance to ac's resistance
 
 	//this is the actual spreading move
@@ -333,7 +356,7 @@ void Engine::createActiveCell(ActiveCell * ac, int row, int col)
 	  //no_data cells should not be included in the link or path between habitats or patches
     if (fabs(cost_map[row][col] - in_data->nodata) > zeroThreshold)
     {
-		findPath(&iLinkMap[ac->row][ac->column], &iLinkMap[row][col], out_data->link_data);
+		findPath(iLinkMap[(ac->row)][(ac->column)], iLinkMap[row][col], out_data->link_data);
     }
   }
 }
@@ -514,11 +537,11 @@ int Engine::combinePatches(int & ind1, int & ind2, std::vector<Patch> & list)
     //transfer all of p2's cells to p1 and update the patch map
     std::vector<Cell> cList = p2->body;
 
-    int id = p1->id;
+    float id = p1->id;
     for (unsigned int i = 0; i < cList.size(); i++)
     {
       p1->body.push_back(cList[i]);
-      voronoi_map[cList[i].row][cList[i].column] = (float)id;
+      voronoi_map[cList[i].row][cList[i].column] = id;
     }
 	//remove the element at ind2 of list
     list.erase(list.begin() + ind2);
@@ -535,11 +558,11 @@ int Engine::combinePatches(int & ind1, int & ind2, std::vector<Patch> & list)
 
     //transfer all of p1's cells to p2 and update the patch map
     std::vector<Cell> cList = p1->body;
-    int id = p2->id;
+    float id = p2->id;
     for (unsigned int i = 0; i < cList.size(); i++)
     {
       p2->body.push_back(cList[i]);
-    voronoi_map[cList[i].row][cList[i].column] = (float)id;
+    voronoi_map[cList[i].row][cList[i].column] = id;
     }
 	//remove the element at ind1 of list
     list.erase(list.begin() + ind1);
@@ -576,28 +599,31 @@ void Engine::connectCell(ActiveCell * ac, int row, int col, float cost)
   lc.originCell = ac->originCell;	//set lc's origin cell to ac's originCell
   lc.cost = cost;					//set lc's cost to the parameter cost
   iLinkMap[row][col] = lc;			//set the row'th an col'th element of iLinkMap to lc
+
 }
 
-void Engine::findPath(LinkCell * ac1, LinkCell * ac2, std::vector<Link> & path_list)
+void Engine::findPath(LinkCell &ac1, LinkCell &ac2, std::vector<Link> & path_list)
 {
+
+	
   //check if the path already exists in the path_list
   for (unsigned int i = 0; i < path_list.size(); i++)
   {
 	  //if the end id and start id correspond to ac1's id and ac2's id OR if the start id and end id correspond to ac1's id and ac2's id then the link already exists
-    if ((path_list[i].end.id == ac1->id && path_list[i].start.id == ac2->id) || (path_list[i].start.id == ac1->id && path_list[i].end.id == ac2->id))
+    if ((path_list[i].end.id == ac1.id && path_list[i].start.id == ac2.id) || (path_list[i].start.id == ac1.id && path_list[i].end.id == ac2.id))
     {
       return;
     }
   }
-
   //create the path
   Link path;			//create a Link instance and name it path
   path.cost = 0.0f;		//set the initial cost to zero	
   //start cell
-  LinkCell lc_temp = iLinkMap[ac1->row][ac1->column]; //get the LinkCell from iLinkMap using ac1's location (row and column)
+  LinkCell lc_temp = iLinkMap[ac1.row][ac1.column]; //get the LinkCell from iLinkMap using ac1's location (row and column)
+  //Rprintf("Middle row: %d, column: %d, ID: %.40f\n", lc_temp.row, lc_temp.column, lc_temp.id);
   path.start = parseMap(lc_temp, path);					//from ac1's location (or lc_temp's location) follow its connections until it reaches a patch
   //end cell
-  lc_temp = iLinkMap[ac2->row][ac2->column];		//get the LinkCell from iLinkMap using ac2's location (row and column)
+  lc_temp = iLinkMap[ac2.row][ac2.column];		//get the LinkCell from iLinkMap using ac2's location (row and column)
   path.end = parseMap(lc_temp, path);				//from ac2's location (or lc_temp's location) follow its connections until it reaches a path
 
   //check if a cheaper indirect path is available
@@ -608,18 +634,18 @@ void Engine::findPath(LinkCell * ac1, LinkCell * ac2, std::vector<Link> & path_l
 Cell Engine::parseMap(LinkCell lc, Link & path)
 {
 	//go through all the connections starting from the input parameter lc's location in the iLinkMap property of the Engine object
-  Cell ret;		//create an instance of Cell called ret (this will be returned)
   Cell c1 = { lc.row, lc.column, lc.id };	//create an instance of a Cell, c1, and set the properties as lc's row, column, and id
-  while (!cellsEqual(c1, lc.originCell))	//as long as c1 does not equal lc's originCell (a cell as part of a patch)
+  Cell ret = c1;		//create an instance of Cell called ret (this will be returned)
+  while (!cellsEqual(c1,lc.fromCell))	//as long as c1 does not equal lc's originCell (a cell as part of a patch)
   {
     path.cost += lc.cost;			//increment the cost by lc's cost
     path.connection.push_back(c1);	//insert the Cell c1 to path (a referenced Link parameter)
     ret = lc;						//set ret to be lc
     Cell from = lc.fromCell;			//create an instance of a Cell called from and set it to lc's fromCell (which is the parentCell or the next cell to process)
-  lc = iLinkMap[from.row][from.column];	//set lc to the next LinkCell from the iLinkMap
-    c1.row = lc.row;					//set c1's paremeters to lc's new parameters
-    c1.column = lc.column;
-    c1.id = lc.id;
+	lc = iLinkMap[from.row][from.column];	//set lc to the next LinkCell from the iLinkMap
+	c1.column = lc.column;				//set c1's paremeters to lc's new parameters
+	c1.row = lc.row;
+	c1.id = lc.id;
   }
   //return the final Cell that was processed (this is the start or end of the Link)
   return ret;
