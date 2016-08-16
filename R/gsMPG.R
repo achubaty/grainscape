@@ -223,7 +223,7 @@ gsMPG <- function(cost, patch, sa = NULL, filterPatch = NULL, spreadFactor = 0) 
   mpg$voronoi <- hce$voronoi
 
   mpg$lcpLinkId <- hce$patchLinks
-  mpg$lcpLinkId[hce$patchLinks > 0] <- 0
+  mpg$lcpLinkId[hce$patchLinks >= 0] <- NA
 
   mpg$lcpPerimWeight <- reclassify(mpg$lcpLinkId, rcl = matrix(c(
     unlist(hce$linkData$LinkId), unlist(hce$linkData$PerimWeight)), ncol = 2)) ## remove unlist once fixed

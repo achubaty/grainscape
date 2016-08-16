@@ -66,17 +66,17 @@ List habConnRcpp(NumericVector cost, int nrow, int ncol, double hab, double no_d
     nmpatch[i] = (double)out_data.patch_map[i];
   }
 
-  //create the returned data structure
+  // create the returned data structure (R indexes from 1, so add 1 to the row/col values)
   List link_data_vec(out_data.link_data.size());
   for (unsigned int i = 0; i < out_data.link_data.size(); i++)
   {
     link_data_vec[i] = List::create(Named("LinkId", (double)(i + 1)*(-1.0)),
       Named("StartId", out_data.link_data[i].start.id),
-      Named("StartRow", out_data.link_data[i].start.row),
-      Named("StartColumn", out_data.link_data[i].start.column),
+      Named("StartRow", out_data.link_data[i].start.row+ 1),
+      Named("StartColumn", out_data.link_data[i].start.column + 1),
       Named("EndId", out_data.link_data[i].end.id),
-      Named("EndRow", out_data.link_data[i].end.row),
-      Named("EndColumn", out_data.link_data[i].end.column),
+      Named("EndRow", out_data.link_data[i].end.row + 1),
+      Named("EndColumn", out_data.link_data[i].end.column + 1),
       Named("PerimWeight", out_data.link_data[i].cost));
 
     //go through each cell in the link data and put in their values
