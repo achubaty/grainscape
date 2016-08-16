@@ -13,8 +13,6 @@
 #' Patch-based models make most sense when animals are restricted to, or dependent on,
 #' a resource patch.  Lattice models can be used as a generalized and functional
 #' approach to scaling resistance surfaces.\cr
-#' Four types of links are identified in the MPG (1=Nearest neighbour;
-#' 2=Minimum spanning tree; 3=Gabriel; 4=Delaunay;)\cr
 #' Areal measurements are given as raster cell counts.
 #' If the raster projection is one where cell sizes are approximately constant in area (e.g., UTM),
 #' or the raster covers a relatively small geographic extent (e.g., < 1000 km in dimension)
@@ -65,8 +63,6 @@
 #'         and their accumulated costs (\code{RasterLayer})\cr
 #'         \code{$lcpLinkId} gives the paths of the links between patches and
 #'         their id (\code{RasterLayer})\cr
-#'         \code{$lcpPerimType} gives the paths of the links between patches and
-#'         their type (\code{RasterLayer}; see notes)\cr
 #'         \code{$mpgPlot} provides a quick way of visualizing the mpg (\code{RasterLayer})\cr\cr
 #'
 #'         The \code{$mpg} has useful vertex and edge attributes.
@@ -114,7 +110,7 @@
 #'
 #' ## Visualize the minimum spanning tree of the MPG
 #' plot(tinyPatchMPG$patchId, col = "black", legend = FALSE)
-#' plot(tinyPatchMPG$lcpPerimType \%in\% c(1,2), add = TRUE, legend = FALSE, col = c(NA, "grey"))
+#' plot(tinyPatchMPG$lcpPerimType %in% c(1,2), add = TRUE, legend = FALSE, col = c(NA, "grey"))
 #'
 #' ## Additional graph extraction scenarios
 #' ## Produce a lattice MPG where focal points are spaced 10 cells apart
