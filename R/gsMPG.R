@@ -209,40 +209,35 @@ gsMPG <- function(cost, patch, sa = NULL, filterPatch = NULL, spreadFactor = 0) 
     stop("grainscape2:  cost raster must not contain missing values at patch cells", call. = FALSE)
   }
 
-  ## Import SELES output
-  #selesGraph <- suppressWarnings(try(read.table(paste(outputFolder, "\\linkstatsmpg.txt", sep = ""),
-  #                                              header = TRUE), silent = TRUE))
-
   ## Call the habitat connectivity engine
   hce <- habConnEngine(rasCost, hab = 1, nodata = -9999)  ## NEEDS user-supplied hab and nodata values
 
   ## Establish mpg object
   mpg <- list()
-  mpg$mpg <- NA                           # *** fill in with igraph object later
-  mpg$landscapeType <- "cost"             # OK
-  mpg$landscape <- rasCost                # OK
+  mpg$landscapeType <- "cost"
+  mpg$landscape <- rasCost
 
-  mpg$patchId <- hce$patchLinks           # OK
-  mpg$patchId[hce$patchLinks < 0] <- 0    # OK
+  mpg$patchId <- hce$patchLinks
+  mpg$patchId[hce$patchLinks < 0] <- 0
 
-  mpg$voronoi <- hce$voronoi              # OK
+  mpg$voronoi <- hce$voronoi
 
-  mpg$lcpLinkId <- hce$patchLinks         # OK
-  mpg$lcpLinkId[hce$patchLinks > 0] <- 0  # OK
+  mpg$lcpLinkId <- hce$patchLinks
+  mpg$lcpLinkId[hce$patchLinks > 0] <- 0
 
   mpg$lcpPerimWeight <- reclassify(mpg$lcpLinkId, rcl = matrix(c(
-    unlist(hce$linkData$LinkId), unlist(hce$linkData$PerimWeight)), ncol = 2)) ## OK -- but remove unlist once fixed
+    unlist(hce$linkData$LinkId), unlist(hce$linkData$PerimWeight)), ncol = 2)) ## remove unlist once fixed
 
   mpg$mpgPlot <- rasCost                     # TO BE REMOVED
   mpg$mpgPlot <- !is.na(mpg$lcpPerimWeight)  # TO BE REMOVED
   mpg$mpgPlot[mpg$mpgPlot == 0] <- NA        # TO BE REMOVED
   mpg$mpgPlot[rasPatch == 1] <- 2            # TO BE REMOVED
 
-  ## Get additional patch information not done by SELES (code reproduced from gsPatch())
+  ## Get additional patch information
   uniquePatches <- sort(unique(mpg$voronoi[]))
 
   ## Patch edge
-  patchEdge <- !is.na(mpg$patchId)
+  patchEdge <- mpg$patchId
   patchEdge[patchEdge == 0] <- NA
   patchEdge <- raster::boundaries(patchEdge, type = "inner")
   patchEdge[patchEdge == 0] <- NA
@@ -250,7 +245,7 @@ gsMPG <- function(cost, patch, sa = NULL, filterPatch = NULL, spreadFactor = 0) 
 
   ## Patch area and core area
   patchArea <- freq(mpg$patchId)
-  patchArea <- patchArea[!is.na(patchArea[, 1]), 2]
+  patchArea <- patchArea[-which(patchArea[, 1] == 0), 2]
   patchEdgeArea <- freq(patchEdge)
   patchEdgeArea <- patchEdgeArea[!is.na(patchEdgeArea[, 1]), 2]
   patch <- data.frame(name = uniquePatches, patchId = uniquePatches,
@@ -259,34 +254,24 @@ gsMPG <- function(cost, patch, sa = NULL, filterPatch = NULL, spreadFactor = 0) 
 
   ## Find centroids of each patch
   cellXY <- coordinates(mpg$patchId)
-  rasX <- mpg$patchId
-  rasY <- rasX
+  r <- mpg$patchId
+  r[r == 0] <- NA
+  rasX <- rasY <- r
   rasX[] <- cellXY[, 1]
   rasY[] <- cellXY[, 2]
-  centroids <- cbind(zonal(rasX, mpg$patchId, fun = 'mean'),
-                     zonal(rasY, mpg$patchId, fun = 'mean')[, 2])
+  centroids <- cbind(zonal(rasX, r, fun = 'mean', na.rm = TRUE),
+                     zonal(rasY, r, fun = 'mean', na.rm = TRUE)[, 2])
 
   toGraphV <- cbind(patch, centroidX = centroids[, 2], centroidY = centroids[, 3])
 
-  ## How to convert SELES cells to raster cell numbers
-  .selesCellToRasterXY <- function(ras, loc) {
-    x <- ncol(ras)
-    xyFromCell(ras, cellFromRowCol(ras, x - (trunc(loc/x)), x*((loc/x) - trunc(loc/x))) + 1)
-  }
-
-  startPerim <- .selesCellToRasterXY(rasCost, selesGraph[, "StartLoc"])
-  endPerim <- .selesCellToRasterXY(rasCost, selesGraph[, "EndLoc"])
-
-  toGraphE <- data.frame(v1 = selesGraph[, "nodeId1"],
-                         v2 = selesGraph[, "nodeId2"],
-                         linkId = selesGraph[, "linkId"],
-                         lcpPerimWeight = selesGraph[, "Cost"],
-                         eucPerimWeight = selesGraph[, "SLDist"],
-                         startPerimX = startPerim[, 1],
-                         startPerimY = startPerim[, 2],
-                         endPerimX = endPerim[, 1],
-                         endPerimY = endPerim[, 2],
-                         linkType = selesGraph[, "linkType"])
+  toGraphE <- data.frame(v1 = unlist(hce$linkData$StartId), ## remove unlist once fixed
+                         v2 = unlist(hce$linkData$EndId), ## remove unlist once fixed
+                         linkId = unlist(hce$linkData$LinkId) * -1L, ## remove unlist once fixed
+                         lcpPerimWeight = unlist(hce$linkData$PerimWeight), ## remove unlist once fixed
+                         startPerimX = unlist(hce$linkData$StartRow), ## remove unlist once fixed
+                         startPerimY = unlist(hce$linkData$StartColumn), ## remove unlist once fixed
+                         endPerimX = unlist(hce$linkData$EndRow), ## remove unlist once fixed
+                         endPerimY = unlist(hce$linkData$EndColumn)) ## remove unlist once fixed
   mpg$mpg <- graph_from_data_frame(toGraphE, directed = FALSE, vertices = toGraphV)
 
   class(mpg) <- "gsMPG"
