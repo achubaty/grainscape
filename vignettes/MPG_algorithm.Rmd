@@ -75,7 +75,7 @@ These are the functions that is visible to the user.
 Function        | Return Type               | Input Arguments               | Description
 ----------------|---------------------------|-------------------------------|------------------
 Engine          | Instance of an Engine     | Nothing                       | Default Engine constructor
-Engine          | Instance of an Engine     | InputData Pointer, OuputData Pointer, Char Pointer, Float (optional, default is 0.0001) | Engine constructor
+Engine          | Instance of an Engine     | InputData Pointer, OuputData Pointer, Char Pointer | Engine constructor
 initialize      | Boolean                   | Nothing                       | Prepares the engine for calculation
 start           | Void                      | Nothing                       | It runs the MPG algorithm
 
@@ -83,8 +83,8 @@ start           | Void                      | Nothing                       | It
 #### Linking Functions
 These functions create the links between cells and finds the least cost (direct or indirect) paths between patches.  
 
-Function      | Return Type     | Input Arguments               | Description
---------------|-----------------|-------------------------------|-------------------
+Function        | Return Type     | Input Arguments               | Description  
+----------------|-----------------|-------------------------------|-------------------  
 findPath      | Void            | LinkCell Pointer, LinkCell Pointer, Vector of Links | Finds the least cost path between two patches
 connectCell   | Void            | ActiveCell Pointer, Integer, Integer, Float | Connects the child cell to the parent cell
 parseMap      | Cell            | LinkCell, Link | Given a starting Cell it follows the connections until it reaches a patch. The last cell in the connection is returned.
@@ -93,12 +93,28 @@ lookForIndirectPath | Void      | Vector of Links, Link   | Tries to find an ind
 #### Patch Finding Functions
 The functions are responsible for finding the patches or clusters in a resistance map, given a value for a habitat.  
 
+Function      | Return Type     | Input Arguments               | Description
+--------------|-----------------|-------------------------------|-------------------
+findPatches   | Vector of Patches | Int, Int, Float             | Finds all the patches in the resistance map given the value of the habitat
+getIndexFromList | Int          | Float, Vector of Patches      | Finds the index in the vector of patches that the given ID correspond to
+combinePatches  | Int           | Int, Int, Vector of Patches   | Given two indeces and the list of patches. Extract the two patches from the list and combine those two into one patch. Insert the new patch into the list and return the index value of the new patch. 
+
 #### Common Functions
 Common functions are almost used in almost all of the functions in the engine.   
 
+Function      | Return Type     | Input Arguments               | Description
+--------------|-----------------|-------------------------------|-------------------
+outOfBounds   | Bool            | Int, Int, Int, Int            | Checks to see if the given row and column is still within the resistance map's dimensions
+cellIsEqual   | Bool            | Cell, Cell                    | Compares the two cells' row and column if they match.
 
 #### Static Functions
 Static functions are functions that can be used without delcaring an object of the class.   
+
+Function      | Return Type     | Input Arguments               | Description
+--------------|-----------------|-------------------------------|-------------------
+emax          | Float           | Vector of Floats              | Finds the maximum value from the vector of floating point values
+emin          | Float           | Vector of Floats              | Finds the minimum value from the vector of floating point values
+calcDistance  | Float           | Cell, Cell                    | Finds the eucledian distance between two Cells
 
 
 --------------------------------------------
@@ -118,3 +134,15 @@ The linking algorithm is embedded within the spreading functions of the MPG algo
 --------------------------------------------
 
 # How to Use the Engine
+
+1. Create InputData and OutputData objects.
+2. Initialize the InputData object's fields.
+3. Create an array of Char with the length of MAX_CHAR_SIZE or a larger value.
+4. Create an Engine object and give the address of the InputData and OutputData objects and the address of the Char array as arguments.
+5. Call the initialization function from the Engine object.
+6. If the initialization is successful, call the start function from the Engine object. If the initialization is not successful, the array of char will contain the reason for the initialization failure.
+7. Once the engine is doen calculating, extract all the fields needed in the OutputData object.
+
+A snippet C++ code is attached below as an example:
+
+![](images/engine_use_snippet.jpg)
