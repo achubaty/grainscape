@@ -97,20 +97,16 @@
 #' tinyCost <- reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
 #'
 #' ## Produce a patch-based MPG where patches are resistance features=1
-#' tinyPatchMPG <- gsMPG(cost = tinyCost, patch = tinyCost == 1)
+#' tinyPatchMPG <- gsMPG(cost = tinyCost, patch = (tinyCost == 1))
 #'
 #' ## Explore the graph structure and node/link attributes
 #' gsGraphDataFrame(tinyPatchMPG)
 #'
 #' ## Find the mean patch area (see igraph manual for use of V() and E())
-#' mean(V(tinyPatchMPG$mpg)$patchArea)
+#' mean(V(tinyPatchMPG$mpg)$patchArea.value)
 #'
 #' ## Quick visualization of the MPG
 #' plot(tinyPatchMPG$mpgPlot, col = c("grey", "black"), legend = FALSE)
-#'
-#' ## Visualize the minimum spanning tree of the MPG
-#' plot(tinyPatchMPG$patchId, col = "black", legend = FALSE)
-#' plot(tinyPatchMPG$lcpPerimType %in% c(1,2), add = TRUE, legend = FALSE, col = c(NA, "grey"))
 #'
 #' ## Additional graph extraction scenarios
 #' ## Produce a lattice MPG where focal points are spaced 10 cells apart
@@ -206,7 +202,13 @@ gsMPG <- function(cost, patch, sa = NULL, filterPatch = NULL, spreadFactor = 0) 
   }
 
   ## Call the habitat connectivity engine
-  hce <- habConnEngine(rasCost, hab = 1)
+  hab <- mask(rasCost, rasPatch, maskvalue = FALSE) %>% getValues() %>%
+    unique() %>% na.omit() %>% as.numeric()
+  if (length(hab) == 1L) {
+    hce <- habConnEngine(rasCost, hab = hab)
+  } else {
+    stop("grainscape2:  multiple cost values corresponding to patch cells", call. = FALSE)
+  }
 
   ## Establish mpg object
   mpg <- list()
@@ -224,10 +226,7 @@ gsMPG <- function(cost, patch, sa = NULL, filterPatch = NULL, spreadFactor = 0) 
   mpg$lcpPerimWeight <- reclassify(mpg$lcpLinkId, rcl = matrix(c(
     hce$linkData$LinkId, hce$linkData$PerimWeight), ncol = 2))
 
-  mpg$mpgPlot <- rasCost                     # TO BE REMOVED
-  mpg$mpgPlot <- !is.na(mpg$lcpPerimWeight)  # TO BE REMOVED
-  mpg$mpgPlot[mpg$mpgPlot == 0] <- NA        # TO BE REMOVED
-  mpg$mpgPlot[rasPatch == 1] <- 2            # TO BE REMOVED
+  mpg$mpgPlot <- hce$patchLinks              # TO BE REMOVED?
 
   ## Get additional patch information
   uniquePatches <- sort(unique(mpg$voronoi[]))

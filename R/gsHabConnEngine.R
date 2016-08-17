@@ -1,3 +1,7 @@
+if (getRversion() >= "3.1.0") {
+  utils::globalVariables(".")
+}
+
 #' Habitat connectivity engine
 #'
 #' DESCRIPTION NEEDED
@@ -19,7 +23,7 @@
 #' @seealso \code{link{habConnRcpp}}
 #'
 #' @examples
-#' cost <- raster(system.file("extdata/fragmented.asc", package = "grainscape2"))
+#' cost <- raster::raster(system.file("extdata/fragmented.asc", package = "grainscape2"))
 #' if (interactive()) plot(cost)
 #'
 #' # cells in raster `cost` with value of 1 are habitat (patch) cells

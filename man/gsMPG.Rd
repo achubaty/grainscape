@@ -95,7 +95,7 @@ tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape2"))
 tinyCost <- reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
 
 ## Produce a patch-based MPG where patches are resistance features=1
-tinyPatchMPG <- gsMPG(cost = tinyCost, patch = tinyCost == 1)
+tinyPatchMPG <- gsMPG(cost = tinyCost, patch = (tinyCost == 1))
 
 ## Explore the graph structure and node/link attributes
 gsGraphDataFrame(tinyPatchMPG)

@@ -23,7 +23,7 @@ An object of class \code{hce} containing the following components:\cr
 DESCRIPTION NEEDED
 }
 \examples{
-cost <- raster(system.file("extdata/fragmented.asc", package = "grainscape2"))
+cost <- raster::raster(system.file("extdata/fragmented.asc", package = "grainscape2"))
 if (interactive()) plot(cost)
 
 # cells in raster `cost` with value of 1 are habitat (patch) cells
