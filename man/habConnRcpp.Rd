@@ -5,7 +5,7 @@
 \alias{.habConnRcpp}
 \title{Habitat connectivity engine (C++)}
 \usage{
-.habConnRcpp(cost, nrow, ncol, hab, threshold = 1e-04)
+.habConnRcpp(cost, nrow, ncol, hab)
 }
 \arguments{
 \item{cost}{A numeric vector of habitat cost (resistance) values
@@ -16,8 +16,6 @@ extracted from a raster cost map.}
 \item{ncol}{Number of columns in the raster cost/patch map.}
 
 \item{hab}{Numeric value corresponding to habitat cells in the cost map.}
-
-\item{threshold}{(Optional) threshold value for comparisons of floating point numbers (default \code{1e-4}).}
 }
 \description{
 Internal function, not intended to be called directly.

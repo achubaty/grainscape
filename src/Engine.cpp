@@ -24,7 +24,6 @@ Engine::Engine()
 Engine::~Engine()
 {}
 
-
 //initialization function (this function should be called before running the engine)
 bool Engine::initialize()
 {
@@ -132,7 +131,7 @@ bool Engine::initialize()
 
   for (unsigned int i = 0; i < active_cell_holder.holder_list[0].size(); i++) //parse through each ActiveCell in the active_cell_holder
   {
-  //at this point the active_cell_holder will only have one list element
+    //at this point the active_cell_holder will only have one list element
     ActiveCell ac = active_cell_holder.holder_list[0].list[i];  //grab the i'th ActiveCell in the list and call it 'ac'
     LinkCell lc;            //create an instance of a LinkCell called 'lc'
     lc.row = ac.row;          //set lc's row to ac's row
@@ -175,7 +174,7 @@ void Engine::start()
       std::vector<ActiveCell> ac_to_check = active_cell_holder.holder_list[i].list;
       for (unsigned int j = 0; j < ac_to_check.size(); j++)
       {
-      //give the address of the element to the activeCellSpreadChecker function
+        //give the address of the element to the activeCellSpreadChecker function
         activeCellSpreadChecker(&ac_to_check[j]);
       }
     }
@@ -196,7 +195,6 @@ void Engine::start()
     spread_list.clear();
     //set the new active cells
     active_cell_holder = temporary_active_cell_holder;
-
   }
 
   //fill the output's voronoi vector with the engine's voronoi_map values
@@ -263,12 +261,13 @@ void Engine::activeCellSpreadChecker(ActiveCell * ac)
     ActiveCellHolder h_temp;      //create an instance of an ActiveCellHolder called 'h_temp'
     h_temp.value = ac->distance;    //set h_temp's value to ac's distance
     h_temp.list.push_back(*ac);      //insert the ActiveCell that ac is pointing to at the end of h_temp's list property (a vector of ActiveCells)
+
     //if the temporary_active_cell_holder is empty then just include h_temp in it since no sorting is needed
-  if (temporary_active_cell_holder.size() <= 0)
+    if (temporary_active_cell_holder.size() <= 0)
     {
       temporary_active_cell_holder.holder_list.push_back(h_temp);
     }
-  //otherwise call the function insertH to handle sorting h_temp in the temporary_active_cell_holder
+    //otherwise call the function insertH to handle sorting h_temp in the temporary_active_cell_holder
     else
     {
       temporary_active_cell_holder.insertH(h_temp);
@@ -281,32 +280,32 @@ void Engine::createActiveCell(ActiveCell * ac, int row, int col)
   //if not out of bounds and have not been conquered by other patches then create a new active cell
   if (!outOfBounds(row, col, in_data->nrow, in_data->ncol) && voronoi_map[row][col] == 0.0f)
   {
-    Cell c;          //create an instance of Cell called 'c'
-    c.row = row;      //set c's row to the parameter row
-    c.column = col;      //set c's column to the parameter col
-    c.id = ac->id;      //set c's id to the id of the ActiveCell that the parameter 'ac' is pointing to
+    Cell c;                   //create an instance of Cell called 'c'
+    c.row = row;              //set c's row to the parameter row
+    c.column = col;           //set c's column to the parameter col
+    c.id = ac->id;            //set c's id to the id of the ActiveCell that the parameter 'ac' is pointing to
     float dist = calcDistance(ac->originCell, c);  //create a variable distance and calculate the distance between 'c' and ac's originCell
-    ActiveCell new_ac;              //create an instance of ActiveCell called 'new_ac'
-    new_ac.time = 0.0f;              //set the time to zero in new_ac
-    new_ac.distance = dist;            //set new_ac's distance to dist
-    new_ac.resistance = cost_map[row][col];    //set new_ac's resistance to cost_map's row'th and col'th element
-    new_ac.originCell = ac->originCell;      //set new_ac's originCell to ac's originCell
-    new_ac.id = c.id;              //set new_ac's id to c's id
-    new_ac.row = row;              //set new_ac's row to c's row
-    new_ac.column = col;          //set new_ac's column to c's column
+    ActiveCell new_ac;        //create an instance of ActiveCell called 'new_ac'
+    new_ac.time = 0.0f;       //set the time to zero in new_ac
+    new_ac.distance = dist;   //set new_ac's distance to dist
+    new_ac.resistance = cost_map[row][col]; //set new_ac's resistance to cost_map's row'th and col'th element
+    new_ac.originCell = ac->originCell;     //set new_ac's originCell to ac's originCell
+    new_ac.id = c.id;         //set new_ac's id to c's id
+    new_ac.row = row;         //set new_ac's row to c's row
+    new_ac.column = col;      //set new_ac's column to c's column
     new_ac.parentResistance = ac->resistance;  //set new_ac's parentResistance to ac's resistance
 
-  //this is the actual spreading move
+    //this is the actual spreading move
     voronoi_map[row][col] = ac->id;  //then set voronoi_map's row'th and col'th element to ac's id
 
-  //if a no_data value in the cost_map is encountered then set the resistance and parent resistances to zero
-  //this will cause the engine to automatically spread into the no_data cells and not connect them
+    //if a no_data value in the cost_map is encountered then set the resistance and parent resistances to zero
+    //this will cause the engine to automatically spread into the no_data cells and not connect them
     if (std::isnan(cost_map[row][col]))//handle no data values
     {
       new_ac.resistance = 0.0f;
       new_ac.parentResistance = 0.0f;
     }
-    else //however if no no_data cells are encountered create a link between the old active cell (ac) to the cell that it is spreading to (new_ac)
+    else //however, if no no_data cells are encountered create a link between the old active cell (ac) to the cell that it is spreading to (new_ac)
       connectCell(ac, row, col, cost_map[row][col]);
 
     //insert new_ac to the temporary_active_cell_holder as a new ActiveCell
@@ -426,21 +425,21 @@ std::vector<Patch> Engine::findPatches(int nrow, int ncol, float habitat)
     //column loop
     for (int col = 0; col < ncol; col++)
     {
-    //if the row'th and col'th element of the cost_map is equal to the habitat then it is a patch or part of a patch
+      //if the row'th and col'th element of the cost_map is equal to the habitat then it is a patch or part of a patch
       if (cost_map[row][col] == habitat)
       {
-      //go through the adjacent cells and check if this is a new patch or just part of a patch
+        //go through the adjacent cells and check if this is a new patch or just part of a patch
         int ind1 = -1;  //set an index to -1 called 'ind1'
         //top left
         if (!outOfBounds(row - 1, col - 1, nrow, ncol) && cost_map[row - 1][col - 1] == habitat)
         {
-      //find the index of the patch from the patch list (ret) given the value of the voronoi_map on the top left of the row'th and col'th element
+          //find the index of the patch from the patch list (ret) given the value of the voronoi_map on the top left of the row'th and col'th element
           ind1 = getIndexFromList(voronoi_map[row - 1][col - 1], ret);
         }
         //left
         if (!outOfBounds(row, col - 1, nrow, ncol) && cost_map[row][col - 1] == habitat)
         {
-      //find the index of the patch from the patch list (ret) given the value of the voronoi_map on the left of the row'th and col'th element
+          //find the index of the patch from the patch list (ret) given the value of the voronoi_map on the left of the row'th and col'th element
           ind1 = getIndexFromList(voronoi_map[row][col - 1], ret);
         }
 
@@ -449,32 +448,32 @@ std::vector<Patch> Engine::findPatches(int nrow, int ncol, float habitat)
         //top right
         if (!outOfBounds(row - 1, col + 1, ncol, nrow) && cost_map[row - 1][col + 1] == habitat)
         {
-      //find the index of the patch from the patch list (ret) given the value of the voronoi_map on the top right of the row'th and col'th element
+          //find the index of the patch from the patch list (ret) given the value of the voronoi_map on the top right of the row'th and col'th element
           ind2 = getIndexFromList(voronoi_map[row - 1][col + 1], ret);
         }
         //top
         if (!outOfBounds(row - 1, col, ncol, nrow) && cost_map[row - 1][col] == habitat)
         {
-      //find the index of the patch from the patch list (ret) given the value of the voronoi_map on the top of the row'th and col'th element
+          //find the index of the patch from the patch list (ret) given the value of the voronoi_map on the top of the row'th and col'th element
           ind2 = getIndexFromList(voronoi_map[row - 1][col], ret);
         }
 
-    //declare and initiate another index variable called 'finalInd'
+        //declare and initiate another index variable called 'finalInd'
         int finalInd = -1;
         //Go through cases
-    //if index1 and index 2 are equal then the set finalInd to either one (I chose ind1)
+        //if index1 and index 2 are equal then the set finalInd to either one (I chose ind1)
         if (ind1 == ind2) finalInd = ind1;
-    //if ind1 == -1 and ind2 is some other number other than -1 then the cell (row'th and col'th) belongs to the patch at the ind2 element of the patch list (ret)
+        //if ind1 == -1 and ind2 is some other number other than -1 then the cell (row'th and col'th) belongs to the patch at the ind2 element of the patch list (ret)
         else if (ind1 == -1 && ind2 != -1) finalInd = ind2;
-    //if ind1 is some other number other than -1 and ind2 is -1 then the cell (row'th and col'th) belongs to the patch at the ind1 element of the patch list (ret)
+        //if ind1 is some other number other than -1 and ind2 is -1 then the cell (row'th and col'th) belongs to the patch at the ind1 element of the patch list (ret)
         else if (ind1 != -1 && ind2 == -1) finalInd = ind1;
-    //if ind1 and ind2 aren't -1 then the cell (row'th and col'th) belongs to two different patches.
+        //if ind1 and ind2 aren't -1 then the cell (row'th and col'th) belongs to two different patches.
         else if (ind1 != -1 && ind2 != -1)
         {
-      //combine the two patches and return the index of the combined patch
+          //combine the two patches and return the index of the combined patch
           finalInd = combinePatches(ind1, ind2, ret);
         }
-    //else set finaInd to -1, meaning a new patch must be created
+        //else set finaInd to -1, meaning a new patch must be created
         else finalInd = -1;
 
         if (finalInd == -1)
@@ -489,7 +488,7 @@ std::vector<Patch> Engine::findPatches(int nrow, int ncol, float habitat)
         }
         else
         {
-      //otherwise insert the cell (row'th and col'th) in the patch
+          //otherwise insert the cell (row'th and col'th) in the patch
           Cell c = { row, col, ret[finalInd].id };  //set Cell c's properties to row, col , and ret's id at the finalInd'th element
           ret[finalInd].body.push_back(c);      //insert Cell c inside the property body of ret at the finalInd'th element
           voronoi_map[row][col] = ret[finalInd].id;  //set the row'th and col'th element of the voronoi_map to ret's id at the finalInd'th element
@@ -522,7 +521,7 @@ int Engine::combinePatches(int & ind1, int & ind2, std::vector<Patch> & list)
       p1->body.push_back(cList[i]);
       voronoi_map[cList[i].row][cList[i].column] = id;
     }
-  //remove the element at ind2 of list
+    //remove the element at ind2 of list
     list.erase(list.begin() + ind2);
   }
   //else if the Patch at p2 has a larger are or number of cells than the Patch at p1
@@ -541,9 +540,9 @@ int Engine::combinePatches(int & ind1, int & ind2, std::vector<Patch> & list)
     for (unsigned int i = 0; i < cList.size(); i++)
     {
       p2->body.push_back(cList[i]);
-    voronoi_map[cList[i].row][cList[i].column] = id;
+      voronoi_map[cList[i].row][cList[i].column] = id;
     }
-  //remove the element at ind1 of list
+    //remove the element at ind1 of list
     list.erase(list.begin() + ind1);
   }
   //return the index of the combined patch
@@ -567,24 +566,21 @@ void Engine::connectCell(ActiveCell * ac, int row, int col, float cost)
 {
   //given ac (a pointer to an ActiveCell) as the parent cell and the integer parameters row and col as the child cell and cost as the child cell's resistance value
   //create a connection between the parent cell and the child cell.
-  LinkCell lc;            //create an instance of a LinkCell called 'lc'
-  lc.row = row;            //set lc's row to the paremeter row
-  lc.column = col;          //set lc's column to the parameter col
-  lc.distance = ac->distance;    //set lc's distance to ac's distance
-  lc.id = ac->id;          //set lc's id to ac's id
-  lc.fromCell.row = ac->row;    //set lc's fromCell's row to ac's row
+  LinkCell lc;                      //create an instance of a LinkCell called 'lc'
+  lc.row = row;                     //set lc's row to the paremeter row
+  lc.column = col;                  //set lc's column to the parameter col
+  lc.distance = ac->distance;       //set lc's distance to ac's distance
+  lc.id = ac->id;                   //set lc's id to ac's id
+  lc.fromCell.row = ac->row;        //set lc's fromCell's row to ac's row
   lc.fromCell.column = ac->column;  //set lc's fromCell's column to ac's column
-  lc.fromCell.id = lc.id;      //set lc's id to ac's id
-  lc.originCell = ac->originCell;  //set lc's origin cell to ac's originCell
-  lc.cost = cost;          //set lc's cost to the parameter cost
-  iLinkMap[row][col] = lc;      //set the row'th an col'th element of iLinkMap to lc
-
+  lc.fromCell.id = lc.id;           //set lc's id to ac's id
+  lc.originCell = ac->originCell;   //set lc's origin cell to ac's originCell
+  lc.cost = cost;                   //set lc's cost to the parameter cost
+  iLinkMap[row][col] = lc;          //set the row'th an col'th element of iLinkMap to lc
 }
 
 void Engine::findPath(LinkCell &ac1, LinkCell &ac2, std::vector<Link> & path_list)
 {
-
-
   //check if the path already exists in the path_list
   for (unsigned int i = 0; i < path_list.size(); i++)
   {
@@ -620,10 +616,10 @@ Cell Engine::parseMap(LinkCell lc, Link & path)
     path.connection.push_back(c1);  //insert the Cell c1 to path (a referenced Link parameter)
     ret = lc;            //set ret to be lc
     Cell from = lc.fromCell;      //create an instance of a Cell called from and set it to lc's fromCell (which is the parentCell or the next cell to process)
-  lc = iLinkMap[from.row][from.column];  //set lc to the next LinkCell from the iLinkMap
-  c1.column = lc.column;        //set c1's paremeters to lc's new parameters
-  c1.row = lc.row;
-  c1.id = lc.id;
+    lc = iLinkMap[from.row][from.column];  //set lc to the next LinkCell from the iLinkMap
+    c1.column = lc.column;        //set c1's paremeters to lc's new parameters
+    c1.row = lc.row;
+    c1.id = lc.id;
   }
   //return the final Cell that was processed (this is the start or end of the Link)
   return ret;
@@ -659,12 +655,12 @@ void Engine::lookForIndirectPath(std::vector<Link> & path_list, Link & path)
           }
           connection.push_back(*pPath1);  //otherwise, insert pPath1's Link in connection
           pPath1 = pPath2;          //set pPath2 to pPath1
-      //if the path's end patch is reached then this is the end of the processing and a proper indirect Link is found
+          //if the path's end patch is reached then this is the end of the processing and a proper indirect Link is found
           if (pPath2->end.id == path.end.id || pPath2->start.id == path.end.id)
           {
             path.cost = cost;
             path.connection = connection[0].connection;
-      //parese through all the Links in connection to create a new Link then update path with that new Link
+            //parse through all the Links in connection to create a new Link then update path with that new Link
             for (unsigned int k = 1; k < connection.size(); k++)
             {
               for (unsigned int m = 0; m < connection[k].connection.size(); m++)
