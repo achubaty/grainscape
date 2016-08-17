@@ -34,7 +34,7 @@
 habConnEngine <- function(cost, hab) {
   stopifnot(class(cost) == "RasterLayer", length(hab) == 1)
   hce <- .habConnRcpp(cost = getValues(cost), nrow = nrow(cost), ncol = ncol(cost),
-                      hab = hab, threshold = getOption("gs.fpthresh"))
+                      hab = hab)
 
   # convert `VoronoiVector` to a raster of identical dimensions etc. as `cost`
   voronoi <- cost

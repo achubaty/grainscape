@@ -1,13 +1,7 @@
 #include "../inst/include/Engine.h"
 
-#include <R.h>
-#include <Rinternals.h>
-#include <Rcpp.h>
-
-using namespace Rcpp;
-
 //Constructor that sets the values for its internal variables
-Engine::Engine(InputData * in_d, OutputData * out_d, char * errmsg, float threshold)
+Engine::Engine(InputData * in_d, OutputData * out_d, char * errmsg)
 {
   in_data = in_d;             //give input data's pointer (or the address of what it is pointing to)
   out_data = out_d;           //give output data's pointer (or the address of what it is pointing to)
@@ -15,7 +9,6 @@ Engine::Engine(InputData * in_d, OutputData * out_d, char * errmsg, float thresh
   voronoi_map = flMap(in_d->nrow, flCol(in_d->ncol, 0.0f));    //Create a map with floating point zero in each cell for the voronoi map
   cost_map = flMap(in_d->nrow, flCol(in_d->ncol, 0.0f));    //Create a map with floating point zero in each cell for the cost/resistance map
   error_message = errmsg;     //give the errmsg's pointer value to the error_message  variable
-  zeroThreshold = threshold;  //give a floating point zero threshold
 }
 
 //Default constructor
@@ -308,7 +301,7 @@ void Engine::createActiveCell(ActiveCell * ac, int row, int col)
 
   //if a no_data value in the cost_map is encountered then set the resistance and parent resistances to zero
   //this will cause the engine to automatically spread into the no_data cells and not connect them
-    if (R_IsNA(cost_map[row][col]))//handle no data values
+    if (std::isnan(cost_map[row][col]))//handle no data values
     {
       new_ac.resistance = 0.0f;
       new_ac.parentResistance = 0.0f;
@@ -340,7 +333,7 @@ void Engine::createActiveCell(ActiveCell * ac, int row, int col)
     //if the cost_map's row'th and col'th element is not a no_data element then create the link
     //otherwise ignore it
     //no_data cells should not be included in the link or path between habitats or patches
-    if (!R_IsNA(cost_map[row][col]))
+    if (!std::isnan(cost_map[row][col]))
     {
       findPath(iLinkMap[(ac->row)][(ac->column)], iLinkMap[row][col], out_data->link_data);
     }

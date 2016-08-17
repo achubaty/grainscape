@@ -8,6 +8,7 @@
 #include <cstring>
 #include <algorithm>
 #include <cmath>
+#include <math.h>
 
 #define MAX_CHAR_SIZE 1024      //Serves as the maximum amount of letters that can or should be stored for the error message
 
@@ -20,7 +21,6 @@ private:
 
     float maxCost;              //maximum cost in the cost vector
     float costRes;              //cost resolution
-    float zeroThreshold;        //degree of error for the floating point zero value (floating point have both +ve and -ve values)
 
     ActiveCellQueue active_cell_holder;              //active cells holder
     ActiveCellQueue temporary_active_cell_holder;    //a temporary active cell holder when the active cell holder is being modified
@@ -79,7 +79,7 @@ private:
 
 public:
     //constructor that takes in a pointer to the input data, pointer to the output data, pointer to a character, and a zero threshold (which is defaulted to 0.0001)
-    Engine(InputData * in_d, OutputData * out_d, char * errmsg, float threshold = 0.0001f);
+    Engine(InputData * in_d, OutputData * out_d, char * errmsg);
 
     //default constructor
     Engine();

@@ -49,7 +49,7 @@ struct InputData
 {
       std::vector<float> cost_vec;
       int nrow, ncol;
-      float habitat, nodata;
+	  float habitat;
 };
 
 //interface output data
