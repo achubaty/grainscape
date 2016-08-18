@@ -101,14 +101,10 @@ tinyPatchMPG <- gsMPG(cost = tinyCost, patch = (tinyCost == 1))
 gsGraphDataFrame(tinyPatchMPG)
 
 ## Find the mean patch area (see igraph manual for use of V() and E())
-mean(V(tinyPatchMPG$mpg)$patchArea)
+mean(V(tinyPatchMPG$mpg)$patchArea.value)
 
 ## Quick visualization of the MPG
 plot(tinyPatchMPG$mpgPlot, col = c("grey", "black"), legend = FALSE)
-
-## Visualize the minimum spanning tree of the MPG
-plot(tinyPatchMPG$patchId, col = "black", legend = FALSE)
-plot(tinyPatchMPG$lcpPerimType \%in\% c(1,2), add = TRUE, legend = FALSE, col = c(NA, "grey"))
 
 ## Additional graph extraction scenarios
 ## Produce a lattice MPG where focal points are spaced 10 cells apart
