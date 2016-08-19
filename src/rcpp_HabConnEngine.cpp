@@ -24,6 +24,7 @@ using namespace Rcpp;
 //'
 //' @author Sam Doctolero
 //' @docType methods
+//' @keywords internal
 //' @rdname habConnRcpp
 // [[Rcpp::export(name = ".habConnRcpp")]]
 List habConnRcpp(NumericVector cost, int nrow, int ncol, double hab)

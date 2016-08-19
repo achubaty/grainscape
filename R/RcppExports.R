@@ -18,6 +18,7 @@
 #'
 #' @author Sam Doctolero
 #' @docType methods
+#' @keywords internal
 #' @rdname habConnRcpp
 .habConnRcpp <- function(cost, nrow, ncol, hab) {
     .Call('grainscape2_habConnRcpp', PACKAGE = 'grainscape2', cost, nrow, ncol, hab)
