@@ -168,7 +168,7 @@ gsGOC <- function(gsMPG, nThresh = NULL, doThresh = NULL,
       #else {
       warning("patchId=", iPatch, " has no connecting links in the MPG.",
               " This is likely caused by a patch surrounded in missing values (NA cells).\n",
-              "At present, all patches must be linked to at least on other patch in the MPG for GOC analyses.\n",
+              "At present, all patches must be linked to at least one other patch in the MPG for GOC analyses.\n",
               "Replacing NA cells in the cost or sa rasters may be required\n", call. = FALSE)
     }
     stop("grainscape2:  cost, patch and/or sa rasters used to create the MPG present a limit case for GOC analyses.  Generated warnings may indicated cause.\nWorkaround for these cases has not yet been implemented.  Please contact the package author for more information.", call. = FALSE)
