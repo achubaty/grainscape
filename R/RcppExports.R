@@ -6,11 +6,12 @@
 #' Internal function, not intended to be called directly.
 #' DESCRIPTION NEEDED
 #'
-#' @param cost              A numeric vector of habitat cost (resistance) values
+#' @param cost              Numeric vector of habitat cost (resistance) values
 #'                          extracted from a raster cost map.
 #'
-#' @param patches			 A numeric vector that have binary values (1s and 0s) where a contiguous
-#'							 set of 1s correspond to a patch and the zeros are resistance values. 
+#' @param patches           Numeric vector that have binary values (1s and 0s)
+#'                          where ones corresponds to patch cells and zeroes to
+#'                          non-habitat (i.e., matrix) cells.
 #'
 #' @param nrow              Number of rows in the raster cost/patch map.
 #'

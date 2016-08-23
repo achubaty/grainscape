@@ -5,17 +5,19 @@
 \alias{.habConnRcpp}
 \title{Habitat connectivity engine (C++)}
 \usage{
-.habConnRcpp(cost, nrow, ncol, hab)
+.habConnRcpp(cost, patches, ncol, nrow)
 }
 \arguments{
-\item{cost}{A numeric vector of habitat cost (resistance) values
+\item{cost}{Numeric vector of habitat cost (resistance) values
 extracted from a raster cost map.}
 
-\item{nrow}{Number of rows in the raster cost/patch map.}
+\item{patches}{Numeric vector that have binary values (1s and 0s)
+where ones corresponds to patch cells and zeroes to
+non-habitat (i.e., matrix) cells.}
 
 \item{ncol}{Number of columns in the raster cost/patch map.}
 
-\item{hab}{Numeric value corresponding to habitat cells in the cost map.}
+\item{nrow}{Number of rows in the raster cost/patch map.}
 }
 \description{
 Internal function, not intended to be called directly.
