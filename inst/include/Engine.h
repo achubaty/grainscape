@@ -34,7 +34,7 @@ private:
     bool initialized;           //indicates if the engine is ready to run or begin
 
     char *error_message;       //a pointer to a character, the contents of this variable is modified if the engine does not work properly
-	int error_message_size;		//size of the array of characters (error_message)
+	int error_message_size;		//size of the array of characters (error_message)	
 
     //Functions://
     //indicates if the cell or pixel has a zero value in the voronoi map
