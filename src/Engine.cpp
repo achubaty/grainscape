@@ -60,18 +60,10 @@ bool Engine::initialize()
       cost_map[i][j] = (float)in_data->cost_vec[i*in_data->ncol + j];
     }
   }
-
-  for ( int i = 0; i < in_data->nrow; i++)
-  {
-	  for ( int j = 0; j < in_data->ncol; j++)
-	  {
-		  if (std::isnan(in_data->patch_vec[i*in_data->ncol + j]))
-			  voronoi_map[i][j] = 0.0f;
-		  else
-			  voronoi_map[i][j] = in_data->patch_vec[i*in_data->ncol + j];
-	  }
-  }
  
+  //find the patches
+  findPatches();
+
   //update the output patch vector
   updateOutputMap(out_data->patch_map, voronoi_map);
   
