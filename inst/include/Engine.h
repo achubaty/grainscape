@@ -65,7 +65,7 @@ private:
     //finds the appropriate index of the sough patch based on the given ID
     int getIndexFromList(float & id, std::vector<Patch> & patches);
     //called from the initialization step to find all the patches in the map
-    std::vector<Patch> findPatches(int nrow, int ncol, float habitat);
+    void findPatches();
 
     //Linking functions
     //connects two cells together

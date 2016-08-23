@@ -1,5 +1,9 @@
 #include "../inst/include/Engine.h"
 
+#include <Rcpp.h>
+
+using namespace Rcpp;
+
 //Constructor that sets the values for its internal variables
 Engine::Engine(InputData * in_d, OutputData * out_d, char * errmsg)
 {
@@ -29,13 +33,13 @@ bool Engine::initialize()
 {
   //check to see if the input vector is equal to the number of cells in a map
   unsigned int size = in_data->nrow * in_data->ncol;
+  
   if (size != in_data->cost_vec.size())
   {
     char msg[] = "product of number of rows and columns did not match cost/resistance vector size\n";
     writeErrorMessage(msg);
     return false;
   }
-
   //initialize maxCost and costRes (maxCost is the maximum resistance value in the raster and costRes is the minimum)
   costRes = in_data->cost_vec[0];
   maxCost = in_data->cost_vec[0];
@@ -49,7 +53,7 @@ bool Engine::initialize()
     if (maxCost < in_data->cost_vec[i])
       maxCost = in_data->cost_vec[i];
   }
-
+  
   //insert the cost values in the actual cost map
   for (unsigned int i = 0; i < cost_map.size(); i++)
   {
@@ -59,24 +63,26 @@ bool Engine::initialize()
     }
   }
 
-  //find the patches first
-  out_data->patch_list = findPatches(in_data->nrow, in_data->ncol, in_data->habitat);
-  if (out_data->patch_list.size() <= 0)
+  for ( int i = 0; i < in_data->nrow; i++)
   {
-    char msg[] = "No patches found\n";
-    writeErrorMessage(msg);
-    return false;
+	  for ( int j = 0; j < in_data->ncol; j++)
+	  {
+		  if (std::isnan(in_data->patch_vec[i*in_data->ncol + j]))
+			  voronoi_map[i][j] = 0.0f;
+		  else
+			  voronoi_map[i][j] = in_data->patch_vec[i*in_data->ncol + j];
+	  }
   }
-
+ 
   //update the output patch vector
   updateOutputMap(out_data->patch_map, voronoi_map);
-
+  
   //get the initial active/spread cells
   for (int i = 0; i < in_data->nrow; i++)
   {
     for (int j = 0; j < in_data->ncol; j++)
     {
-      if (cost_map[i][j] == in_data->habitat)
+      if (voronoi_map[i][j] > 0.0f)
       {
         bool isActive = false;
         //look at all the 4 adjacent cells
@@ -117,18 +123,18 @@ bool Engine::initialize()
       }
     }
   }
-
+  
   //if the initial active cell holder is zero then there's no need for the engine to start
   if (active_cell_holder.size() <= 0)
   {
-    char msg[] = "No initial active cells found\n";
+    char msg[] = "no initial active cells found\n";
     writeErrorMessage(msg);
     return false;
   }
-
+  
   //resize link map and initialize the cells
   iLinkMap = LinkMap(in_data->nrow, lcCol(in_data->ncol)); //give the map nrow rows and ncol columns
-
+  
   for (unsigned int i = 0; i < active_cell_holder.holder_list[0].size(); i++) //parse through each ActiveCell in the active_cell_holder
   {
     //at this point the active_cell_holder will only have one list element
@@ -143,10 +149,11 @@ bool Engine::initialize()
     lc.cost = 0.0f;            //set the cost to zero
     iLinkMap[lc.row][lc.column] = lc;  //insert lc to the appropriate element in the iLinkMap property of the engine
   }
-
+  
   //once all the initiaization parameters are done set the initialized property to true
   initialized = true;
   //then return true
+  Rprintf("Initialized\n");
   return initialized;
 }
 
@@ -220,7 +227,7 @@ bool Engine::cellIsZero(int row, int col)
 {
   //check if the row and column values are not out of bounds and the voronoi_map's row'th and col'th
   //element is zero if both are true then return true otherwise false
-  if (!outOfBounds(row, col, in_data->nrow, in_data->ncol) && voronoi_map[row][col] == 0.0f)
+  if (!outOfBounds(row, col, in_data->nrow, in_data->ncol) && !(voronoi_map[row][col] > 0.0f))
     return true;
   return false;
 }
@@ -344,8 +351,11 @@ void Engine::writeErrorMessage(char* msg)
   //if the msg's number of characters is greater than the allocated memory for error_message
   //then characters in msg cannot be inserted into error_message due to insufficient allocated space
   //therefore do not alter error_message
-  if (strlen(msg) > strlen(error_message))
-    return;
+	if (strlen(msg) > strlen(error_message))
+	{
+		Rprintf("Error: %d\n", strlen(error_message));
+		return;
+	}
 
   //otherwise, insert all the characters of msg into error_message
   //once all of msg has been transferred then set the rest of error_message to null
@@ -412,50 +422,48 @@ bool Engine::cellsEqual(Cell c1, Cell c2)
 }
 
 //Patch Finding Functions
-std::vector<Patch> Engine::findPatches(int nrow, int ncol, float habitat)
+void Engine::findPatches()
 {
-  //declare a vector of Patches called 'ret'
-  std::vector<Patch> ret;
   //declare and initiate an idCount and set it to 5
   int idCount = 5;
 
   //row loop
-  for (int row = 0; row < nrow; row++)
+  for (int row = 0; row < in_data->nrow; row++)
   {
     //column loop
-    for (int col = 0; col < ncol; col++)
+    for (int col = 0; col < in_data->ncol; col++)
     {
       //if the row'th and col'th element of the cost_map is equal to the habitat then it is a patch or part of a patch
-      if (cost_map[row][col] == habitat)
+      if (in_data->patch_vec[row*in_data->ncol + col] > 0.0f)
       {
         //go through the adjacent cells and check if this is a new patch or just part of a patch
         int ind1 = -1;  //set an index to -1 called 'ind1'
         //top left
-        if (!outOfBounds(row - 1, col - 1, nrow, ncol) && cost_map[row - 1][col - 1] == habitat)
+		if (!outOfBounds(row - 1, col - 1, in_data->nrow, in_data->ncol) && in_data->patch_vec[(row - 1)*in_data->ncol + (col - 1)] > 0.0f)
         {
           //find the index of the patch from the patch list (ret) given the value of the voronoi_map on the top left of the row'th and col'th element
-          ind1 = getIndexFromList(voronoi_map[row - 1][col - 1], ret);
+          ind1 = getIndexFromList(voronoi_map[row - 1][col - 1], out_data->patch_list);
         }
         //left
-        if (!outOfBounds(row, col - 1, nrow, ncol) && cost_map[row][col - 1] == habitat)
+		if (!outOfBounds(row, col - 1, in_data->nrow, in_data->ncol) && in_data->patch_vec[row*in_data->ncol + (col - 1)] > 0.0f)
         {
           //find the index of the patch from the patch list (ret) given the value of the voronoi_map on the left of the row'th and col'th element
-          ind1 = getIndexFromList(voronoi_map[row][col - 1], ret);
+			ind1 = getIndexFromList(voronoi_map[row][col - 1], out_data->patch_list);
         }
 
         //top and top right will be in the same patch
         int ind2 = -1;  //set the index to -1 called 'ind2'
         //top right
-        if (!outOfBounds(row - 1, col + 1, ncol, nrow) && cost_map[row - 1][col + 1] == habitat)
+		if (!outOfBounds(row - 1, col + 1, in_data->nrow, in_data->ncol) && in_data->patch_vec[(row - 1)*in_data->ncol + (col + 1)] > 0.0f)
         {
           //find the index of the patch from the patch list (ret) given the value of the voronoi_map on the top right of the row'th and col'th element
-          ind2 = getIndexFromList(voronoi_map[row - 1][col + 1], ret);
+			ind2 = getIndexFromList(voronoi_map[row - 1][col + 1], out_data->patch_list);
         }
         //top
-        if (!outOfBounds(row - 1, col, ncol, nrow) && cost_map[row - 1][col] == habitat)
+		if (!outOfBounds(row - 1, col, in_data->nrow, in_data->ncol) && in_data->patch_vec[(row - 1)*in_data->ncol + col] > 0.0f)
         {
           //find the index of the patch from the patch list (ret) given the value of the voronoi_map on the top of the row'th and col'th element
-          ind2 = getIndexFromList(voronoi_map[row - 1][col], ret);
+			ind2 = getIndexFromList(voronoi_map[row - 1][col], out_data->patch_list);
         }
 
         //declare and initiate another index variable called 'finalInd'
@@ -471,7 +479,7 @@ std::vector<Patch> Engine::findPatches(int nrow, int ncol, float habitat)
         else if (ind1 != -1 && ind2 != -1)
         {
           //combine the two patches and return the index of the combined patch
-          finalInd = combinePatches(ind1, ind2, ret);
+			finalInd = combinePatches(ind1, ind2, out_data->patch_list);
         }
         //else set finaInd to -1, meaning a new patch must be created
         else finalInd = -1;
@@ -484,20 +492,18 @@ std::vector<Patch> Engine::findPatches(int nrow, int ncol, float habitat)
           Cell c = { row, col, temp.id };  //set Cell c's properties to row, col, and temp's id
           voronoi_map[row][col] = temp.id;  //set the row'th and col'th element of the voronoi_map to temp's id
           temp.body.push_back(c);    //insert Cell c in temp's property called body (vector of Cells)
-          ret.push_back(temp);      //insert temp in ret ( a vector of Patches)
+		  out_data->patch_list.push_back(temp);      //insert temp in ret ( a vector of Patches)
         }
         else
         {
           //otherwise insert the cell (row'th and col'th) in the patch
-          Cell c = { row, col, ret[finalInd].id };  //set Cell c's properties to row, col , and ret's id at the finalInd'th element
-          ret[finalInd].body.push_back(c);      //insert Cell c inside the property body of ret at the finalInd'th element
-          voronoi_map[row][col] = ret[finalInd].id;  //set the row'th and col'th element of the voronoi_map to ret's id at the finalInd'th element
+			Cell c = { row, col, out_data->patch_list[finalInd].id };  //set Cell c's properties to row, col , and ret's id at the finalInd'th element
+			out_data->patch_list[finalInd].body.push_back(c);      //insert Cell c inside the property body of ret at the finalInd'th element
+			voronoi_map[row][col] = out_data->patch_list[finalInd].id;  //set the row'th and col'th element of the voronoi_map to ret's id at the finalInd'th element
         }
       }
     }
   }
-  //return a vector of Patches (which is ret)
-  return ret;
 }
 
 int Engine::combinePatches(int & ind1, int & ind2, std::vector<Patch> & list)

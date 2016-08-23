@@ -15,19 +15,19 @@ using namespace Rcpp;
 //' @param cost              A numeric vector of habitat cost (resistance) values
 //'                          extracted from a raster cost map.
 //'
+//' @param patches			 A numeric vector that have binary values (1s and 0s) where a contiguous
+//'							 set of 1s correspond to a patch and the zeros are resistance values. 
+//'
 //' @param nrow              Number of rows in the raster cost/patch map.
 //'
 //' @param ncol              Number of columns in the raster cost/patch map.
-//'
-//' @param hab               Numeric value corresponding to habitat cells in the cost map.
-//'
 //'
 //' @author Sam Doctolero
 //' @docType methods
 //' @keywords internal
 //' @rdname habConnRcpp
 // [[Rcpp::export(name = ".habConnRcpp")]]
-List habConnRcpp(NumericVector cost, int nrow, int ncol, double hab)
+List habConnRcpp(NumericVector cost, NumericVector patches, int ncol, int nrow)
 {
   //create instances of inputdata and output data
   InputData in_data;
@@ -39,12 +39,18 @@ List habConnRcpp(NumericVector cost, int nrow, int ncol, double hab)
     in_data.cost_vec[i] = (float)cost[i];
   }
 
+  //initialize the input data patches vector
+  in_data.patch_vec.resize(patches.size());
+  for (unsigned int i = 0; i < in_data.patch_vec.size(); i++)
+  {
+	  in_data.patch_vec[i] = (float)patches[i];
+  }
+
   //other properties of input data
   in_data.nrow = nrow;
   in_data.ncol = ncol;
-  in_data.habitat = (float)hab;
 
-  char error_msg[MAX_CHAR_SIZE] = "Pass in this variable to the engine as an error message holder\n";
+  char error_msg[MAX_CHAR_SIZE];
   Engine habConnCalculator(&in_data, &out_data, error_msg);
   if (!habConnCalculator.initialize())
   {

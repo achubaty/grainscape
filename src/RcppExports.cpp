@@ -6,16 +6,16 @@
 using namespace Rcpp;
 
 // habConnRcpp
-List habConnRcpp(NumericVector cost, int nrow, int ncol, double hab);
-RcppExport SEXP grainscape2_habConnRcpp(SEXP costSEXP, SEXP nrowSEXP, SEXP ncolSEXP, SEXP habSEXP) {
+List habConnRcpp(NumericVector cost, NumericVector patches, int ncol, int nrow);
+RcppExport SEXP grainscape2_habConnRcpp(SEXP costSEXP, SEXP patchesSEXP, SEXP ncolSEXP, SEXP nrowSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< NumericVector >::type cost(costSEXP);
-    Rcpp::traits::input_parameter< int >::type nrow(nrowSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type patches(patchesSEXP);
     Rcpp::traits::input_parameter< int >::type ncol(ncolSEXP);
-    Rcpp::traits::input_parameter< double >::type hab(habSEXP);
-    __result = Rcpp::wrap(habConnRcpp(cost, nrow, ncol, hab));
+    Rcpp::traits::input_parameter< int >::type nrow(nrowSEXP);
+    __result = Rcpp::wrap(habConnRcpp(cost, patches, ncol, nrow));
     return __result;
 END_RCPP
 }

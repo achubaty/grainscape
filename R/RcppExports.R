@@ -9,18 +9,18 @@
 #' @param cost              A numeric vector of habitat cost (resistance) values
 #'                          extracted from a raster cost map.
 #'
+#' @param patches			 A numeric vector that have binary values (1s and 0s) where a contiguous
+#'							 set of 1s correspond to a patch and the zeros are resistance values. 
+#'
 #' @param nrow              Number of rows in the raster cost/patch map.
 #'
 #' @param ncol              Number of columns in the raster cost/patch map.
-#'
-#' @param hab               Numeric value corresponding to habitat cells in the cost map.
-#'
 #'
 #' @author Sam Doctolero
 #' @docType methods
 #' @keywords internal
 #' @rdname habConnRcpp
-.habConnRcpp <- function(cost, nrow, ncol, hab) {
-    .Call('grainscape2_habConnRcpp', PACKAGE = 'grainscape2', cost, nrow, ncol, hab)
+.habConnRcpp <- function(cost, patches, ncol, nrow) {
+    .Call('grainscape2_habConnRcpp', PACKAGE = 'grainscape2', cost, patches, ncol, nrow)
 }
 
