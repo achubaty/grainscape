@@ -5,12 +5,12 @@
 \alias{habConnEngine}
 \title{Habitat connectivity engine}
 \usage{
-habConnEngine(cost, hab)
+habConnEngine(cost, patches)
 }
 \arguments{
-\item{cost}{Raster cost (resistance) map.}
+\item{cost}{Numeric raster cost (resistance) map.}
 
-\item{hab}{Numeric value corresponding to habitat cells.}
+\item{patches}{Logical raster indicating presence of habitat patches.}
 }
 \value{
 An object of class \code{hce} containing the following components:\cr
@@ -27,7 +27,7 @@ cost <- raster::raster(system.file("extdata/fragmented.asc", package = "grainsca
 if (interactive()) plot(cost)
 
 # cells in raster `cost` with value of 1 are habitat (patch) cells
-links <- habConnEngine(cost, hab = 1)
+links <- habConnEngine(cost, patches = (cost == 1))
 
 
 if (interactive()) {

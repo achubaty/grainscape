@@ -6,8 +6,8 @@ if (getRversion() >= "3.1.0") {
 #'
 #' DESCRIPTION NEEDED
 #'
-#' @param cost      Raster cost (resistance) map.
-#' @param hab       Numeric value corresponding to habitat cells.
+#' @param cost      Numeric raster cost (resistance) map.
+#' @param patches   Logical raster indicating presence of habitat patches.
 #'
 #' @return An object of class \code{hce} containing the following components:\cr
 #'         1. \code{voronoi}: a raster whose values indicate the voronoi tesselation;\cr
@@ -18,7 +18,7 @@ if (getRversion() >= "3.1.0") {
 #' @author Alex Chubaty
 #' @docType methods
 #' @export
-#' @importFrom raster getValues ncol nrow raster unique
+#' @importFrom raster extent getValues ncol nrow raster unique
 #' @rdname habConnEngine
 #' @seealso \code{link{habConnRcpp}}
 #'
@@ -27,7 +27,7 @@ if (getRversion() >= "3.1.0") {
 #' if (interactive()) plot(cost)
 #'
 #' # cells in raster `cost` with value of 1 are habitat (patch) cells
-#' links <- habConnEngine(cost, hab = 1)
+#' links <- habConnEngine(cost, patches = (cost == 1))
 #'
 #'
 #' if (interactive()) {
@@ -35,10 +35,12 @@ if (getRversion() >= "3.1.0") {
 #'   plot(links$voronoi)    # plot the voronoi tesselation
 #'   plot(links$patchLinks) # plot the patches and links
 #' }
-habConnEngine <- function(cost, hab) {
-  stopifnot(class(cost) == "RasterLayer", length(hab) == 1)
-  hce <- .habConnRcpp(cost = getValues(cost), nrow = nrow(cost), ncol = ncol(cost),
-                      hab = hab)
+habConnEngine <- function(cost, patches) {
+  stopifnot(class(cost) == "RasterLayer", class(patches) == "RasterLayer",
+            extent(cost) == extent(patches),
+            ncol(cost) == ncol(patches), nrow(cost) == nrow(patches))
+  hce <- .habConnRcpp(cost = getValues(cost), patches = getValues(patches),
+                      nrow = nrow(cost), ncol = ncol(cost))
 
   # convert `VoronoiVector` to a raster of identical dimensions etc. as `cost`
   voronoi <- cost
