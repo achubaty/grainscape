@@ -33,7 +33,8 @@ private:
 
     bool initialized;           //indicates if the engine is ready to run or begin
 
-    char * error_message;       //a pointer to a character, the contents of this variable is modified if the engine does not work properly
+    char *error_message;       //a pointer to a character, the contents of this variable is modified if the engine does not work properly
+	int error_message_size;		//size of the array of characters (error_message)
 
     //Functions://
     //indicates if the cell or pixel has a zero value in the voronoi map
@@ -50,7 +51,7 @@ private:
 
     //if an engine error ever occurs this function is called to send the reason for the crash to an external char [] variable
     //it writes whatever was in the given msg to the engine's error_message variable
-    void writeErrorMessage(char* msg);
+    void writeErrorMessage(char* msg, int size);
 
     //Initialization functions://
     //Common functions
@@ -79,7 +80,7 @@ private:
 
 public:
     //constructor that takes in a pointer to the input data, pointer to the output data, pointer to a character, and a zero threshold (which is defaulted to 0.0001)
-    Engine(InputData * in_d, OutputData * out_d, char * errmsg);
+    Engine(InputData * in_d, OutputData * out_d, char *errmsg, int msg_size);
 
     //default constructor
     Engine();

@@ -50,8 +50,9 @@ List habConnRcpp(NumericVector cost, NumericVector patches, int ncol, int nrow)
   in_data.nrow = nrow;
   in_data.ncol = ncol;
 
-  char error_msg[MAX_CHAR_SIZE];
-  Engine habConnCalculator(&in_data, &out_data, error_msg);
+  char error_msg[MAX_CHAR_SIZE] = {};
+
+  Engine habConnCalculator(&in_data, &out_data, error_msg, MAX_CHAR_SIZE);
   if (!habConnCalculator.initialize())
   {
     Rprintf("Engine did not initialize due to %s\n", error_msg);

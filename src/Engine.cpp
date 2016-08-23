@@ -1,11 +1,11 @@
 #include "../inst/include/Engine.h"
-
+#include <iostream>
 #include <Rcpp.h>
 
 using namespace Rcpp;
 
 //Constructor that sets the values for its internal variables
-Engine::Engine(InputData * in_d, OutputData * out_d, char * errmsg)
+Engine::Engine(InputData * in_d, OutputData * out_d, char * errmsg, int size_err)
 {
   in_data = in_d;             //give input data's pointer (or the address of what it is pointing to)
   out_data = out_d;           //give output data's pointer (or the address of what it is pointing to)
@@ -13,6 +13,7 @@ Engine::Engine(InputData * in_d, OutputData * out_d, char * errmsg)
   voronoi_map = flMap(in_d->nrow, flCol(in_d->ncol, 0.0f));    //Create a map with floating point zero in each cell for the voronoi map
   cost_map = flMap(in_d->nrow, flCol(in_d->ncol, 0.0f));    //Create a map with floating point zero in each cell for the cost/resistance map
   error_message = errmsg;     //give the errmsg's pointer value to the error_message  variable
+  error_message_size = size_err;	//give the size_err to error_message_size
 }
 
 //Default constructor
@@ -37,7 +38,7 @@ bool Engine::initialize()
   if (size != in_data->cost_vec.size())
   {
     char msg[] = "product of number of rows and columns did not match cost/resistance vector size\n";
-    writeErrorMessage(msg);
+    writeErrorMessage(msg,strlen(msg));
     return false;
   }
   //initialize maxCost and costRes (maxCost is the maximum resistance value in the raster and costRes is the minimum)
@@ -128,7 +129,7 @@ bool Engine::initialize()
   if (active_cell_holder.size() <= 0)
   {
     char msg[] = "no initial active cells found\n";
-    writeErrorMessage(msg);
+    writeErrorMessage(msg,strlen(msg));
     return false;
   }
   
@@ -153,7 +154,6 @@ bool Engine::initialize()
   //once all the initiaization parameters are done set the initialized property to true
   initialized = true;
   //then return true
-  Rprintf("Initialized\n");
   return initialized;
 }
 
@@ -163,7 +163,7 @@ void Engine::start()
   if (!initialized)
   {
     char msg[] = "Engine is not initialized. Failed";
-    writeErrorMessage(msg);
+    writeErrorMessage(msg, strlen(msg));
     return;
   }
 
@@ -346,22 +346,21 @@ void Engine::createActiveCell(ActiveCell * ac, int row, int col)
   }
 }
 
-void Engine::writeErrorMessage(char* msg)
+void Engine::writeErrorMessage(char* msg, int size)
 {
   //if the msg's number of characters is greater than the allocated memory for error_message
   //then characters in msg cannot be inserted into error_message due to insufficient allocated space
   //therefore do not alter error_message
-	if (strlen(msg) > strlen(error_message))
+	if (size > error_message_size)
 	{
-		Rprintf("Error: %d\n", strlen(error_message));
 		return;
 	}
 
   //otherwise, insert all the characters of msg into error_message
   //once all of msg has been transferred then set the rest of error_message to null
-  for (unsigned int i = 0; i < strlen(error_message); i++)
+  for (int i = 0; i < error_message_size; i++)
   {
-    if (i < strlen(msg))
+    if (i < size)
       error_message[i] = msg[i];
     else
       error_message[i] = 0;
