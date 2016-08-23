@@ -1,8 +1,5 @@
 #include "../inst/include/Engine.h"
-#include <iostream>
-#include <Rcpp.h>
-
-using namespace Rcpp;
+#include <Rcpp.h>			//Uncomment this when NOT using R
 
 //Constructor that sets the values for its internal variables
 Engine::Engine(InputData * in_d, OutputData * out_d, char * errmsg, int size_err)
@@ -170,6 +167,7 @@ void Engine::start()
   //keep looping until there aren't any more active cells
   while (active_cell_holder.size() > 0)
   {
+	  Rcpp::checkUserInterrupt();	//Uncomment this when NOT using R
     //clear the temporary active cell holder
     temporary_active_cell_holder.holder_list.clear();
 
