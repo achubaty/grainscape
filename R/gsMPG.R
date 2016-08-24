@@ -116,7 +116,7 @@
 #' tinySa <- tinyCost
 #' tinySa[] <- 1
 #' tinySa[1:5000] <- 0
-#' tinyPatchMPG <- gsMPG(cost = tinyCost, patch = tinyCost == 1, sa = tinySa)
+#' tinyPatchMPG <- gsMPG(cost = tinyCost, patch = (tinyCost == 1), sa = tinySa)
 #' }
 #'
 gsMPG <- function(cost, patch, sa = NULL, filterPatch = NULL, spreadFactor = 0) {
@@ -202,13 +202,7 @@ gsMPG <- function(cost, patch, sa = NULL, filterPatch = NULL, spreadFactor = 0) 
   }
 
   ## Call the habitat connectivity engine
-  hab <- mask(rasCost, rasPatch, maskvalue = FALSE) %>% getValues() %>%
-    unique() %>% na.omit() %>% as.numeric()
-  if (length(hab) == 1L) {
-    hce <- habConnEngine(rasCost, hab = hab)
-  } else {
-    stop("grainscape2:  multiple cost values corresponding to patch cells", call. = FALSE)
-  }
+  hce <- habConnEngine(cost = rasCost, patches = rasPatch)
 
   ## Establish mpg object
   mpg <- list()
