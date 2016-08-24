@@ -11,10 +11,12 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Overview
 
+The Minimimum Planar Graph (MPG) Algorithm is used to find the voronoi boundaries and approximate least cost paths between patches. The voronoi boundaries are created using a spreading or marching algorithm. Each perimeter cell in the patches spread out to adjacent cells, that have not been visited yet or are not part of any patch, and are given a patch ID to mark the voronoi territory. A voronoi boundary is found when a cell is visited twice by two different voronoi territories or IDs. Using a marching algorithm to find the voronoi boundaries makes it possible to implement a linking algorithm that can run in parallel with the marching algorithm. As a cell is spread into, let's call it a child cell, it then creates a link or connection between the child cell and the cell that it spreaded from, let's call that a parent cell. Finding the least cost path this way is only possible with the use of storing the child cells, which will eventually become parent cells, in a queueing table that sorts the cells in a certain order. The child cells are sorted by increasing eucledian distance between the child cell and their origin cell, the perimeter cell that the connection originally spawned from. A link or path between patches is then created at the first voronoi boundary between two patches. 
+
 ## Terminologies
 
 - *Cell:* A box or element in a map.
-- *Active Cell:* A type of cell that is currently being evaluated.
+- *Active Cell:* A type of cell that is currently being evaluated. It refers to the child cell mentioned above. 
 - *Time:* This could mean iterations. Time is used due to Andrew Fall's use of the term in his forest fire analogy.
 - *Object:* An instance of a certain data type, class, or data structure (*i.e.*, `Cell c`, `c` then is an object of type `Cell`).
 
@@ -103,7 +105,7 @@ The functions are responsible for finding the patches or clusters in a resistanc
 
 **Function**        | **Return Type**     | **Input Arguments**         | **Description**  
 --------------------|---------------------|-----------------------------|---------------------------
-`findPatches`       | Vector of Patches   | Int, Int, Float             | Finds all the patches in the resistance map given the value of the habitat.
+`findPatches`       | Void                | Nothing                     | Finds all the patches in the patch vector and assign patch IDs.
 `getIndexFromList`  | Int                 | Float, Vector of Patches    | Finds the index in the vector of patches that the given ID correspond to.
 `combinePatches`    | Int                 | Int, Int, Vector of Patches | Given two indeces and the list of patches. Extract the two patches from the list and combine those two into one patch. Insert the new patch into the list and return the index value of the new patch. 
 
@@ -148,7 +150,7 @@ The linking algorithm is embedded within the spreading functions of the MPG algo
 1. Create `InputData` and `OutputData` objects.
 2. Initialize the `InputData` object's fields.
 3. Create an array of `Char` with the length of `MAX_CHAR_SIZE` or a larger value.
-4. Create an `Engine` object and give the address of the `InputData` and `OutputData` objects and the address of the `Char` array as arguments.
+4. Create an `Engine` object and give the address of the `InputData` and `OutputData` objects, the `Char` array  and the size of the array as arguments.
 5. Call the initialization function from the `Engine` object.
 6. If the initialization is successful, call the start function from the `Engine` object. If the initialization is not successful, the array of char will contain the reason for the initialization failure.
 7. Once the engine is doen calculating, extract all the fields needed in the `OutputData` object.
@@ -156,3 +158,5 @@ The linking algorithm is embedded within the spreading functions of the MPG algo
 A snippet C++ code is attached below as an example:
 
 ![](images/engine_use_snippet.jpg)
+
+Note that the current Engine has two lines of code that are meant for interfacing with R. In order to make the Engine run with any programming or scripting language, remove those two line. One of them is an include statement for Rcpp, at the very top of source code, and the other is inside the start function, the first line inside the while loop. Those two lines are convenient for R users when they want to interrupt or stop the MPG algorithm safely, without crashing their console and possibly losing their data. 
