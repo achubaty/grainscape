@@ -148,15 +148,47 @@ The linking algorithm is embedded within the spreading functions of the MPG algo
 # How to Use the Engine
 
 1. Create `InputData` and `OutputData` objects.
-2. Initialize the `InputData` object's fields.
+2. Initialize the `InputData` object's fields. Keep in mind that the vectors in the InputData and Output data structures are all of type `float`.
 3. Create an array of `Char` with the length of `MAX_CHAR_SIZE` or a larger value.
 4. Create an `Engine` object and give the address of the `InputData` and `OutputData` objects, the `Char` array  and the size of the array as arguments.
 5. Call the initialization function from the `Engine` object.
 6. If the initialization is successful, call the start function from the `Engine` object. If the initialization is not successful, the array of char will contain the reason for the initialization failure.
 7. Once the engine is doen calculating, extract all the fields needed in the `OutputData` object.
 
-A snippet C++ code is attached below as an example:
+A snippet C++ code is shown below as an example:
 
-![](images/engine_use_snippet.jpg)
+```
+vector<float> EngineInterface(vector<float> resistance, vector<float> patches ,int nrow, int ncol)
+{
+	//InputData and OutputData objects
+	InputData inObj;
+	OutputData outObj; 
+
+	//Initialize InputData object
+	inObj.cost_vec = resistance;
+	inObj.nrow = nrow;
+	inObj.ncol = ncol;
+	inObj.patch_vec = patches;
+
+	//Array of chars with a size of MAX_CHAR_SIZE
+	char error[MAX_CHAR_SIZE];
+
+	//Engine object while passing in the InputData and OutputData objects' address and the array of chars
+	Engine engineObj(&inObj, &outObj, error, MAX_CHAR_SIZE);
+
+	//Initialize the engineObj, if it fails output the reason why and exit the function
+	if (engineObj.initialize() == false)
+	{
+		cout << error << endl;
+		return outObj.voronoi_map;
+	}
+
+	//start the calculation
+	engineObj.start();
+
+	//extract the data needed, in this case the voronoi_map
+	return outObj.voronoi_map;
+}
+```
 
 Note that the current Engine has two lines of code that are meant for interfacing with R. In order to make the Engine run with any programming or scripting language, remove those two line. One of them is an include statement for Rcpp, at the very top of source code, and the other is inside the start function, the first line inside the while loop. Those two lines are convenient for R users when they want to interrupt or stop the MPG algorithm safely, without crashing their console and possibly losing their data. 
