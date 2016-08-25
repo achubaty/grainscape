@@ -90,6 +90,9 @@
 #'
 #' @examples
 #' \dontrun{
+#' require(igraph)
+#' require(raster)
+#'
 #' ## Load raster landscape
 #' tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape2"))
 #'
@@ -107,6 +110,12 @@
 #'
 #' ## Quick visualization of the MPG
 #' plot(tinyPatchMPG$mpgPlot, col = c("grey", "black"), legend = FALSE)
+#'
+#' ## Visualize the minimum spanning tree of the MPG
+#' tinyPatchMST <- mst(tinyPatchMPG$mpg)
+#' MSTlinks <- edge_attr(tinyPatchMST, "linkId")
+#' plot(tinyPatchMPG$patchId, col = "black", legend = FALSE)
+#' plot((tinyPatchMPG$lcpLinkId * -1) %in% MSTlinks, add = TRUE, legend = FALSE, col = c(NA, "grey"))
 #'
 #' ## Additional graph extraction scenarios
 #' ## Produce a lattice MPG where focal points are spaced 10 cells apart
