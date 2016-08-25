@@ -98,10 +98,10 @@
 #' tinyPatchGOC <- gsGOC(tinyPatchMPG, doThresh = c(0, 20, 40), sp = TRUE)
 #' }
 #'
-gsGOC <- function(gsMPG, nThresh = NULL, doThresh = NULL,
+gsGOC <- function(mpg, nThresh = NULL, doThresh = NULL,
                   weight = "lcpPerimWeight", sp = FALSE, verbose = 3) {
-  if (class(gsMPG) != "gsMPG") {
-    stop("grainscape2: graph must be a gsMPG object", call. = FALSE)
+  if (class(mpg) != "gsMPG") {
+    stop("grainscape2: mpg must be a gsMPG object", call. = FALSE)
   }
 
   if (sp && !requireNamespace("rgeos", quietly = TRUE)) {
@@ -109,7 +109,7 @@ gsGOC <- function(gsMPG, nThresh = NULL, doThresh = NULL,
   }
 
   threshGraph <- vector("list")
-  baseGraph <- gsMPG$mpg
+  baseGraph <- mpg$mpg
 
   linkWeight <- try(edge_attr(baseGraph, weight), silent = TRUE)
 
@@ -125,14 +125,14 @@ gsGOC <- function(gsMPG, nThresh = NULL, doThresh = NULL,
     ## Determine nThresh unique thresholds covering the full range of possibilities
     ## in terms of the number of polygons
     allUniqueThresh <- t(sapply(sort(c(0, unique(linkWeight))), function(x) {
-      cbind(x, components(delete_edges(gsMPG$mpg, which(linkWeight > x)))$no)
+      cbind(x, components(delete_edges(mpg$mpg, which(linkWeight > x)))$no)
     }))
     doThresh <- allUniqueThresh[!duplicated(allUniqueThresh[, 2]), 1]
     doThresh <- doThresh[round(seq(1, length(doThresh), length = nThresh))]
   }
 
-  threshGraph$metaData <- gsMPG$metaData
-  threshGraph$voronoi <- gsMPG$voronoi
+  threshGraph$metaData <- mpg$metaData                      ## what is this doing? metaData is not an element of mpg
+  threshGraph$voronoi <- mpg$voronoi
   threshGraph$voronoi[threshGraph$voronoi == -1] <- NA      # WHAT IS THIS DOING?
   threshGraph$summary <- data.frame(maxLink = doThresh)
 

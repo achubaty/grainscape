@@ -5,13 +5,10 @@
 \alias{gsGOC}
 \title{Produce a grains of connectivity model at multiple scales (patch-based or lattice GOC)}
 \usage{
-gsGOC(gsMPG, nThresh = NULL, doThresh = NULL, weight = "lcpPerimWeight",
+gsGOC(mpg, nThresh = NULL, doThresh = NULL, weight = "lcpPerimWeight",
   sp = FALSE, verbose = 3)
 }
 \arguments{
-\item{gsMPG}{A \code{gsMPG} object produced by \code{\link{gsMPG}}.
-For lattice GOC \code{\link{gsMPG}} must be run with patch set as an integer value.}
-
 \item{nThresh}{Optional.  An integer giving the number of thresholds (or scales)
 at which to create GOC models.  Thresholds are selected to produce
 a maximum number of unique grains (i.e., models).
@@ -40,6 +37,9 @@ polygons can be exported as shapefiles for use in other GIS applications.
 But, please see details.}
 
 \item{verbose}{Set \code{verbose=1} for no progress information to console.}
+
+\item{gsMPG}{A \code{gsMPG} object produced by \code{\link{gsMPG}}.
+For lattice GOC \code{\link{gsMPG}} must be run with patch set as an integer value.}
 }
 \value{
 A \code{gsGOC} object, consisting of a list of objects.\cr\cr
