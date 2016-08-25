@@ -69,7 +69,7 @@
 #' @author Paul Galpern
 #' @docType methods
 #' @export
-#' @importFrom igraph clusters delete.edges E 'E<-' get.edge.attribute get.edges graph_from_data_frame is.igraph V 'V<-' vcount
+#' @importFrom igraph components delete_edges E 'E<-' edge_attr get.edges graph_from_data_frame is.igraph V 'V<-' vcount
 #' @importFrom raster freq rasterToPolygons reclassify zonal
 #' @importFrom sp coordinates
 #' @importFrom stats median
@@ -111,7 +111,7 @@ gsGOC <- function(gsMPG, nThresh = NULL, doThresh = NULL,
   threshGraph <- vector("list")
   baseGraph <- gsMPG$mpg
 
-  linkWeight <- try(get.edge.attribute(baseGraph, weight), silent = TRUE)
+  linkWeight <- try(edge_attr(baseGraph, weight), silent = TRUE)
 
   if (class(linkWeight) == "try-error") {
     stop("grainscape2: weight must be the name of an existing link attribute to threshold (e.g., 'lcpPerimWeight')", call. = FALSE)
@@ -124,8 +124,8 @@ gsGOC <- function(gsMPG, nThresh = NULL, doThresh = NULL,
   } else if (is.null(doThresh)) {
     ## Determine nThresh unique thresholds covering the full range of possibilities
     ## in terms of the number of polygons
-    allUniqueThresh <- t(sapply(sort(c(0,unique(linkWeight))), function(x) {
-      cbind(x, clusters(delete.edges(gsMPG$mpg, which(linkWeight > x)))$no)
+    allUniqueThresh <- t(sapply(sort(c(0, unique(linkWeight))), function(x) {
+      cbind(x, components(delete_edges(gsMPG$mpg, which(linkWeight > x)))$no)
     }))
     doThresh <- allUniqueThresh[!duplicated(allUniqueThresh[, 2]), 1]
     doThresh <- doThresh[round(seq(1, length(doThresh), length = nThresh))]
@@ -133,11 +133,11 @@ gsGOC <- function(gsMPG, nThresh = NULL, doThresh = NULL,
 
   threshGraph$metaData <- gsMPG$metaData
   threshGraph$voronoi <- gsMPG$voronoi
-  threshGraph$voronoi[threshGraph$voronoi == -1] <- NA
+  threshGraph$voronoi[threshGraph$voronoi == -1] <- NA      # WHAT IS THIS DOING?
   threshGraph$summary <- data.frame(maxLink = doThresh)
 
   ## Optionally retain a vectorized version of the smallest grain of connectivity
-  ## That can later be used to create larger grains by aggregation
+  ## that can later be used to create larger grains by aggregation
   if (sp) {
     if (verbose >= 2) cat("Creating SpatialPolygons for smallest grain\n")
     if (verbose >= 3) {
@@ -175,10 +175,10 @@ gsGOC <- function(gsMPG, nThresh = NULL, doThresh = NULL,
     ## Remove the vertices representing these patches from the mpg
     #baseGraph <- delete.vertices(baseGraph, which(V(baseGraph)$name %in% as.character(unlinkedPatches))-1)
     #allLinks <- get.edges(baseGraph, E(baseGraph)) + 1
-    #linkWeight <- get.edge.attribute(baseGraph, weight)
+    #linkWeight <- edge_attr(baseGraph, weight)
   }
 
-  linkId <- get.edge.attribute(baseGraph, "linkId")
+  linkId <- edge_attr(baseGraph, "linkId")
 
   cellXY <- coordinates(threshGraph$voronoi)
 
@@ -186,17 +186,17 @@ gsGOC <- function(gsMPG, nThresh = NULL, doThresh = NULL,
 
   for (iThresh in 1:length(doThresh)) {
     if (verbose >= 1) cat("Threshold", iThresh, "of", length(doThresh), "\n")
-    tGraph <- delete.edges(baseGraph, which(linkWeight > doThresh[iThresh]))
+    tGraph <- delete_edges(baseGraph, which(linkWeight > doThresh[iThresh]))
 
     ## Determine the component structure of the threshold graph
-    componentList <- clusters(tGraph)
+    componentList <- components(tGraph)
 
     ## Determine if there is more than one component in the graph (if not, return NA)
     if (componentList$no > 1) {
       components <- componentList$membership
 
       ## Determine which edges have endpoints in different components, and create a lookup data frame
-      linkComponentLookup <- cbind(linkId, get.edge.attribute(baseGraph, weight), allLinks,
+      linkComponentLookup <- cbind(linkId, edge_attr(baseGraph, weight), allLinks,
                                    t(apply(allLinks, 1, function(x) c(components[x[1]], components[x[2]]))))
 
       linkComponentLookup <- data.frame(linkComponentLookup[linkComponentLookup[,5] != linkComponentLookup[,6],])
@@ -220,9 +220,9 @@ gsGOC <- function(gsMPG, nThresh = NULL, doThresh = NULL,
             c1 <- linkComponentLookup[i, "compNode1"]
             c2 <- linkComponentLookup[i, "compNode2"]
             sameLink <- (linkComponentLookup[, "compNode1"] == c1) &
-              (linkComponentLookup[,"compNode2"] == c2) |
-              ((linkComponentLookup[,"compNode1"] == c2) &
-                 (linkComponentLookup[,"compNode2"] == c1))
+              (linkComponentLookup[, "compNode2"] == c2) |
+              ((linkComponentLookup[, "compNode1"] == c2) &
+                 (linkComponentLookup[, "compNode2"] == c1))
             linkComponentLookup[sameLink, "compLinkId"] <- paste(c1, c2, sep = "_")
             done[sameLink] <- TRUE
           }

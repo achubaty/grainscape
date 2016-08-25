@@ -114,7 +114,7 @@ tinyLatticeMPG <- gsMPG(cost = tinyCost, patch = 10)
 tinySa <- tinyCost
 tinySa[] <- 1
 tinySa[1:5000] <- 0
-tinyPatchMPG <- gsMPG(cost = tinyCost, patch = tinyCost == 1, sa = tinySa)
+tinyPatchMPG <- gsMPG(cost = tinyCost, patch = (tinyCost == 1), sa = tinySa)
 }
 
 }
