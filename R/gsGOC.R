@@ -69,7 +69,7 @@
 #' @author Paul Galpern
 #' @docType methods
 #' @export
-#' @importFrom igraph components delete_edges E 'E<-' edge_attr get.edges graph_from_data_frame is.igraph V 'V<-' vcount
+#' @importFrom igraph components delete_edges E 'E<-' edge_attr ends graph_from_data_frame is.igraph V 'V<-' vcount
 #' @importFrom raster freq rasterToPolygons reclassify zonal
 #' @importFrom sp coordinates
 #' @importFrom stats median
@@ -147,7 +147,7 @@ gsGOC <- function(gsMPG, nThresh = NULL, doThresh = NULL,
     threshGraph$voronoiSP <- rasterToPolygons(threshGraph$voronoi, dissolve = TRUE)
   }
 
-  allLinks <- get.edges(baseGraph, E(baseGraph))
+  allLinks <- ends(baseGraph, E(baseGraph))
 
   ## Check MPG for orphaned patches
   ## A workaround has not yet been implemented
@@ -174,7 +174,7 @@ gsGOC <- function(gsMPG, nThresh = NULL, doThresh = NULL,
     stop("grainscape2:  cost, patch and/or sa rasters used to create the MPG present a limit case for GOC analyses.  Generated warnings may indicated cause.\nWorkaround for these cases has not yet been implemented.  Please contact the package author for more information.", call. = FALSE)
     ## Remove the vertices representing these patches from the mpg
     #baseGraph <- delete.vertices(baseGraph, which(V(baseGraph)$name %in% as.character(unlinkedPatches))-1)
-    #allLinks <- get.edges(baseGraph, E(baseGraph)) + 1
+    #allLinks <- ends(baseGraph, E(baseGraph)) + 1
     #linkWeight <- edge_attr(baseGraph, weight)
   }
 
