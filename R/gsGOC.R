@@ -185,7 +185,7 @@ gsGOC <- function(mpg, nThresh = NULL, doThresh = NULL,
   threshGraph$th <- vector("list", length(doThresh))
 
   for (iThresh in 1:length(doThresh)) {
-    if (verbose >= 1) cat("Threshold", iThresh, "of", length(doThresh), "\n")
+    if (verbose >= 1) message("Threshold ", iThresh, " of ", length(doThresh)) ## REMOVE THIS?
     tGraph <- delete_edges(baseGraph, which(linkWeight > doThresh[iThresh]))
 
     ## Determine the component structure of the threshold graph
@@ -199,7 +199,7 @@ gsGOC <- function(mpg, nThresh = NULL, doThresh = NULL,
       linkComponentLookup <- cbind(linkId, edge_attr(baseGraph, weight), allLinks,
                                    t(apply(allLinks, 1, function(x) c(components[x[1]], components[x[2]]))))
 
-      linkComponentLookup <- data.frame(linkComponentLookup[linkComponentLookup[,5] != linkComponentLookup[,6],])
+      linkComponentLookup <- data.frame(linkComponentLookup[linkComponentLookup[, 5] != linkComponentLookup[, 6],])
 
       ## Deal with the case when there are exactly 2 components
       if (ncol(linkComponentLookup) == 1) {
