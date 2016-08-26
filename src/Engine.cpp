@@ -329,7 +329,7 @@ void Engine::createActiveCell(ActiveCell * ac, int row, int col)
     //if the cost_map's row'th and col'th element is not a no_data element then create the link
     //otherwise ignore it
     //no_data cells should not be included in the link or path between habitats or patches
-    if (!std::isnan(cost_map[row][col]))
+    if (!std::isnan(cost_map[row][col]) && !std::isnan(cost_map[ac->row][ac->column]))
     {
       findPath(iLinkMap[(ac->row)][(ac->column)], iLinkMap[row][col], out_data->link_data);
     }
@@ -576,32 +576,34 @@ void Engine::connectCell(ActiveCell * ac, int row, int col, float cost)
 
 void Engine::findPath(LinkCell &ac1, LinkCell &ac2, std::vector<Link> & path_list)
 {
-  //check if the path already exists in the path_list
-  for (unsigned int i = 0; i < path_list.size(); i++)
-  {
-    //if the end id and start id correspond to ac1's id and ac2's id OR if the start id and end id correspond to ac1's id and ac2's id then the link already exists
-    if ((path_list[i].end.id == ac1.id && path_list[i].start.id == ac2.id) || (path_list[i].start.id == ac1.id && path_list[i].end.id == ac2.id))
-    {
-      return;
-    }
-  }
-  //create the path
-  Link path;      //create a Link instance and name it path
-  path.cost = 0.0f;    //set the initial cost to zero
-  //start cell
-  LinkCell lc_temp = iLinkMap[ac1.row][ac1.column]; //get the LinkCell from iLinkMap using ac1's location (row and column)
-  path.start = parseMap(lc_temp, path);          //from ac1's location (or lc_temp's location) follow its connections until it reaches a patch
-  //end cell
-  lc_temp = iLinkMap[ac2.row][ac2.column];    //get the LinkCell from iLinkMap using ac2's location (row and column)
-  path.end = parseMap(lc_temp, path);        //from ac2's location (or lc_temp's location) follow its connections until it reaches a path
+	//check if the path already exists in the path_list
+	for (unsigned int i = 0; i < path_list.size(); i++)
+	{
+		//if the end id and start id correspond to ac1's id and ac2's id OR if the start id and end id correspond to ac1's id and ac2's id then the link already exists
+		if ((path_list[i].end.id == ac1.id && path_list[i].start.id == ac2.id) || (path_list[i].start.id == ac1.id && path_list[i].end.id == ac2.id))
+		{
+			return;
+		}
+	}
+	//create the path
+	Link path;      //create a Link instance and name it path
+	path.cost = 0.0f;    //set the initial cost to zero
+	//start cell
+	LinkCell lc_temp = iLinkMap[ac1.row][ac1.column]; //get the LinkCell from iLinkMap using ac1's location (row and column)
+	path.start = parseMap(lc_temp, path);          //from ac1's location (or lc_temp's location) follow its connections until it reaches a patch
+	//end cell
+	lc_temp = iLinkMap[ac2.row][ac2.column];    //get the LinkCell from iLinkMap using ac2's location (row and column)
+	path.end = parseMap(lc_temp, path);        //from ac2's location (or lc_temp's location) follow its connections until it reaches a path
 
-  //check if a cheaper indirect path is available
-  lookForIndirectPath(path_list, path);        //if a cheaper inderect path exists the function updates the Link called 'path'
+	//check if a cheaper indirect path is available
+	lookForIndirectPath(path_list, path);        //if a cheaper inderect path exists the function updates the Link called 'path'
+
   path_list.push_back(path);      //insert the new Link (path) in the path_list property of the Engine object
 }
 
 Cell Engine::parseMap(LinkCell lc, Link & path)
 {
+	Cell mid = { lc.row, lc.column, lc.id };
   //go through all the connections starting from the input parameter lc's location in the iLinkMap property of the Engine object
   Cell c1 = { lc.row, lc.column, lc.id };  //create an instance of a Cell, c1, and set the properties as lc's row, column, and id
   Cell ret = c1;    //create an instance of Cell called ret (this will be returned)
