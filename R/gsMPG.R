@@ -237,7 +237,6 @@ gsMPG <- function(cost, patch, sa = NULL, filterPatch = NULL, spreadFactor = 0) 
 
   ## Patch edge
   patchEdge <- mpg$patchId
-  patchEdge[patchEdge == 0] <- NA
   patchEdge <- raster::boundaries(patchEdge, type = "inner")
   patchEdge[patchEdge == 0] <- NA
   patchEdge <- mask(mpg$patchId, patchEdge)
@@ -251,15 +250,17 @@ gsMPG <- function(cost, patch, sa = NULL, filterPatch = NULL, spreadFactor = 0) 
 
   ## Find centroids of each patch
   cellXY <- coordinates(mpg$patchId)
-  r <- mpg$patchId
+  r <- rasX <- rasY <- mpg$patchId
   r[r == 0] <- NA
-  rasX <- rasY <- r
   rasX[] <- cellXY[, 1]
   rasY[] <- cellXY[, 2]
   centroids <- cbind(zonal(rasX, r, fun = 'mean', na.rm = TRUE),
-                     zonal(rasY, r, fun = 'mean', na.rm = TRUE)[, 2])
+                     zonal(rasY, r, fun = 'mean', na.rm = TRUE)[, 2]) %>%
+    as.data.frame()
+  colnames(centroids) <- c("zone", "meanX", "meanY")
 
-  toGraphV <- cbind(patch, centroidX = centroids[, 2], centroidY = centroids[, 3])
+  toGraphV <- cbind(patch, centroidX = centroids$meanX, centroidY = centroids$meanY) %>%
+    as.data.frame()
 
   toGraphE <- data.frame(v1 = hce$linkData$StartId,
                          v2 = hce$linkData$EndId,
