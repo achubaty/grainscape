@@ -78,6 +78,8 @@
 #'
 #' @examples
 #' \dontrun{
+#' library(raster)
+#'
 #' ## Load raster landscape
 #' tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape2"))
 #'
@@ -179,9 +181,7 @@ gsGOC <- function(mpg, nThresh = NULL, doThresh = NULL,
   }
 
   linkId <- edge_attr(baseGraph, "linkId")
-
   cellXY <- coordinates(threshGraph$voronoi)
-
   threshGraph$th <- vector("list", length(doThresh))
 
   for (iThresh in 1:length(doThresh)) {
@@ -197,9 +197,13 @@ gsGOC <- function(mpg, nThresh = NULL, doThresh = NULL,
 
       ## Determine which edges have endpoints in different components, and create a lookup data frame
       linkComponentLookup <- cbind(linkId, edge_attr(baseGraph, weight), allLinks,
-                                   t(apply(allLinks, 1, function(x) c(components[x[1]], components[x[2]]))))
-
-      linkComponentLookup <- data.frame(linkComponentLookup[linkComponentLookup[, 5] != linkComponentLookup[, 6],])
+                                   t(apply(allLinks, 1, function(x) {
+                                     c(components[x[1]], components[x[2]])
+                             }))) %>%
+        apply(., 2, as.numeric) %>%
+        as.data.frame(stringsAsFactors = FALSE)
+      linkComponentLookup <- linkComponentLookup[linkComponentLookup[, 5] != linkComponentLookup[, 6],]
+      colnames(linkComponentLookup) <- c("linkId", "linkWeight", "node1", "node2", "compNode1", "compNode2")
 
       ## Deal with the case when there are exactly 2 components
       if (ncol(linkComponentLookup) == 1) {
@@ -210,9 +214,7 @@ gsGOC <- function(mpg, nThresh = NULL, doThresh = NULL,
       if (nrow(linkComponentLookup) > 0) {
         ## Standardize component link names (i.e., give a link from component 2 to component 1
         ## the same name as a link from component 1 to component 2)
-        linkComponentLookup <- cbind(linkComponentLookup, matrix(NA, nrow(linkComponentLookup), 1))
-        names(linkComponentLookup) <- c("linkId", "linkWeight", "node1", "node2",
-                                        "compNode1", "compNode2", "compLinkId")
+        linkComponentLookup$compLinkId <- rep(NA_real_, nrow(linkComponentLookup))
         done <- rep(FALSE, nrow(linkComponentLookup))
 
         for (i in 1:nrow(linkComponentLookup)) {
@@ -230,8 +232,9 @@ gsGOC <- function(mpg, nThresh = NULL, doThresh = NULL,
 
         ## Build data.frame for component graph
         ## Find maximum, minimum, mean, and median edge weights between components
-        maxWeight <- as.vector(sapply(unique(linkComponentLookup[, "compLinkId"]), function(x)
-          max(linkComponentLookup[linkComponentLookup$compLinkId == x,"linkWeight"])))
+        maxWeight <- as.vector(sapply(unique(linkComponentLookup[, "compLinkId"]), function(x) {
+          max(linkComponentLookup[linkComponentLookup$compLinkId == x, "linkWeight"])
+        }))
         linkIdMaxWeight <- as.vector(sapply(unique(linkComponentLookup[, "compLinkId"]), function(x)
           linkComponentLookup[linkComponentLookup$compLinkId == x, "linkId"][which.max(linkComponentLookup[linkComponentLookup$compLinkId == x, "linkWeight"])]))
         minWeight <- as.vector(sapply(unique(linkComponentLookup[, "compLinkId"]), function(x)
@@ -302,11 +305,11 @@ gsGOC <- function(mpg, nThresh = NULL, doThresh = NULL,
         ## Find the total patch area, total patch edge area, and total core area
         ##   in each polygon and add as vertex attributes.
         patchAreaLookup <- cbind(V(baseGraph)$patchId,
-                                 V(baseGraph)$patchArea,
-                                 V(baseGraph)$patchEdgeArea,
-                                 V(baseGraph)$coreArea)
+                                 V(baseGraph)$patchArea.value,
+                                 V(baseGraph)$patchEdgeArea.value,
+                                 V(baseGraph)$coreArea.value)
         V(componentGraph)$totalPatchArea <- as.numeric(unlist(sapply(sourcePatchId, function(x)
-          sum(patchAreaLookup[patchAreaLookup[, 1] %in% as.numeric(strsplit(x, ", ")[[1]]), 2]))))
+          sum(patchAreaLookup[patchAreaLookup[, 1] %in% as.numeric(x), 2]))))
         V(componentGraph)$totalPatchEdgeArea <- as.numeric(unlist(sapply(sourcePatchId, function(x)
           sum(patchAreaLookup[patchAreaLookup[, 1] %in% as.numeric(strsplit(x, ", ")[[1]]), 3]))))
         V(componentGraph)$totalCoreArea <- as.numeric(unlist(sapply(sourcePatchId, function(x)
