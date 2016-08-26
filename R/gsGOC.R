@@ -139,10 +139,10 @@ gsGOC <- function(mpg, nThresh = NULL, doThresh = NULL,
   ## Optionally retain a vectorized version of the smallest grain of connectivity
   ## that can later be used to create larger grains by aggregation
   if (sp) {
-    if (verbose >= 2) cat("Creating SpatialPolygons for smallest grain\n")
+    if (verbose >= 2) message("Creating SpatialPolygons for smallest grain.")
     if (verbose >= 3) {
-      cat("  Time for completion is dependent on the number of patches and the dimensions of the raster\n")
-      cat("  Occasional failures caused by memory errors are due to an as-yet uncorrected bug in the GEOS library (rgeos).  See manual.\n")
+      message("  Time for completion is dependent on the number of patches and the dimensions of the raster.")
+      message("  Occasional failures caused by memory errors are due to an as-yet uncorrected bug in the GEOS library (rgeos). See manual.") ## remove? is this still true?
     }
     threshGraph$voronoiSP <- rasterToPolygons(threshGraph$voronoi, dissolve = TRUE)
   }

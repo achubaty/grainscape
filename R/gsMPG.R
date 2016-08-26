@@ -200,9 +200,10 @@ gsMPG <- function(cost, patch, sa = NULL, filterPatch = NULL, spreadFactor = 0) 
     rasSa[] <- 1
   }
 
-  ## Check that patch raster is binary
-  if (!all(unique(rasPatch[]) %in% c(TRUE, FALSE))) {
-    stop("grainscape2:  patch must be a binary raster (=1 for patches; =0 for non-patches).  Missing values (NA) should be set to 0.", call. = FALSE)
+  ## Check that patch raster is binary, first corecing NAs to zeroes
+  rasPatch[is.na(rasPatch)] <- 0
+  if (!all(unique(rasPatch[]) %in% c(FALSE, TRUE))) {
+    stop("grainscape2:  patch must be a binary raster (=1 for patches; =0 for non-patches).", call. = FALSE)
   }
 
   ## Check that cost raster is not equal to NA at patches
