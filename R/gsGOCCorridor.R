@@ -35,7 +35,7 @@
 #' @docType methods
 #' @export
 #' @importFrom graphics plot
-#' @importFrom igraph get.edge.attribute get.edgelist get.shortest.paths V
+#' @importFrom igraph '%>%' as_edgelist edge_attr shortest_paths V
 #' @importFrom sp Line Lines SpatialLines SpatialLinesDataFrame SpatialPoints
 #' @include gsGOCVisualize.R
 #' @rdname gsGOCCorridor
@@ -44,31 +44,31 @@
 #' @examples
 #' \dontrun{
 #' ## Load raster landscape
-#' tiny <- raster(system.file("extdata/tiny.asc", package="grainscape"))
+#' tiny <- raster(system.file("extdata/tiny.asc", package="grainscape2"))
 #'
 #' ## Create a resistance surface from a raster using an is-becomes reclassification
-#' tinyCost <- reclassify(tiny, rcl=cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
+#' tinyCost <- reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
 #'
 #' ## Produce a patch-based MPG where patches are resistance features=1
-#' tinyPatchMPG <- gsMPG(cost=tinyCost, patch=tinyCost==1)
+#' tinyPatchMPG <- gsMPG(cost = tinyCost, patch = (tinyCost == 1))
 #'
 #' ## Extract a representative subset of 5 grains of connectivity using sp=TRUE
-#' tinyPatchGOC <- gsGOC(tinyPatchMPG, nThresh=5, sp=TRUE)
+#' tinyPatchGOC <- gsGOC(tinyPatchMPG, nThresh = 5, sp = TRUE)
 #'
 #' ## Quick visualization of a corridor
 #' corridorStartEnd <- rbind(c(10,10), c(90,90))
-#' gsGOCCorridor(tinyPatchGOC, whichThresh=3, coords=corridorStartEnd, doPlot=TRUE)
+#' gsGOCCorridor(tinyPatchGOC, whichThresh = 3, coords = corridorStartEnd, doPlot = TRUE)
 #'
 #' ## More control over a corridor visualization
-#' tinyPatchCorridor <- gsGOCCorridor(tinyPatchGOC, whichThresh=3, coords=corridorStartEnd)
-#' plot(tinyPatchCorridor$voronoiSP, col="lightgrey", border="white", lwd=2)
-#' plot(tinyPatchCorridor$linksSP, col="darkred", lty="dashed", add=TRUE)
-#' plot(tinyPatchCorridor$nodesSP, col="darkred", pch=21, bg="white", add=TRUE)
-#' plot(tinyPatchCorridor$shortestLinksSP, col="darkred", lty="solid", lwd=2, add=TRUE)
-#' plot(tinyPatchCorridor$shortestNodesSP, col="darkred", pch=21, bg="darkred", add=TRUE)
+#' tinyPatchCorridor <- gsGOCCorridor(tinyPatchGOC, whichThresh = 3, coords = corridorStartEnd)
+#' plot(tinyPatchCorridor$voronoiSP, col = "lightgrey", border = "white", lwd = 2)
+#' plot(tinyPatchCorridor$linksSP, col = "darkred", lty = "dashed", add = TRUE)
+#' plot(tinyPatchCorridor$nodesSP, col = "darkred", pch = 21, bg="white", add = TRUE)
+#' plot(tinyPatchCorridor$shortestLinksSP, col = "darkred", lty = "solid", lwd = 2, add = TRUE)
+#' plot(tinyPatchCorridor$shortestNodesSP, col = "darkred", pch = 21, bg = "darkred", add = TRUE)
 #' mtext(paste("Corridor shortest path length:",
 #'             round(tinyPatchCorridor$corridorLength, 2),
-#'             "resistance units"), side=1)
+#'             "resistance units"), side = 1)
 #' }
 #'
 gsGOCCorridor <- function(gsGOC, whichThresh, coords, doPlot = FALSE, weight = "meanWeight") {
@@ -77,7 +77,7 @@ gsGOCCorridor <- function(gsGOC, whichThresh, coords, doPlot = FALSE, weight = "
   }
 
   if (!requireNamespace("rgeos", quietly = TRUE)) {
-    stop("grainscape2:  rgeos package must be installed to use sp = TRUE")
+    stop("grainscape2:  rgeos package must be installed to use sp=TRUE")
   }
 
   if (is.null(gsGOC$voronoiSP)) {
@@ -89,7 +89,7 @@ gsGOCCorridor <- function(gsGOC, whichThresh, coords, doPlot = FALSE, weight = "
     stop("grainscape2:  whichThresh must index a single threshold existing in the gsGOC object", call. = FALSE)
   }
 
-  if (!(weight %in% list.edge.attributes(gsGOC$th[[1]]$goc))) {
+  if (!(weight %in% edge_attr(gsGOC$th[[1]]$goc))) {
     stop("grainscape2:  link weight attribute with this name doesn't exist in gsGOC object", call. = FALSE)
   }
 
@@ -107,7 +107,7 @@ gsGOCCorridor <- function(gsGOC, whichThresh, coords, doPlot = FALSE, weight = "
   }
 
   ## GOC Graph
-  edges <- get.edgelist(gsGOC$th[[whichThresh]]$goc)
+  edges <- as_edgelist(gsGOC$th[[whichThresh]]$goc)
   edges <- cbind(edgeNum = 1:nrow(edges),
                  v1 = sapply(edges[, 1], function(x) {
                    which(V(gsGOC$th[[whichThresh]]$goc)$name == x)
@@ -116,37 +116,46 @@ gsGOCCorridor <- function(gsGOC, whichThresh, coords, doPlot = FALSE, weight = "
                    which(V(gsGOC$th[[whichThresh]]$goc)$name == x)
                   }))
   edgesGOC <- apply(edges, 1, function(i) {
-    Lines(Line(cbind(c(V(gsGOC$th[[whichThresh]]$goc)$centroidX[i["v1"]],
-                       V(gsGOC$th[[whichThresh]]$goc)$centroidX[i["v2"]]),
-                     c(V(gsGOC$th[[whichThresh]]$goc)$centroidY[i["v1"]],
-                       V(gsGOC$th[[whichThresh]]$goc)$centroidY[i["v2"]]))),
-          ID = as.character(i["edgeNum"]))
-  })
-  edgesGOC <- SpatialLinesDataFrame(
-    SpatialLines(edgesGOC),
-    data = data.frame(edgeNum = 1:nrow(edges),
-                      weight = get.edge.attribute(gsGOC$th[[whichThresh]]$goc, weight))
-  )
+    cbind(c(V(gsGOC$th[[whichThresh]]$goc)$centroidX[i["v1"]],
+            V(gsGOC$th[[whichThresh]]$goc)$centroidX[i["v2"]]),
+          c(V(gsGOC$th[[whichThresh]]$goc)$centroidY[i["v1"]],
+            V(gsGOC$th[[whichThresh]]$goc)$centroidY[i["v2"]])) %>%
+      Line() %>%
+      Lines(ID = as.character(i["edgeNum"]))
+  }) %>%
+    SpatialLines() %>%
+    SpatialLinesDataFrame(data = data.frame(
+      edgeNum = 1:nrow(edges),
+      weight = edge_attr(gsGOC$th[[whichThresh]]$goc, weight)
+    ))
+
   verticesGOC <- SpatialPoints(cbind(V(gsGOC$th[[whichThresh]]$goc)$centroidX,
                                      V(gsGOC$th[[whichThresh]]$goc)$centroidY))
 
   ## Shortest path
   startEndPolygons <- gsGOCPoint(gsGOC, coords)$pointPolygon[, whichThresh]
-  startEndPath <- get.shortest.paths(gsGOC$th[[whichThresh]]$goc,
-                                     which(V(gsGOC$th[[whichThresh]]$goc)$polygonId == startEndPolygons[1]),
-                                     which(V(gsGOC$th[[whichThresh]]$goc)$polygonId == startEndPolygons[2]),
-                                     weights = V(gsGOC$th[[whichThresh]]$goc)$meanWeight)[[1]]
-  shortestPathEdges <- SpatialLines(list(Lines(Line(
-    cbind(V(gsGOC$th[[whichThresh]]$goc)$centroidX[startEndPath],
-          V(gsGOC$th[[whichThresh]]$goc)$centroidY[startEndPath])
-  ), ID = "1")))
+  startEndPath <- shortest_paths(gsGOC$th[[whichThresh]]$goc,
+                                 which(V(gsGOC$th[[whichThresh]]$goc)$polygonId == startEndPolygons[1]),
+                                 which(V(gsGOC$th[[whichThresh]]$goc)$polygonId == startEndPolygons[2]),
+                                 weights = V(gsGOC$th[[whichThresh]]$goc)$meanWeight) %>%
+    `[[`(1) %>%
+    `[[`(1) %>%
+    as.numeric()
+
+  shortestPathEdges <- cbind(V(gsGOC$th[[whichThresh]]$goc)$centroidX[startEndPath],
+                             V(gsGOC$th[[whichThresh]]$goc)$centroidY[startEndPath]) %>%
+    Line() %>%
+    Lines(ID = "1") %>%
+    list() %>%
+    SpatialLines()
+
   shortestPathVertices <- SpatialPoints(cbind(
     V(gsGOC$th[[whichThresh]]$goc)$centroidX[startEndPath],
     V(gsGOC$th[[whichThresh]]$goc)$centroidY[startEndPath]))
-  pathDist <- shortest.paths(
+  pathDist <- distances(
     gsGOC$th[[whichThresh]]$goc,
     v = V(gsGOC$th[[whichThresh]]$goc)[startEndPath[1]],
-    weights = get.edge.attribute(gsGOC$th[[whichThresh]]$goc, weight)
+    weights = edge_attr(gsGOC$th[[whichThresh]]$goc, weight)
   )[startEndPath[length(startEndPath)]]
 
   voronoiSP <- gsGOCVisualize(gsGOC, whichThresh, sp = TRUE)$voronoiSP
@@ -158,8 +167,7 @@ gsGOCCorridor <- function(gsGOC, whichThresh, coords, doPlot = FALSE, weight = "
     plot(verticesGOC, add = TRUE, pch = 21, col = "grey60", bg = "white", cex = 0.75)
     plot(shortestPathEdges, add = TRUE, col = "black", lwd = 2)
     plot(shortestPathVertices, add = TRUE,  pch = 21, col = "black", bg = "white", cex = 0.75)
-  }
-  if (doPlot == 2) {
+  } else if (doPlot == 2) {
     plot(voronoiSP, border = "black", lwd = 0.75)
     plot(edgesGOC, add = TRUE, col = "darkgray", lwd = 1.5)
     plot(verticesGOC, add = TRUE, pch = 21, col = "darkgrey", bg = "white", cex = 0.75)

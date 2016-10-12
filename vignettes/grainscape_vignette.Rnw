@@ -72,17 +72,17 @@ In each case we draw on artificial landscape data that is provided with the pack
 
 
 \item[Tutorial 1] The minimum planar graph
-\addcontentsline{toc}{subsection}{The minimum planar graph}  
+\addcontentsline{toc}{subsection}{The minimum planar graph}
 
 The minimum planar graph (hereafter MPG) is a spatial representation of a graph or a network that provides an efficient approximation of all possible pairwise connections between graph nodes \citep{fall_etal_2007}.  In graph-based landscape connectivity analyses, graph nodes have typically been patches of habitat that are demonstrably important for the species in question \citep{fall_etal_2007}.
 
 An MPG has links (i.e. models the possibility for organism movement and dispersal) between spatially adjacent habitat patches.  In some cases spatially adjacent patches may not be linked, if the shortest connection between them can be made through a third patch.  In practice, this property means that the MPG can be used to make a simple and easily visualized picture of how a set of habitat patches is connected.  The alternative, the complete graph, can quickly become challenging to interpret because these may contain a dense set of graph links making the pattern difficult to discern.  A second advantage of the MPG is the much reduced set of graph links;  this can be valuable where computational efficiency is important, and essential where the number of habitat patches being modelled numbers in the thousands.
 
-However, there are some types of connectivity analyses where the MPG approximation of the complete graph is not appropriate.  For example, assessing community structure within a landscape patch network (i.e. finding sets of patches that are densely connected) is not possible as redundant connections have been removed intentionally.  Equally, the MPG is a poor choice for prioritizing the influence of a patch for connectivity, the objective in a number of landscape graph studies e.g. \citep{pascualhortal_saura_2006}. Please see \citep{galpern_etal_2011} for further discussion of these limitations and of the MPG.  
+However, there are some types of connectivity analyses where the MPG approximation of the complete graph is not appropriate.  For example, assessing community structure within a landscape patch network (i.e. finding sets of patches that are densely connected) is not possible as redundant connections have been removed intentionally.  Equally, the MPG is a poor choice for prioritizing the influence of a patch for connectivity, the objective in a number of landscape graph studies e.g. \citep{pascualhortal_saura_2006}. Please see \citep{galpern_etal_2011} for further discussion of these limitations and of the MPG.
 
 \begin{description}
 \item[Step 1] Preparing the resistance surface
-\addcontentsline{toc}{subsubsection}{Step 1:  Preparing the resistance surface}  
+\addcontentsline{toc}{subsubsection}{Step 1:  Preparing the resistance surface}
 
 
 The MPG has typically been constructed using least-cost path links between the perimeters of habitat patches.  This implies that landscape structure in the "matrix" between patches is influencing movement, and that the organism in question is on average minimizing its costs when moving through this matrix (an assumption possibly appropriate for terrestrial animals, and terrestrial animal-dispersed plants).  Equally, MPGs can be constructed using Euclidean links, where the only influence of the matrix on movement is the effect of spatial separation (i.e. distance it presents between neighbouring habitat).  In the following example we illustrate just the case where links are least-cost paths on a resistance surface.  Euclidean links can be produced by passing a uniform cost surface (a constant raster), and a raster describing the patches.  The only difference in analysis is at the first step below.
@@ -91,10 +91,10 @@ The MPG has typically been constructed using least-cost path links between the p
 We begin by loading a landscape raster distributed with the package.  Note that any raster format readable using the \verb!raster! package can be used here.  The \verb!.asc! format rasters distributed with the package are \verb!ESRI ArcASCII! format.
 
 <<echo=TRUE,print=FALSE>>=
-patchy <- raster(system.file("extdata/patchy.asc", package="grainscape"))
+patchy <- raster(system.file("extdata/patchy.asc", package="grainscape2"))
 @
 
-Then, for convenience, we use R to turn this raster into a resistance surface.  In this example we will assume the feature class 1 are the patches, so we will set them to resistance value also equal to 1 (i.e. no additional resistance to movement than distance alone).  The river, feature class 2, is assigned the highest resistance of 10.  Other features are assigned values in between.  The parameterization of resistance surfaces is itself a big topic \citep{zeller_etal_2012}.  
+Then, for convenience, we use R to turn this raster into a resistance surface.  In this example we will assume the feature class 1 are the patches, so we will set them to resistance value also equal to 1 (i.e. no additional resistance to movement than distance alone).  The river, feature class 2, is assigned the highest resistance of 10.  Other features are assigned values in between.  The parameterization of resistance surfaces is itself a big topic \citep{zeller_etal_2012}.
 
 <<echo=TRUE,print=FALSE>>=
 patchyCost <- reclassify(patchy, rcl=cbind(c(1,2,3,4,5), c(1, 10, 8, 3, 6)))
@@ -119,7 +119,7 @@ The result is shown in Figure~\ref{fig:patchycost}.
 
 \begin{description}
 \item[Step 2] Extracting the MPG
-\addcontentsline{toc}{subsubsection}{Step 2:  Extracting the MPG}  
+\addcontentsline{toc}{subsubsection}{Step 2:  Extracting the MPG}
 
 
 With a resistance surface in hand the next step is to create the MPG.  Basic use of the function, \verb!gsMPG()! to do this is shown here.  Here for simplicity we assume that all areas with the resistance value equal to 1 on the raster are patches.
@@ -136,7 +136,7 @@ Upon execution of this function, \textsc{grainscape} calls \textsc{SELES}, a bin
 
 \begin{description}
 \item[Step 3] Quick visualization of the MPG
-\addcontentsline{toc}{subsubsection}{Step 3:  Quick visualization of the MPG}  
+\addcontentsline{toc}{subsubsection}{Step 3:  Quick visualization of the MPG}
 
 
 A quick way to visualize the MPG is provided in the \verb!gsMPG! object produced by \verb!gsMPG()!.
@@ -167,7 +167,7 @@ plot(links, col="darkgrey", add=TRUE, legend=FALSE)
 
 \begin{description}
 \item[Step 4] Reporting on the MPG
-\addcontentsline{toc}{subsubsection}{Step 4:  Reporting on the MPG}  
+\addcontentsline{toc}{subsubsection}{Step 4:  Reporting on the MPG}
 
 
 Following extraction, the MPG is available as an \verb!igraph! object (see \verb!patchyMPG$mpg!) and can be analyzed using any of the functions in this package.  A quick way to report on the structure of the graph in tabular format is provided by the \textsc{grainscape} function \verb!gsGraphDataFrame()!:
@@ -188,7 +188,7 @@ tempResult
 
 \begin{description}
 \item[Step 5] Thresholding the MPG
-\addcontentsline{toc}{subsubsection}{Step 5:  Thresholding the MPG}  
+\addcontentsline{toc}{subsubsection}{Step 5:  Thresholding the MPG}
 
 
 A frequent step in the analysis of a patch-based landscape graph is to threshold the graph into a series of subgraphs or components representing connected areas for an organism \citep{galpern_etal_2011, galpern_etal_2012, urban_keitt_2001}.  This has sometimes been called a scalar analysis \citep{brooks_2003}.
@@ -226,7 +226,7 @@ Other independent variables about the components (e.g. area of patches) could, o
 
 \begin{description}
 \item[Step 6] Visualizing a thresholded graph
-\addcontentsline{toc}{subsubsection}{Step 6:  Visualizing a thresholded graph}  
+\addcontentsline{toc}{subsubsection}{Step 6:  Visualizing a thresholded graph}
 
 
 Consider an organism able to disperse a maximum of 200 resistance units.  According to Figure~\ref{fig:scalesaggregation} this organism would experience this landscape as 6 connected regions.  This is visualized in Figure~\ref{fig:thresholdedgraph}.
@@ -254,7 +254,7 @@ plot(thresholdLink, add=TRUE, col="darkgrey", legend=FALSE)
 
 \begin{description}
 \item[Step 7] Next steps
-\addcontentsline{toc}{subsubsection}{Step 7:  Next Steps}  
+\addcontentsline{toc}{subsubsection}{Step 7:  Next Steps}
 
 With the MPG in hand, all sorts of subsequent analyses about landscape connectivity are possible.  Grains of connectivity (GOC) the subject of the next three tutorials is an example of using the MPG and its complement the Voronoi tessellation.
 
@@ -265,7 +265,7 @@ When programming your own analyses in R based on the MPG it is helpful to observ
 
 \begin{description}
 \item[Tutorial 2] Patch-based grains of connectivity
-\addcontentsline{toc}{subsection}{Patch-based grains of connectivity}  
+\addcontentsline{toc}{subsection}{Patch-based grains of connectivity}
 
 Grains of connectivity (hereafter GOC) was initially developed in two papers \citep{galpern_manseau_2013, galpern_etal_2012}.  Please refer to these papers for much more detail on this method.  In summary, grains of connectivity describes a tessellation of functionally-connected regions of the landscape.  These may be especially useful for modelling landscape connectivity for highly-mobile terrestrial organisms that are not obligate patch occupants.
 
@@ -278,9 +278,9 @@ Patch-based GOC, shown in this tutorial, may be most relevant for oganisms that 
 Here, we repeat the steps in Tutorial 1 for the same resistance surface.  Any of the variations imaginable for the MPG are equally valid here.
 
 <<echo=TRUE,print=FALSE>>=
-patchy <- raster(system.file("extdata/patchy.asc", package="grainscape"))
-patchyCost <- reclassify(patchy, rcl=cbind(c(1,2,3,4,5), c(1, 10, 8, 3, 6)))
-#patchyMPG <- gsMPG(patchyCost, patch=patchyCost==1)
+patchy <- raster(system.file("extdata/patchy.asc", package = "grainscape2"))
+patchyCost <- reclassify(patchy, rcl = cbind(c(1,2,3,4,5), c(1, 10, 8, 3, 6)))
+#patchyMPG <- gsMPG(patchyCost, patch = (patchyCost == 1))
 @
 \end{description}
 
@@ -390,7 +390,7 @@ distGOC$th[[62]]
 
 \begin{description}
 \item[Tutorial 3] Lattice grains of connectivity
-\addcontentsline{toc}{subsection}{Lattice grains of connectivity}  
+\addcontentsline{toc}{subsection}{Lattice grains of connectivity}
 
 A lattice grains of connectivity model uses a lattice of focal points superimposed over the landscape rather than patches on the landscape as nodes in the MPG.  These points are also the generators used in the Voronoi tessellation.  The result is a more generic way to scale up a resistance surface to coarser scales, without requiring assumptions about a particular habitat type that may be "focal" for connectivity.  All that is required for analysis is an input resistance surface, reducing the ecological parameter set of the model.
 
@@ -444,7 +444,7 @@ These steps proceeds much as with the patch-based GOC model.  The next step is t
 #patchyGOCLattice <- gsGOC(patchyMPGLattice, nThresh=100)
 @
 
-Visualization of the Voronoi tessellation for the 35th threshold is shown in Figure~\ref{fig:goclatticethresh}.  
+Visualization of the Voronoi tessellation for the 35th threshold is shown in Figure~\ref{fig:goclatticethresh}.
 
 \begin{figure}[p]
 \begin{center}
@@ -474,7 +474,7 @@ Further analyses can proceed as with the patch-based GOC model.  For example \ve
 
 \begin{description}
 \item[Tutorial 4] Advanced visualization for grains of connectivity models
-\addcontentsline{toc}{subsection}{Advanced visualization for grains of connectivity models}  
+\addcontentsline{toc}{subsection}{Advanced visualization for grains of connectivity models}
 
 So far we have been visualizing the products of analysis using raster formats.  Since all analyses take place in raster format this has the added advantage of speed.  However, for publications, or on-screen visuals, it tends to be better to have high resolution vector representations; particularly of the Voronoi polygons, as this makes it easier to understand what they show without confusing blocks of colour.
 
@@ -563,7 +563,7 @@ mtext(paste("Shortest path between P and Q:",
 \begin{center}
 
 <<fig=TRUE, echo=TRUE, print=FALSE, results=hide>>=
-tiny <- raster(system.file("extdata/tiny.asc", package="grainscape"))
+tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape2"))
 ## Create a resistance surface from a raster using an is-becomes reclassification
 #tinyCost <- reclassify(tiny, rcl=cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
 ## Produce a patch-based MPG where patches are resistance features=1
@@ -597,7 +597,7 @@ mtext(paste("Corridor shortest path length:",
 
 \begin{description}
 \item[Tutorial 5] The minimum planar graph extracted in overlapping strips for applications in large landscapes
-\addcontentsline{toc}{subsection}{The minimum planar graph extracted in overlapping strips for applications in large landscapes}  
+\addcontentsline{toc}{subsection}{The minimum planar graph extracted in overlapping strips for applications in large landscapes}
 
 Applications of graph-based connectivity analyses in ecology, evolution, and conservation biology often require that the MPG be constructed for large landscapes with many patches. Due to memory limitations associated with SELES, these large landscape are best analyzed in sections. To do so, the landscape is sectioned into overlapping strips and the MPG is constructed in each one either sequentially or in parallel. Once the MPGs are constructed they are then stitched together by aligning the Voronoi tessellations of the cost surfaces in overlapping regions. The landscape must be rectangular for the sectioning and subsequent stitching of the MPGs.
 
@@ -605,15 +605,15 @@ Applications of graph-based connectivity analyses in ecology, evolution, and con
 \item[Step 1] Preparing the resistance surface
 \addcontentsline{toc}{subsubsection}{Step 1: Preparing the resistance surface}
 
-This is the same as Step 1 in Tutorial 1. For this example we will use the another landscape raster distributed with the package also in ESRI ArcASCII format.  This is illustrated in Figure~\ref{fig:resistTutorial5}. 
+This is the same as Step 1 in Tutorial 1. For this example we will use the another landscape raster distributed with the package also in ESRI ArcASCII format.  This is illustrated in Figure~\ref{fig:resistTutorial5}.
 
 \begin{figure}[p]
 \begin{center}
 
 <<fig=TRUE, echo=TRUE, print=FALSE, results=hide>>=
-fragmented <- raster(system.file("extdata/fragmented.asc", package="grainscape"))
-fragmentedCost <- reclassify(fragmented, rcl=cbind(c(1,2,3,4,5), c(1, 10, 8, 3, 6)))
-plot(fragmentedCost, main="")
+fragmented <- raster(system.file("extdata/fragmented.asc", package = "grainscape2"))
+fragmentedCost <- reclassify(fragmented, rcl = cbind(c(1,2,3,4,5), c(1, 10, 8, 3, 6)))
+plot(fragmentedCost, main = "")
 @
 
 \caption{The resistance surface used in Tutorial 5}
@@ -675,7 +675,7 @@ plot(fragmentedMPG$patchId, col="black", main="gsMPG()", legend=FALSE)
 ## we'll make them wider so they print nicely
 links <- fragmentedMPG$lcpPerimWeight > 0
 links[raster::edge(links, type="outer")] <- 1
-plot(links, col="darkgrey", add=TRUE, legend=FALSE)  
+plot(links, col="darkgrey", add=TRUE, legend=FALSE)
 @
 
 \caption{A comparison of MPGs produced using \verb!gsMPGstich()! and the single pass version \verb!gsMPG()!}
@@ -689,7 +689,7 @@ item[Step 4] Visualizing, reporting, thresholding and further analysis of the MP
 
 The MPG extraction using the function gsMPGstitch() produces a gsMPG object that is the same form as that created using gsMPG(). All subsequent visualizations, manipulations, and analyses are therefore identical to those described in Steps 3-7 in Tutorial 1 The minimum planar graph.
 
-Note that when we compare the MPGs constructed with the functions \verb!gsMPGstitch()! and \verb!gsMPG()!, the patch ids are different.  
+Note that when we compare the MPGs constructed with the functions \verb!gsMPGstitch()! and \verb!gsMPG()!, the patch ids are different.
 
 <<echo=TRUE,print=FALSE>>=
 gsGraphDataFrame(fragmentedMPGstitch)

@@ -34,17 +34,17 @@
 #' @docType methods
 #' @export
 #' @importFrom graphics plot
-#' @importFrom igraph 'E<-' is.igraph V
+#' @importFrom igraph 'E<-' is_igraph V
 #' @importFrom methods as
-#' @importFrom raster reclassify
-#' @importFrom sp geometry SpatialPoints SpatialPolygonsDataFrame spChFIDs
+#' @importFrom raster plot reclassify
+#' @importFrom sp geometry plot SpatialPoints SpatialPolygonsDataFrame spChFIDs
 #' @rdname gsGOCVisualize
 #' @seealso \code{\link{gsGOC}}
 #'
 #' @examples
 #' \dontrun{
 #' ## Load raster landscape
-#' tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape"))
+#' tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape2"))
 #'
 #' ## Create a resistance surface from a raster using an is-becomes reclassification
 #' tinyCost <- reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
@@ -94,7 +94,7 @@ gsGOCVisualize <- function(gsGOC, whichThresh, sp = FALSE, doPlot = FALSE) {
 
   results$summary <- gsGOC$summary[whichThresh, ]
 
-  if (is.igraph(gsGOC$th[[whichThresh]]$goc)) {
+  if (is_igraph(gsGOC$th[[whichThresh]]$goc)) {
     threshGraph <- gsGOC$th[[whichThresh]]$goc
 
     ## Produce is-becomes reclassifyification table for voronoi raster
@@ -112,7 +112,7 @@ gsGOCVisualize <- function(gsGOC, whichThresh, sp = FALSE, doPlot = FALSE) {
 
     ## Take the SpatialPolygons object and combine polygons as necessary
     if (sp) {
-      cat("Creating SpatialPolygons\n")
+      message("Creating SpatialPolygons.")
       voronoiSP <- geometry(gsGOC$voronoiSP)
       indexSP <- as(gsGOC$voronoiSP, "data.frame")[, 1]
       newVoronoi <- NULL
@@ -138,17 +138,18 @@ gsGOCVisualize <- function(gsGOC, whichThresh, sp = FALSE, doPlot = FALSE) {
           newVoronoi <- rbind(newVoronoi, thisPolygon)
         }
       }
-      newVoronoi <- SpatialPolygonsDataFrame(newVoronoi,
-                                             data.frame(polygonId = V(threshGraph)$polygonId,
-                                                        row.names = V(threshGraph)$polygonId))
-      results$voronoiSP <- newVoronoi
+      results$voronoiSP <- SpatialPolygonsDataFrame(
+        newVoronoi,
+        data.frame(polygonId = V(threshGraph)$polygonId,
+                   row.names = V(threshGraph)$polygonId)
+      )
     }
 
     if (doPlot) {
       if (sp) {
-        plot(results$voronoiSP)
+        sp::plot(results$voronoiSP)
       } else {
-        plot(results$voronoi, main = paste(c("whichThresh=", whichThresh), collapse = ""))
+        raster::plot(results$voronoi, main = paste(c("whichThresh=", whichThresh), collapse = ""))
       }
     }
   }

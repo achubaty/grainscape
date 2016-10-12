@@ -14,12 +14,24 @@ gsGOCPoint(gsGOC, coords)
 the coordinates of points of interest.}
 }
 \value{
-A list object with elements:
-\code{$pointPolygon} is a matrix with elements giving the id of the polygon from the \code{gsGOC}, where rows give points of interest and columns give thresholds\cr
-\code{$pointTotalPatchArea} is a matrix with elements giving the area of patches in a polygon (in cell counts), where rows give points of interest and columns give thresholds\cr
-\code{$pointTotalCoreArea} is the same for core area of patches\cr
-\code{$pointECS} gives the patch area (in cell counts) averaged for all points of interest (defined by O'Brien et al. 2006)\cr
-\code{$pointECSCore} is the same for the core area of patches
+A list with elements:
+
+\itemize{
+    \item \code{pointPolygon} is a matrix with elements giving the id of the
+          polygon from the \code{gsGOC}, where rows give points of interest
+          and columns give thresholds;
+
+    \item \code{pointTotalPatchArea} is a matrix with elements giving the
+          area of patches in a polygon (in cell counts), where rows give points
+          of interest and columns give thresholds;
+
+    \item \code{pointTotalCoreArea} is the same for core area of patches;
+
+    \item \code{pointECS} gives the patch area (in cell counts) averaged for
+          all points of interest (defined by O'Brien et al. 2006);
+
+    \item \code{pointECSCore} is the same for the core area of patches.
+}
 }
 \description{
 Given a \code{\link{gsGOC}} object identify the polygon containing a location at multiple scales.
@@ -30,7 +42,7 @@ See \code{\link{gsMPG}} for warning related to areal measurements.
 \examples{
 \dontrun{
 ## Load raster landscape
-tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape"))
+tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape2"))
 
 ## Create a resistance surface from a raster using an is-becomes reclassification
 tinyCost <- reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))

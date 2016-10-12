@@ -3,7 +3,8 @@
 \docType{methods}
 \name{gsGraphDataFrame}
 \alias{gsGraphDataFrame}
-\title{Produce a data.frame containing the structure and associated attributes for a gsMPG, gsGOC, or igraph object}
+\title{Produce a \code{data.frame} containing the structure and associated attributes
+for a \code{gsMPG}, \code{gsGOC}, or \code{igraph} object}
 \usage{
 gsGraphDataFrame(gsObj)
 }
@@ -20,15 +21,16 @@ an enumerated list of the same length as the number of thresholds is returned
 each containing \code{$v} and \code{$e} elements.
 }
 \description{
-Given a gsMPG, gsGOC, or any igraph object produce a data.frame containing the
-node (vertex) and link (edge) structure as well as the associated attributes for these.
+Given a \code{gsMPG}, \code{gsGOC}, or any \code{igraph} object, produce a
+\code{data.frame} containing the node (vertex) and link (edge) structure as
+well as the associated attributes for these.
 This provides an easy way to create data tables describing graphs, particularly
 helpful for users unfamiliar with the structure of igraph objects.
 }
 \examples{
 \dontrun{
 ## Load raster landscape
-tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape"))
+tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape2"))
 
 ## Create a resistance surface from a raster using an is-becomes reclassification
 tinyCost <- reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))

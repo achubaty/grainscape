@@ -9,6 +9,9 @@ gsGOC(mpg, nThresh = NULL, doThresh = NULL, weight = "lcpPerimWeight",
   sp = FALSE, verbose = 3)
 }
 \arguments{
+\item{mpg}{A \code{gsMPG} object produced by \code{\link{gsMPG}}.
+For lattice GOC \code{\link{gsMPG}} must be run with patch set as an integer value.}
+
 \item{nThresh}{Optional.  An integer giving the number of thresholds (or scales)
 at which to create GOC models.  Thresholds are selected to produce
 a maximum number of unique grains (i.e., models).
@@ -37,9 +40,6 @@ polygons can be exported as shapefiles for use in other GIS applications.
 But, please see details.}
 
 \item{verbose}{Set \code{verbose=1} for no progress information to console.}
-
-\item{gsMPG}{A \code{gsMPG} object produced by \code{\link{gsMPG}}.
-For lattice GOC \code{\link{gsMPG}} must be run with patch set as an integer value.}
 }
 \value{
 A \code{gsGOC} object, consisting of a list of objects.\cr\cr
@@ -75,6 +75,8 @@ See \code{\link{gsMPG}} for warning related to areal measurements.
 }
 \examples{
 \dontrun{
+library(raster)
+
 ## Load raster landscape
 tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape2"))
 
@@ -104,6 +106,7 @@ Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien.  (2007) Spatial graphs:  Princip
 Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis at multiple spatial scales in landscape genetics.  Molecular Ecology 21:3996-4009.\cr
 }
 \seealso{
-\code{\link{gsMPG}}, \code{\link{gsGOCVisualize}}, \code{\link{gsGOCDistance}}, \code{\link{gsGOCPoint}}
+\code{\link{gsMPG}}, \code{\link{gsGOCVisualize}},
+         \code{\link{gsGOCDistance}}, \code{\link{gsGOCPoint}}
 }
 

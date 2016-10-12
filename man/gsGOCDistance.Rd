@@ -8,11 +8,13 @@
 gsGOCDistance(gsGOC, coords, weight = "meanWeight")
 }
 \arguments{
-\item{gsGOC}{A \code{gsGOC} object produced by \code{\link{gsGOC}}}
+\item{gsGOC}{A \code{gsGOC} object produced by \code{\link{gsGOC}}.}
 
-\item{coords}{A two column matrix or a \code{\link{SpatialPoints}} object giving the coordinates of points of interest}
+\item{coords}{A two column matrix or a \code{\link{SpatialPoints}} object
+giving the coordinates of points of interest.}
 
-\item{weight}{The GOC graph link weight to use in calculating the distance.  Please see details for explanation.}
+\item{weight}{The GOC graph link weight to use in calculating the distance.
+Please see Details for explanation.}
 }
 \value{
 A list object giving a distance matrix for each threshold in the \code{gsGOC} object.
@@ -27,7 +29,7 @@ for landscape connectivity assessments.
 \examples{
 \dontrun{
 ## Load raster landscape
-tiny <- raster(system.file("extdata/tiny.asc", package="grainscape"))
+tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape2"))
 
 ## Create a resistance surface from a raster using an is-becomes reclassifification
 tinyCost <- reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))

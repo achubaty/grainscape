@@ -5,7 +5,7 @@
 #' at multiple scales (resistance thresholds) by scalar analysis.
 #' Patch-based or lattice GOC modelling can be done with this function.
 #'
-#' @param gsMPG  A \code{gsMPG} object produced by \code{\link{gsMPG}}.
+#' @param mpg    A \code{gsMPG} object produced by \code{\link{gsMPG}}.
 #'               For lattice GOC \code{\link{gsMPG}} must be run with patch set as an integer value.
 #'
 #' @param nThresh  Optional.  An integer giving the number of thresholds (or scales)
@@ -69,12 +69,13 @@
 #' @author Paul Galpern
 #' @docType methods
 #' @export
-#' @importFrom igraph components delete_edges E 'E<-' edge_attr ends graph_from_data_frame is.igraph V 'V<-' vcount
+#' @importFrom igraph components delete_edges E 'E<-' edge_attr ends graph_from_data_frame is_igraph V 'V<-' vcount
 #' @importFrom raster freq rasterToPolygons reclassify zonal
 #' @importFrom sp coordinates
 #' @importFrom stats median
 #' @rdname gsGOC
-#' @seealso \code{\link{gsMPG}}, \code{\link{gsGOCVisualize}}, \code{\link{gsGOCDistance}}, \code{\link{gsGOCPoint}}
+#' @seealso \code{\link{gsMPG}}, \code{\link{gsGOCVisualize}},
+#'          \code{\link{gsGOCDistance}}, \code{\link{gsGOCPoint}}
 #'
 #' @examples
 #' \dontrun{
@@ -317,7 +318,7 @@ gsGOC <- function(mpg, nThresh = NULL, doThresh = NULL,
         V(componentGraph)$patchId <- sourcePatchId
 
         ## Find distances between each polygon centroid
-        eucCentroidWeight <- apply(get.edgelist(componentGraph), 1, function(x) {
+        eucCentroidWeight <- apply(as_edgelist(componentGraph), 1, function(x) {
           x1 <- which(uniquePolygons == x[1])
           x2 <- which(uniquePolygons == x[2])
 
@@ -336,23 +337,23 @@ gsGOC <- function(mpg, nThresh = NULL, doThresh = NULL,
 
   ## Add data to the summary table
   threshGraph$summary$nPolygon <- unlist(lapply(threshGraph$th, function(x) {
-    if (is.igraph(x$goc)) vcount(x$goc) else NA
+    if (is_igraph(x$goc)) vcount(x$goc) else NA
   }))
   threshGraph$summary$maxPolygonArea <- unlist(lapply(threshGraph$th, function(x)
-    if (is.igraph(x$goc)) max(V(x$goc)$polygonArea) else NA))
+    if (is_igraph(x$goc)) max(V(x$goc)$polygonArea) else NA))
   threshGraph$summary$minPolygonArea <- unlist(lapply(threshGraph$th, function(x)
-    if (is.igraph(x$goc)) min(V(x$goc)$polygonArea) else NA))
+    if (is_igraph(x$goc)) min(V(x$goc)$polygonArea) else NA))
   threshGraph$summary$meanPolygonArea <- unlist(lapply(threshGraph$th, function(x)
-    if (is.igraph(x$goc)) mean(V(x$goc)$polygonArea) else NA))
+    if (is_igraph(x$goc)) mean(V(x$goc)$polygonArea) else NA))
   threshGraph$summary$medianPolygonArea <- unlist(lapply(threshGraph$th, function(x)
-    if (is.igraph(x$goc)) median(V(x$goc)$polygonArea) else NA))
+    if (is_igraph(x$goc)) median(V(x$goc)$polygonArea) else NA))
 
   ## Find ECS (Expected cluster size; O'Brien et al, 2006) using totalPatchArea
   threshGraph$summary$ECS <- unlist(lapply(threshGraph$th, function(x)
-    if (is.igraph(x$goc)) sum(V(x$goc)$totalPatchArea^2)/sum(V(x$goc)$totalPatchArea) else NA))
+    if (is_igraph(x$goc)) sum(V(x$goc)$totalPatchArea^2)/sum(V(x$goc)$totalPatchArea) else NA))
   ## Find ECSCore (Expected cluster size; O'Brien et al, 2006) using totalCoreArea
   threshGraph$summary$ECSCore <- unlist(lapply(threshGraph$th, function(x)
-    if (is.igraph(x$goc)) sum(V(x$goc)$totalCoreArea^2)/sum(V(x$goc)$totalCoreArea) else NA))
+    if (is_igraph(x$goc)) sum(V(x$goc)$totalCoreArea^2)/sum(V(x$goc)$totalCoreArea) else NA))
   class(threshGraph) <- "gsGOC"
 
   return(threshGraph)

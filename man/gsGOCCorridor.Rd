@@ -40,31 +40,31 @@ Visualization is exclusively in vector format. \code{\link{gsGOC}} must be run u
 \examples{
 \dontrun{
 ## Load raster landscape
-tiny <- raster(system.file("extdata/tiny.asc", package="grainscape"))
+tiny <- raster(system.file("extdata/tiny.asc", package="grainscape2"))
 
 ## Create a resistance surface from a raster using an is-becomes reclassification
-tinyCost <- reclassify(tiny, rcl=cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
+tinyCost <- reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
 
 ## Produce a patch-based MPG where patches are resistance features=1
-tinyPatchMPG <- gsMPG(cost=tinyCost, patch=tinyCost==1)
+tinyPatchMPG <- gsMPG(cost = tinyCost, patch = (tinyCost == 1))
 
 ## Extract a representative subset of 5 grains of connectivity using sp=TRUE
-tinyPatchGOC <- gsGOC(tinyPatchMPG, nThresh=5, sp=TRUE)
+tinyPatchGOC <- gsGOC(tinyPatchMPG, nThresh = 5, sp = TRUE)
 
 ## Quick visualization of a corridor
 corridorStartEnd <- rbind(c(10,10), c(90,90))
-gsGOCCorridor(tinyPatchGOC, whichThresh=3, coords=corridorStartEnd, doPlot=TRUE)
+gsGOCCorridor(tinyPatchGOC, whichThresh = 3, coords = corridorStartEnd, doPlot = TRUE)
 
 ## More control over a corridor visualization
-tinyPatchCorridor <- gsGOCCorridor(tinyPatchGOC, whichThresh=3, coords=corridorStartEnd)
-plot(tinyPatchCorridor$voronoiSP, col="lightgrey", border="white", lwd=2)
-plot(tinyPatchCorridor$linksSP, col="darkred", lty="dashed", add=TRUE)
-plot(tinyPatchCorridor$nodesSP, col="darkred", pch=21, bg="white", add=TRUE)
-plot(tinyPatchCorridor$shortestLinksSP, col="darkred", lty="solid", lwd=2, add=TRUE)
-plot(tinyPatchCorridor$shortestNodesSP, col="darkred", pch=21, bg="darkred", add=TRUE)
+tinyPatchCorridor <- gsGOCCorridor(tinyPatchGOC, whichThresh = 3, coords = corridorStartEnd)
+plot(tinyPatchCorridor$voronoiSP, col = "lightgrey", border = "white", lwd = 2)
+plot(tinyPatchCorridor$linksSP, col = "darkred", lty = "dashed", add = TRUE)
+plot(tinyPatchCorridor$nodesSP, col = "darkred", pch = 21, bg="white", add = TRUE)
+plot(tinyPatchCorridor$shortestLinksSP, col = "darkred", lty = "solid", lwd = 2, add = TRUE)
+plot(tinyPatchCorridor$shortestNodesSP, col = "darkred", pch = 21, bg = "darkred", add = TRUE)
 mtext(paste("Corridor shortest path length:",
             round(tinyPatchCorridor$corridorLength, 2),
-            "resistance units"), side=1)
+            "resistance units"), side = 1)
 }
 
 }

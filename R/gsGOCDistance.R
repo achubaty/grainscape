@@ -1,16 +1,16 @@
 #' Find the grains of connectivity network distance
 #'
-#' @description
-#'
 #' Given a \code{\link{gsGOC}} object find the shortest network distance between
 #' pairs of points using the GOC graph.  This can be used as an effective distance
 #' for landscape connectivity assessments.
 #'
-#' @param gsGOC  A \code{gsGOC} object produced by \code{\link{gsGOC}}
+#' @param gsGOC    A \code{gsGOC} object produced by \code{\link{gsGOC}}.
 #'
-#' @param  coords  A two column matrix or a \code{\link{SpatialPoints}} object giving the coordinates of points of interest
+#' @param  coords  A two column matrix or a \code{\link{SpatialPoints}} object
+#'                 giving the coordinates of points of interest.
 #'
-#' @param  weight  The GOC graph link weight to use in calculating the distance.  Please see details for explanation.
+#' @param  weight  The GOC graph link weight to use in calculating the distance.
+#'                 Please see Details for explanation.
 #'
 #' @return  A list object giving a distance matrix for each threshold in the \code{gsGOC} object.
 #' Distance matrices give the pairwise grains of connectivity network distances between sampling locations.
@@ -23,14 +23,14 @@
 #' @author Paul Galpern
 #' @docType methods
 #' @export
-#' @importFrom igraph 'E<-' get.edge.attribute is.igraph shortest.paths
+#' @importFrom igraph distances 'E<-' edge_attr is_igraph
 #' @rdname gsGOCDistance
 #' @seealso  \code{\link{gsGOC}}, \code{\link{gsGOCPoint}}
 #'
 #' @examples
 #' \dontrun{
 #' ## Load raster landscape
-#' tiny <- raster(system.file("extdata/tiny.asc", package="grainscape"))
+#' tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape2"))
 #'
 #' ## Create a resistance surface from a raster using an is-becomes reclassifification
 #' tinyCost <- reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
@@ -62,7 +62,7 @@ gsGOCDistance <- function(gsGOC, coords, weight="meanWeight") {
     stop("grainscape2:  coords must be a SpatialPoints object or a matrix of two columns giving X and Y coordinates", call. = FALSE)
   }
 
-  if (!(weight %in% list.edge.attributes(gsGOC$th[[1]]$goc))) {
+  if (!(weight %in% edge_attr(gsGOC$th[[1]]$goc))) {
     stop("grainscape2:  link weight attribute with this name doesn't exist in gsGOC object", call. = FALSE)
   }
 
@@ -75,10 +75,10 @@ gsGOCDistance <- function(gsGOC, coords, weight="meanWeight") {
   for (iThresh in 1:ncol(whichGrain)) {
     threshGraph <- gsGOC$th[[iThresh]]$goc
 
-    if (is.igraph(threshGraph)) {
-      E(threshGraph)$weight <- get.edge.attribute(threshGraph, weight)
+    if (is_igraph(threshGraph)) {
+      E(threshGraph)$weight <- edge_attr(threshGraph, weight)
       vertices <- sapply(whichGrain[, iThresh], function(x) which(V(threshGraph)$polygonId == x))
-      results$th[[iThresh]]$grainD <- shortest.paths(threshGraph, v = vertices)[, vertices]
+      results$th[[iThresh]]$grainD <- distances(threshGraph, v = vertices)[, vertices]
     } else {
       results$th[[iThresh]] <- NA
     }

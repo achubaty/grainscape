@@ -1,8 +1,10 @@
-#' Produce a data.frame containing the structure and associated attributes for a gsMPG, gsGOC, or igraph object
+#' Produce a \code{data.frame} containing the structure and associated attributes
+#' for a \code{gsMPG}, \code{gsGOC}, or \code{igraph} object
 #'
 #' @description
-#' Given a gsMPG, gsGOC, or any igraph object produce a data.frame containing the
-#' node (vertex) and link (edge) structure as well as the associated attributes for these.
+#' Given a \code{gsMPG}, \code{gsGOC}, or any \code{igraph} object, produce a
+#' \code{data.frame} containing the node (vertex) and link (edge) structure as
+#' well as the associated attributes for these.
 #' This provides an easy way to create data tables describing graphs, particularly
 #' helpful for users unfamiliar with the structure of igraph objects.
 #'
@@ -23,7 +25,7 @@
 #' @author Paul Galpern
 #' @docType methods
 #' @export
-#' @importFrom igraph get.edge.attribute get.edgelist get.vertex.attribute is.igraph list.edge.attributes list.vertex.attributes
+#' @importFrom igraph as_edgelist edge_attr is_igraph vertex_attr
 #' @importFrom utils type.convert
 #' @rdname gsGraphDataFrame
 #' @seealso \code{\link{gsMPG}}, \code{\link{gsGOC}}
@@ -31,7 +33,7 @@
 #' @examples
 #' \dontrun{
 #' ## Load raster landscape
-#' tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape"))
+#' tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape2"))
 #'
 #' ## Create a resistance surface from a raster using an is-becomes reclassification
 #' tinyCost <- reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
@@ -72,13 +74,13 @@ gsGraphDataFrame <- function(gsObj) {
   for (i in 1:length(theseGraphs)) {
     thisGraph <- theseGraphs[[i]]
 
-    if (is.igraph(thisGraph))  {
+    if (is_igraph(thisGraph))  {
       results[[i]] <- list()
-      results[[i]]$v <- data.frame(sapply(list.vertex.attributes(thisGraph), function(x) {
-        get.vertex.attribute(thisGraph, x)
+      results[[i]]$v <- data.frame(sapply(vertex_attr(thisGraph), function(x) {
+        vertex_attr(thisGraph, x)
       }), stringsAsFactors = FALSE)
-      results[[i]]$e <- data.frame(get.edgelist(thisGraph), sapply(list.edge.attributes(thisGraph), function(x) {
-        get.edge.attribute(thisGraph, x)
+      results[[i]]$e <- data.frame(as_edgelist(thisGraph), sapply(edge_attr(thisGraph), function(x) {
+        edge_attr(thisGraph, x)
       }), stringsAsFactors = FALSE)
       edgeDfNames <- names(results[[i]]$e)
       names(results[[i]]$e) <- c("e1", "e2", edgeDfNames[3:length(edgeDfNames)])

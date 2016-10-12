@@ -43,7 +43,7 @@
 #' @author Paul Galpern
 #' @docType methods
 #' @export
-#' @importFrom igraph clusters delete.edges get.edge.attribute
+#' @importFrom igraph clusters delete.edges edge_attr
 #' @rdname gsThreshold
 #' @seealso \code{\link{gsMPG}}
 #'
@@ -74,7 +74,7 @@ gsThreshold <- function(gsMPG, weight = "lcpPerimWeight", nThresh = NULL, doThre
 
   threshGraph <- vector("list")
 
-  linkWeight <- try(get.edge.attribute(baseGraph, weight), silent = TRUE)
+  linkWeight <- try(edge_attr(baseGraph, weight), silent = TRUE)
   if (class(linkWeight) == "try-error") {
     stop("grainscape2: weight must be the name of an existing link attribute to threshold (e.g., 'lcpPerimWeight')", call. = FALSE)
   }

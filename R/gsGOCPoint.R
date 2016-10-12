@@ -10,12 +10,24 @@
 #' @param coords  A two column matrix or a \code{\link{SpatialPoints}} object giving
 #'                the coordinates of points of interest.
 #'
-#' @return A list object with elements:
-#' \code{$pointPolygon} is a matrix with elements giving the id of the polygon from the \code{gsGOC}, where rows give points of interest and columns give thresholds\cr
-#' \code{$pointTotalPatchArea} is a matrix with elements giving the area of patches in a polygon (in cell counts), where rows give points of interest and columns give thresholds\cr
-#' \code{$pointTotalCoreArea} is the same for core area of patches\cr
-#' \code{$pointECS} gives the patch area (in cell counts) averaged for all points of interest (defined by O'Brien et al. 2006)\cr
-#' \code{$pointECSCore} is the same for the core area of patches
+#' @return A list with elements:
+#'
+#' \itemize{
+#'     \item \code{pointPolygon} is a matrix with elements giving the id of the
+#'           polygon from the \code{gsGOC}, where rows give points of interest
+#'           and columns give thresholds;
+#'
+#'     \item \code{pointTotalPatchArea} is a matrix with elements giving the
+#'           area of patches in a polygon (in cell counts), where rows give points
+#'           of interest and columns give thresholds;
+#'
+#'     \item \code{pointTotalCoreArea} is the same for core area of patches;
+#'
+#'     \item \code{pointECS} gives the patch area (in cell counts) averaged for
+#'           all points of interest (defined by O'Brien et al. 2006);
+#'
+#'     \item \code{pointECSCore} is the same for the core area of patches.
+#' }
 #'
 #' @references
 #' Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien.  (2007) Spatial graphs:  Principles and applications for habitat connectivity.  Ecosystems.  10:448:461\cr
@@ -25,14 +37,14 @@
 #' @author Paul Galpern
 #' @docType methods
 #' @export
-#' @importFrom igraph is.igraph V
+#' @importFrom igraph is_igraph V
 #' @importFrom raster cellFromXY
 #' @rdname gsGOCPoint
 #' @seealso \code{\link{gsGOC}}, \code{\link{gsGOCDistance}}
 #' @examples
 #' \dontrun{
 #' ## Load raster landscape
-#' tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape"))
+#' tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape2"))
 #'
 #' ## Create a resistance surface from a raster using an is-becomes reclassification
 #' tinyCost <- reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
@@ -79,9 +91,8 @@ gsGOCPoint <- function(gsGOC, coords) {
   totalPatchAreaPoints <- grainPoints
   totalCoreAreaPoints <- grainPoints
 
-
   for (iThresh in 1:length(gsGOC$th)) {
-    if (is.igraph(gsGOC$th[[iThresh]]$goc)) {
+    if (is_igraph(gsGOC$th[[iThresh]]$goc)) {
       threshGraph <- gsGOC$th[[iThresh]]$goc
 
       ## Produce patchId and patchArea lookup tables with polygonId as the index
