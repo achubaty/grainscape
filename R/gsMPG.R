@@ -212,7 +212,7 @@ gsMPG <- function(cost, patch, sa = NULL, filterPatch = NULL, spreadFactor = 0) 
   }
 
   ## Call the habitat connectivity engine
-  hce <- habConnEngine(cost = rasCost, patches = rasPatch)
+  hce <- .habConnEngine(cost = rasCost, patches = rasPatch)
 
   ## Establish mpg object
   mpg <- list()

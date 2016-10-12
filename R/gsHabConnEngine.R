@@ -4,7 +4,8 @@ if (getRversion() >= "3.1.0") {
 
 #' Habitat connectivity engine
 #'
-#' DESCRIPTION NEEDED
+#' Internal function. Servesa s a wrapper around the habitat connectivity engine
+#' developed in C++.
 #'
 #' @param cost      Numeric raster cost (resistance) map.
 #' @param patches   Logical raster indicating presence of habitat patches.
@@ -17,8 +18,8 @@ if (getRversion() >= "3.1.0") {
 #'
 #' @author Alex Chubaty
 #' @docType methods
-#' @export
 #' @importFrom raster extent getValues ncol nrow raster unique
+#' @keywords internal
 #' @rdname habConnEngine
 #' @seealso \code{link{habConnRcpp}}
 #'
@@ -27,15 +28,14 @@ if (getRversion() >= "3.1.0") {
 #' if (interactive()) plot(cost)
 #'
 #' # cells in raster `cost` with value of 1 are habitat (patch) cells
-#' links <- habConnEngine(cost, patches = (cost == 1))
-#'
+#' links <- grainscape2:::.habConnEngine(cost, patches = (cost == 1))
 #'
 #' if (interactive()) {
 #'   links                  # examine the object
 #'   plot(links$voronoi)    # plot the voronoi tesselation
 #'   plot(links$patchLinks) # plot the patches and links
 #' }
-habConnEngine <- function(cost, patches) {
+.habConnEngine <- function(cost, patches) {
   stopifnot(class(cost) == "RasterLayer", class(patches) == "RasterLayer",
             extent(cost) == extent(patches),
             ncol(cost) == ncol(patches), nrow(cost) == nrow(patches))
