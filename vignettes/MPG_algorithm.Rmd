@@ -11,8 +11,15 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Overview
 
-The Minimimum Planar Graph (MPG) Algorithm is used to find the voronoi boundaries and approximate least cost paths between patches. The voronoi boundaries are created using a spreading or marching algorithm. Each perimeter cell in the patches spread out to adjacent cells, that have not been visited yet or are not part of any patch, and are given a patch ID to mark the voronoi territory. A voronoi boundary is found when a cell is visited twice by two different voronoi territories or IDs. Using a marching algorithm to find the voronoi boundaries makes it possible to implement a linking algorithm that can run in parallel with the marching algorithm. As a cell is spread into, let's call it a child cell, it then creates a link or connection between the child cell and the cell that it spreaded from, let's call that a parent cell. Finding the least cost path this way is only possible with the use of storing the child cells, which will eventually become parent cells, in a queueing table that sorts the cells in a certain order. The child cells are sorted by increasing eucledian distance between the child cell and their origin cell, the perimeter cell that the connection originally spawned from. A link or path between patches is then created at the first voronoi boundary between two patches. 
-
+The Minimimum Planar Graph (MPG) Algorithm is used to find the voronoi boundaries and approximate least cost paths between patches.
+The voronoi boundaries are created using a spreading or marching algorithm.
+Each perimeter cell in the patches spread out to adjacent cells, that have not been visited yet or are not part of any patch, and are given a patch ID to mark the voronoi territory.
+A voronoi boundary is found when a cell is visited twice by two different voronoi territories or IDs.
+Using a marching algorithm to find the voronoi boundaries makes it possible to implement a linking algorithm that can run in parallel with the marching algorithm.
+As a cell is spread into, let's call it a child cell, it then creates a link or connection between the child cell and the cell that it spreaded from, let's call that a parent cell.
+Finding the least cost path this way is only possible with the use of storing the child cells, which will eventually become parent cells, in a queueing table that sorts the cells in a certain order.
+The child cells are sorted by increasing eucledian distance between the child cell and their origin cell, the perimeter cell that the connection originally spawned from.
+A link or path between patches is then created at the first voronoi boundary between two patches. 
 ## Terminologies
 
 - *Cell:* A box or element in a map.
@@ -191,4 +198,6 @@ vector<float> EngineInterface(vector<float> resistance, vector<float> patches ,i
 }
 ```
 
-Note that the current Engine has two lines of code that are meant for interfacing with R. In order to make the Engine run with any programming or scripting language, remove those two line. One of them is an include statement for Rcpp, at the very top of source code, and the other is inside the start function, the first line inside the while loop. Those two lines are convenient for R users when they want to interrupt or stop the MPG algorithm safely, without crashing their console and possibly losing their data. 
+Note that the current Engine has two lines of code that are meant for interfacing with R.
+In order to make the Engine run with any programming or scripting language, remove those two line.
+One of them is an include statement for Rcpp, at the very top of source code, and the other is inside the start function, the first line inside the while loop. Those two lines are convenient for R users when they want to interrupt or stop the MPG algorithm safely, without crashing their console and possibly losing their data. 
