@@ -89,7 +89,7 @@ gsGOCCorridor <- function(gsGOC, whichThresh, coords, doPlot = FALSE, weight = "
     stop("grainscape2:  whichThresh must index a single threshold existing in the gsGOC object", call. = FALSE)
   }
 
-  if (!(weight %in% edge_attr(gsGOC$th[[1]]$goc))) {
+  if (!(weight %in% names(edge_attr(gsGOC$th[[1]]$goc)))) {
     stop("grainscape2:  link weight attribute with this name doesn't exist in gsGOC object", call. = FALSE)
   }
 

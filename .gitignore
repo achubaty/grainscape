@@ -8,3 +8,5 @@ src/*.so
 .Rhistory
 .RData
 .Ruserdata
+vignettes/*_cache
+

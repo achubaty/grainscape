@@ -62,7 +62,7 @@ gsGOCDistance <- function(gsGOC, coords, weight="meanWeight") {
     stop("grainscape2:  coords must be a SpatialPoints object or a matrix of two columns giving X and Y coordinates", call. = FALSE)
   }
 
-  if (!(weight %in% edge_attr(gsGOC$th[[1]]$goc))) {
+  if (!(weight %in% names(edge_attr(gsGOC$th[[1]]$goc)))) {
     stop("grainscape2:  link weight attribute with this name doesn't exist in gsGOC object", call. = FALSE)
   }
 

@@ -9,7 +9,7 @@ Description: Given a landscape resistance surface, creates grains of
     project.org/projects/grainscape/).
 URL: https://github.com/achubaty/grainscape2
 Version: 0.3.0.9000
-Date: 2016-07-15
+Date: 2016-10-13
 Authors@R: c(
     person("Paul", "Galpern", email = "pgalpern@gmail.com", role = c("aut", "cph", "cre")),
     person("Sam", "Doctolero", email = "sam.doctolero@gmail.com", role = "aut"),
@@ -22,10 +22,10 @@ Imports:
     sp,
     raster,
     Rcpp (>= 0.12.5),
-    rmarkdown,
     utils
 LinkingTo: Rcpp
 Suggests:
+    grDevices,
     knitr,
     parallel,
     rgeos,

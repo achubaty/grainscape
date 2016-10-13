@@ -10,11 +10,14 @@ if (getRversion() >= "3.1.0") {
 #' @param cost      Numeric raster cost (resistance) map.
 #' @param patches   Logical raster indicating presence of habitat patches.
 #'
-#' @return An object of class \code{hce} containing the following components:\cr
-#'         1. \code{voronoi}: a raster whose values indicate the voronoi tesselation;\cr
-#'         2. \code{patchLinks}: a raster whose values indicate patch ids (positive integers)
-#'            and link ids (negative integers);\cr
-#'         3. \code{linkData}: data.frame of link attributes.
+#' @return An object of class \code{hce} containing the following components:
+#'
+#' \itemize{
+#' \item \code{voronoi}: a raster whose values indicate the voronoi tesselation;
+#' \item \code{patchLinks}: a raster whose values indicate patch ids (positive integers)
+#'       and link ids (negative integers);
+#' \item \code{linkData}: data.frame of link attributes.
+#' }
 #'
 #' @author Alex Chubaty
 #' @docType methods

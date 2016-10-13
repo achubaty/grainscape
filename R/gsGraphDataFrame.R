@@ -76,10 +76,10 @@ gsGraphDataFrame <- function(gsObj) {
 
     if (is_igraph(thisGraph))  {
       results[[i]] <- list()
-      results[[i]]$v <- data.frame(sapply(vertex_attr(thisGraph), function(x) {
+      results[[i]]$v <- data.frame(sapply(names(vertex_attr(thisGraph)), function(x) {
         vertex_attr(thisGraph, x)
       }), stringsAsFactors = FALSE)
-      results[[i]]$e <- data.frame(as_edgelist(thisGraph), sapply(edge_attr(thisGraph), function(x) {
+      results[[i]]$e <- data.frame(as_edgelist(thisGraph), sapply(names(edge_attr(thisGraph)), function(x) {
         edge_attr(thisGraph, x)
       }), stringsAsFactors = FALSE)
       edgeDfNames <- names(results[[i]]$e)
