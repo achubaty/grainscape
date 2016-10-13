@@ -62,9 +62,6 @@ Patch-based or lattice GOC modelling can be done with this function.
 \details{
 This function can take a long time to run when \code{sp = TRUE}.
 Time taken is dependent on the dimensions of the \code{gsMPG$voronoi} raster.
-Also, as of this release (May, 2012) there was still a memory leak in \code{rgeos}
-caused by its parent \code{GEOS} library.  In extreme circumstances \code{sp = TRUE}
-may fail or cause a crash of the R process.
 }
 \note{
 Researchers should consider whether the use of a patch-based GOC or a lattice

@@ -398,10 +398,6 @@ However, for publications, or on-screen visuals, it tends to be better to have h
 
 In the two sections of this tutorial we demonstrate how to use the `rgeos` package in R to produce polygon representations of the Voronoi polygons in a GOC model, as well as using a `grainscape` function intended for advanced visualizations.
 
-Beware: one caution is that the `rgeos` package continues to have memory leak problems from its parent C `GEOS` library which extend to `grainscape` [*is this still true???*].
-Occasionally when running analyses, particularly with thousands of nodes (*i.e.*, polygons), `rgeos` can consume all available memory and lead to a crash of the R instance.
-Also, when running multiple visualizations in succession it is often necessary to terminate the R instance to free up memory before running a subsequent visualization.
-
 ### Section 1: Visualizing GOC models with vectorized Voronoi polygons
 
 For final analyses where visualization is a goal, build the GOC model with the `sp=TRUE` parameter set.

@@ -40,9 +40,6 @@
 #' @details
 #' This function can take a long time to run when \code{sp = TRUE}.
 #' Time taken is dependent on the dimensions of the \code{gsMPG$voronoi} raster.
-#' Also, as of this release (May, 2012) there was still a memory leak in \code{rgeos}
-#' caused by its parent \code{GEOS} library.  In extreme circumstances \code{sp = TRUE}
-#' may fail or cause a crash of the R process.
 #'
 #' @return  A \code{gsGOC} object, consisting of a list of objects.\cr\cr
 #' The main elements:\cr
@@ -145,7 +142,6 @@ gsGOC <- function(mpg, nThresh = NULL, doThresh = NULL,
     if (verbose >= 2) message("Creating SpatialPolygons for smallest grain.")
     if (verbose >= 3) {
       message("  Time for completion is dependent on the number of patches and the dimensions of the raster.")
-      message("  Occasional failures caused by memory errors are due to an as-yet uncorrected bug in the GEOS library (rgeos). See manual.") ## remove? is this still true?
     }
     threshGraph$voronoiSP <- rasterToPolygons(threshGraph$voronoi, dissolve = TRUE)
   }
