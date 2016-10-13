@@ -18,7 +18,6 @@ License: GPL (>= 2)
 Imports:
     graphics,
     igraph,
-    knitr,
     methods,
     sp,
     raster,
@@ -27,8 +26,10 @@ Imports:
     utils
 LinkingTo: Rcpp
 Suggests:
+    knitr,
     parallel,
     rgeos,
+    rmarkdown,
     testthat
 VinetteBuilder: knitr, rmarkdown
 BugReports: https://github.com/achubaty/grainscape2/issues
