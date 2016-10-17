@@ -66,7 +66,7 @@
 #' }
 #'
 gsThreshold <- function(gsMPG, weight = "lcpPerimWeight", nThresh = NULL, doThresh = NULL) {
-  if ((class(gsMPG) != "gsMPG")) {
+  if (!inherits(gsMPG, "gsMPG")) {
     stop("grainscape2: gsMPG must be a 'gsMPG' object")
   }
 
@@ -75,8 +75,9 @@ gsThreshold <- function(gsMPG, weight = "lcpPerimWeight", nThresh = NULL, doThre
   threshGraph <- vector("list")
 
   linkWeight <- try(edge_attr(baseGraph, weight), silent = TRUE)
-  if (class(linkWeight) == "try-error") {
-    stop("grainscape2: weight must be the name of an existing link attribute to threshold (e.g., 'lcpPerimWeight')", call. = FALSE)
+  if (inherits(linkWeight, "try-error")) {
+    stop("grainscape2: weight must be the name of an existing link attribute",
+         " to threshold (e.g., 'lcpPerimWeight')", call. = FALSE)
   }
 
   if (is.null(nThresh) && is.null(doThresh)) {

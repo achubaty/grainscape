@@ -72,7 +72,7 @@
 #' }
 #'
 gsGOCCorridor <- function(gsGOC, whichThresh, coords, doPlot = FALSE, weight = "meanWeight") {
-  if (class(gsGOC) != "gsGOC") {
+  if (!inherits(gsGOC, "gsGOC")) {
     stop("grainscape2:  input object must be of class 'gsGOC'.  Run gsGOC() first using sp=TRUE.", call. = FALSE)
   }
 
@@ -93,15 +93,15 @@ gsGOCCorridor <- function(gsGOC, whichThresh, coords, doPlot = FALSE, weight = "
     stop("grainscape2:  link weight attribute with this name doesn't exist in gsGOC object", call. = FALSE)
   }
 
-  if ((is.null(dim(coords))) & (class(coords) != "SpatialPoints")) {
+  if ((is.null(dim(coords))) & (!inherits(coords, "SpatialPoints"))) {
     coords <- t(as.matrix(coords))
   }
 
-  if ((class(coords) != "SpatialPoints") && (dim(coords)[2] != 2)) {
+  if (!inherits(coords, "SpatialPoints") && (dim(coords)[2] != 2)) {
     stop("grainscape2:  coords must be a SpatialPoints object or a matrix of two columns giving X and Y coordinates", call. = FALSE)
   }
 
-  if (((class(coords) == "SpatialPoints") && (length(coords) > 2)) || (nrow(coords) > 2)) {
+  if ((inherits(coords, "SpatialPoints") && (length(coords) > 2)) || (nrow(coords) > 2)) {
     warning("grainscape2:  using only first two sets of coordinates for corridor start and end points", call. = FALSE)
     coords <- coords[1:2, ]
   }

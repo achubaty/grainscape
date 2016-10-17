@@ -113,11 +113,11 @@
 #'
 gsGOC <- function(mpg, nThresh = NULL, doThresh = NULL,
                   weight = "lcpPerimWeight", sp = FALSE, verbose = 3) {
-  if (class(mpg) != "gsMPG") {
+  if (!inherits(mpg,  "gsMPG")) {
     stop("grainscape2: mpg must be a gsMPG object", call. = FALSE)
   }
 
-  if (sp && !requireNamespace("rgeos", quietly = TRUE)) {
+  if (isTRUE(sp) && !requireNamespace("rgeos", quietly = TRUE)) {
     stop("grainscape2:  rgeos package must be installed to use sp = TRUE")
   }
 
@@ -126,7 +126,7 @@ gsGOC <- function(mpg, nThresh = NULL, doThresh = NULL,
 
   linkWeight <- try(edge_attr(baseGraph, weight), silent = TRUE)
 
-  if (class(linkWeight) == "try-error") {
+  if (inherits(linkWeight, "try-error")) {
     stop("grainscape2: weight must be the name of an existing link attribute to threshold (e.g., 'lcpPerimWeight')", call. = FALSE)
   }
 

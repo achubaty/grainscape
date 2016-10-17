@@ -41,9 +41,12 @@ if (getRversion() >= "3.1.0") {
 #'   plot(links$patchLinks) # plot the patches and links
 #' }
 .habConnEngine <- function(cost, patches) {
-  stopifnot(class(cost) == "RasterLayer", class(patches) == "RasterLayer",
+  stopifnot(inherits(cost, "RasterLayer"),
+            inherits(patches, "RasterLayer"),
             extent(cost) == extent(patches),
-            ncol(cost) == ncol(patches), nrow(cost) == nrow(patches))
+            ncol(cost) == ncol(patches),
+            nrow(cost) == nrow(patches))
+
   hce <- .habConnRcpp(cost = getValues(cost), patches = getValues(patches),
                       nrow = nrow(cost), ncol = ncol(cost))
 

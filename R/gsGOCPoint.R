@@ -64,19 +64,19 @@
 #' }
 #'
 gsGOCPoint <- function(gsGOC, coords) {
-  if (class(gsGOC) != "gsGOC") {
+  if (!inherits(gsGOC, "gsGOC")) {
     stop("grainscape2:  input object must be of class 'gsGOC'.  Run gsGOC() first.", call. = FALSE)
   }
 
-  if ((is.null(dim(coords))) & (class(coords) != "SpatialPoints")) {
+  if (is.null(dim(coords)) & !inherits(coords, "SpatialPoints")) {
     coords <- t(as.matrix(coords))
   }
 
-  if ((class(coords) != "SpatialPoints") && (dim(coords)[2] != 2)) {
+  if (!inherits(coords, "SpatialPoints") && (dim(coords)[2] != 2)) {
     stop("grainscape2:  coords must be a SpatialPoints object or a matrix of two columns giving X and Y coordinates", call. = FALSE)
   }
 
-  if (class(coords) != "SpatialPoints") {
+  if (!inherits(coords, "SpatialPoints")) {
     coords <- SpatialPoints(coords)
   }
 

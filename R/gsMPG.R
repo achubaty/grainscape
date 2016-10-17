@@ -130,12 +130,12 @@
 #'
 gsMPG <- function(cost, patch, sa = NULL, filterPatch = NULL, spreadFactor = 0) {
   ## Check that cost raster is of class RasterLayer
-  if ((class(cost) != "RasterLayer")) {
+  if (!inherits(cost, "RasterLayer")) {
     stop("grainscape2: cost raster must be of class RasterLayer", call. = FALSE)
   }
 
   ## Prepare a lattice patch if patch is numeric
-  if (class(patch) == "numeric") {
+  if (inherits(patch, "numeric")) {
     ## Produce the lattice patch rasters
     focalPointDistFreq <- patch
     patch <- cost
@@ -145,12 +145,12 @@ gsMPG <- function(cost, patch, sa = NULL, filterPatch = NULL, spreadFactor = 0) 
                                 seq(1, ncol(patch), by = focalPointDistFreq) + focalPointDistFreq/2)] <- 1
     ## Remove lattice points that fall on NA cost cells
     patch[is.na(cost)] <- 0
-  } else if ((class(patch) != "RasterLayer")) {
+  } else if (!inherits(patch, "RasterLayer")) {
     stop("grainscape2: patch must be a raster (patch-based model) OR an integer (lattice model).", call. = FALSE)
   }
 
   ## Check that input rasters are of class RasterLayer
-  if ((class(cost) != "RasterLayer")) {
+  if (!inherits(cost, "RasterLayer")) {
     stop("grainscape2: cost raster must be of class RasterLayer.", call. = FALSE)
   }
 
@@ -187,7 +187,7 @@ gsMPG <- function(cost, patch, sa = NULL, filterPatch = NULL, spreadFactor = 0) 
 
   ## Check sa is comparable with other rasters
   if (!is.null(sa)) {
-    if (class(sa) != "RasterLayer") {
+    if (!inherits(sa, "RasterLayer")) {
       stop("grainscape2:  sa raster must be of class RasterLayer", call. = FALSE)
     }
     if (!compareRaster(cost, sa, res = TRUE, orig = TRUE, stopiffalse = FALSE)) {

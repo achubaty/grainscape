@@ -55,18 +55,16 @@
 #' }
 #'
 gsGraphDataFrame <- function(gsObj) {
-  if (!(class(gsObj) %in% c("gsMPG", "gsGOC", "igraph"))) {
-    stop("grainscape2: gsObj must be a gsMPG, gsGOC or igraph object", call. = FALSE)
-  }
-
-  if (class(gsObj) == "gsMPG") {
+  if (inherits(gsObj, "gsGOC")) {
+    theseGraphs <- lapply(gsObj$th, function(x) x$goc)
+  } else if (inherits(gsObj, "gsMPG")) {
     theseGraphs <- vector("list", 1)
     theseGraphs[[1]] <- gsObj$mpg
-  } else if (class(gsObj) == "igraph") {
+  } else if (inherits(gsObj, "igraph")) {
     theseGraphs <- vector("list", 1)
     theseGraphs[[1]] <- gsObj
   } else {
-    theseGraphs <- lapply(gsObj$th, function(x) x$goc)
+    stop("grainscape2: gsObj must be a gsMPG, gsGOC or igraph object", call. = FALSE)
   }
 
   results <- vector("list", length(theseGraphs))
