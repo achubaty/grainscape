@@ -1,0 +1,14 @@
+Known issues: https://github.com/achubaty/grainscape2/issues
+
+version 0.3.0.9000
+==================
+* reimplement novel algorithm to calculate the minimum planar graph;
+  no longer relies on SELES binary and is now cross-platform.
+* use updated `igraph` functions internally
+* updated vignette / tutorial (#5)
+* Renamed functions to remove `gs` and `gsGOC` prefixes. Old names have been deprecated. (#10)
+
+version 0.3
+===========
+* original version from R-forge (http://grainscape.r-forge.r-project.org/)
+* uses a SELES binary to calculate the minimum planar graph (Windows only)
