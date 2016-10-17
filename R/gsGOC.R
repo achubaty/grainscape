@@ -5,27 +5,27 @@
 #' at multiple scales (resistance thresholds) by scalar analysis.
 #' Patch-based or lattice GOC modelling can be done with this function.
 #'
-#' @param mpg    A \code{gsMPG} object produced by \code{\link{gsMPG}}.
-#'               For lattice GOC \code{\link{gsMPG}} must be run with patch set as an integer value.
+#' @param mpg       A \code{gsMPG} object produced by \code{\link{gsMPG}}.
+#'                  For lattice GOC \code{\link{gsMPG}} must be run with patch set as an integer value.
 #'
-#' @param nThresh  Optional.  An integer giving the number of thresholds (or scales)
-#'                 at which to create GOC models.  Thresholds are selected to produce
-#'                 a maximum number of unique grains (i.e., models).
-#'                 \code{nThresh} thresholds are also approximately evenly spread
-#'                 between 0 and the threshold at which all patches or focal points
-#'                 on the landscape are connected.  This is a simple way to get
-#'                 a representative subset of all possible GOC models.
-#'                 Provide either \code{nThresh} or \code{doThresh} not both.
+#' @param nThresh   Optional.  An integer giving the number of thresholds (or scales)
+#'                  at which to create GOC models.  Thresholds are selected to produce
+#'                  a maximum number of unique grains (i.e., models).
+#'                  \code{nThresh} thresholds are also approximately evenly spread
+#'                  between 0 and the threshold at which all patches or focal points
+#'                  on the landscape are connected.  This is a simple way to get
+#'                  a representative subset of all possible GOC models.
+#'                  Provide either \code{nThresh} or \code{doThresh} not both.
 #'
 #' @param doThresh  Optional.  A vector giving the link thresholds at which to create GOC models.
 #'                  Use \code{link{gsThreshold}} to identify thresholds of interest.
 #'                  Provide either \code{nThresh} or \code{doThresh} not both.
 #'
-#' @param weight  A string giving the link weight or attribute to use for threshold.
-#'                \code{"lcpPerimWeight"} uses the accumulated resistance or least-cost
-#'                path distance from the perimeters of patches as the link weight.
-#'                \code{"eucPerimWeight"} use the Euclidean distance from the
-#'                perimeters of patches as the link weight.
+#' @param weight    A string giving the link weight or attribute to use for threshold.
+#'                  \code{"lcpPerimWeight"} uses the accumulated resistance or least-cost
+#'                  path distance from the perimeters of patches as the link weight.
+#'                  \code{"eucPerimWeight"} use the Euclidean distance from the
+#'                  perimeters of patches as the link weight.
 #'
 #' @param sp  Logical.  If \code{TRUE} the \code{rgeos} package is used to create
 #'            a vector of class\cr \code{\link{SpatialPolygonsDataFrame}} describing
@@ -42,21 +42,34 @@
 #' Time taken is dependent on the dimensions of the \code{gsMPG$voronoi} raster.
 #'
 #' @return  A \code{gsGOC} object, consisting of a list of objects.\cr\cr
-#' The main elements:\cr
-#' \code{$voronoi} is a raster describing the regions of proximity in resistance units around the focal patches or points (\code{RasterLayer})\cr
-#' \code{$voronoiSP} is a vector representation of these regions of proximity (\code{SpatialPolygons}; if \code{sp = TRUE})\cr
-#' \code{$summary} summarizes the grains of connectivity generated and their properties\cr
-#' \code{$th} is a list of length \code{nThresh} or \code{length(doThresh)} giving the GOC graph at each threshold.\cr\cr
+#' The main elements:
+#'
+#' \describe{
+#'   \item{\code{voronoi}}{ is a raster describing the regions of proximity in
+#'   resistance units around the focal patches or points (\code{RasterLayer});}
+#'
+#'   \item{\code{voronoiSP}}{is a vector representation of these regions of
+#'   proximity (\code{SpatialPolygons}; if \code{sp = TRUE});}
+#'
+#'   \item{\code{summary}}{summarizes the grains of connectivity generated and
+#'   their properties;}
+#'
+#'   \item{\code{th}}{is a list of length \code{nThresh} or \code{length(doThresh)}
+#'   giving the GOC graph at each threshold.}
+#' }
+#'
 #' Each element of \code{$th} contains a \code{$goc} object giving the GOC graph as class \code{\link{igraph}}.
 #' Vertex attributes describes qualities of each polygon including the coordinates of each polygon centroid,
 #' the area of these polygons, and the original patch IDs in the MPG that are included in each polygon.
 #' All areal measurements are given as raster cell counts.
-#' A variety of edge attributes are also given in the GOC graph.  See \code{\link{gsGOCDistance}} for more information.
+#' A variety of edge attributes are also given in the GOC graph.
+#' See \code{\link{gsGOCDistance}} for more information.
 #'
 #' @note Researchers should consider whether the use of a patch-based GOC or a lattice
 #' GOC model is appropriate based on the patch-dependency of the organism under study.
 #' Patch-based models make most sense when animals are restricted to, or dependent on, a resource patch.
-#' Lattice models can be used as a generalized and functional approach to scaling resistance surfaces.\cr
+#' Lattice models can be used as a generalized and functional approach to scaling resistance surfaces.
+#'
 #' See \code{\link{gsMPG}} for warning related to areal measurements.
 #'
 #' @references
