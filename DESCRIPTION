@@ -42,7 +42,7 @@ Collate:
     'corridor.R'
     'deprecated.R'
     'distance.R'
-    'grainscape2-package.R'
+    'grainscape-package.R'
     'graphdf.R'
     'habitatConnectivityEngine.R'
     'point.R'
