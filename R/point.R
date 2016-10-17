@@ -1,11 +1,11 @@
 #' Identify the polygons containing locations in grains of connectivity (GOC) tessellations
 #'
 #' @description
-#' Given a \code{\link{gsGOC}} object identify the polygon containing a location at multiple scales.
+#' Given a \code{\link{GOC}} object identify the polygon containing a location at multiple scales.
 #'
-#' @note See \code{\link{gsMPG}} for warning related to areal measurements.
+#' @note See \code{\link{MPG}} for warning related to areal measurements.
 #'
-#' @param gsGOC  A \code{gsGOC} object produced by \code{\link{gsGOC}}
+#' @param GOC  A \code{GOC} object produced by \code{\link{GOC}}
 #'
 #' @param coords  A two column matrix or a \code{\link{SpatialPoints}} object giving
 #'                the coordinates of points of interest.
@@ -14,7 +14,7 @@
 #'
 #' \describe{
 #'   \item{\code{pointPolygon}}{a matrix with elements giving the id of the
-#'   polygon from the \code{gsGOC}, where rows give points of interest and
+#'   polygon from the \code{GOC}, where rows give points of interest and
 #'   columns give thresholds;}
 #'
 #'   \item{\code{pointTotalPatchArea}}{is a matrix with elements giving the area
@@ -39,8 +39,8 @@
 #' @export
 #' @importFrom igraph is_igraph V
 #' @importFrom raster cellFromXY
-#' @rdname gsGOCPoint
-#' @seealso \code{\link{gsGOC}}, \code{\link{gsGOCDistance}}
+#' @rdname point
+#' @seealso \code{\link{GOC}}, \code{\link{distance}}
 #' @examples
 #' \dontrun{
 #' ## Load raster landscape
@@ -50,22 +50,22 @@
 #' tinyCost <- reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
 #'
 #' ## Produce a patch-based MPG where patches are resistance features=1
-#' tinyPatchMPG <- gsMPG(cost = tinyCost, patch = tinyCost == 1)
+#' tinyPatchMPG <- MPG(cost = tinyCost, patch = tinyCost == 1)
 #'
 #' ## Extract a representative subset of 5 grains of connectivity
-#' tinyPatchGOC <- gsGOC(tinyPatchMPG, nThresh = 5)
+#' tinyPatchGOC <- GOC(tinyPatchMPG, nThresh = 5)
 #'
 #' ## Three sets of coordinates in the study area
 #' loc <- cbind(c(30, 60, 90), c(30, 60, 90))
 #'
 #' ## Find the GOC polygon containing these three locations
 #' ## for each of the 5 grains of connectivity
-#' tinyPts <- gsGOCPoint(tinyPatchGOC, loc)
+#' tinyPts <- point(tinyPatchGOC, loc)
 #' }
 #'
-gsGOCPoint <- function(gsGOC, coords) {
-  if (!inherits(gsGOC, "gsGOC")) {
-    stop("grainscape2:  input object must be of class 'gsGOC'.  Run gsGOC() first.", call. = FALSE)
+point <- function(GOC, coords) {
+  if (!inherits(GOC, "GOC")) {
+    stop("grainscape2:  input object must be of class 'goc'.  Run GOC() first.", call. = FALSE)
   }
 
   if (is.null(dim(coords)) & !inherits(coords, "SpatialPoints")) {
@@ -81,19 +81,19 @@ gsGOCPoint <- function(gsGOC, coords) {
   }
 
   ## Remove points that fall in NA locations
-  cellPoints <- cellFromXY(gsGOC$voronoi, coords)
-  if (suppressWarnings(sum(is.na(gsGOC$voronoi[cellPoints]))) > 0) {
-    cellPoints <- suppressWarnings(cellPoints[!is.na(gsGOC$voronoi[cellPoints])])
+  cellPoints <- cellFromXY(GOC$voronoi, coords)
+  if (suppressWarnings(sum(is.na(GOC$voronoi[cellPoints]))) > 0) {
+    cellPoints <- suppressWarnings(cellPoints[!is.na(GOC$voronoi[cellPoints])])
     stop("grainscape2:  there are coords that are not defined on the raster.\n", call. = FALSE)
   }
 
-  grainPoints <- matrix(NA, nrow = length(cellPoints), ncol = length(gsGOC$th))
+  grainPoints <- matrix(NA, nrow = length(cellPoints), ncol = length(GOC$th))
   totalPatchAreaPoints <- grainPoints
   totalCoreAreaPoints <- grainPoints
 
-  for (iThresh in 1:length(gsGOC$th)) {
-    if (is_igraph(gsGOC$th[[iThresh]]$goc)) {
-      threshGraph <- gsGOC$th[[iThresh]]$goc
+  for (iThresh in 1:length(GOC$th)) {
+    if (is_igraph(GOC$th[[iThresh]]$goc)) {
+      threshGraph <- GOC$th[[iThresh]]$goc
 
       ## Produce patchId and patchArea lookup tables with polygonId as the index
       patchIdLookup <-  matrix(0, 1, 2)
@@ -111,7 +111,7 @@ gsGOCPoint <- function(gsGOC, coords) {
       ## Faster method which references the cells from the stored voronoi raster
       ## and uses the graph vertex record to determine the polygonId
 
-      grainPoints[, iThresh] <- as.numeric(sapply(gsGOC$voronoi[cellPoints], function(x) {
+      grainPoints[, iThresh] <- as.numeric(sapply(GOC$voronoi[cellPoints], function(x) {
         patchIdLookup[patchIdLookup[, 2] == x, 1]
       }))
 

@@ -5,12 +5,12 @@
 #' building the graph at a series of link thresholds.
 #' As the threshold value increases more nodes in the graph become connected,
 #' forming increasingly fewer components, until the graph becomes connected (e.g., Brooks, 2003).
-#' N.B. Grains of connectivity (GOC) done by \code{\link{gsGOC}} is also a scalar
+#' N.B. Grains of connectivity (GOC) done by \code{\link{GOC}} is also a scalar
 #' analysis using Voronoi tessellations rather than patches (see Galpern et al., 2012).
 #'
-#' @note See \code{\link{gsMPG}} for warning related to areal measurements.
+#' @note See \code{\link{MPG}} for warning related to areal measurements.
 #'
-#' @param gsMPG  A \code{gsMPG} object produced by \code{\link{gsMPG}}.
+#' @param MPG  A \code{MPG} object produced by \code{\link{MPG}}.
 #'
 #' @param weight  A string giving the link weight or attribute to use for threshold.
 #'                \code{"lcpPerimWeight"} uses the accumulated resistance or least-cost path
@@ -27,7 +27,7 @@
 #'                 Provide either \code{nThresh} or \code{doThresh} not both.
 #'
 #' @param doThresh  Optional.  A vector giving the link thresholds at which to create GOC models.
-#'                  Use \code{link{gsThreshold}} to identify thresholds of interest.
+#'                  Use \code{link{threshold}} to identify thresholds of interest.
 #'                  Provide either \code{nThresh} or \code{doThresh} not both.
 #'
 #' @return A list object with the following elements:\cr
@@ -44,8 +44,8 @@
 #' @docType methods
 #' @export
 #' @importFrom igraph clusters delete.edges edge_attr
-#' @rdname gsThreshold
-#' @seealso \code{\link{gsMPG}}
+#' @rdname threshold
+#' @seealso \code{\link{MPG}}
 #'
 #' @examples
 #' \dontrun{
@@ -56,21 +56,21 @@
 #' tinyCost <- reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
 #'
 #' ## Produce a patch-based MPG where patches are resistance features=1
-#' tinyPatchMPG <- gsMPG(cost = tinyCost, patch = tinyCost == 1)
+#' tinyPatchMPG <- MPG(cost = tinyCost, patch = tinyCost == 1)
 #'
 #' ## Threshold this graph at a representative subset of 10 thresholds
-#' tinyThresh <- gsThreshold(tinyPatchMPG, nThresh = 10)
+#' tinyThresh <- threshold(tinyPatchMPG, nThresh = 10)
 #'
 #' ## Examine the properties of one of these threshold graphs
 #' print(tinyThresh$th[[7]], vertex = TRUE, edge = TRUE)
 #' }
 #'
-gsThreshold <- function(gsMPG, weight = "lcpPerimWeight", nThresh = NULL, doThresh = NULL) {
-  if (!inherits(gsMPG, "gsMPG")) {
-    stop("grainscape2: gsMPG must be a 'gsMPG' object")
+threshold <- function(MPG, weight = "lcpPerimWeight", nThresh = NULL, doThresh = NULL) {
+  if (!inherits(MPG, "MPG")) {
+    stop("grainscape2: MPG must be a 'MPG' object")
   }
 
-  baseGraph <- gsMPG$mpg
+  baseGraph <- MPG$mpg
 
   threshGraph <- vector("list")
 

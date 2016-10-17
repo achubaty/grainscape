@@ -116,11 +116,11 @@ The result is shown in \autoref{fig:patchycost}.
 ### Step 2: Extracting the MPG
 
 With a resistance surface in hand the next step is to create the MPG.
-Basic use of the function, `gsMPG()` to do this is shown here.
+Basic use of the function, `MPG()` to do this is shown here.
 Here for simplicity we assume that all areas with the resistance value equal to `1` on the raster are patches.
 
 ```{r}
-patchyMPG <- gsMPG(patchyCost, patch = (patchyCost == 1))
+patchyMPG <- MPG(patchyCost, patch = (patchyCost == 1))
 ```
 
 Note that we defined the patches by passing a binary raster `patchyCost==1` as input.
@@ -129,7 +129,7 @@ Equally, we could use the `raster` package to load a binary raster produced manu
 
 ### Step 3: Quick visualization of the MPG
 
-A quick way to visualize the MPG is provided in the `gsMPG` object produced by `gsMPG()`.
+A quick way to visualize the MPG is provided in the `MPG` object produced by `MPG()`.
 
 ```{r, eval=FALSE}
 plot(patchyMPG$mpgPlot)
@@ -151,10 +151,10 @@ plot(links, col = "darkgrey", add = TRUE, legend = FALSE)
 ### Step 4: Reporting on the MPG
 
 Following extraction, the MPG is available as an `igraph` object (see `patchyMPG$mpg`) and can be analyzed using any of the functions in this package.
-A quick way to report on the structure of the graph in tabular format is provided by the function `gsGraphDataFrame()`:
+A quick way to report on the structure of the graph in tabular format is provided by the function `graphdf()`:
 
 ```{r, eval=FALSE}
-gsGraphDataFrame(patchyMPG)
+graphdf(patchyMPG)
 ```
 
 The output shows the structure of the vertices (nodes) and their attributes under the list element `$v` as well as the structure of the graph in the form of an edge list (*i.e.*, pairs of edges `e1` and `e2` that are connected) and associated edge (link) attributes under the list element `$e`.
@@ -166,7 +166,7 @@ This attribute describes the Euclidean distance between patch perimeters given t
 Please see the next tutorial for information about the Voronoi tessellation.
 
 ```{r, echo=FALSE, results='hide'}
-tempResult <- gsGraphDataFrame(patchyMPG)
+tempResult <- graphdf(patchyMPG)
 tempResult[[1]]$v <- tempResult[[1]]$v[1:3, ]
 tempResult[[1]]$e <- tempResult[[1]]$e[1:3, ]
 tempResult
@@ -177,10 +177,10 @@ tempResult
 A frequent step in the analysis of a patch-based landscape graph is to threshold the graph into a series of subgraphs or components representing connected areas for an organism [@Urban:2001ec; @Galpern:2011bc; @Galpern:2012me].
 This has sometimes been called a scalar analysis [@Brooks:2003oi].
 
-The function `gsThreshold()` provides a way to conduct a scalar analysis at multiple scales. Here we ask for 5 thresholds, and the function finds five approximately evenly-spaced threshold values in link length:
+The function `threshold()` provides a way to conduct a scalar analysis at multiple scales. Here we ask for 5 thresholds, and the function finds five approximately evenly-spaced threshold values in link length:
 
 ```{r}
-scalarAnalysis <- gsThreshold(patchyMPG, nThresh = 5)
+scalarAnalysis <- threshold(patchyMPG, nThresh = 5)
 scalarAnalysis$summary
 ```
 
@@ -188,7 +188,7 @@ The `$summary` of this analysis can be plotted to explore scales of aggregation 
 \autoref{fig:scalesaggregation} shows a scalar analysis of this landscape with 100 thresholds, where the response variables is the number of components or subgraphs created by the thresholding.
 
 ```{r, fig.cap='\\label{fig:scalesaggregation}A scalar analysis at 100 thresholds of the MPG in \\autoref{fig:mpgplot}. When the landscape is a single component at higher link thresholds all patches are completely connected. As an example, an organism able to disperse 200 resistance units would experience this landscape as 6 connected regions.'}
-scalarAnalysis <- gsThreshold(patchyMPG, nThresh = 100)
+scalarAnalysis <- threshold(patchyMPG, nThresh = 100)
 plot(scalarAnalysis$summary[, "maxLink"],
      scalarAnalysis$summary[, "nComponents"],
      xlab = "Link Threshold (resistance units)",
@@ -222,7 +222,7 @@ Grains of connectivity (GOC), the subject of the next three tutorials, is an exa
 When programming your own analyses in R based on the MPG it is helpful to observe that the `patchyMPG$patchId` and `patchyMPG$lcpLinkId` rasters contain the numerical IDs of the patches (nodes) and links respectively.
 These are are also contained as attributes in the `igraph` object `patchyMPG$mpg`.
 Using these three data objects together gives flexibility to visualize any graph analysis.
-To explore the attributes further use `gsGraphDataFrame()`.
+To explore the attributes further use `graphdf()`.
 
 ## Tutorial 2: Patch-based grains of connectivity
 
@@ -243,7 +243,7 @@ Any of the variations imaginable for the MPG are equally valid here.
 ```{r}
 patchy <- raster(system.file("extdata/patchy.asc", package = "grainscape2"))
 patchyCost <- reclassify(patchy, rcl = cbind(c(1,2,3,4,5), c(1, 10, 8, 3, 6)))
-patchyMPG <- gsMPG(patchyCost, patch = (patchyCost == 1))
+patchyMPG <- MPG(patchyCost, patch = (patchyCost == 1))
 ```
 
 ### Step 2:  Exploring the Voronoi tessellation
@@ -254,7 +254,7 @@ It is found by finding the region of proximity in resistance units around a reso
 In contrast to a typical Voronoi tessellation where the generators are points and distance is Euclidean, this tessellation uses two-dimensional patches as generators and distance is calculated in cost or resistance space.
 Ultimately, the tessellation is found in `SELES` using a marching algorithm.
 
-The Voronoi tessellation was extracted by `gsMPG()` in order to build the MPG.
+The Voronoi tessellation was extracted by `MPG()` in order to build the MPG.
 It can be plotted simply as follows:
 
 ```{r, eval=FALSE}
@@ -270,39 +270,39 @@ plot(patchyMPG$patchId, add = TRUE, col = "black", legend = FALSE)
 
 ### Step 3: Building GOC models
 
-GOC analysis is essentially a scalar or thresholding analysis (see `gsThreshold()` and 'Tutorial 1') except the graph being thresholded is one of Voronoi polygons rather than patches.
+GOC analysis is essentially a scalar or thresholding analysis (see `threshold()` and 'Tutorial 1') except the graph being thresholded is one of Voronoi polygons rather than patches.
 In particular, it is the MPG of Voronoi polygons that is thresholded.
 As links are added, and Voronoi polygons linked, the relevant polygons are combined describing larger connected regions.
 An additional step is that the links connecting a pair of polygons are the mean value of all links connecting any patches in each of the two polygons from the MPG [@Galpern:2012me].
 
-The function `gsGOC()` builds GOC models at multiple thresholds.
-As with `gsThreshold()` we can specify the number of thresholds, or grains of connectivity models, we want to create using the `nThresh` parameter.
+The function `GOC()` builds GOC models at multiple thresholds.
+As with `threshold()` we can specify the number of thresholds, or grains of connectivity models, we want to create using the `nThresh` parameter.
 
 ```{r, results='hide'}
-patchyGOC <- gsGOC(patchyMPG, nThresh = 100)
+patchyGOC <- GOC(patchyMPG, nThresh = 100)
 ```
 
 ### Step 4: Visualizing a GOC model
 
-To get a quick sense of the connected regions described by a GOC model at a given threshold (or scale of movement) we can use the function `gsGOCVisualize()`.
+To get a quick sense of the connected regions described by a GOC model at a given threshold (or scale of movement) we can use the function `visualize()`.
 This example uses the functions plotting mechanism to plot the 62nd threshold in the `patchyGOC` object.
 
 \autoref{fig:gocthresh} shows the resulting plot.
 
 ```{r, fig.cap='\\label{fig:gocthresh}A visualization of a GOC model. In this case it is the 62nd scale or threshold extracted, which represents a link threshold of 168 resistance units, and a landscape of 6 components. Voronoi polygons imply regions that are functionally-connected at the given movement threshold.'}
-gsGOCVisualize(patchyGOC, whichThresh = 62, doPlot = TRUE)
+visualize(patchyGOC, whichThresh = 62, doPlot = TRUE)
 ```
 
 ### Step 5: Identifying locations on a GOC model
 
 Organisms have locations in space.
 It is often necessary to know which connected region contains a given location in a GOC model.
-This can be done using the function `gsGOCPoints()`.
+This can be done using the function `point()`.
 First we create a thousand random locations that are on the landscape, and then run the function:
 
 ```{r, eval=FALSE}
 loc <- cbind(runif(1000)*399, runif(1000) * -399)
-locGOC <- gsGOCPoint(patchyGOC, loc)
+locGOC <- point(patchyGOC, loc)
 ```
 
 The resulting object `locGOC` reports on the polygon which contains each location at each threshold (`pointPolygon`) as well as several other variables describing features of the polygons in which point locations are contained.
@@ -310,7 +310,7 @@ The resulting object `locGOC` reports on the polygon which contains each locatio
 ### Step 6: Finding the distance between points on a GOC model
 
 As mentioned at an earlier step, at each threshold (or scale) there is also a GOC graph describing the relationships among the polygons.
-We can find the distance between the polygons containing pairs of points using the `gsGOCDistance()` function.
+We can find the distance between the polygons containing pairs of points using the `distance()` function.
 This may be particularly useful in certain types of landscape genetic analyses where genetic distances are correlated with landscape distances [@Galpern:2012me].
 A key advantage is that thresholding permits scaling of these distances for coarse representations of the landscape, removing variation from the calculation of distance that may be uncorrelated with dispersal.
 
@@ -318,7 +318,7 @@ Here we'll use four locations on the landscape.
 
 ```{r, results='hide'}
 loc <- rbind(c(100,-100), c(200, -200), c(300, -300), c(100, -300))
-distGOC <- gsGOCDistance(patchyGOC, loc)
+distGOC <- distance(patchyGOC, loc)
 ```
 
 The resulting object `locGOC` reports on the pairwise distances in accumulated resistance units between each of those four points given the GOC model at each threshold.
@@ -346,7 +346,7 @@ This integer gives the spacing in cells between focal points in the square latti
 Thus a square raster of `400` cells in dimension, and `patch=40` produces a lattice of `10 * 10 = 100` focal points.
 
 ```{r}
-patchyMPGLattice <- gsMPG(patchyCost, patch = 40)
+patchyMPGLattice <- MPG(patchyCost, patch = 40)
 ```
 
 Let's check how many focal points were actually used in this case:
@@ -375,20 +375,20 @@ These steps proceeds much as with the patch-based GOC model.
 The next step is to produce GOC model.
 
 ```{r, results='hide'}
-patchyGOCLattice <- gsGOC(patchyMPGLattice, nThresh = 100)
+patchyGOCLattice <- GOC(patchyMPGLattice, nThresh = 100)
 ```
 
 Visualization of the Voronoi tessellation for the 35th threshold is shown in \autoref{fig:goclatticethresh}.
 
 ```{r, fig.cap='\\label{fig:goclatticethresh}A visualization of a GOC model. In this case it is the 35th scale or threshold extracted, which represents a link threshold of 122 resistance units. Voronoi polygons imply regions that are functionally-connected at this movement threshold. It is easy to imagine, here, how using more lattice points makes it possible to define grains of connectivity with higher resolution.'}
-plot(gsGOCVisualize(patchyGOCLattice, whichThresh = 35)$voronoi,
+plot(visualize(patchyGOCLattice, whichThresh = 35)$voronoi,
      col = sample(terrain.colors(100)), main = "whichThresh=35")
 ```
 
 ### Step 3: Next steps
 
 Further analyses can proceed as with the patch-based GOC model.
-For example `gsGOCPoints` and `gsGOCDistance` can be used, as can other `igraph` analyses of the graphs contained in `patchyGOCLattice$th` and `patchMPGLattice$mpg`.
+For example `point` and `distance` can be used, as can `igraph` analyses of the graphs contained in `patchyGOCLattice$th` and `patchMPGLattice$mpg`.
 
 ## Tutorial 4: Advanced visualization for grains of connectivity models
 
@@ -406,8 +406,8 @@ Here, we do this for both the patch-based and lattice GOC models of Tutorials 2 
 **Note that this can be very slow, consuming orders of magnitude more computational time!**
 
 ```{r, results='hide'}
-patchyGOC_SP <- gsGOC(patchyMPG, nThresh = 100, sp = TRUE)
-patchyGOCLattice_SP <- gsGOC(patchyMPGLattice, nThresh = 100, sp = TRUE)
+patchyGOC_SP <- GOC(patchyMPG, nThresh = 100, sp = TRUE)
+patchyGOCLattice_SP <- GOC(patchyMPGLattice, nThresh = 100, sp = TRUE)
 ```
 
 Note how we can now visualize the Voronoi tessellation also with the `sp=TRUE` parameter to make things sharper.
@@ -415,7 +415,7 @@ Note how we can now visualize the Voronoi tessellation also with the `sp=TRUE` p
 
 ```{r, fig.cap='\\label{fig:spvoronoi}A visualization of a lattice GOC model using vectorized Voronoi polygons, superimposed over the input resistance surface. In this case the Voronoi polygons show the finest grain possible using the 100 point lattice (+) initially specified. Plotting only the outlines of the Voronoi polygons makes it easier to show other information on this map (*e.g.*, resistance surface) and retain clarity. Recall, when interpreting this figure, that the polygons show regions of proximity from each focal lattice point given distance in resistance units.'}
 plot(patchyCost, legend = FALSE, main = "")
-plot(gsGOCVisualize(patchyGOCLattice_SP, whichThresh = 1, sp = TRUE)$voronoiSP,
+plot(visualize(patchyGOCLattice_SP, whichThresh = 1, sp = TRUE)$voronoiSP,
      add = TRUE)
 
 focalPts <- cbind(V(patchyMPGLattice$mpg)$centroidX, V(patchyMPGLattice$mpg)$centroidY)
@@ -424,14 +424,14 @@ points(focalPts, pch = "+", cex = 1.25)
 
 ### Section 2: Visualizing the complete GOC model, corridors and shortest paths
 
-`grainscape` provides a function called `gsGOCCorridor()` to simplify advanced visualizations when the goal is to show a GOC, the graph connecting Voronoi polygons and a shortest path or corridor between certain points on the landscape.
+`grainscape` provides a function called `corridor()` to simplify advanced visualizations when the goal is to show a GOC, the graph connecting Voronoi polygons and a shortest path or corridor between certain points on the landscape.
 
 \autoref{fig:corridorpatch} shows a visualization for the patch-based GOC model, and \autoref{fig:corridorlattice} shows a visualization for the lattice GOC model.
 Finally \autoref{fig:corridorfancy} demonstrates how to take manual control of the visualization to liven up the product!
 
 ```{r, fig.cap='\\label{fig:corridorpatch}A visualization of the complete patch-based GOC model at its finest scale and the shortest path or least-cost corridor given the GOC graph between two locations on the map (P and Q) at this scale. Grey regions are Voronoi polygons in the patch-based GOC model.'}
 loc <- rbind(c(50, -350), c(350, -50))
-corridor1 <- gsGOCCorridor(patchyGOC_SP, whichThresh = 1, coords = loc, doPlot = TRUE)
+corridor1 <- corridor(patchyGOC_SP, whichThresh = 1, coords = loc, doPlot = TRUE)
 points(loc, pch = c("P", "Q"), cex = 1.25)
 mtext(paste("Shortest path between P and Q:",
             round(corridor1$corridorLength, 2), "resistance units",
@@ -441,7 +441,7 @@ mtext(paste("Shortest path between P and Q:",
 
 ```{r, fig.cap='\\label{fig:corridorlattice}A visualization of the complete lattice GOC model at a relatively coarse scale and the shortest path or least-cost corridor given the GOC graph between two locations on the map (P and Q) at this scale. Grey regions are Voronoi polygons in the lattice GOC model.'}
 loc <- rbind(c(50, -350), c(350, -50))
-corridor1 <- gsGOCCorridor(patchyGOCLattice_SP, whichThresh = 45,
+corridor1 <- corridor(patchyGOCLattice_SP, whichThresh = 45,
                            coords = loc, doPlot = TRUE)
 points(loc, pch = c("P", "Q"), cex = 1.25)
 mtext(paste("Shortest path between P and Q:",
@@ -457,14 +457,14 @@ tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape2"))
 tinyCost <- reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
 
 ## Produce a patch-based MPG where patches are resistance features=1
-tinyPatchMPG <- gsMPG(cost = tinyCost, patch = (tinyCost == 1))
+tinyPatchMPG <- MPG(cost = tinyCost, patch = (tinyCost == 1))
 
 ## Extract a representative subset of 5 grains of connectivity using sp=TRUE
-tinyPatchGOC <- gsGOC(tinyPatchMPG, nThresh = 5, sp = TRUE)
+tinyPatchGOC <- GOC(tinyPatchMPG, nThresh = 5, sp = TRUE)
 
 ## Visualization of a corridor
 corridorStartEnd <- rbind(c(10,10), c(90,90))
-tinyPatchCorridor <- gsGOCCorridor(tinyPatchGOC, whichThresh = 3,
+tinyPatchCorridor <- corridor(tinyPatchGOC, whichThresh = 3,
                                    coords = corridorStartEnd)
 plot(tinyPatchCorridor$voronoiSP, col = "lightgrey", border = "white", lwd = 2)
 plot(tinyPatchCorridor$linksSP, col = "darkred", lty = "dashed", add = TRUE)

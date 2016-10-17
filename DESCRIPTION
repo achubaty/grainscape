@@ -35,16 +35,17 @@ VinetteBuilder: knitr, rmarkdown
 BugReports: https://github.com/achubaty/grainscape2/issues
 ByteCompile: yes
 Collate:
+    'GOC.R'
+    'MPG.R'
     'RcppExports.R'
+    'visualize.R'
+    'corridor.R'
+    'deprecated.R'
+    'distance.R'
     'grainscape2-package.R'
-    'gsGOC.R'
-    'gsGOCVisualize.R'
-    'gsGOCCorridor.R'
-    'gsGOCDistance.R'
-    'gsGOCPoint.R'
-    'gsGraphDataFrame.R'
-    'gsHabConnEngine.R'
-    'gsMPG.R'
-    'gsThreshold.R'
+    'graphdf.R'
+    'habitatConnectivityEngine.R'
+    'point.R'
+    'threshold.R'
     'zzz.R'
 RoxygenNote: 5.0.1

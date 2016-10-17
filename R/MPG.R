@@ -12,7 +12,8 @@
 #' MPG model is appropriate based on the patch-dependency of the organism under study.
 #' Patch-based models make most sense when animals are restricted to, or dependent on,
 #' a resource patch.  Lattice models can be used as a generalized and functional
-#' approach to scaling resistance surfaces.\cr
+#' approach to scaling resistance surfaces.
+#'
 #' Areal measurements are given as raster cell counts.
 #' If the raster projection is one where cell sizes are approximately constant in area (e.g., UTM),
 #' or the raster covers a relatively small geographic extent (e.g., < 1000 km in dimension)
@@ -52,27 +53,34 @@
 #'                      To reduce accuracy and increase speed, set this as
 #'                      \code{spreadFactor=10} or \code{spreadFactor=100}.
 #'
-#' @return A \code{gsMPG} object, consisting of a list of objects.\cr\cr
-#'         The main elements:\cr
-#'         \code{$mpg} is the minimum planar graph as class \code{igraph}\cr
-#'         \code{$patchId} is the input \code{patch} raster with patch cells
-#'         assigned to their id (\code{RasterLayer})\cr
-#'         \code{$voronoi} is the Voronoi tessellation of the patches and
-#'         resistance surface (\code{RasterLayer})\cr
-#'         \code{$lcpPerimWeight} gives the paths of the links between patches
-#'         and their accumulated costs (\code{RasterLayer})\cr
-#'         \code{$lcpLinkId} gives the paths of the links between patches and
-#'         their id (\code{RasterLayer})\cr
-#'         \code{$mpgPlot} provides a quick way of visualizing the mpg (\code{RasterLayer})\cr\cr
+#' @return A \code{MPG} object, containing the following elements:
 #'
-#'         The \code{$mpg} has useful vertex and edge attributes.
-#'         Vertex attributes give attributes of patches including patch area,
-#'         the area of patch edges, the core area of each patch, and the coordinates
-#'         of the patch centroid.
-#'         All areal measurements are given as raster cell counts.
-#'         Edge attributes give attributes of the graph links including link
-#'         weights giving accumulated resistance/least-cost path distance,
-#'         Euclidean distance, and the start and end coordinates of each link.
+#' \describe{
+#'   \item{\code{mpg}}{the minimum planar graph as class \code{igraph}}
+#'
+#'   \item{\code{patchId}}{the input \code{patch} raster with patch cells
+#'   assigned to their id (\code{RasterLayer})}
+#'
+#'   \item{\code{voronoi}}{the Voronoi tessellation of the patches and
+#'   resistance surface (\code{RasterLayer})}
+#'
+#'   \item{\code{lcpPerimWeight}}{the paths of the links between patches and
+#'   their accumulated costs (\code{RasterLayer})}
+#'
+#'   \item{\code{lcpLinkId}}{the paths of the links between patches and their
+#'   id (\code{RasterLayer})}
+#'
+#'   \item{\code{mpgPlot}}{provides a quick way of visualizing the mpg (\code{RasterLayer})}
+#' }
+#'
+#' The \code{$mpg} has useful vertex and edge attributes.
+#' Vertex attributes give attributes of patches including patch area,
+#' the area of patch edges, the core area of each patch, and the coordinates
+#' of the patch centroid.
+#' All areal measurements are given as raster cell counts.
+#' Edge attributes give attributes of the graph links including link
+#' weights giving accumulated resistance/least-cost path distance,
+#' Euclidean distance, and the start and end coordinates of each link.
 #'
 #' @references
 #' Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien.  (2007) Spatial graphs:  Principles and applications for habitat connectivity.  Ecosystems.  10:448:461\cr
@@ -85,8 +93,8 @@
 #' @importFrom raster boundaries cellFromRowCol cellFromRowColCombine compareRaster getValues mask projection raster res writeRaster xyFromCell
 #' @importFrom sp coordinates
 #' @importFrom utils read.table
-#' @rdname gsMPG
-#' @seealso \code{\link{gsGOC}, \link{gsThreshold}}
+#' @rdname MPG
+#' @seealso \code{\link{GOC}, \link{threshold}}
 #'
 #' @examples
 #' \dontrun{
@@ -100,10 +108,10 @@
 #' tinyCost <- reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
 #'
 #' ## Produce a patch-based MPG where patches are resistance features=1
-#' tinyPatchMPG <- gsMPG(cost = tinyCost, patch = (tinyCost == 1))
+#' tinyPatchMPG <- MPG(cost = tinyCost, patch = (tinyCost == 1))
 #'
 #' ## Explore the graph structure and node/link attributes
-#' gsGraphDataFrame(tinyPatchMPG)
+#' graphdf(tinyPatchMPG)
 #'
 #' ## Find the mean patch area (see igraph manual for use of V() and E())
 #' mean(V(tinyPatchMPG$mpg)$patchArea.value)
@@ -119,16 +127,16 @@
 #'
 #' ## Additional graph extraction scenarios
 #' ## Produce a lattice MPG where focal points are spaced 10 cells apart
-#' tinyLatticeMPG <- gsMPG(cost = tinyCost, patch = 10)
+#' tinyLatticeMPG <- MPG(cost = tinyCost, patch = 10)
 #'
 #' ## Produce a patch-based MPG with a study area consisting of half of the map
 #' tinySa <- tinyCost
 #' tinySa[] <- 1
 #' tinySa[1:5000] <- 0
-#' tinyPatchMPG <- gsMPG(cost = tinyCost, patch = (tinyCost == 1), sa = tinySa)
+#' tinyPatchMPG <- MPG(cost = tinyCost, patch = (tinyCost == 1), sa = tinySa)
 #' }
 #'
-gsMPG <- function(cost, patch, sa = NULL, filterPatch = NULL, spreadFactor = 0) {
+MPG <- function(cost, patch, sa = NULL, filterPatch = NULL, spreadFactor = 0) {
   ## Check that cost raster is of class RasterLayer
   if (!inherits(cost, "RasterLayer")) {
     stop("grainscape2: cost raster must be of class RasterLayer", call. = FALSE)
@@ -272,7 +280,7 @@ gsMPG <- function(cost, patch, sa = NULL, filterPatch = NULL, spreadFactor = 0) 
                          endPerimY = hce$linkData$EndColumn)
   mpg$mpg <- graph_from_data_frame(toGraphE, directed = FALSE, vertices = toGraphV)
 
-  class(mpg) <- "gsMPG"
+  class(mpg) <- "MPG"
 
   return(mpg)
 }

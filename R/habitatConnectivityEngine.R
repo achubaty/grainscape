@@ -10,7 +10,7 @@ if (getRversion() >= "3.1.0") {
 #' @param cost      Numeric raster cost (resistance) map.
 #' @param patches   Logical raster indicating presence of habitat patches.
 #'
-#' @return An object of class \code{hce} containing the following components:
+#' @return An object of class \code{HCE} containing the following components:
 #'
 #' \describe{
 #'   \item{\code{voronoi}}{a raster whose values indicate the voronoi tesselation;}
@@ -63,6 +63,6 @@ if (getRversion() >= "3.1.0") {
   linkData <- lapply(hce$LinkData, data.frame) %>% do.call(rbind, .)
 
   out <- list(voronoi = voronoi, patchLinks = patchLinks, linkData = linkData)
-  class(out) <- "hce"
+  class(out) <- "HCE"
   return(out)
 }

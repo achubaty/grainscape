@@ -1,10 +1,10 @@
 #' Find the grains of connectivity network distance
 #'
-#' Given a \code{\link{gsGOC}} object find the shortest network distance between
+#' Given a \code{\link{GOC}} object find the shortest network distance between
 #' pairs of points using the GOC graph.  This can be used as an effective distance
 #' for landscape connectivity assessments.
 #'
-#' @param gsGOC    A \code{gsGOC} object produced by \code{\link{gsGOC}}.
+#' @param GOC    A \code{GOC} object produced by \code{\link{GOC}}.
 #'
 #' @param  coords  A two column matrix or a \code{\link{SpatialPoints}} object
 #'                 giving the coordinates of points of interest.
@@ -12,7 +12,7 @@
 #' @param  weight  The GOC graph link weight to use in calculating the distance.
 #'                 Please see Details for explanation.
 #'
-#' @return  A list object giving a distance matrix for each threshold in the \code{gsGOC} object.
+#' @return  A list object giving a distance matrix for each threshold in the \code{GOC} object.
 #' Distance matrices give the pairwise grains of connectivity network distances between sampling locations.
 #' Matrix indices correspond to rows in the \code{coords} matrix.
 #'
@@ -24,8 +24,8 @@
 #' @docType methods
 #' @export
 #' @importFrom igraph distances 'E<-' edge_attr is_igraph
-#' @rdname gsGOCDistance
-#' @seealso  \code{\link{gsGOC}}, \code{\link{gsGOCPoint}}
+#' @rdname distance
+#' @seealso  \code{\link{GOC}}, \code{\link{point}}
 #'
 #' @examples
 #' \dontrun{
@@ -36,23 +36,23 @@
 #' tinyCost <- reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
 #'
 #' ## Produce a patch-based MPG where patches are resistance features=1
-#' tinyPatchMPG <- gsMPG(cost = tinyCost, patch = tinyCost == 1)
+#' tinyPatchMPG <- MPG(cost = tinyCost, patch = tinyCost == 1)
 #'
 #' ## Extract a representative subset of 5 grains of connectivity
-#' tinyPatchGOC <- gsGOC(tinyPatchMPG, nThresh = 5)
+#' tinyPatchGOC <- GOC(tinyPatchMPG, nThresh = 5)
 #'
 #' ## Three sets of coordinates in the study area
 #' loc <- cbind(c(30, 60, 90), c(30, 60, 90))
 #'
 #' ## Find the GOC network distance matrices between these points
 #' ## for each of the 5 grains of connectivity
-#' tinyDist <- gsGOCDistance(tinyPatchGOC, loc)
+#' tinyDist <- distance(tinyPatchGOC, loc)
 #' }
 #'
-gsGOCDistance <- function(gsGOC, coords, weight="meanWeight") {
-  if (!inherits(gsGOC, "gsGOC")) {
-    stop("grainscape2:  input object must be of class 'gsGOC'.  Run gsGOC() first.", call. = FALSE)
-  }
+distance <- function(GOC, coords, weight = "meanWeight") {
+  if (!inherits(GOC, "GOC")) {
+    stop("grainscape2:  input object must be of class 'GOC'.  Run GOC() first.", call. = FALSE)
+ }
 
   if ((is.null(dim(coords))) & !inherits(coords, "SpatialPoints")) {
     coords <- t(as.matrix(coords))
@@ -62,18 +62,18 @@ gsGOCDistance <- function(gsGOC, coords, weight="meanWeight") {
     stop("grainscape2:  coords must be a SpatialPoints object or a matrix of two columns giving X and Y coordinates", call. = FALSE)
   }
 
-  if (!(weight %in% names(edge_attr(gsGOC$th[[1]]$goc)))) {
-    stop("grainscape2:  link weight attribute with this name doesn't exist in gsGOC object", call. = FALSE)
+  if (!(weight %in% names(edge_attr(GOC$th[[1]]$goc)))) {
+    stop("grainscape2:  link weight attribute with this name doesn't exist in GOC object", call. = FALSE)
   }
 
-  whichGrain <- gsGOCPoint(gsGOC, coords)$pointPolygon
+  whichGrain <- point(GOC, coords)$pointPolygon
 
   results <- list()
-  results$metaData <- gsGOC$metaData
+  results$metaData <- GOC$metaData
   results$th <- vector("list", ncol(whichGrain))
 
   for (iThresh in 1:ncol(whichGrain)) {
-    threshGraph <- gsGOC$th[[iThresh]]$goc
+    threshGraph <- GOC$th[[iThresh]]$goc
 
     if (is_igraph(threshGraph)) {
       E(threshGraph)$weight <- edge_attr(threshGraph, weight)

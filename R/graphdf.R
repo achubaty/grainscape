@@ -1,20 +1,20 @@
 #' Produce a \code{data.frame} containing the structure and associated attributes
-#' for a \code{gsMPG}, \code{gsGOC}, or \code{igraph} object
+#' for a \code{MPG}, \code{GOC}, or \code{igraph} object
 #'
 #' @description
-#' Given a \code{gsMPG}, \code{gsGOC}, or any \code{igraph} object, produce a
+#' Given a \code{MPG}, \code{GOC}, or any \code{igraph} object, produce a
 #' \code{data.frame} containing the node (vertex) and link (edge) structure as
 #' well as the associated attributes for these.
 #' This provides an easy way to create data tables describing graphs, particularly
 #' helpful for users unfamiliar with the structure of igraph objects.
 #'
-#' @param gsObj  A \code{gsMPG}, \code{gsGOC}, or \code{igraph} object.
+#' @param x  A \code{MPG}, \code{GOC}, or \code{igraph} object.
 #'
 #' @return A list object:\cr\cr
 #' \code{$v} giving node (vertex) names and associated attributes\cr
 #' \code{$e} giving link (edge) lists and associated attributes\cr\cr
-#' Please see \code{\link{gsMPG}} and \code{\link{gsGOC}} for details about the attributes.\cr\cr
-#' For \code{\link{gsGOC}} objects which typically contain multiple thresholds,
+#' Please see \code{\link{MPG}} and \code{\link{GOC}} for details about the attributes.\cr\cr
+#' For \code{\link{GOC}} objects which typically contain multiple thresholds,
 #' an enumerated list of the same length as the number of thresholds is returned
 #' each containing \code{$v} and \code{$e} elements.
 #'
@@ -27,8 +27,8 @@
 #' @export
 #' @importFrom igraph as_edgelist edge_attr is_igraph vertex_attr
 #' @importFrom utils type.convert
-#' @rdname gsGraphDataFrame
-#' @seealso \code{\link{gsMPG}}, \code{\link{gsGOC}}
+#' @rdname graphdf
+#' @seealso \code{\link{MPG}}, \code{\link{GOC}}
 #'
 #' @examples
 #' \dontrun{
@@ -39,32 +39,32 @@
 #' tinyCost <- reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
 #'
 #' ## Produce a patch-based MPG where patches are resistance features=1
-#' tinyPatchMPG <- gsMPG(cost = tinyCost, patch = tinyCost == 1)
+#' tinyPatchMPG <- MPG(cost = tinyCost, patch = tinyCost == 1)
 #'
 #' ## Extract a representative subset of 5 grains of connectivity
-#' tinyPatchGOC <- gsGOC(tinyPatchMPG, nThresh = 5)
+#' tinyPatchGOC <- GOC(tinyPatchMPG, nThresh = 5)
 #'
-#' ## Create a data.frame with the structure and attributes of a gsMPG object
-#' tinyPatchMPG_df <- gsGraphDataFrame(tinyPatchMPG)
+#' ## Create a data.frame with the structure and attributes of a MPG object
+#' tinyPatchMPG_df <- graphdf(tinyPatchMPG)
 #'
-#' ## Create a data.frame with the structure and attributes of a gsGOC object
-#' tinyPatchGOC_df <- gsGraphDataFrame(tinyPatchGOC)
+#' ## Create a data.frame with the structure and attributes of a GOC object
+#' tinyPatchGOC_df <- graphdf(tinyPatchGOC)
 #'
 #' ## Create a data.frame with the structure and attributes of any igraph object
-#' gsGraphDataFrame(tinyPatchGOC$th[[1]]$goc)
+#' graphdf(tinyPatchGOC$th[[1]]$goc)
 #' }
 #'
-gsGraphDataFrame <- function(gsObj) {
-  if (inherits(gsObj, "gsGOC")) {
-    theseGraphs <- lapply(gsObj$th, function(x) x$goc)
-  } else if (inherits(gsObj, "gsMPG")) {
+graphdf <- function(x) {
+  if (inherits(x, "GOC")) {
+    theseGraphs <- lapply(x$th, function(x) x$goc)
+  } else if (inherits(x, "MPG")) {
     theseGraphs <- vector("list", 1)
-    theseGraphs[[1]] <- gsObj$mpg
-  } else if (inherits(gsObj, "igraph")) {
+    theseGraphs[[1]] <- x$mpg
+  } else if (inherits(x, "igraph")) {
     theseGraphs <- vector("list", 1)
-    theseGraphs[[1]] <- gsObj
+    theseGraphs[[1]] <- x
   } else {
-    stop("grainscape2: gsObj must be a gsMPG, gsGOC or igraph object", call. = FALSE)
+    stop("grainscape2: x must be a MPG, GOC or igraph object", call. = FALSE)
   }
 
   results <- vector("list", length(theseGraphs))
