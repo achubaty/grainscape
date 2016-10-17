@@ -139,7 +139,8 @@ tinyPatchMPG <- MPG(cost = tinyCost, patch = (tinyCost == 1), sa = tinySa)
 Paul Galpern, Sam Doctolero, Alex Chubaty
 }
 \references{
-Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien.  (2007) Spatial graphs:  Principles and applications for habitat connectivity.  Ecosystems.  10:448:461\cr
+Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien. (2007) Spatial graphs: Principles and applications for habitat connectivity. Ecosystems 10:448:461.
+
 Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis at multiple spatial scales in landscape genetics.  Molecular Ecology 21:3996-4009.
 }
 \seealso{

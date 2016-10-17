@@ -41,11 +41,11 @@
 #'
 #' Fall, A. and J. Fall. (2001). A domain-specific language for models of landscape dynamics. Ecological Modelling 141:1-18.
 #'
-#' Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien. (2007) Spatial graphs: Principles and applications for habitat connectivity. Ecosystems. 10:448:461.
+#' Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien. (2007) Spatial graphs: Principles and applications for habitat connectivity. Ecosystems 10:448:461.
 #'
 #' Galpern, P., M. Manseau, A. Fall. (2011)  Patch-based graphs of landscape connectivity: A guide to construction, analysis and application for conservation.  Biological Conservation 144:44-55.
 #'
-#' Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis at multiple spatial scales in landscape genetics. Molecular Ecology. 21:3996-4009.
+#' Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis at multiple spatial scales in landscape genetics. Molecular Ecology 21:3996-4009.
 #'
 #' Hijmans, R.J. and J. van Etten. (2016). raster: Geographic analysis and modeling with raster data. R package version 2.5-8, \url{https://CRAN.R-project.org/package=raster}.
 #'
@@ -63,14 +63,29 @@
 #' @author Alex M. Chubaty
 NULL
 
-#' Test maps included with \code{grainscape} are intended for users to explore the functionality of the package using simple and artificial land cover maps.  These maps have four or five discrete land cover classes (integers from 1 to 5) intended to represent distinct land cover types.  Typical analyses begin by reclassifying these to reflect resistance to movement.
+#' Test maps included with \code{grainscape}
+#'
+#' Intended for users to explore the functionality of the package using simple
+#' and artificial land cover maps.
+#' These maps have four or five discrete land cover classes (integers from 1 to 5)
+#' intended to represent distinct land cover types.
+#' Typical analyses begin by reclassifying these to reflect resistance to movement.
 #'
 #' @details
-#' \code{patchy.asc}: A caricatured map of four land cover classes, where patches are large and easy to identify polygonal regions for heuristic purposes.  This unrealistic map can be used to illustrate the method and understand how it works  The map also serves a similar heuristic purpose in a review of graph-based connectivity methods (Galpern et al., 2011).  (400 x 400 raster cells).
 #'
-#' \code{fragmented.asc}: A simulated land cover map with five land cover classes using an algorithm that produces fragmentation. (400 x 400 raster cells).
+#' \describe{
+#'   \link{\code{patchy.asc}}{A caricatured map of four land cover classes, where
+#'   patches are large and easy to identify polygonal regions for heuristic purposes.
+#'   This unrealistic map can be used to illustrate the method and understand how it works.
+#'   The map also serves a similar heuristic purpose in a review of graph-based
+#'   connectivity methods (Galpern et al., 2011).  (400 x 400 raster cells.)}
 #'
-#' \code{tiny.asc}: Similar to \code{fragmented.asc} but smaller in extent for lightning-fast computation and experimental use.  (100 x 100 raster cells)
+#'   \link{\code{fragmented.asc}}{A simulated land cover map with five land cover
+#'   classes using an algorithm that produces fragmentation. (400 x 400 raster cells.)}
+#'
+#'   \link{\code{tiny.asc}}{Similar to \code{fragmented.asc} but smaller in extent
+#'   for lightning-fast computation and experimental use.  (100 x 100 raster cells.)}
+#' }
 #'
 #' @docType data
 #' @keywords maps

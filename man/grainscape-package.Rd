@@ -50,9 +50,11 @@ Csardi, G. and T. Nepusz. (2006). The igraph software package for complex networ
 
 Fall, A. and J. Fall. (2001). A domain-specific language for models of landscape dynamics. Ecological Modelling 141:1-18.
 
-Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien. (2007) Spatial graphs: Principles and applications for habitat connectivity. Ecosystems. 10:448:461.
+Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien. (2007) Spatial graphs: Principles and applications for habitat connectivity. Ecosystems 10:448:461.
 
-Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis at multiple spatial scales in landscape genetics. Molecular Ecology. 21:3996-4009.
+Galpern, P., M. Manseau, A. Fall. (2011)  Patch-based graphs of landscape connectivity: A guide to construction, analysis and application for conservation.  Biological Conservation 144:44-55.
+
+Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis at multiple spatial scales in landscape genetics. Molecular Ecology 21:3996-4009.
 
 Hijmans, R.J. and J. van Etten. (2016). raster: Geographic analysis and modeling with raster data. R package version 2.5-8, \url{https://CRAN.R-project.org/package=raster}.
 

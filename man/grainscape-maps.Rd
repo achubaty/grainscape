@@ -6,12 +6,26 @@
 \title{Test maps included with \code{grainscape}}
 \format{raster}
 \description{
-Test maps included with \code{grainscape}
+Intended for users to explore the functionality of the package using simple
+and artificial land cover maps.
+These maps have four or five discrete land cover classes (integers from 1 to 5)
+intended to represent distinct land cover types.
+Typical analyses begin by reclassifying these to reflect resistance to movement.
 }
 \details{
-\code{fragmented.asc}: DESCRIPTION NEEDED - PLEASE WRITE
-\code{patchy.asc}: DESCRIPTION NEEDED - PLEASE WRITE
-\code{tiny.asc}: DESCRIPTION NEEDED - PLEASE WRITE
+\describe{
+  \link{\code{patchy.asc}}{A caricatured map of four land cover classes, where
+  patches are large and easy to identify polygonal regions for heuristic purposes.
+  This unrealistic map can be used to illustrate the method and understand how it works.
+  The map also serves a similar heuristic purpose in a review of graph-based
+  connectivity methods (Galpern et al., 2011).  (400 x 400 raster cells.)}
+
+  \link{\code{fragmented.asc}}{A simulated land cover map with five land cover
+  classes using an algorithm that produces fragmentation. (400 x 400 raster cells.)}
+
+  \link{\code{tiny.asc}}{Similar to \code{fragmented.asc} but smaller in extent
+  for lightning-fast computation and experimental use.  (100 x 100 raster cells.)}
+}
 }
 \keyword{maps}
 
