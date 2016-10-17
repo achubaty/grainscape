@@ -314,11 +314,11 @@ GOC <- function(mpg, nThresh = NULL, doThresh = NULL,
         ## Find the total patch area, total patch edge area, and total core area
         ##   in each polygon and add as vertex attributes.
         patchAreaLookup <- cbind(V(baseGraph)$patchId,
-                                 V(baseGraph)$patchArea.value,
-                                 V(baseGraph)$patchEdgeArea.value,
-                                 V(baseGraph)$coreArea.value)
+                                 V(baseGraph)$patchArea.count,
+                                 V(baseGraph)$patchEdgeArea.count,
+                                 V(baseGraph)$coreArea.count)
         V(componentGraph)$totalPatchArea <- as.numeric(unlist(sapply(sourcePatchId, function(x)
-          sum(patchAreaLookup[patchAreaLookup[, 1] %in% as.numeric(x), 2]))))
+          sum(patchAreaLookup[patchAreaLookup[, 1] %in% as.numeric(strsplit(x, ", ")[[1]]), 2]))))
         V(componentGraph)$totalPatchEdgeArea <- as.numeric(unlist(sapply(sourcePatchId, function(x)
           sum(patchAreaLookup[patchAreaLookup[, 1] %in% as.numeric(strsplit(x, ", ")[[1]]), 3]))))
         V(componentGraph)$totalCoreArea <- as.numeric(unlist(sapply(sourcePatchId, function(x)
