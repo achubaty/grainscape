@@ -28,7 +28,7 @@
 #'                  perimeters of patches as the link weight.
 #'
 #' @param sp  Logical.  If \code{TRUE} the \code{rgeos} package is used to create
-#'            a vector of class\cr \code{\link{SpatialPolygonsDataFrame}} describing
+#'            a vector of class \code{\link{SpatialPolygonsDataFrame}} describing
 #'            the finest grain of connectivity.  This is very useful for visualizing
 #'            grains of connectivity models, especially for print purposes.
 #'            Equally, using the \code{maptools} or \code{rgdal} packages these
@@ -41,8 +41,7 @@
 #' This function can take a long time to run when \code{sp = TRUE}.
 #' Time taken is dependent on the dimensions of the \code{MPG$voronoi} raster.
 #'
-#' @return  A \code{GOC} object, consisting of a list of objects.\cr\cr
-#' The main elements:
+#' @return  A \code{GOC} object containing:
 #'
 #' \describe{
 #'   \item{\code{voronoi}}{ is a raster describing the regions of proximity in

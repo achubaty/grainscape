@@ -10,13 +10,19 @@
 #'
 #' @param x  A \code{MPG}, \code{GOC}, or \code{igraph} object.
 #'
-#' @return A list object:\cr\cr
-#' \code{$v} giving node (vertex) names and associated attributes\cr
-#' \code{$e} giving link (edge) lists and associated attributes\cr\cr
-#' Please see \code{\link{MPG}} and \code{\link{GOC}} for details about the attributes.\cr\cr
+#' @return A list object containing:
+#'
+#' \describe{
+#'   \item{\code{v}}{node (vertex) names and associated attributes;}
+#'
+#'   \item{\code{e} giving link (edge) lists and associated attributes.}
+#' }
+#'
+#' Please see \code{\link{MPG}} and \code{\link{GOC}} for details about the attributes.
+#'
 #' For \code{\link{GOC}} objects which typically contain multiple thresholds,
 #' an enumerated list of the same length as the number of thresholds is returned
-#' each containing \code{$v} and \code{$e} elements.
+#' each containing \code{v} and \code{e} elements.
 #'
 #' @references
 #' Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien.  (2007) Spatial graphs:  Principles and applications for habitat connectivity.  Ecosystems.  10:448:461\cr\cr

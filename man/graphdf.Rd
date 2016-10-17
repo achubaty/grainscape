@@ -12,13 +12,19 @@ graphdf(x)
 \item{x}{A \code{MPG}, \code{GOC}, or \code{igraph} object.}
 }
 \value{
-A list object:\cr\cr
-\code{$v} giving node (vertex) names and associated attributes\cr
-\code{$e} giving link (edge) lists and associated attributes\cr\cr
-Please see \code{\link{MPG}} and \code{\link{GOC}} for details about the attributes.\cr\cr
+A list object containing:
+
+\describe{
+  \item{\code{v}}{node (vertex) names and associated attributes;}
+
+  \item{\code{e} giving link (edge) lists and associated attributes.}
+}
+
+Please see \code{\link{MPG}} and \code{\link{GOC}} for details about the attributes.
+
 For \code{\link{GOC}} objects which typically contain multiple thresholds,
 an enumerated list of the same length as the number of thresholds is returned
-each containing \code{$v} and \code{$e} elements.
+each containing \code{v} and \code{e} elements.
 }
 \description{
 Given a \code{MPG}, \code{GOC}, or any \code{igraph} object, produce a

@@ -29,10 +29,13 @@ Use \code{link{threshold}} to identify thresholds of interest.
 Provide either \code{nThresh} or \code{doThresh} not both.}
 }
 \value{
-A list object with the following elements:\cr
-\code{$summary} summarizes the thresholded graphs generated and their properties\cr
-\code{$th} is a list of length \code{nThresh} or \code{length(doThresh)} giving
-the thresholded graph (class \code{igraph}) at each threshold.
+A list object with the following elements:
+
+\describe{
+  \item{\code{summary}}{summarizes the thresholded graphs generated and their properties;}
+  \item{\code{th}}{a list of length \code{nThresh} or \code{length(doThresh)}
+  giving the thresholded graph (class \code{igraph}) at each threshold.}
+}
 }
 \description{
 This function performs a scalar analysis of a minimum planar graph (MPG) by

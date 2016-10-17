@@ -23,11 +23,19 @@ For full control, manually produce plots using the \code{$voronoi}
 or \code{$voronoiSP} objects created by this function.}
 }
 \value{
-A list object:\cr\cr
-\code{$summary} giving the properties of the visualized scale of the GOC model\cr
-\code{$voronoi} giving the tessellation (\code{RasterLayer})\cr
-\code{$centroids} the centroids of the polygons in the tessellation (\code{SpatialPoints})\cr
-\code{$voronoiSP} vector representation of polygons in the tessellation (\code{SpatialPolygonsDataFrame}; if \code{sp=TRUE})
+A list object containing the following elements:
+
+\describe{
+  \item{\code{$summary}}{gives the properties of the visualized scale of the GOC model;}
+
+  \item{\code{$voronoi}}{a \code{RasterLayer} giving the Voronoi tessellation;}
+
+  \item{\code{$centroids}}{a \code{SpatialPoints} objects giving the centroids
+  of the polygons in the tessellation;}
+
+  \item{\code{$voronoiSP}}{vector representation of polygons in the tessellation
+  (\code{SpatialPolygonsDataFrame}; if \code{sp=TRUE})}
+}
 }
 \description{
 Given a series of GOC models built at different scales in a \code{GOC} object,

@@ -20,11 +20,19 @@
 #'                For full control, manually produce plots using the \code{$voronoi}
 #'                or \code{$voronoiSP} objects created by this function.
 #'
-#' @return  A list object:\cr\cr
-#' \code{$summary} giving the properties of the visualized scale of the GOC model\cr
-#' \code{$voronoi} giving the tessellation (\code{RasterLayer})\cr
-#' \code{$centroids} the centroids of the polygons in the tessellation (\code{SpatialPoints})\cr
-#' \code{$voronoiSP} vector representation of polygons in the tessellation (\code{SpatialPolygonsDataFrame}; if \code{sp=TRUE})
+#' @return  A list object containing the following elements:
+#'
+#' \describe{
+#'   \item{\code{$summary}}{gives the properties of the visualized scale of the GOC model;}
+#'
+#'   \item{\code{$voronoi}}{a \code{RasterLayer} giving the Voronoi tessellation;}
+#'
+#'   \item{\code{$centroids}}{a \code{SpatialPoints} objects giving the centroids
+#'   of the polygons in the tessellation;}
+#'
+#'   \item{\code{$voronoiSP}}{vector representation of polygons in the tessellation
+#'   (\code{SpatialPolygonsDataFrame}; if \code{sp=TRUE})}
+#' }
 #'
 #' @references
 #' Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien.  (2007) Spatial graphs:  Principles and applications for habitat connectivity.  Ecosystems.  10:448:461\cr

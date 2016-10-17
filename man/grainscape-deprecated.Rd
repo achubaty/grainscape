@@ -50,7 +50,7 @@ path distance from the perimeters of patches as the link weight.
 perimeters of patches as the link weight.}
 
 \item{sp}{Logical.  If \code{TRUE} the \code{rgeos} package is used to create
-a vector of class\cr \code{\link{SpatialPolygonsDataFrame}} describing
+a vector of class \code{\link{SpatialPolygonsDataFrame}} describing
 the finest grain of connectivity.  This is very useful for visualizing
 grains of connectivity models, especially for print purposes.
 Equally, using the \code{maptools} or \code{rgdal} packages these
