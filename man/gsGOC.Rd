@@ -43,16 +43,28 @@ But, please see details.}
 }
 \value{
 A \code{gsGOC} object, consisting of a list of objects.\cr\cr
-The main elements:\cr
-\code{$voronoi} is a raster describing the regions of proximity in resistance units around the focal patches or points (\code{RasterLayer})\cr
-\code{$voronoiSP} is a vector representation of these regions of proximity (\code{SpatialPolygons}; if \code{sp = TRUE})\cr
-\code{$summary} summarizes the grains of connectivity generated and their properties\cr
-\code{$th} is a list of length \code{nThresh} or \code{length(doThresh)} giving the GOC graph at each threshold.\cr\cr
+The main elements:
+
+\describe{
+  \item{\code{voronoi}}{ is a raster describing the regions of proximity in
+  resistance units around the focal patches or points (\code{RasterLayer});}
+
+  \item{\code{voronoiSP}}{is a vector representation of these regions of
+  proximity (\code{SpatialPolygons}; if \code{sp = TRUE});}
+
+  \item{\code{summary}}{summarizes the grains of connectivity generated and
+  their properties;}
+
+  \item{\code{th}}{is a list of length \code{nThresh} or \code{length(doThresh)}
+  giving the GOC graph at each threshold.}
+}
+
 Each element of \code{$th} contains a \code{$goc} object giving the GOC graph as class \code{\link{igraph}}.
 Vertex attributes describes qualities of each polygon including the coordinates of each polygon centroid,
 the area of these polygons, and the original patch IDs in the MPG that are included in each polygon.
 All areal measurements are given as raster cell counts.
-A variety of edge attributes are also given in the GOC graph.  See \code{\link{gsGOCDistance}} for more information.
+A variety of edge attributes are also given in the GOC graph.
+See \code{\link{gsGOCDistance}} for more information.
 }
 \description{
 Given a \code{\link{gsMPG}} object produce a grains of connectivity (GOC) model
@@ -67,7 +79,8 @@ Time taken is dependent on the dimensions of the \code{gsMPG$voronoi} raster.
 Researchers should consider whether the use of a patch-based GOC or a lattice
 GOC model is appropriate based on the patch-dependency of the organism under study.
 Patch-based models make most sense when animals are restricted to, or dependent on, a resource patch.
-Lattice models can be used as a generalized and functional approach to scaling resistance surfaces.\cr
+Lattice models can be used as a generalized and functional approach to scaling resistance surfaces.
+
 See \code{\link{gsMPG}} for warning related to areal measurements.
 }
 \examples{

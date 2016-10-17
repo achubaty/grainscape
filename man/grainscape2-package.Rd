@@ -23,17 +23,16 @@ be determined at multiple scales.
 Analyses of this sort can contribute to corridor identification, landscape genetics,
 as well as other connectivity assessments.
 Minimum planar graph (MPG; Fall et al., 2007) models of resource patches on
-landscapes can also be generated using the software.\cr\cr
+landscapes can also be generated using the software.
 
 MPG calculations and generalization of the Voronoi tessellation used in GOC models
-is based on the routines in SELES software (\url{http://seles.info/}; Fall and Fall, 2001).
+is based on the routines in SELES software (Fall and Fall, 2001).
 Routines also depend on the \code{sp} (Pebesma and Bivand, 2005),
-\code{raster} (Hijmans and van Etten, 2011), \code{igraph} (Csardi and Nepusz, 2006), and optionally
-\code{rgeos} packages (Bivand and Rundel, 2012).\cr\cr
+\code{raster} (Hijmans and van Etten, 2011), \code{igraph} (Csardi and Nepusz, 2006),
+and optionally \code{rgeos} packages (Bivand and Rundel, 2012).
 
-An R vignette detailing the use of this package for landscape connectivity modelling is in preparation.\cr\cr
-
-Please cite this package using the Galpern et al. (2012) reference below.
+A vignette detailing the use of this package for landscape connectivity modelling is included.
+See \code{browseVignettes('grainscape2')}.
 
 A detailed tutorial is available as a vignette.
 }
@@ -45,15 +44,16 @@ Sam Doctolero
 Alex M. Chubaty
 }
 \references{
-Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien.  Spatial graphs:  Principles and applications for habitat connectivity.  Ecosystems.  10:448:461.
-
-Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis at multiple spatial scales in landscape genetics.  Molecular Ecology. 21:3996-4009.
-
 Bivand, R.S. and C. Rundel. (2016). rgeos: Interface to Geometry Engine - Open Source (GEOS). R package version 0.3-19, \url{https://CRAN.R-project.org/package=rgeos}.
 
 Csardi, G. and T. Nepusz. (2006). The igraph software package for complex network research. InterJournal Complex Systems 1695. \url{http://igraph.org}.
 
 Fall, A. and J. Fall. (2001). A domain-specific language for models of landscape dynamics. Ecological Modelling 141:1-18.
+
+Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien. (2007) Spatial graphs: Principles and applications for habitat connectivity. Ecosystems. 10:448:461.
+
+Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis at multiple spatial scales in landscape genetics. Molecular Ecology. 21:3996-4009.
+
 Hijmans, R.J. and J. van Etten. (2016). raster: Geographic analysis and modeling with raster data. R package version 2.5-8, \url{https://CRAN.R-project.org/package=raster}.
 
 Pebesma, E.J. and R.S. Bivand. (2005). Classes and methods for spatial data in R. R News 5 (2), \url{http://cran.r-project.org/doc/Rnews/}.

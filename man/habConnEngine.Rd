@@ -15,11 +15,13 @@
 \value{
 An object of class \code{hce} containing the following components:
 
-\itemize{
-\item \code{voronoi}: a raster whose values indicate the voronoi tesselation;
-\item \code{patchLinks}: a raster whose values indicate patch ids (positive integers)
-      and link ids (negative integers);
-\item \code{linkData}: data.frame of link attributes.
+\describe{
+  \item{\code{voronoi}}{a raster whose values indicate the voronoi tesselation;}
+
+  \item{\code{patchLinks}}{a raster whose values indicate patch ids (positive integers)
+  and link ids (negative integers);}
+
+  \item{\code{linkData}}{data.frame of link attributes.}
 }
 }
 \description{
