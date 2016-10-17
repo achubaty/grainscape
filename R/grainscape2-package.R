@@ -29,7 +29,7 @@
 #' and optionally \code{rgeos} packages (Bivand and Rundel, 2012).
 #'
 #' A vignette detailing the use of this package for landscape connectivity modelling is included.
-#' See \code{browseVignettes('grainscape2')}.
+#' See \code{browseVignettes('grainscape')}.
 #'
 #' A detailed tutorial is available as a vignette.
 #'
@@ -49,19 +49,19 @@
 #'
 #' Pebesma, E.J. and R.S. Bivand. (2005). Classes and methods for spatial data in R. R News 5 (2), \url{http://cran.r-project.org/doc/Rnews/}.
 #'
-#' @name grainscape2-package
-#' @aliases grainscape2
+#' @name grainscape-package
+#' @aliases grainscape
 #' @docType package
 #' @keywords connectivity, minimum planar graph, spatial graph
 #' @importFrom Rcpp evalCpp
-#' @useDynLib grainscape2
+#' @useDynLib grainscape
 #'
 #' @author Paul Galpern
 #' @author Sam Doctolero
 #' @author Alex M. Chubaty
 NULL
 
-#' Test maps included with \code{grainscape2}
+#' Test maps included with \code{grainscape}
 #'
 #' @details
 #' \code{fragmented.asc}: DESCRIPTION NEEDED - PLEASE WRITE
@@ -70,7 +70,7 @@ NULL
 #'
 #' @docType data
 #' @keywords maps
-#' @name grainscape2-maps
-#' @rdname grainscape2-maps
+#' @name grainscape-maps
+#' @rdname grainscape-maps
 #' @format raster
 NULL

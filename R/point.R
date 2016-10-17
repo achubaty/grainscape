@@ -44,7 +44,7 @@
 #' @examples
 #' \dontrun{
 #' ## Load raster landscape
-#' tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape2"))
+#' tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape"))
 #'
 #' ## Create a resistance surface from a raster using an is-becomes reclassification
 #' tinyCost <- reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
@@ -65,7 +65,7 @@
 #'
 point <- function(GOC, coords) {
   if (!inherits(GOC, "GOC")) {
-    stop("grainscape2:  input object must be of class 'goc'.  Run GOC() first.", call. = FALSE)
+    stop("grainscape:  input object must be of class 'goc'.  Run GOC() first.", call. = FALSE)
   }
 
   if (is.null(dim(coords)) & !inherits(coords, "SpatialPoints")) {
@@ -73,7 +73,7 @@ point <- function(GOC, coords) {
   }
 
   if (!inherits(coords, "SpatialPoints") && (dim(coords)[2] != 2)) {
-    stop("grainscape2:  coords must be a SpatialPoints object or a matrix of two columns giving X and Y coordinates", call. = FALSE)
+    stop("grainscape:  coords must be a SpatialPoints object or a matrix of two columns giving X and Y coordinates", call. = FALSE)
   }
 
   if (!inherits(coords, "SpatialPoints")) {
@@ -84,7 +84,7 @@ point <- function(GOC, coords) {
   cellPoints <- cellFromXY(GOC$voronoi, coords)
   if (suppressWarnings(sum(is.na(GOC$voronoi[cellPoints]))) > 0) {
     cellPoints <- suppressWarnings(cellPoints[!is.na(GOC$voronoi[cellPoints])])
-    stop("grainscape2:  there are coords that are not defined on the raster.\n", call. = FALSE)
+    stop("grainscape:  there are coords that are not defined on the raster.\n", call. = FALSE)
   }
 
   grainPoints <- matrix(NA, nrow = length(cellPoints), ncol = length(GOC$th))

@@ -53,7 +53,7 @@
 #' @examples
 #' \dontrun{
 #' # Load raster landscape
-#' tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape2"))
+#' tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape"))
 #'
 #' ## Create a resistance surface from a raster using an is-becomes reclassification
 #' tinyCost <- reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
@@ -70,7 +70,7 @@
 #'
 threshold <- function(MPG, weight = "lcpPerimWeight", nThresh = NULL, doThresh = NULL) {
   if (!inherits(MPG, "MPG")) {
-    stop("grainscape2: MPG must be a 'MPG' object")
+    stop("grainscape: MPG must be a 'MPG' object")
   }
 
   baseGraph <- MPG$mpg
@@ -79,14 +79,14 @@ threshold <- function(MPG, weight = "lcpPerimWeight", nThresh = NULL, doThresh =
 
   linkWeight <- try(edge_attr(baseGraph, weight), silent = TRUE)
   if (inherits(linkWeight, "try-error")) {
-    stop("grainscape2: weight must be the name of an existing link attribute",
+    stop("grainscape: weight must be the name of an existing link attribute",
          " to threshold (e.g., 'lcpPerimWeight')", call. = FALSE)
   }
 
   if (is.null(nThresh) && is.null(doThresh)) {
-    stop("grainscape2: either nThresh or doThresh must be specified", call. = FALSE)
+    stop("grainscape: either nThresh or doThresh must be specified", call. = FALSE)
   } else if (!is.null(nThresh) && !is.null(doThresh)) {
-    stop("grainscape2: only one of nThresh or doThresh must be specified", call. = FALSE)
+    stop("grainscape: only one of nThresh or doThresh must be specified", call. = FALSE)
   } else if (is.null(doThresh)) {
     doThresh <- seq(0, max(linkWeight), length = nThresh)
   }

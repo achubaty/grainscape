@@ -102,7 +102,7 @@
 #' require(raster)
 #'
 #' ## Load raster landscape
-#' tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape2"))
+#' tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape"))
 #'
 #' ## Create a resistance surface from a raster using an is-becomes reclassifyification
 #' tinyCost <- reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
@@ -139,7 +139,7 @@
 MPG <- function(cost, patch, sa = NULL, filterPatch = NULL, spreadFactor = 0) {
   ## Check that cost raster is of class RasterLayer
   if (!inherits(cost, "RasterLayer")) {
-    stop("grainscape2: cost raster must be of class RasterLayer", call. = FALSE)
+    stop("grainscape: cost raster must be of class RasterLayer", call. = FALSE)
   }
 
   ## Prepare a lattice patch if patch is numeric
@@ -154,28 +154,28 @@ MPG <- function(cost, patch, sa = NULL, filterPatch = NULL, spreadFactor = 0) {
     ## Remove lattice points that fall on NA cost cells
     patch[is.na(cost)] <- 0
   } else if (!inherits(patch, "RasterLayer")) {
-    stop("grainscape2: patch must be a raster (patch-based model) OR an integer (lattice model).", call. = FALSE)
+    stop("grainscape: patch must be a raster (patch-based model) OR an integer (lattice model).", call. = FALSE)
   }
 
   ## Check that input rasters are of class RasterLayer
   if (!inherits(cost, "RasterLayer")) {
-    stop("grainscape2: cost raster must be of class RasterLayer.", call. = FALSE)
+    stop("grainscape: cost raster must be of class RasterLayer.", call. = FALSE)
   }
 
   ## Check patch and cost are comparable
   if (!compareRaster(patch, cost, res = TRUE, orig = TRUE, stopiffalse = FALSE)) {
-    stop("grainscape2: patch and cost rasters must be identical in extent, projection, origin and resolution.", call. = FALSE)
+    stop("grainscape: patch and cost rasters must be identical in extent, projection, origin and resolution.", call. = FALSE)
   }
 
   ## Check additional geographic features of input rasters
   if (res(cost)[1] != res(cost)[2]) {
-    warning(paste0("grainscape2:  raster cells are not square;  assuming a square cell of ",
+    warning(paste0("grainscape:  raster cells are not square;  assuming a square cell of ",
                    res(cost)[1], " units."), call. = FALSE)
   }
 
   ## Check projection
   if (!is.na(projection(cost)) && (!grepl("UTM|utm", toupper(projection(cost))))) {
-    warning("grainscape2:  projection suggests that all cells may not be of equal area; Note that grainscape2 assumes equal area in all calculations.", call. = FALSE)
+    warning("grainscape:  projection suggests that all cells may not be of equal area; Note that grainscape assumes equal area in all calculations.", call. = FALSE)
   }
 
   ## use `cost` raster as template for `rasCost`, `rasPatch`, and `rasSa`
@@ -196,10 +196,10 @@ MPG <- function(cost, patch, sa = NULL, filterPatch = NULL, spreadFactor = 0) {
   ## Check sa is comparable with other rasters
   if (!is.null(sa)) {
     if (!inherits(sa, "RasterLayer")) {
-      stop("grainscape2:  sa raster must be of class RasterLayer", call. = FALSE)
+      stop("grainscape:  sa raster must be of class RasterLayer", call. = FALSE)
     }
     if (!compareRaster(cost, sa, res = TRUE, orig = TRUE, stopiffalse = FALSE)) {
-      stop("grainscape2: patch, cost and sa rasters must be identical in extent, projection, origin and resolution", call. = FALSE)
+      stop("grainscape: patch, cost and sa rasters must be identical in extent, projection, origin and resolution", call. = FALSE)
     }
     rasSa[] <- getValues(sa)
     rasCost[is.na(rasSa)] <- NA
@@ -211,12 +211,12 @@ MPG <- function(cost, patch, sa = NULL, filterPatch = NULL, spreadFactor = 0) {
   ## Check that patch raster is binary, first corecing NAs to zeroes
   rasPatch[is.na(rasPatch)] <- 0
   if (!all(unique(rasPatch[]) %in% c(FALSE, TRUE))) {
-    stop("grainscape2:  patch must be a binary raster (=1 for patches; =0 for non-patches).", call. = FALSE)
+    stop("grainscape:  patch must be a binary raster (=1 for patches; =0 for non-patches).", call. = FALSE)
   }
 
   ## Check that cost raster is not equal to NA at patches
   if (sum(is.na(rasCost[rasPatch == 1]) > 0)) {
-    stop("grainscape2:  cost raster must not contain missing values at patch cells", call. = FALSE)
+    stop("grainscape:  cost raster must not contain missing values at patch cells", call. = FALSE)
   }
 
   ## Call the habitat connectivity engine

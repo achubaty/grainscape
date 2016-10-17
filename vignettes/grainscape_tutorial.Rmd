@@ -26,7 +26,7 @@ knitr::opts_chunk$set(cache = TRUE, echo = TRUE, eval = TRUE, fig.height = 5,
 # Introduction
 
 This document is a supplement to the `grainscape` package, and is included as an R vignette.
-`grainscape` can be installed from [https://github.com/achubaty/grainscape2](https://github.com/achubaty/grainscape2).
+`grainscape` can be installed from [https://github.com/achubaty/grainscape](https://github.com/achubaty/grainscape).
 Here, we illustrate the use of the package in a tutorial format.
 
 Are animals free to move across the landscape?
@@ -64,7 +64,7 @@ All analyses presented here can be run with the basic `grainscape` installation,
 library(igraph)
 library(sp)
 library(raster)
-library(grainscape2)
+library(grainscape)
 ```
 
 ## Tutorial 1: The minimin planar graph
@@ -97,7 +97,7 @@ Note that any raster format readable using the `raster` package can be used here
 The `.asc` format rasters distributed with the package are *ESRI ArcASCII* format.
 
 ```{r, results='hide'}
-patchy <- raster(system.file("extdata/patchy.asc", package = "grainscape2"))
+patchy <- raster(system.file("extdata/patchy.asc", package = "grainscape"))
 ```
 
 Then, for convenience, we use R to turn this raster into a resistance surface.
@@ -241,7 +241,7 @@ Here, we repeat the steps in Tutorial 1 for the same resistance surface.
 Any of the variations imaginable for the MPG are equally valid here.
 
 ```{r}
-patchy <- raster(system.file("extdata/patchy.asc", package = "grainscape2"))
+patchy <- raster(system.file("extdata/patchy.asc", package = "grainscape"))
 patchyCost <- reclassify(patchy, rcl = cbind(c(1,2,3,4,5), c(1, 10, 8, 3, 6)))
 patchyMPG <- MPG(patchyCost, patch = (patchyCost == 1))
 ```
@@ -451,7 +451,7 @@ mtext(paste("Shortest path between P and Q:",
 ```
 
 ```{r, fig.cap='\\label{fig:corridorfancy}More control over a corridor visualization using an example from the manual, and the tiny.asc resistance surface.'}
-tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape2"))
+tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape"))
 
 ## Create a resistance surface from a raster using an is-becomes reclassification
 tinyCost <- reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))

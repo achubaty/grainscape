@@ -1,4 +1,4 @@
-# grainscape2
+# grainscape
 
 ## Grains of connectivity and minimum planar graph modelling of landscape connectivity
 
@@ -14,9 +14,9 @@ Building packages from source requires the appropriate development libraries for
 ```r
 #install.packages("devtools")
 library("devtools")
-install_github("achubaty/grainscape2")
+install_github("achubaty/grainscape")
 ```
 
 ### Reporting bugs
 
-Contact us via the package GitHub site: [https://github.com/achubaty/grainscape2/issues](https://github.com/achubaty/grainscape2/issues).
+Contact us via the package GitHub site: [https://github.com/achubaty/grainscape/issues](https://github.com/achubaty/grainscape/issues).

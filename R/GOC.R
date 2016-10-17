@@ -91,7 +91,7 @@
 #' library(raster)
 #'
 #' ## Load raster landscape
-#' tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape2"))
+#' tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape"))
 #'
 #' ## Create a resistance surface from a raster using an is-becomes reclassifyifyification
 #' tinyCost <- reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
@@ -113,11 +113,11 @@
 GOC <- function(mpg, nThresh = NULL, doThresh = NULL,
                   weight = "lcpPerimWeight", sp = FALSE, verbose = 3) {
   if (!inherits(mpg,  "MPG")) {
-    stop("grainscape2: mpg must be a MPG object", call. = FALSE)
+    stop("grainscape: mpg must be a MPG object", call. = FALSE)
   }
 
   if (isTRUE(sp) && !requireNamespace("rgeos", quietly = TRUE)) {
-    stop("grainscape2:  rgeos package must be installed to use sp = TRUE")
+    stop("grainscape:  rgeos package must be installed to use sp = TRUE")
   }
 
   threshGraph <- vector("list")
@@ -126,13 +126,13 @@ GOC <- function(mpg, nThresh = NULL, doThresh = NULL,
   linkWeight <- try(edge_attr(baseGraph, weight), silent = TRUE)
 
   if (inherits(linkWeight, "try-error")) {
-    stop("grainscape2: weight must be the name of an existing link attribute to threshold (e.g., 'lcpPerimWeight')", call. = FALSE)
+    stop("grainscape: weight must be the name of an existing link attribute to threshold (e.g., 'lcpPerimWeight')", call. = FALSE)
   }
 
   if (is.null(nThresh) && is.null(doThresh)) {
-    stop("grainscape2: either nThresh or doThresh must be specified", call. = FALSE)
+    stop("grainscape: either nThresh or doThresh must be specified", call. = FALSE)
   } else if (!is.null(nThresh) && !is.null(doThresh)) {
-    stop("grainscape2: only one of nThresh or doThresh must be specified", call. = FALSE)
+    stop("grainscape: only one of nThresh or doThresh must be specified", call. = FALSE)
   } else if (is.null(doThresh)) {
     ## Determine nThresh unique thresholds covering the full range of possibilities
     ## in terms of the number of polygons
@@ -182,7 +182,7 @@ GOC <- function(mpg, nThresh = NULL, doThresh = NULL,
               "At present, all patches must be linked to at least one other patch in the MPG for GOC analyses.\n",
               "Replacing NA cells in the cost or sa rasters may be required\n", call. = FALSE)
     }
-    stop("grainscape2:  cost, patch and/or sa rasters used to create the MPG present a limit case for GOC analyses.  Generated warnings may indicated cause.\nWorkaround for these cases has not yet been implemented.  Please contact the package author for more information.", call. = FALSE)
+    stop("grainscape:  cost, patch and/or sa rasters used to create the MPG present a limit case for GOC analyses.  Generated warnings may indicated cause.\nWorkaround for these cases has not yet been implemented.  Please contact the package author for more information.", call. = FALSE)
     ## Remove the vertices representing these patches from the mpg
     #baseGraph <- delete.vertices(baseGraph, which(V(baseGraph)$name %in% as.character(unlinkedPatches))-1)
     #allLinks <- ends(baseGraph, E(baseGraph)) + 1

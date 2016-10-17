@@ -52,7 +52,7 @@
 #' @examples
 #' \dontrun{
 #' ## Load raster landscape
-#' tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape2"))
+#' tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape"))
 #'
 #' ## Create a resistance surface from a raster using an is-becomes reclassification
 #' tinyCost <- reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
@@ -82,20 +82,20 @@
 #'
 visualize <- function(GOC, whichThresh, sp = FALSE, doPlot = FALSE) {
   if (!inherits(GOC, "GOC")) {
-    stop("grainscape2:  input object must be of class 'GOC'.  Run GOC() first.", call. = FALSE)
+    stop("grainscape:  input object must be of class 'GOC'.  Run GOC() first.", call. = FALSE)
   }
 
   if (isTRUE(sp) && !requireNamespace("rgeos", quietly = TRUE)) {
-    stop("grainscape2:  rgeos package must be installed to use sp = TRUE")
+    stop("grainscape:  rgeos package must be installed to use sp = TRUE")
   }
 
   ## Check whichThresh
   if ((length(whichThresh) > 1) || (!(whichThresh %in% 1:length(GOC$th)))) {
-    stop("grainscape2:  whichThresh must index a single threshold existing in the GOC object", call. = FALSE)
+    stop("grainscape:  whichThresh must index a single threshold existing in the GOC object", call. = FALSE)
   }
 
   if (sp && is.null(GOC$voronoiSP)) {
-    stop("grainscape2:  GOC object must also be produced using sp=TRUE", call. = FALSE)
+    stop("grainscape:  GOC object must also be produced using sp=TRUE", call. = FALSE)
   }
 
   results <- list()

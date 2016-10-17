@@ -87,7 +87,7 @@ See \code{\link{MPG}} for warning related to areal measurements.
 library(raster)
 
 ## Load raster landscape
-tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape2"))
+tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape"))
 
 ## Create a resistance surface from a raster using an is-becomes reclassifyifyification
 tinyCost <- reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))

@@ -29,11 +29,11 @@ Internal function. Servesa s a wrapper around the habitat connectivity engine
 developed in C++.
 }
 \examples{
-cost <- raster::raster(system.file("extdata/fragmented.asc", package = "grainscape2"))
+cost <- raster::raster(system.file("extdata/fragmented.asc", package = "grainscape"))
 if (interactive()) plot(cost)
 
 # cells in raster `cost` with value of 1 are habitat (patch) cells
-links <- grainscape2:::.habConnEngine(cost, patches = (cost == 1))
+links <- grainscape:::.habConnEngine(cost, patches = (cost == 1))
 
 if (interactive()) {
   links                  # examine the object

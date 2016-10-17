@@ -17,7 +17,7 @@ A list object containing:
 \describe{
   \item{\code{v}}{node (vertex) names and associated attributes;}
 
-  \item{\code{e} giving link (edge) lists and associated attributes.}
+  \item{\code{e}}{link (edge) lists and associated attributes.}
 }
 
 Please see \code{\link{MPG}} and \code{\link{GOC}} for details about the attributes.
@@ -36,7 +36,7 @@ helpful for users unfamiliar with the structure of igraph objects.
 \examples{
 \dontrun{
 ## Load raster landscape
-tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape2"))
+tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape"))
 
 ## Create a resistance surface from a raster using an is-becomes reclassification
 tinyCost <- reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))

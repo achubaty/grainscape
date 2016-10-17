@@ -47,7 +47,7 @@ Visualization is exclusively in vector format. \code{\link{GOC}} must be run usi
 \examples{
 \dontrun{
 ## Load raster landscape
-tiny <- raster(system.file("extdata/tiny.asc", package="grainscape2"))
+tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape"))
 
 ## Create a resistance surface from a raster using an is-becomes reclassification
 tinyCost <- reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
@@ -79,7 +79,7 @@ mtext(paste("Corridor shortest path length:",
 Paul Galpern
 }
 \references{
-Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien.  (2007) Spatial graphs: Principles and applications for habitat connectivity. Ecosystems. 10:448:461.\cr\cr
+Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien. (2007) Spatial graphs: Principles and applications for habitat connectivity. Ecosystems. 10:448:461.\cr\cr
 Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis at multiple spatial scales in landscape genetics. Molecular Ecology 21:3996-4009.\cr
 }
 \seealso{

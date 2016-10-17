@@ -1,13 +1,26 @@
 ---
 title: "The Minimum Planar Graph algorithm"
 author: "Sam Doctolero and Alex M Chubaty"
-date: "August 17, 2016"
-output: html_document
+date: '`r Sys.Date()`'
+output:
+  pdf_document:
+    toc: yes
+    toc_depth: 3
+---
+
+fontsize: 11pt
+vignette: >
+  %\VignetteIndexEntry{grainscape MPG algorithm}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(cache = TRUE, echo = TRUE, eval = TRUE, fig.height = 5,
+                      fig.width = 5, message = FALSE, results = 'hold', warning = FALSE)
 ```
+
+\newpage
 
 # Overview
 

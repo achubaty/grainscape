@@ -36,7 +36,7 @@
 #' }
 #'
 #' @references
-#' Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien.  (2007) Spatial graphs: Principles and applications for habitat connectivity. Ecosystems. 10:448:461.\cr\cr
+#' Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien. (2007) Spatial graphs: Principles and applications for habitat connectivity. Ecosystems. 10:448:461.\cr\cr
 #' Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis at multiple spatial scales in landscape genetics. Molecular Ecology 21:3996-4009.\cr
 #'
 #' @author Paul Galpern
@@ -52,7 +52,7 @@
 #' @examples
 #' \dontrun{
 #' ## Load raster landscape
-#' tiny <- raster(system.file("extdata/tiny.asc", package="grainscape2"))
+#' tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape"))
 #'
 #' ## Create a resistance surface from a raster using an is-becomes reclassification
 #' tinyCost <- reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
@@ -81,24 +81,24 @@
 #'
 corridor <- function(GOC, whichThresh, coords, doPlot = FALSE, weight = "meanWeight") {
   if (!inherits(GOC, "GOC")) {
-    stop("grainscape2:  input object must be of class 'GOC'.  Run GOC() first using sp=TRUE.", call. = FALSE)
+    stop("grainscape:  input object must be of class 'GOC'.  Run GOC() first using sp=TRUE.", call. = FALSE)
   }
 
   if (!requireNamespace("rgeos", quietly = TRUE)) {
-    stop("grainscape2:  rgeos package must be installed to use sp=TRUE")
+    stop("grainscape:  rgeos package must be installed to use sp=TRUE")
   }
 
   if (is.null(GOC$voronoiSP)) {
-    stop("grainscape2:  GOC object must be produced using sp=TRUE", call. = FALSE)
+    stop("grainscape:  GOC object must be produced using sp=TRUE", call. = FALSE)
   }
 
   ## Check whichThresh
   if ((length(whichThresh) > 1) || (!(whichThresh %in% 1:length(GOC$th)))) {
-    stop("grainscape2:  whichThresh must index a single threshold existing in the GOC object", call. = FALSE)
+    stop("grainscape:  whichThresh must index a single threshold existing in the GOC object", call. = FALSE)
   }
 
   if (!(weight %in% names(edge_attr(GOC$th[[1]]$goc)))) {
-    stop("grainscape2:  link weight attribute with this name doesn't exist in GOC object", call. = FALSE)
+    stop("grainscape:  link weight attribute with this name doesn't exist in GOC object", call. = FALSE)
   }
 
   if ((is.null(dim(coords))) & (!inherits(coords, "SpatialPoints"))) {
@@ -106,11 +106,11 @@ corridor <- function(GOC, whichThresh, coords, doPlot = FALSE, weight = "meanWei
   }
 
   if (!inherits(coords, "SpatialPoints") && (dim(coords)[2] != 2)) {
-    stop("grainscape2:  coords must be a SpatialPoints object or a matrix of two columns giving X and Y coordinates", call. = FALSE)
+    stop("grainscape:  coords must be a SpatialPoints object or a matrix of two columns giving X and Y coordinates", call. = FALSE)
   }
 
   if ((inherits(coords, "SpatialPoints") && (length(coords) > 2)) || (nrow(coords) > 2)) {
-    warning("grainscape2:  using only first two sets of coordinates for corridor start and end points", call. = FALSE)
+    warning("grainscape:  using only first two sets of coordinates for corridor start and end points", call. = FALSE)
     coords <- coords[1:2, ]
   }
 

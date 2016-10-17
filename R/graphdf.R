@@ -15,7 +15,7 @@
 #' \describe{
 #'   \item{\code{v}}{node (vertex) names and associated attributes;}
 #'
-#'   \item{\code{e} giving link (edge) lists and associated attributes.}
+#'   \item{\code{e}}{link (edge) lists and associated attributes.}
 #' }
 #'
 #' Please see \code{\link{MPG}} and \code{\link{GOC}} for details about the attributes.
@@ -39,7 +39,7 @@
 #' @examples
 #' \dontrun{
 #' ## Load raster landscape
-#' tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape2"))
+#' tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape"))
 #'
 #' ## Create a resistance surface from a raster using an is-becomes reclassification
 #' tinyCost <- reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
@@ -70,7 +70,7 @@ graphdf <- function(x) {
     theseGraphs <- vector("list", 1)
     theseGraphs[[1]] <- x
   } else {
-    stop("grainscape2: x must be a MPG, GOC or igraph object", call. = FALSE)
+    stop("grainscape: x must be a MPG, GOC or igraph object", call. = FALSE)
   }
 
   results <- vector("list", length(theseGraphs))

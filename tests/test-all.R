@@ -1,2 +1,2 @@
 library(testthat)
-test_check("grainscape2")
+test_check("grainscape")

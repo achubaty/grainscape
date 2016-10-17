@@ -30,7 +30,7 @@
 #' @examples
 #' \dontrun{
 #' ## Load raster landscape
-#' tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape2"))
+#' tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape"))
 #'
 #' ## Create a resistance surface from a raster using an is-becomes reclassifification
 #' tinyCost <- reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
@@ -51,7 +51,7 @@
 #'
 distance <- function(GOC, coords, weight = "meanWeight") {
   if (!inherits(GOC, "GOC")) {
-    stop("grainscape2:  input object must be of class 'GOC'.  Run GOC() first.", call. = FALSE)
+    stop("grainscape:  input object must be of class 'GOC'.  Run GOC() first.", call. = FALSE)
  }
 
   if ((is.null(dim(coords))) & !inherits(coords, "SpatialPoints")) {
@@ -59,11 +59,11 @@ distance <- function(GOC, coords, weight = "meanWeight") {
   }
 
   if (!inherits(coords, "SpatialPoints") && (dim(coords)[2] != 2)) {
-    stop("grainscape2:  coords must be a SpatialPoints object or a matrix of two columns giving X and Y coordinates", call. = FALSE)
+    stop("grainscape:  coords must be a SpatialPoints object or a matrix of two columns giving X and Y coordinates", call. = FALSE)
   }
 
   if (!(weight %in% names(edge_attr(GOC$th[[1]]$goc)))) {
-    stop("grainscape2:  link weight attribute with this name doesn't exist in GOC object", call. = FALSE)
+    stop("grainscape:  link weight attribute with this name doesn't exist in GOC object", call. = FALSE)
   }
 
   whichGrain <- point(GOC, coords)$pointPolygon
