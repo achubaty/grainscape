@@ -91,7 +91,7 @@ The MPG has typically been constructed using least-cost path links between the p
 We begin by loading a landscape raster distributed with the package.  Note that any raster format readable using the \verb!raster! package can be used here.  The \verb!.asc! format rasters distributed with the package are \verb!ESRI ArcASCII! format.
 
 <<echo=TRUE,print=FALSE>>=
-patchy <- raster(system.file("extdata/patchy.asc", package="grainscape2"))
+patchy <- raster(system.file("extdata/patchy.asc", package="grainscape"))
 @
 
 Then, for convenience, we use R to turn this raster into a resistance surface.  In this example we will assume the feature class 1 are the patches, so we will set them to resistance value also equal to 1 (i.e. no additional resistance to movement than distance alone).  The river, feature class 2, is assigned the highest resistance of 10.  Other features are assigned values in between.  The parameterization of resistance surfaces is itself a big topic \citep{zeller_etal_2012}.
@@ -278,7 +278,7 @@ Patch-based GOC, shown in this tutorial, may be most relevant for oganisms that 
 Here, we repeat the steps in Tutorial 1 for the same resistance surface.  Any of the variations imaginable for the MPG are equally valid here.
 
 <<echo=TRUE,print=FALSE>>=
-patchy <- raster(system.file("extdata/patchy.asc", package = "grainscape2"))
+patchy <- raster(system.file("extdata/patchy.asc", package = "grainscape"))
 patchyCost <- reclassify(patchy, rcl = cbind(c(1,2,3,4,5), c(1, 10, 8, 3, 6)))
 #patchyMPG <- gsMPG(patchyCost, patch = (patchyCost == 1))
 @
@@ -563,7 +563,7 @@ mtext(paste("Shortest path between P and Q:",
 \begin{center}
 
 <<fig=TRUE, echo=TRUE, print=FALSE, results=hide>>=
-tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape2"))
+tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape"))
 ## Create a resistance surface from a raster using an is-becomes reclassification
 #tinyCost <- reclassify(tiny, rcl=cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
 ## Produce a patch-based MPG where patches are resistance features=1
@@ -611,7 +611,7 @@ This is the same as Step 1 in Tutorial 1. For this example we will use the anoth
 \begin{center}
 
 <<fig=TRUE, echo=TRUE, print=FALSE, results=hide>>=
-fragmented <- raster(system.file("extdata/fragmented.asc", package = "grainscape2"))
+fragmented <- raster(system.file("extdata/fragmented.asc", package = "grainscape"))
 fragmentedCost <- reclassify(fragmented, rcl = cbind(c(1,2,3,4,5), c(1, 10, 8, 3, 6)))
 plot(fragmentedCost, main = "")
 @
