@@ -9,7 +9,7 @@ output:
 bibliography: bibliography.bib
 fontsize: 11pt
 vignette: >
-  %\VignetteIndexEntry{grainscape supplementary documentation with tutorials}
+  %\VignetteIndexEntry{grainscape tutorials}
   %\VignetteKeyword{habitat connectivity, minimum planar graph, spatial graph, grains of connectivity}
   %\VignetteDepends{grDevices, igraph, sp, raster}
   %\VignetteEncoding{UTF-8}
@@ -24,10 +24,6 @@ knitr::opts_chunk$set(cache = TRUE, echo = TRUE, eval = TRUE, fig.height = 5,
 \newpage
 
 # Introduction
-
-This document is a supplement to the `grainscape` package, and is included as an R vignette.
-`grainscape` can be installed from [https://github.com/achubaty/grainscape](https://github.com/achubaty/grainscape).
-Here, we illustrate the use of the package in a tutorial format.
 
 Are animals free to move across the landscape?
 What, if anything, may limit or encourage their movement and dispersal.
