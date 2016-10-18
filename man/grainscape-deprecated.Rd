@@ -27,9 +27,6 @@ gsGraphDataFrame(x)
 gsMPG(cost, patch, sa = NULL, filterPatch = NULL, spreadFactor = 0)
 }
 \arguments{
-\item{mpg}{A \code{MPG} object produced by \code{\link{MPG}}.
-For lattice GOC \code{\link{MPG}} must be run with patch set as an integer value.}
-
 \item{nThresh}{Optional.  An integer giving the number of thresholds (or scales)
 at which to create GOC models.  Thresholds are selected to produce
 a maximum number of unique grains (i.e., models).
@@ -70,7 +67,8 @@ giving coordinates at the end points of the corridor.}
 corridor at the given scale.
 For full control, manually produce plots using the outputs of this function.}
 
-\item{x}{A \code{MPG}, \code{GOC}, or \code{igraph} object.}
+\item{x}{A \code{mpg} object produced by \code{\link{MPG}}.
+For lattice GOC \code{MPG} must be run with patch set as an integer value.}
 
 \item{cost}{A raster of class \code{RasterLayer} giving a landscape resistance
 surface, where the values of each raster cell are proportional to

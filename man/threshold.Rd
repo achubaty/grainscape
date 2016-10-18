@@ -71,8 +71,10 @@ print(tinyThresh$th[[7]], vertex = TRUE, edge = TRUE)
 Paul Galpern
 }
 \references{
-Brooks, C.P. (2003) A scalar analysis of landscape connectivity. Oikos 102:433-439.\cr
-Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien.  (2007) Spatial graphs: Principles and applications for habitat connectivity.  Ecosystems.  10:448:461\cr
+Brooks, C.P. (2003) A scalar analysis of landscape connectivity. Oikos 102:433-439.
+
+Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien. (2007) Spatial graphs: Principles and applications for habitat connectivity. Ecosystems 10:448:461.
+
 Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis at multiple spatial scales in landscape genetics.  Molecular Ecology 21:3996-4009.
 }
 \seealso{

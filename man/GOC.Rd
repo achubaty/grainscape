@@ -3,14 +3,17 @@
 \docType{methods}
 \name{GOC}
 \alias{GOC}
+\alias{GOC.mpg}
 \title{Produce a grains of connectivity model at multiple scales (patch-based or lattice GOC)}
 \usage{
-GOC(mpg, nThresh = NULL, doThresh = NULL, weight = "lcpPerimWeight",
-  sp = FALSE, verbose = 3)
+GOC(x, ...)
+
+\method{GOC}{mpg}(x, nThresh = NULL, doThresh = NULL,
+  weight = "lcpPerimWeight", sp = FALSE, verbose = 3)
 }
 \arguments{
-\item{mpg}{A \code{MPG} object produced by \code{\link{MPG}}.
-For lattice GOC \code{\link{MPG}} must be run with patch set as an integer value.}
+\item{x}{A \code{mpg} object produced by \code{\link{MPG}}.
+For lattice GOC \code{MPG} must be run with patch set as an integer value.}
 
 \item{nThresh}{Optional.  An integer giving the number of thresholds (or scales)
 at which to create GOC models.  Thresholds are selected to produce
@@ -58,7 +61,7 @@ A \code{GOC} object containing:
   giving the GOC graph at each threshold.}
 }
 
-Each element of \code{$th} contains a \code{$goc} object giving the GOC graph as class \code{\link{igraph}}.
+Each element of \code{th} contains a \code{goc} object giving the GOC graph as class \code{\link{igraph}}.
 Vertex attributes describes qualities of each polygon including the coordinates of each polygon centroid,
 the area of these polygons, and the original patch IDs in the MPG that are included in each polygon.
 All areal measurements are given as raster cell counts.
@@ -66,13 +69,13 @@ A variety of edge attributes are also given in the GOC graph.
 See \code{\link{distance}} for more information.
 }
 \description{
-Given a \code{\link{MPG}} object produce a grains of connectivity (GOC) model
-at multiple scales (resistance thresholds) by scalar analysis.
+Produce a grains of connectivity (GOC) model at multiple scales (resistance thresholds)
+by scalar analysis.
 Patch-based or lattice GOC modelling can be done with this function.
 }
 \details{
 This function can take a long time to run when \code{sp = TRUE}.
-Time taken is dependent on the dimensions of the \code{MPG$voronoi} raster.
+Time taken is dependent on the dimensions of the \code{mpg$voronoi} raster.
 }
 \note{
 Researchers should consider whether the use of a patch-based GOC or a lattice
@@ -111,8 +114,9 @@ tinyPatchGOC <- GOC(tinyPatchMPG, doThresh = c(0, 20, 40), sp = TRUE)
 Paul Galpern
 }
 \references{
-Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien.  (2007) Spatial graphs:  Principles and applications for habitat connectivity.  Ecosystems.  10:448:461\cr
-Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis at multiple spatial scales in landscape genetics.  Molecular Ecology 21:3996-4009.\cr
+Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien. (2007) Spatial graphs: Principles and applications for habitat connectivity. Ecosystems 10:448:461.
+
+Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis at multiple spatial scales in landscape genetics. Molecular Ecology 21:3996-4009.
 }
 \seealso{
 \code{\link{MPG}}, \code{\link{visualize}},
