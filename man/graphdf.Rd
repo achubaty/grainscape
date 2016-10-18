@@ -3,13 +3,24 @@
 \docType{methods}
 \name{graphdf}
 \alias{graphdf}
-\title{Produce a \code{data.frame} containing the structure and associated attributes
-for a \code{MPG}, \code{GOC}, or \code{igraph} object}
+\alias{graphdf.goc}
+\alias{graphdf.igraph}
+\alias{graphdf.list}
+\alias{graphdf.mpg}
+\title{Produce a \code{data.frame} containing the structure and associated attributes}
 \usage{
 graphdf(x)
+
+\method{graphdf}{list}(x)
+
+\method{graphdf}{goc}(x)
+
+\method{graphdf}{mpg}(x)
+
+\method{graphdf}{igraph}(x)
 }
 \arguments{
-\item{x}{A \code{MPG}, \code{GOC}, or \code{igraph} object.}
+\item{x}{A \code{goc}, \code{mpg}, \code{igraph}, or \code{list} object.}
 }
 \value{
 A list object containing:
@@ -27,11 +38,10 @@ an enumerated list of the same length as the number of thresholds is returned
 each containing \code{v} and \code{e} elements.
 }
 \description{
-Given a \code{MPG}, \code{GOC}, or any \code{igraph} object, produce a
-\code{data.frame} containing the node (vertex) and link (edge) structure as
-well as the associated attributes for these.
+Produce a \code{data.frame} containing the node (vertex) and link (edge)
+structure as well as the associated attributes for these.
 This provides an easy way to create data tables describing graphs, particularly
-helpful for users unfamiliar with the structure of igraph objects.
+helpful for users unfamiliar with the structure of \code{igraph} objects.
 }
 \examples{
 \dontrun{
@@ -60,11 +70,6 @@ graphdf(tinyPatchGOC$th[[1]]$goc)
 }
 \author{
 Paul Galpern
-}
-\references{
-Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien. (2007) Spatial graphs: Principles and applications for habitat connectivity. Ecosystems 10:448:461.
-
-Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis at multiple spatial scales in landscape genetics.  Molecular Ecology 21:3996-4009.
 }
 \seealso{
 \code{\link{MPG}}, \code{\link{GOC}}

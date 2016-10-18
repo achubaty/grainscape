@@ -1,11 +1,19 @@
-#' Visualize corridors between two points using a grains of connectivity (GOC) tessellation at a given scale in vector format
+#' Visualize corridors between two points using a grains of connectivity (GOC)
 #'
 #' @description
-#' Given a series of GOC models built at different scales in a \code{GOC} object, visualize the corridor
-#' (or shortest path) between two points using one of the tessellations (i.e., scales) in these models.
-#' Visualization is exclusively in vector format. \code{\link{GOC}} must be run using the \code{sp=TRUE} option.
+#' Given a series of GOC models built at different scales, visualize the corridor
+#' (or shortest path) between two points using one of the tessellations
+#' (i.e., scales) in these models.
+#' Visualization is exclusively in vector format.
+#' \code{\link{GOC}} must be run using the \code{sp=TRUE} option.
 #'
-#' @param GOC  A \code{GOC} object created by \code{\link{GOC}}
+#' @param ...  Additional arguments.
+#'
+#' @export
+#'
+corridor <- function(x, ...) UseMethod("corridor")
+
+#' @param x       A \code{goc} object created by \code{\link{GOC}}.
 #'
 #' @param whichThresh  Integer giving the index of the threshold to visualize.
 #'
@@ -22,17 +30,23 @@
 #' @return A list object:
 #'
 #' \describe{
-#'   \item{\code{$voronoiSP}}{vector representation of polygons in the tessellation (\code{SpatialPolygonsDataFrame})}
+#'   \item{\code{voronoiSP}}{vector representation of polygons in the tessellation
+#'   (\code{SpatialPolygonsDataFrame})}
 #'
-#'   \item{\code{$linksSP}}{vector representation of links in the grains of connectivity graph (\code{SpatialLinesDataFrame})}
+#'   \item{\code{linksSP}}{vector representation of links in the grains of
+#'   connectivity graph (\code{SpatialLinesDataFrame})}
 #'
-#'   \item{\code{$nodesSP}}{vector representation of the nodes in the grains of connectivity graph (\code{SpatialPoints})}
+#'   \item{\code{nodesSP}}{vector representation of the nodes in the grains of
+#'   connectivity graph (\code{SpatialPoints})}
 #'
-#'   \item{\code{$shortestLinksSP}}{vector representation of the links in the shortest path between coordinates (\code{SpatialLines})}
+#'   \item{\code{shortestLinksSP}}{vector representation of the links in the
+#'   shortest path between coordinates (\code{SpatialLines})}
 #'
-#'   \item{\code{$shortestNodesSP}}{vector representation of the nodes in the shortest path between coordinates (\code{SpatialPoints})}
+#'   \item{\code{shortestNodesSP}}{vector representation of the nodes in the
+#'   shortest path between coordinates (\code{SpatialPoints})}
 #'
-#'   \item{\code{$corridorLength}}{gives the length of the shortest path between coordinates in accumulated resistance units}
+#'   \item{\code{corridorLength}}{gives the length of the shortest path between
+#'   coordinates in accumulated resistance units}
 #' }
 #'
 #' @references
@@ -80,25 +94,21 @@
 #'             "resistance units"), side = 1)
 #' }
 #'
-corridor <- function(GOC, whichThresh, coords, doPlot = FALSE, weight = "meanWeight") {
-  if (!inherits(GOC, "GOC")) {
-    stop("grainscape:  input object must be of class 'GOC'.  Run GOC() first using sp=TRUE.", call. = FALSE)
-  }
-
+corridor.goc <- function(x, ..., whichThresh, coords, doPlot = FALSE, weight = "meanWeight") {
   if (!requireNamespace("rgeos", quietly = TRUE)) {
     stop("grainscape:  rgeos package must be installed to use sp=TRUE")
   }
 
-  if (is.null(GOC$voronoiSP)) {
+  if (is.null(x$voronoiSP)) {
     stop("grainscape:  GOC object must be produced using sp=TRUE", call. = FALSE)
   }
 
   ## Check whichThresh
-  if ((length(whichThresh) > 1) || (!(whichThresh %in% 1:length(GOC$th)))) {
+  if ((length(whichThresh) > 1) || (!(whichThresh %in% 1:length(x$th)))) {
     stop("grainscape:  whichThresh must index a single threshold existing in the GOC object", call. = FALSE)
   }
 
-  if (!(weight %in% names(edge_attr(GOC$th[[1]]$goc)))) {
+  if (!(weight %in% names(edge_attr(x$th[[1]]$goc)))) {
     stop("grainscape:  link weight attribute with this name doesn't exist in GOC object", call. = FALSE)
   }
 
@@ -116,58 +126,58 @@ corridor <- function(GOC, whichThresh, coords, doPlot = FALSE, weight = "meanWei
   }
 
   ## GOC Graph
-  edges <- as_edgelist(GOC$th[[whichThresh]]$goc)
+  edges <- as_edgelist(x$th[[whichThresh]]$goc)
   edges <- cbind(edgeNum = 1:nrow(edges),
-                 v1 = sapply(edges[, 1], function(x) {
-                   which(V(GOC$th[[whichThresh]]$goc)$name == x)
+                 v1 = sapply(edges[, 1], function(z) {
+                   which(V(x$th[[whichThresh]]$goc)$name == z)
                   }),
-                 v2 = sapply(edges[, 2], function(x) {
-                   which(V(GOC$th[[whichThresh]]$goc)$name == x)
+                 v2 = sapply(edges[, 2], function(z) {
+                   which(V(x$th[[whichThresh]]$goc)$name == z)
                   }))
   edgesGOC <- apply(edges, 1, function(i) {
-    cbind(c(V(GOC$th[[whichThresh]]$goc)$centroidX[i["v1"]],
-            V(GOC$th[[whichThresh]]$goc)$centroidX[i["v2"]]),
-          c(V(GOC$th[[whichThresh]]$goc)$centroidY[i["v1"]],
-            V(GOC$th[[whichThresh]]$goc)$centroidY[i["v2"]])) %>%
+    cbind(c(V(x$th[[whichThresh]]$goc)$centroidX[i["v1"]],
+            V(x$th[[whichThresh]]$goc)$centroidX[i["v2"]]),
+          c(V(x$th[[whichThresh]]$goc)$centroidY[i["v1"]],
+            V(x$th[[whichThresh]]$goc)$centroidY[i["v2"]])) %>%
       Line() %>%
       Lines(ID = as.character(i["edgeNum"]))
   }) %>%
     SpatialLines() %>%
     SpatialLinesDataFrame(data = data.frame(
       edgeNum = 1:nrow(edges),
-      weight = edge_attr(GOC$th[[whichThresh]]$goc, weight)
+      weight = edge_attr(x$th[[whichThresh]]$goc, weight)
     ))
 
-  verticesGOC <- SpatialPoints(cbind(V(GOC$th[[whichThresh]]$goc)$centroidX,
-                                     V(GOC$th[[whichThresh]]$goc)$centroidY))
+  verticesGOC <- SpatialPoints(cbind(V(x$th[[whichThresh]]$goc)$centroidX,
+                                     V(x$th[[whichThresh]]$goc)$centroidY))
 
   ## Shortest path
-  startEndPolygons <- point(GOC, coords)$pointPolygon[, whichThresh]
-  startEndPath <- shortest_paths(GOC$th[[whichThresh]]$goc,
-                                 which(V(GOC$th[[whichThresh]]$goc)$polygonId == startEndPolygons[1]),
-                                 which(V(GOC$th[[whichThresh]]$goc)$polygonId == startEndPolygons[2]),
-                                 weights = V(GOC$th[[whichThresh]]$goc)$meanWeight) %>%
+  startEndPolygons <- point(x, coords)$pointPolygon[, whichThresh]
+  startEndPath <- shortest_paths(x$th[[whichThresh]]$goc,
+                                 which(V(x$th[[whichThresh]]$goc)$polygonId == startEndPolygons[1]),
+                                 which(V(x$th[[whichThresh]]$goc)$polygonId == startEndPolygons[2]),
+                                 weights = V(x$th[[whichThresh]]$goc)$meanWeight) %>%
     `[[`(1) %>%
     `[[`(1) %>%
     as.numeric()
 
-  shortestPathEdges <- cbind(V(GOC$th[[whichThresh]]$goc)$centroidX[startEndPath],
-                             V(GOC$th[[whichThresh]]$goc)$centroidY[startEndPath]) %>%
+  shortestPathEdges <- cbind(V(x$th[[whichThresh]]$goc)$centroidX[startEndPath],
+                             V(x$th[[whichThresh]]$goc)$centroidY[startEndPath]) %>%
     Line() %>%
     Lines(ID = "1") %>%
     list() %>%
     SpatialLines()
 
   shortestPathVertices <- SpatialPoints(cbind(
-    V(GOC$th[[whichThresh]]$goc)$centroidX[startEndPath],
-    V(GOC$th[[whichThresh]]$goc)$centroidY[startEndPath]))
+    V(x$th[[whichThresh]]$goc)$centroidX[startEndPath],
+    V(x$th[[whichThresh]]$goc)$centroidY[startEndPath]))
   pathDist <- distances(
-    GOC$th[[whichThresh]]$goc,
-    v = V(GOC$th[[whichThresh]]$goc)[startEndPath[1]],
-    weights = edge_attr(GOC$th[[whichThresh]]$goc, weight)
+    x$th[[whichThresh]]$goc,
+    v = V(x$th[[whichThresh]]$goc)[startEndPath[1]],
+    weights = edge_attr(x$th[[whichThresh]]$goc, weight)
   )[startEndPath[length(startEndPath)]]
 
-  voronoiSP <- visualize(GOC, whichThresh, sp = TRUE)$voronoiSP
+  voronoiSP <- visualize(x, whichThresh, sp = TRUE)$voronoiSP
 
   ## Do plot
   if (doPlot == 1) {

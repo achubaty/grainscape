@@ -8,12 +8,14 @@
 \usage{
 GOC(x, ...)
 
-\method{GOC}{mpg}(x, nThresh = NULL, doThresh = NULL,
+\method{GOC}{mpg}(x, ..., nThresh = NULL, doThresh = NULL,
   weight = "lcpPerimWeight", sp = FALSE, verbose = 3)
 }
 \arguments{
 \item{x}{A \code{mpg} object produced by \code{\link{MPG}}.
 For lattice GOC \code{MPG} must be run with patch set as an integer value.}
+
+\item{...}{Additional arguments.}
 
 \item{nThresh}{Optional.  An integer giving the number of thresholds (or scales)
 at which to create GOC models.  Thresholds are selected to produce

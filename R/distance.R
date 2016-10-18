@@ -1,10 +1,17 @@
 #' Find the grains of connectivity network distance
 #'
-#' Given a \code{\link{GOC}} object find the shortest network distance between
-#' pairs of points using the GOC graph.  This can be used as an effective distance
-#' for landscape connectivity assessments.
+#' Find the shortest network distance between pairs of points using the GOC graph.
+#' This can be used as an effective distance for landscape connectivity assessments.
 #'
-#' @param GOC    A \code{GOC} object produced by \code{\link{GOC}}.
+#' @param ...  Additional arguments.
+#'
+#' @export
+#'
+distance <- function(x, ...) UseMethod("distance")
+
+
+
+#' @param x        A \code{GOC} object produced by \code{\link{GOC}}.
 #'
 #' @param  coords  A two column matrix or a \code{\link{SpatialPoints}} object
 #'                 giving the coordinates of points of interest.
@@ -50,11 +57,7 @@
 #' tinyDist <- distance(tinyPatchGOC, loc)
 #' }
 #'
-distance <- function(GOC, coords, weight = "meanWeight") {
-  if (!inherits(GOC, "GOC")) {
-    stop("grainscape:  input object must be of class 'GOC'.  Run GOC() first.", call. = FALSE)
- }
-
+distance.goc <- function(x, ..., coords, weight = "meanWeight") {
   if ((is.null(dim(coords))) & !inherits(coords, "SpatialPoints")) {
     coords <- t(as.matrix(coords))
   }
@@ -63,22 +66,22 @@ distance <- function(GOC, coords, weight = "meanWeight") {
     stop("grainscape:  coords must be a SpatialPoints object or a matrix of two columns giving X and Y coordinates", call. = FALSE)
   }
 
-  if (!(weight %in% names(edge_attr(GOC$th[[1]]$goc)))) {
+  if (!(weight %in% names(edge_attr(x$th[[1]]$goc)))) {
     stop("grainscape:  link weight attribute with this name doesn't exist in GOC object", call. = FALSE)
   }
 
-  whichGrain <- point(GOC, coords)$pointPolygon
+  whichGrain <- point(x, coords)$pointPolygon
 
   results <- list()
-  results$metaData <- GOC$metaData
+  results$metaData <- x$metaData
   results$th <- vector("list", ncol(whichGrain))
 
   for (iThresh in 1:ncol(whichGrain)) {
-    threshGraph <- GOC$th[[iThresh]]$goc
+    threshGraph <- x$th[[iThresh]]$goc
 
     if (is_igraph(threshGraph)) {
       E(threshGraph)$weight <- edge_attr(threshGraph, weight)
-      vertices <- sapply(whichGrain[, iThresh], function(x) which(V(threshGraph)$polygonId == x))
+      vertices <- sapply(whichGrain[, iThresh], function(z) which(V(threshGraph)$polygonId == z))
       results$th[[iThresh]]$grainD <- distances(threshGraph, v = vertices)[, vertices]
     } else {
       results$th[[iThresh]] <- NA

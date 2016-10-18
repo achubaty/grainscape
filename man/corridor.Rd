@@ -3,12 +3,18 @@
 \docType{methods}
 \name{corridor}
 \alias{corridor}
-\title{Visualize corridors between two points using a grains of connectivity (GOC) tessellation at a given scale in vector format}
+\alias{corridor.goc}
+\title{Visualize corridors between two points using a grains of connectivity (GOC)}
 \usage{
-corridor(GOC, whichThresh, coords, doPlot = FALSE, weight = "meanWeight")
+corridor(x, ...)
+
+\method{corridor}{goc}(x, ..., whichThresh, coords, doPlot = FALSE,
+  weight = "meanWeight")
 }
 \arguments{
-\item{GOC}{A \code{GOC} object created by \code{\link{GOC}}}
+\item{x}{A \code{goc} object created by \code{\link{GOC}}.}
+
+\item{...}{Additional arguments.}
 
 \item{whichThresh}{Integer giving the index of the threshold to visualize.}
 
@@ -26,23 +32,31 @@ Please see details in \code{\link{distance}}.}
 A list object:
 
 \describe{
-  \item{\code{$voronoiSP}}{vector representation of polygons in the tessellation (\code{SpatialPolygonsDataFrame})}
+  \item{\code{voronoiSP}}{vector representation of polygons in the tessellation
+  (\code{SpatialPolygonsDataFrame})}
 
-  \item{\code{$linksSP}}{vector representation of links in the grains of connectivity graph (\code{SpatialLinesDataFrame})}
+  \item{\code{linksSP}}{vector representation of links in the grains of
+  connectivity graph (\code{SpatialLinesDataFrame})}
 
-  \item{\code{$nodesSP}}{vector representation of the nodes in the grains of connectivity graph (\code{SpatialPoints})}
+  \item{\code{nodesSP}}{vector representation of the nodes in the grains of
+  connectivity graph (\code{SpatialPoints})}
 
-  \item{\code{$shortestLinksSP}}{vector representation of the links in the shortest path between coordinates (\code{SpatialLines})}
+  \item{\code{shortestLinksSP}}{vector representation of the links in the
+  shortest path between coordinates (\code{SpatialLines})}
 
-  \item{\code{$shortestNodesSP}}{vector representation of the nodes in the shortest path between coordinates (\code{SpatialPoints})}
+  \item{\code{shortestNodesSP}}{vector representation of the nodes in the
+  shortest path between coordinates (\code{SpatialPoints})}
 
-  \item{\code{$corridorLength}}{gives the length of the shortest path between coordinates in accumulated resistance units}
+  \item{\code{corridorLength}}{gives the length of the shortest path between
+  coordinates in accumulated resistance units}
 }
 }
 \description{
-Given a series of GOC models built at different scales in a \code{GOC} object, visualize the corridor
-(or shortest path) between two points using one of the tessellations (i.e., scales) in these models.
-Visualization is exclusively in vector format. \code{\link{GOC}} must be run using the \code{sp=TRUE} option.
+Given a series of GOC models built at different scales, visualize the corridor
+(or shortest path) between two points using one of the tessellations
+(i.e., scales) in these models.
+Visualization is exclusively in vector format.
+\code{\link{GOC}} must be run using the \code{sp=TRUE} option.
 }
 \examples{
 \dontrun{

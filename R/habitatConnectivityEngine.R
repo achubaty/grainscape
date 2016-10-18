@@ -63,6 +63,6 @@ if (getRversion() >= "3.1.0") {
   linkData <- lapply(hce$LinkData, data.frame) %>% do.call(rbind, .)
 
   out <- list(voronoi = voronoi, patchLinks = patchLinks, linkData = linkData)
-  class(out) <- "HCE"
+  class(out) <- "hce"
   return(out)
 }

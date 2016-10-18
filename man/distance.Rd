@@ -3,12 +3,17 @@
 \docType{methods}
 \name{distance}
 \alias{distance}
+\alias{distance.goc}
 \title{Find the grains of connectivity network distance}
 \usage{
-distance(GOC, coords, weight = "meanWeight")
+distance(x, ...)
+
+\method{distance}{goc}(x, ..., coords, weight = "meanWeight")
 }
 \arguments{
-\item{GOC}{A \code{GOC} object produced by \code{\link{GOC}}.}
+\item{x}{A \code{GOC} object produced by \code{\link{GOC}}.}
+
+\item{...}{Additional arguments.}
 
 \item{coords}{A two column matrix or a \code{\link{SpatialPoints}} object
 giving the coordinates of points of interest.}
@@ -22,9 +27,8 @@ Distance matrices give the pairwise grains of connectivity network distances bet
 Matrix indices correspond to rows in the \code{coords} matrix.
 }
 \description{
-Given a \code{\link{GOC}} object find the shortest network distance between
-pairs of points using the GOC graph.  This can be used as an effective distance
-for landscape connectivity assessments.
+Find the shortest network distance between pairs of points using the GOC graph.
+This can be used as an effective distance for landscape connectivity assessments.
 }
 \examples{
 \dontrun{

@@ -3,19 +3,25 @@
 \docType{methods}
 \name{MPG}
 \alias{MPG}
+\alias{MPG.RasterLayer}
 \title{Extract a minimum planar graph (MPG) model from a landscape resistance surface}
 \usage{
-MPG(cost, patch, sa = NULL, filterPatch = NULL, spreadFactor = 0)
+MPG(cost, ...)
+
+\method{MPG}{RasterLayer}(cost, ..., patch, sa = NULL, filterPatch = NULL,
+  spreadFactor = 0)
 }
 \arguments{
-\item{cost}{A raster of class \code{RasterLayer} giving a landscape resistance
-surface, where the values of each raster cell are proportional to
-the resistance to movement, dispersal, or gene flow for an organism
+\item{cost}{A \code{RasterLayer} giving a landscape resistance surface,
+where the values of each raster cell are proportional to the
+resistance to movement, dispersal, or gene flow for an organism
 in the landscape feature they represent.
 Missing values \code{NA} are acceptable (but see below).
 Negative values are not.
 To extract an MPG with Euclidean links (i.e., and not least-cost
 path links) set \code{cost[] <- 1}.}
+
+\item{...}{Additional arguments.}
 
 \item{patch}{A raster of class \code{RasterLayer} for a patch-based analysis
 OR an integer for a lattice analysis.
@@ -71,8 +77,8 @@ weights giving accumulated resistance/least-cost path distance,
 Euclidean distance, and the start and end coordinates of each link.
 }
 \description{
-This function is used to extract a minimum planar graph (MPG) and
-it is also the first step in grains of connectivity (GOC) modelling.
+Extracts a minimum planar graph (MPG) and is also the first step
+in grains of connectivity (GOC) modelling.
 Both patch-based and lattice MPGs can be extracted.
 }
 \details{
@@ -96,8 +102,8 @@ other cases (see \code{\link{projectRaster}}).
 }
 \examples{
 \dontrun{
-require(igraph)
-require(raster)
+library(igraph)
+library(raster)
 
 ## Load raster landscape
 tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape"))
