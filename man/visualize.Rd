@@ -5,10 +5,12 @@
 \alias{visualize}
 \title{Visualize grains of connectivity (GOC) tessellations at a given scale}
 \usage{
-visualize(GOC, whichThresh, sp = FALSE, doPlot = FALSE)
+visualize(x, whichThresh, sp = FALSE, doPlot = FALSE)
+
+visualize(x, whichThresh, sp = FALSE, doPlot = FALSE)
 }
 \arguments{
-\item{GOC}{A \code{GOC} object created by \code{\link{GOC}}.}
+\item{x}{A \code{GOC} object created by \code{\link{GOC}}.}
 
 \item{whichThresh}{Integer giving the index of the threshold to visualize.}
 
@@ -21,6 +23,8 @@ and that the \code{rgeos} package is installed.}
 of the Voronoi tessellation at \code{whichThresh} for quick visualizations.
 For full control, manually produce plots using the \code{$voronoi}
 or \code{$voronoiSP} objects created by this function.}
+
+\item{...}{Additional arguments.}
 }
 \value{
 A list object containing the following elements:
@@ -38,8 +42,7 @@ A list object containing the following elements:
 }
 }
 \description{
-Given a series of GOC models built at different scales in a \code{GOC} object,
-visualize one the tessellations (i.e., scales) in these models.
+Visualize a tessellations (i.e., scales) in a GOC model.
 Visualization is by default in raster format.
 Vector based visualization is also possible.
 }

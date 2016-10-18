@@ -3,22 +3,27 @@
 \docType{methods}
 \name{point}
 \alias{point}
+\alias{point.goc}
 \title{Identify the polygons containing locations in grains of connectivity (GOC) tessellations}
 \usage{
-point(GOC, coords)
+point(x, coords)
+
+\method{point}{goc}(x, coords)
 }
 \arguments{
-\item{GOC}{A \code{GOC} object produced by \code{\link{GOC}}}
+\item{x}{A \code{goc} object produced by \code{\link{GOC}}.}
 
 \item{coords}{A two column matrix or a \code{\link{SpatialPoints}} object giving
 the coordinates of points of interest.}
+
+\item{...}{Additional arguments.}
 }
 \value{
 A list with elements:
 
 \describe{
   \item{\code{pointPolygon}}{a matrix with elements giving the id of the
-  polygon from the \code{GOC}, where rows give points of interest and
+  polygon from the \code{goc}, where rows give points of interest and
   columns give thresholds;}
 
   \item{\code{pointTotalPatchArea}}{is a matrix with elements giving the area
@@ -34,7 +39,7 @@ A list with elements:
 }
 }
 \description{
-Given a \code{\link{GOC}} object identify the polygon containing a location at multiple scales.
+Identify the polygon containing a location at multiple scales.
 }
 \note{
 See \code{\link{MPG}} for warning related to areal measurements.

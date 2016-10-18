@@ -1,11 +1,17 @@
 #' Identify the polygons containing locations in grains of connectivity (GOC) tessellations
 #'
 #' @description
-#' Given a \code{\link{GOC}} object identify the polygon containing a location at multiple scales.
+#' Identify the polygon containing a location at multiple scales.
 #'
-#' @note See \code{\link{MPG}} for warning related to areal measurements.
+#' @param ...  Additional arguments.
 #'
-#' @param GOC  A \code{GOC} object produced by \code{\link{GOC}}
+#' @export
+#'
+point <- function(x, coords) UseMethod("point")
+
+
+
+#' @param x       A \code{goc} object produced by \code{\link{GOC}}.
 #'
 #' @param coords  A two column matrix or a \code{\link{SpatialPoints}} object giving
 #'                the coordinates of points of interest.
@@ -14,7 +20,7 @@
 #'
 #' \describe{
 #'   \item{\code{pointPolygon}}{a matrix with elements giving the id of the
-#'   polygon from the \code{GOC}, where rows give points of interest and
+#'   polygon from the \code{goc}, where rows give points of interest and
 #'   columns give thresholds;}
 #'
 #'   \item{\code{pointTotalPatchArea}}{is a matrix with elements giving the area
@@ -28,6 +34,8 @@
 #'
 #'   \item{\code{pointECSCore}}{is the same for the core area of patches.}
 #' }
+#'
+#' @note See \code{\link{MPG}} for warning related to areal measurements.
 #'
 #' @references
 #' Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien. (2007) Spatial graphs: Principles and applications for habitat connectivity. Ecosystems 10:448:461.
@@ -65,11 +73,7 @@
 #' tinyPts <- point(tinyPatchGOC, loc)
 #' }
 #'
-point <- function(GOC, coords) {
-  if (!inherits(GOC, "GOC")) {
-    stop("grainscape:  input object must be of class 'goc'.  Run GOC() first.", call. = FALSE)
-  }
-
+point.goc <- function(x, coords) {
   if (is.null(dim(coords)) & !inherits(coords, "SpatialPoints")) {
     coords <- t(as.matrix(coords))
   }
@@ -83,19 +87,19 @@ point <- function(GOC, coords) {
   }
 
   ## Remove points that fall in NA locations
-  cellPoints <- cellFromXY(GOC$voronoi, coords)
-  if (suppressWarnings(sum(is.na(GOC$voronoi[cellPoints]))) > 0) {
-    cellPoints <- suppressWarnings(cellPoints[!is.na(GOC$voronoi[cellPoints])])
+  cellPoints <- cellFromXY(x$voronoi, coords)
+  if (suppressWarnings(sum(is.na(x$voronoi[cellPoints]))) > 0) {
+    cellPoints <- suppressWarnings(cellPoints[!is.na(x$voronoi[cellPoints])])
     stop("grainscape:  there are coords that are not defined on the raster.\n", call. = FALSE)
   }
 
-  grainPoints <- matrix(NA, nrow = length(cellPoints), ncol = length(GOC$th))
+  grainPoints <- matrix(NA, nrow = length(cellPoints), ncol = length(x$th))
   totalPatchAreaPoints <- grainPoints
   totalCoreAreaPoints <- grainPoints
 
-  for (iThresh in 1:length(GOC$th)) {
-    if (is_igraph(GOC$th[[iThresh]]$goc)) {
-      threshGraph <- GOC$th[[iThresh]]$goc
+  for (iThresh in 1:length(x$th)) {
+    if (is_igraph(x$th[[iThresh]]$goc)) {
+      threshGraph <- x$th[[iThresh]]$goc
 
       ## Produce patchId and patchArea lookup tables with polygonId as the index
       patchIdLookup <-  matrix(0, 1, 2)
@@ -113,15 +117,15 @@ point <- function(GOC, coords) {
       ## Faster method which references the cells from the stored voronoi raster
       ## and uses the graph vertex record to determine the polygonId
 
-      grainPoints[, iThresh] <- as.numeric(sapply(GOC$voronoi[cellPoints], function(x) {
-        patchIdLookup[patchIdLookup[, 2] == x, 1]
+      grainPoints[, iThresh] <- as.numeric(sapply(x$voronoi[cellPoints], function(z) {
+        patchIdLookup[patchIdLookup[, 2] == z, 1]
       }))
 
-      totalPatchAreaPoints[, iThresh] <- as.numeric(sapply(grainPoints[, iThresh], function(x) {
-        patchAreaLookup[patchAreaLookup[, 1] == x, 2]
+      totalPatchAreaPoints[, iThresh] <- as.numeric(sapply(grainPoints[, iThresh], function(z) {
+        patchAreaLookup[patchAreaLookup[, 1] == z, 2]
       }))
-      totalCoreAreaPoints[, iThresh] <- as.numeric(sapply(grainPoints[, iThresh], function(x) {
-        patchAreaLookup[patchAreaLookup[, 1] == x, 4]
+      totalCoreAreaPoints[, iThresh] <- as.numeric(sapply(grainPoints[, iThresh], function(z) {
+        patchAreaLookup[patchAreaLookup[, 1] == z, 4]
       }))
     }
   }

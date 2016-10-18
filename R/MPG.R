@@ -1,7 +1,7 @@
 #' Extract a minimum planar graph (MPG) model from a landscape resistance surface
 #'
-#' @description This function is used to extract a minimum planar graph (MPG) and
-#' it is also the first step in grains of connectivity (GOC) modelling.
+#' @description Extracts a minimum planar graph (MPG) and is also the first step
+#' in grains of connectivity (GOC) modelling.
 #' Both patch-based and lattice MPGs can be extracted.
 #'
 #' @details Use this function to create a minimum planar graph (MPG) that can be
@@ -21,14 +21,22 @@
 #' Reprojection of rasters should be considered to minimize these effects in
 #' other cases (see \code{\link{projectRaster}}).
 #'
-#' @param cost  A raster of class \code{RasterLayer} giving a landscape resistance
-#'              surface, where the values of each raster cell are proportional to
-#'              the resistance to movement, dispersal, or gene flow for an organism
-#'              in the landscape feature they represent.
-#'              Missing values \code{NA} are acceptable (but see below).
-#'              Negative values are not.
-#'              To extract an MPG with Euclidean links (i.e., and not least-cost
-#'              path links) set \code{cost[] <- 1}.
+#' @param ...  Additional arguments.
+#'
+#' @export
+#'
+MPG <- function(cost, ...) UseMethod("MPG")
+
+
+
+#' @param cost   A \code{RasterLayer} giving a landscape resistance surface,
+#'               where the values of each raster cell are proportional to the
+#'               resistance to movement, dispersal, or gene flow for an organism
+#'               in the landscape feature they represent.
+#'               Missing values \code{NA} are acceptable (but see below).
+#'               Negative values are not.
+#'               To extract an MPG with Euclidean links (i.e., and not least-cost
+#'               path links) set \code{cost[] <- 1}.
 #'
 #' @param patch  A raster of class \code{RasterLayer} for a patch-based analysis
 #'               OR an integer for a lattice analysis.
@@ -99,8 +107,8 @@
 #'
 #' @examples
 #' \dontrun{
-#' require(igraph)
-#' require(raster)
+#' library(igraph)
+#' library(raster)
 #'
 #' ## Load raster landscape
 #' tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape"))
@@ -137,12 +145,8 @@
 #' tinyPatchMPG <- MPG(cost = tinyCost, patch = (tinyCost == 1), sa = tinySa)
 #' }
 #'
-MPG <- function(cost, patch, sa = NULL, filterPatch = NULL, spreadFactor = 0) {
-  ## Check that cost raster is of class RasterLayer
-  if (!inherits(cost, "RasterLayer")) {
-    stop("grainscape: cost raster must be of class RasterLayer", call. = FALSE)
-  }
-
+MPG.RasterLayer <- function(cost, ..., patch, sa = NULL, filterPatch = NULL,
+                            spreadFactor = 0) {
   ## Prepare a lattice patch if patch is numeric
   if (inherits(patch, "numeric")) {
     ## Produce the lattice patch rasters
@@ -281,7 +285,7 @@ MPG <- function(cost, patch, sa = NULL, filterPatch = NULL, spreadFactor = 0) {
                          endPerimY = hce$linkData$EndColumn)
   mpg$mpg <- graph_from_data_frame(toGraphE, directed = FALSE, vertices = toGraphV)
 
-  class(mpg) <- "MPG"
+  class(mpg) <- "mpg"
 
   return(mpg)
 }

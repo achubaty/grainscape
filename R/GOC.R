@@ -1,12 +1,20 @@
 #' Produce a grains of connectivity model at multiple scales (patch-based or lattice GOC)
 #'
 #' @description
-#' Given a \code{\link{MPG}} object produce a grains of connectivity (GOC) model
-#' at multiple scales (resistance thresholds) by scalar analysis.
+#' Produce a grains of connectivity (GOC) model at multiple scales (resistance thresholds)
+#' by scalar analysis.
 #' Patch-based or lattice GOC modelling can be done with this function.
 #'
-#' @param mpg       A \code{MPG} object produced by \code{\link{MPG}}.
-#'                  For lattice GOC \code{\link{MPG}} must be run with patch set as an integer value.
+#' @param ...  Additional arguments.
+#'
+#' @export
+#'
+GOC <- function(x, ...) UseMethod("GOC")
+
+
+
+#' @param x         A \code{mpg} object produced by \code{\link{MPG}}.
+#'                  For lattice GOC \code{MPG} must be run with patch set as an integer value.
 #'
 #' @param nThresh   Optional.  An integer giving the number of thresholds (or scales)
 #'                  at which to create GOC models.  Thresholds are selected to produce
@@ -39,7 +47,7 @@
 #'
 #' @details
 #' This function can take a long time to run when \code{sp = TRUE}.
-#' Time taken is dependent on the dimensions of the \code{MPG$voronoi} raster.
+#' Time taken is dependent on the dimensions of the \code{mpg$voronoi} raster.
 #'
 #' @return  A \code{GOC} object containing:
 #'
@@ -57,7 +65,7 @@
 #'   giving the GOC graph at each threshold.}
 #' }
 #'
-#' Each element of \code{$th} contains a \code{$goc} object giving the GOC graph as class \code{\link{igraph}}.
+#' Each element of \code{th} contains a \code{goc} object giving the GOC graph as class \code{\link{igraph}}.
 #' Vertex attributes describes qualities of each polygon including the coordinates of each polygon centroid,
 #' the area of these polygons, and the original patch IDs in the MPG that are included in each polygon.
 #' All areal measurements are given as raster cell counts.
@@ -72,8 +80,9 @@
 #' See \code{\link{MPG}} for warning related to areal measurements.
 #'
 #' @references
-#' Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien.  (2007) Spatial graphs:  Principles and applications for habitat connectivity.  Ecosystems.  10:448:461\cr
-#' Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis at multiple spatial scales in landscape genetics.  Molecular Ecology 21:3996-4009.\cr
+#' Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien. (2007) Spatial graphs: Principles and applications for habitat connectivity. Ecosystems 10:448:461.
+#'
+#' Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis at multiple spatial scales in landscape genetics. Molecular Ecology 21:3996-4009.
 #'
 #' @author Paul Galpern
 #' @docType methods
@@ -110,18 +119,14 @@
 #' tinyPatchGOC <- GOC(tinyPatchMPG, doThresh = c(0, 20, 40), sp = TRUE)
 #' }
 #'
-GOC <- function(mpg, nThresh = NULL, doThresh = NULL,
-                  weight = "lcpPerimWeight", sp = FALSE, verbose = 3) {
-  if (!inherits(mpg,  "MPG")) {
-    stop("grainscape: mpg must be a MPG object", call. = FALSE)
-  }
-
+GOC.mpg <- function(x, ..., nThresh = NULL, doThresh = NULL,
+                    weight = "lcpPerimWeight", sp = FALSE, verbose = 3) {
   if (isTRUE(sp) && !requireNamespace("rgeos", quietly = TRUE)) {
     stop("grainscape:  rgeos package must be installed to use sp = TRUE")
   }
 
   threshGraph <- vector("list")
-  baseGraph <- mpg$mpg
+  baseGraph <- x$mpg
 
   linkWeight <- try(edge_attr(baseGraph, weight), silent = TRUE)
 
@@ -136,16 +141,16 @@ GOC <- function(mpg, nThresh = NULL, doThresh = NULL,
   } else if (is.null(doThresh)) {
     ## Determine nThresh unique thresholds covering the full range of possibilities
     ## in terms of the number of polygons
-    allUniqueThresh <- t(sapply(sort(c(0, unique(linkWeight))), function(x) {
-      cbind(x, components(delete_edges(mpg$mpg, which(linkWeight > x)))$no)
+    allUniqueThresh <- t(sapply(sort(c(0, unique(linkWeight))), function(z) {
+      cbind(x, components(delete_edges(x$mpg, which(linkWeight > z)))$no)
     }))
     doThresh <- allUniqueThresh[!duplicated(allUniqueThresh[, 2]), 1]
     doThresh <- doThresh[round(seq(1, length(doThresh), length = nThresh))]
   }
 
-  threshGraph$metaData <- mpg$metaData                      ## what is this doing? metaData is not an element of mpg
-  threshGraph$voronoi <- mpg$voronoi
-  threshGraph$voronoi[threshGraph$voronoi == -1] <- NA      # WHAT IS THIS DOING?
+  threshGraph$metaData <- x$metaData                      ## what is this doing? metaData is not an element of the mpg
+  threshGraph$voronoi <- x$voronoi
+  threshGraph$voronoi[threshGraph$voronoi == -1] <- NA    ## WHAT IS THIS DOING?
   threshGraph$summary <- data.frame(maxLink = doThresh)
 
   ## Optionally retain a vectorized version of the smallest grain of connectivity
@@ -162,31 +167,16 @@ GOC <- function(mpg, nThresh = NULL, doThresh = NULL,
 
   ## Check MPG for orphaned patches
   ## A workaround has not yet been implemented
-  id <- sapply(V(baseGraph)$name, function(x) sum(allLinks == as.integer(x)))
+  id <- sapply(V(baseGraph)$name, function(z) sum(allLinks == as.integer(z)))
   unlinkedPatches <- as.integer(V(baseGraph)$name[which(id == 0)])
   if (length(unlinkedPatches) > 0) {
     for (iPatch in unlinkedPatches) {
-      ## Identify the largest adjacent Voronoi region
-      #adjacentVor <- unique(threshGraph$voronoi[adjacent(threshGraph$voronoi, cells = which(threshGraph$voronoi[] == iPatch), target=which(threshGraph$voronoi[]!=iPatch), directions=8, pairs = TRUE)[,2]])
-      #largestAdjacentVor <- adjacentVor[which.max(sapply(adjacentVor, function(x) sum(threshGraph$voronoi[] == x, na.rm = TRUE)))]
-
-      #if (!is.null(largestAdjacentVor)) {
-      #    threshGraph$voronoi[threshGraph$voronoi==iPatch] <- largestAdjacentVor
-
-      #    warning(paste0("patchId=", iPatch, " has no connecting links in the MPG.  Its Voronoi region has been assigned to the largest adjacent region (patchId="
-      #        , largestAdjacentVor, ").  It will be ignored for GOC-related analyses.\n"), call. = FALSE)
-      #}
-      #else {
       warning("patchId=", iPatch, " has no connecting links in the MPG.",
               " This is likely caused by a patch surrounded in missing values (NA cells).\n",
               "At present, all patches must be linked to at least one other patch in the MPG for GOC analyses.\n",
               "Replacing NA cells in the cost or sa rasters may be required\n", call. = FALSE)
     }
     stop("grainscape:  cost, patch and/or sa rasters used to create the MPG present a limit case for GOC analyses.  Generated warnings may indicated cause.\nWorkaround for these cases has not yet been implemented.  Please contact the package author for more information.", call. = FALSE)
-    ## Remove the vertices representing these patches from the mpg
-    #baseGraph <- delete.vertices(baseGraph, which(V(baseGraph)$name %in% as.character(unlinkedPatches))-1)
-    #allLinks <- ends(baseGraph, E(baseGraph)) + 1
-    #linkWeight <- edge_attr(baseGraph, weight)
   }
 
   linkId <- edge_attr(baseGraph, "linkId")
@@ -206,8 +196,8 @@ GOC <- function(mpg, nThresh = NULL, doThresh = NULL,
 
       ## Determine which edges have endpoints in different components, and create a lookup data frame
       linkComponentLookup <- cbind(linkId, edge_attr(baseGraph, weight), allLinks,
-                                   t(apply(allLinks, 1, function(x) {
-                                     c(components[x[1]], components[x[2]])
+                                   t(apply(allLinks, 1, function(z) {
+                                     c(components[z[1]], components[z[2]])
                              }))) %>%
         apply(., 2, as.numeric) %>%
         as.data.frame(stringsAsFactors = FALSE)
@@ -241,25 +231,25 @@ GOC <- function(mpg, nThresh = NULL, doThresh = NULL,
 
         ## Build data.frame for component graph
         ## Find maximum, minimum, mean, and median edge weights between components
-        maxWeight <- as.vector(sapply(unique(linkComponentLookup[, "compLinkId"]), function(x) {
-          max(linkComponentLookup[linkComponentLookup$compLinkId == x, "linkWeight"])
+        maxWeight <- as.vector(sapply(unique(linkComponentLookup[, "compLinkId"]), function(z) {
+          max(linkComponentLookup[linkComponentLookup$compLinkId == z, "linkWeight"])
         }))
-        linkIdMaxWeight <- as.vector(sapply(unique(linkComponentLookup[, "compLinkId"]), function(x)
-          linkComponentLookup[linkComponentLookup$compLinkId == x, "linkId"][which.max(linkComponentLookup[linkComponentLookup$compLinkId == x, "linkWeight"])]))
-        minWeight <- as.vector(sapply(unique(linkComponentLookup[, "compLinkId"]), function(x)
-          min(linkComponentLookup[linkComponentLookup$compLinkId == x, "linkWeight"])))
-        linkIdMinWeight <- as.vector(sapply(unique(linkComponentLookup[, "compLinkId"]), function(x)
-          linkComponentLookup[linkComponentLookup$compLinkId == x, "linkId"][which.min(linkComponentLookup[linkComponentLookup$compLinkId == x,"linkWeight"])]))
-        medianWeight <- as.vector(sapply(unique(linkComponentLookup[, "compLinkId"]), function(x)
-          median(linkComponentLookup[linkComponentLookup$compLinkId == x, "linkWeight"])))
-        meanWeight <- as.vector(sapply(unique(linkComponentLookup[, "compLinkId"]), function(x)
-          mean(linkComponentLookup[linkComponentLookup$compLinkId == x, "linkWeight"])))
-        numEdgesWeight <- as.vector(sapply(unique(linkComponentLookup[, "compLinkId"]), function(x)
-          sum(linkComponentLookup$compLinkId == x)))
+        linkIdMaxWeight <- as.vector(sapply(unique(linkComponentLookup[, "compLinkId"]), function(z)
+          linkComponentLookup[linkComponentLookup$compLinkId == z, "linkId"][which.max(linkComponentLookup[linkComponentLookup$compLinkId == z, "linkWeight"])]))
+        minWeight <- as.vector(sapply(unique(linkComponentLookup[, "compLinkId"]), function(z)
+          min(linkComponentLookup[linkComponentLookup$compLinkId == z, "linkWeight"])))
+        linkIdMinWeight <- as.vector(sapply(unique(linkComponentLookup[, "compLinkId"]), function(z)
+          linkComponentLookup[linkComponentLookup$compLinkId == z, "linkId"][which.min(linkComponentLookup[linkComponentLookup$compLinkId == z,"linkWeight"])]))
+        medianWeight <- as.vector(sapply(unique(linkComponentLookup[, "compLinkId"]), function(z)
+          median(linkComponentLookup[linkComponentLookup$compLinkId == z, "linkWeight"])))
+        meanWeight <- as.vector(sapply(unique(linkComponentLookup[, "compLinkId"]), function(z)
+          mean(linkComponentLookup[linkComponentLookup$compLinkId == z, "linkWeight"])))
+        numEdgesWeight <- as.vector(sapply(unique(linkComponentLookup[, "compLinkId"]), function(z)
+          sum(linkComponentLookup$compLinkId == z)))
 
         ## Get all linkIds between components and add them as a comma-delimited list
-        linkIdAll <- as.character(sapply(unique(linkComponentLookup[, "compLinkId"]), function(x)
-          paste(linkComponentLookup[linkComponentLookup$compLinkId == x, "linkId"], collapse = ", ")))
+        linkIdAll <- as.character(sapply(unique(linkComponentLookup[, "compLinkId"]), function(z)
+          paste(linkComponentLookup[linkComponentLookup$compLinkId == z, "linkId"], collapse = ", ")))
 
         ## Convert back from string representation of component linkIds to numeric
         componentGraphNodes <- do.call(rbind,strsplit(unique(linkComponentLookup$compLinkId), "_"))
@@ -271,8 +261,8 @@ GOC <- function(mpg, nThresh = NULL, doThresh = NULL,
           graph_from_data_frame(directed = FALSE)
 
         V(componentGraph)$polygonId <- V(componentGraph)$name
-        sourcePatchId <- sapply(as.numeric(as.character(V(componentGraph)$polygonId)), function(x)
-          paste(as.character(V(baseGraph)$patchId[components == x]), collapse = ", "))
+        sourcePatchId <- sapply(as.numeric(as.character(V(componentGraph)$polygonId)), function(z)
+          paste(as.character(V(baseGraph)$patchId[components == z]), collapse = ", "))
 
         ## Produce a raster representing this grain of connectivity
         gocRaster <- threshGraph$voronoi
@@ -317,18 +307,18 @@ GOC <- function(mpg, nThresh = NULL, doThresh = NULL,
                                  V(baseGraph)$patchArea.count,
                                  V(baseGraph)$patchEdgeArea.count,
                                  V(baseGraph)$coreArea.count)
-        V(componentGraph)$totalPatchArea <- as.numeric(unlist(sapply(sourcePatchId, function(x)
-          sum(patchAreaLookup[patchAreaLookup[, 1] %in% as.numeric(strsplit(x, ", ")[[1]]), 2]))))
-        V(componentGraph)$totalPatchEdgeArea <- as.numeric(unlist(sapply(sourcePatchId, function(x)
-          sum(patchAreaLookup[patchAreaLookup[, 1] %in% as.numeric(strsplit(x, ", ")[[1]]), 3]))))
-        V(componentGraph)$totalCoreArea <- as.numeric(unlist(sapply(sourcePatchId, function(x)
-          sum(patchAreaLookup[patchAreaLookup[, 1] %in% as.numeric(strsplit(x, ", ")[[1]]), 4]))))
+        V(componentGraph)$totalPatchArea <- as.numeric(unlist(sapply(sourcePatchId, function(z)
+          sum(patchAreaLookup[patchAreaLookup[, 1] %in% as.numeric(strsplit(z, ", ")[[1]]), 2]))))
+        V(componentGraph)$totalPatchEdgeArea <- as.numeric(unlist(sapply(sourcePatchId, function(z)
+          sum(patchAreaLookup[patchAreaLookup[, 1] %in% as.numeric(strsplit(z, ", ")[[1]]), 3]))))
+        V(componentGraph)$totalCoreArea <- as.numeric(unlist(sapply(sourcePatchId, function(z)
+          sum(patchAreaLookup[patchAreaLookup[, 1] %in% as.numeric(strsplit(z, ", ")[[1]]), 4]))))
         V(componentGraph)$patchId <- sourcePatchId
 
         ## Find distances between each polygon centroid
-        eucCentroidWeight <- apply(as_edgelist(componentGraph), 1, function(x) {
-          x1 <- which(uniquePolygons == x[1])
-          x2 <- which(uniquePolygons == x[2])
+        eucCentroidWeight <- apply(as_edgelist(componentGraph), 1, function(z) {
+          x1 <- which(uniquePolygons == z[1])
+          x2 <- which(uniquePolygons == z[2])
 
           return(sqrt((centroids[x2, 1] - centroids[x1, 1])^2 + (centroids[x2, 2] - centroids[x1, 2])^2))
         })
@@ -344,31 +334,31 @@ GOC <- function(mpg, nThresh = NULL, doThresh = NULL,
   }
 
   ## Add data to the summary table
-  threshGraph$summary$nPolygon <- unlist(lapply(threshGraph$th, function(x) {
+  threshGraph$summary$nPolygon <- unlist(lapply(threshGraph$th, function(z) {
     if (is_igraph(x$goc)) vcount(x$goc) else NA
   }))
-  threshGraph$summary$maxPolygonArea <- unlist(lapply(threshGraph$th, function(x) {
+  threshGraph$summary$maxPolygonArea <- unlist(lapply(threshGraph$th, function(z) {
     if (is_igraph(x$goc)) max(V(x$goc)$polygonArea) else NA
   }))
-  threshGraph$summary$minPolygonArea <- unlist(lapply(threshGraph$th, function(x) {
+  threshGraph$summary$minPolygonArea <- unlist(lapply(threshGraph$th, function(z) {
     if (is_igraph(x$goc)) min(V(x$goc)$polygonArea) else NA
   }))
-  threshGraph$summary$meanPolygonArea <- unlist(lapply(threshGraph$th, function(x) {
+  threshGraph$summary$meanPolygonArea <- unlist(lapply(threshGraph$th, function(z) {
     if (is_igraph(x$goc)) mean(V(x$goc)$polygonArea) else NA
   }))
-  threshGraph$summary$medianPolygonArea <- unlist(lapply(threshGraph$th, function(x) {
+  threshGraph$summary$medianPolygonArea <- unlist(lapply(threshGraph$th, function(z) {
     if (is_igraph(x$goc)) median(V(x$goc)$polygonArea) else NA
   }))
 
   ## Find ECS (Expected cluster size; O'Brien et al, 2006) using totalPatchArea
-  threshGraph$summary$ECS <- unlist(lapply(threshGraph$th, function(x) {
+  threshGraph$summary$ECS <- unlist(lapply(threshGraph$th, function(z) {
     if (is_igraph(x$goc)) sum(V(x$goc)$totalPatchArea^2)/sum(V(x$goc)$totalPatchArea) else NA
   }))
   ## Find ECSCore (Expected cluster size; O'Brien et al, 2006) using totalCoreArea
-  threshGraph$summary$ECSCore <- unlist(lapply(threshGraph$th, function(x) {
+  threshGraph$summary$ECSCore <- unlist(lapply(threshGraph$th, function(z) {
     if (is_igraph(x$goc)) sum(V(x$goc)$totalCoreArea^2)/sum(V(x$goc)$totalCoreArea) else NA
   }))
-  class(threshGraph) <- "GOC"
+  class(threshGraph) <- "goc"
 
   return(threshGraph)
 }

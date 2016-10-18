@@ -27,6 +27,8 @@ gsGraphDataFrame(x)
 gsMPG(cost, patch, sa = NULL, filterPatch = NULL, spreadFactor = 0)
 }
 \arguments{
+\item{mpg}{A \code{MPG} object.}
+
 \item{nThresh}{Optional.  An integer giving the number of thresholds (or scales)
 at which to create GOC models.  Thresholds are selected to produce
 a maximum number of unique grains (i.e., models).
@@ -56,7 +58,7 @@ But, please see details.}
 
 \item{verbose}{Set \code{verbose=1} for no progress information to console.}
 
-\item{GOC}{A \code{GOC} object created by \code{\link{GOC}}}
+\item{GOC}{A \code{GOC} object.}
 
 \item{whichThresh}{Integer giving the index of the threshold to visualize.}
 
@@ -70,9 +72,9 @@ For full control, manually produce plots using the outputs of this function.}
 \item{x}{A \code{mpg} object produced by \code{\link{MPG}}.
 For lattice GOC \code{MPG} must be run with patch set as an integer value.}
 
-\item{cost}{A raster of class \code{RasterLayer} giving a landscape resistance
-surface, where the values of each raster cell are proportional to
-the resistance to movement, dispersal, or gene flow for an organism
+\item{cost}{A \code{RasterLayer} giving a landscape resistance surface,
+where the values of each raster cell are proportional to the
+resistance to movement, dispersal, or gene flow for an organism
 in the landscape feature they represent.
 Missing values \code{NA} are acceptable (but see below).
 Negative values are not.

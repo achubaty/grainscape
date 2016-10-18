@@ -1,12 +1,18 @@
 #' Visualize grains of connectivity (GOC) tessellations at a given scale
 #'
 #' @description
-#' Given a series of GOC models built at different scales in a \code{GOC} object,
-#' visualize one the tessellations (i.e., scales) in these models.
+#' Visualize a tessellations (i.e., scales) in a GOC model.
 #' Visualization is by default in raster format.
 #' Vector based visualization is also possible.
 #'
-#' @param GOC  A \code{GOC} object created by \code{\link{GOC}}.
+#' @param ...  Additional arguments.
+#'
+#' @export
+visualize <- function(x, ...) UseMethod("visualize")
+
+
+
+#' @param x   A \code{GOC} object created by \code{\link{GOC}}.
 #'
 #' @param whichThresh  Integer giving the index of the threshold to visualize.
 #'
@@ -81,30 +87,28 @@
 #' plot(visualize(tinyPatchGOC, whichThresh = 3, sp = TRUE)$voronoiSP, add = TRUE, lwd = 2)
 #' }
 #'
-visualize <- function(GOC, whichThresh, sp = FALSE, doPlot = FALSE) {
-  if (!inherits(GOC, "GOC")) {
-    stop("grainscape:  input object must be of class 'GOC'.  Run GOC() first.", call. = FALSE)
-  }
-
+#' @export
+#'
+visualize <- function(x, whichThresh, sp = FALSE, doPlot = FALSE) {
   if (isTRUE(sp) && !requireNamespace("rgeos", quietly = TRUE)) {
     stop("grainscape:  rgeos package must be installed to use sp = TRUE")
   }
 
   ## Check whichThresh
-  if ((length(whichThresh) > 1) || (!(whichThresh %in% 1:length(GOC$th)))) {
+  if ((length(whichThresh) > 1) || (!(whichThresh %in% 1:length(x$th)))) {
     stop("grainscape:  whichThresh must index a single threshold existing in the GOC object", call. = FALSE)
   }
 
-  if (sp && is.null(GOC$voronoiSP)) {
+  if (sp && is.null(x$voronoiSP)) {
     stop("grainscape:  GOC object must also be produced using sp=TRUE", call. = FALSE)
   }
 
   results <- list()
 
-  results$summary <- GOC$summary[whichThresh, ]
+  results$summary <- x$summary[whichThresh, ]
 
-  if (is_igraph(GOC$th[[whichThresh]]$goc)) {
-    threshGraph <- GOC$th[[whichThresh]]$goc
+  if (is_igraph(x$th[[whichThresh]]$goc)) {
+    threshGraph <- x$th[[whichThresh]]$goc
 
     ## Produce is-becomes reclassifyification table for voronoi raster
     rclTable <-  matrix(0, 1, 2)
@@ -114,7 +118,7 @@ visualize <- function(GOC, whichThresh, sp = FALSE, doPlot = FALSE) {
                               as.integer(V(threshGraph)$polygonId[i])))
     }
     rclTable <- rclTable[2:nrow(rclTable), ]
-    results$voronoi <- reclassify(GOC$voronoi, rcl = rclTable)
+    results$voronoi <- reclassify(x$voronoi, rcl = rclTable)
 
     results$centroids <- SpatialPoints(cbind(V(threshGraph)$centroidX,
                                              V(threshGraph)$centroidY))
@@ -122,8 +126,8 @@ visualize <- function(GOC, whichThresh, sp = FALSE, doPlot = FALSE) {
     ## Take the SpatialPolygons object and combine polygons as necessary
     if (sp) {
       message("Creating SpatialPolygons.")
-      voronoiSP <- geometry(GOC$voronoiSP)
-      indexSP <- as(GOC$voronoiSP, "data.frame")[, 1]
+      voronoiSP <- geometry(x$voronoiSP)
+      indexSP <- as(x$voronoiSP, "data.frame")[, 1]
       newVoronoi <- NULL
       for (i in 1:length(V(threshGraph)$polygonId)) {
         fromId <- as.integer(unlist(strsplit(V(threshGraph)$patchId[i], ", ")))

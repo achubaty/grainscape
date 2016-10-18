@@ -3,12 +3,18 @@
 \docType{methods}
 \name{threshold}
 \alias{threshold}
+\alias{threshold.mpg}
 \title{Produce a minimum planar graph (MPG) at multiple scales}
 \usage{
-threshold(MPG, weight = "lcpPerimWeight", nThresh = NULL, doThresh = NULL)
+threshold(x, ...)
+
+\method{threshold}{mpg}(x, ..., weight = "lcpPerimWeight", nThresh = NULL,
+  doThresh = NULL)
 }
 \arguments{
-\item{MPG}{A \code{MPG} object produced by \code{\link{MPG}}.}
+\item{x}{A \code{mpg} object produced by \code{\link{MPG}}.}
+
+\item{...}{Additional arguments.}
 
 \item{weight}{A string giving the link weight or attribute to use for threshold.
 \code{"lcpPerimWeight"} uses the accumulated resistance or least-cost path
@@ -38,8 +44,8 @@ A list object with the following elements:
 }
 }
 \description{
-This function performs a scalar analysis of a minimum planar graph (MPG) by
-building the graph at a series of link thresholds.
+Perform a scalar analysis of a minimum planar graph (MPG) by building the
+graph at a series of link thresholds.
 As the threshold value increases more nodes in the graph become connected,
 forming increasingly fewer components, until the graph becomes connected (e.g., Brooks, 2003).
 N.B. Grains of connectivity (GOC) done by \code{\link{GOC}} is also a scalar

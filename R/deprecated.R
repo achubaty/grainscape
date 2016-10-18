@@ -4,6 +4,7 @@
 #'
 #' @export gsGOC
 #' @inheritParams GOC
+#' @param mpg  A \code{MPG} object.
 #' @rdname grainscape-deprecated
 #'
 gsGOC <- function(mpg, nThresh = NULL, doThresh = NULL,
@@ -14,6 +15,7 @@ gsGOC <- function(mpg, nThresh = NULL, doThresh = NULL,
 
 #' @export gsGOCCorridor
 #' @inheritParams corridor
+#' @param GOC  A \code{GOC} object.
 #' @rdname grainscape-deprecated
 #'
 gsGOCCorridor <- function(GOC, whichThresh, coords, doPlot = FALSE, weight = "meanWeight") {

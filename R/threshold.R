@@ -1,16 +1,22 @@
 #' Produce a minimum planar graph (MPG) at multiple scales
 #'
 #' @description
-#' This function performs a scalar analysis of a minimum planar graph (MPG) by
-#' building the graph at a series of link thresholds.
+#' Perform a scalar analysis of a minimum planar graph (MPG) by building the
+#' graph at a series of link thresholds.
 #' As the threshold value increases more nodes in the graph become connected,
 #' forming increasingly fewer components, until the graph becomes connected (e.g., Brooks, 2003).
 #' N.B. Grains of connectivity (GOC) done by \code{\link{GOC}} is also a scalar
 #' analysis using Voronoi tessellations rather than patches (see Galpern et al., 2012).
 #'
-#' @note See \code{\link{MPG}} for warning related to areal measurements.
+#' @param ...  Additional arguments.
 #'
-#' @param MPG  A \code{MPG} object produced by \code{\link{MPG}}.
+#' @export
+#'
+threshold <- function(x, ...) UseMethod("threshold")
+
+
+
+#' @param x       A \code{mpg} object produced by \code{\link{MPG}}.
 #'
 #' @param weight  A string giving the link weight or attribute to use for threshold.
 #'                \code{"lcpPerimWeight"} uses the accumulated resistance or least-cost path
@@ -38,6 +44,8 @@
 #'   giving the thresholded graph (class \code{igraph}) at each threshold.}
 #' }
 #'
+#' @note See \code{\link{MPG}} for warning related to areal measurements.
+#'
 #' @references
 #' Brooks, C.P. (2003) A scalar analysis of landscape connectivity. Oikos 102:433-439.
 #'
@@ -48,7 +56,7 @@
 #' @author Paul Galpern
 #' @docType methods
 #' @export
-#' @importFrom igraph clusters delete.edges edge_attr
+#' @importFrom igraph '%>%' clusters delete.edges edge_attr
 #' @rdname threshold
 #' @seealso \code{\link{MPG}}
 #'
@@ -70,12 +78,8 @@
 #' print(tinyThresh$th[[7]], vertex = TRUE, edge = TRUE)
 #' }
 #'
-threshold <- function(MPG, weight = "lcpPerimWeight", nThresh = NULL, doThresh = NULL) {
-  if (!inherits(MPG, "MPG")) {
-    stop("grainscape: MPG must be a 'MPG' object")
-  }
-
-  baseGraph <- MPG$mpg
+threshold.mpg <- function(x, ..., weight = "lcpPerimWeight", nThresh = NULL, doThresh = NULL) {
+  baseGraph <- x$mpg
 
   threshGraph <- vector("list")
 
@@ -99,7 +103,10 @@ threshold <- function(MPG, weight = "lcpPerimWeight", nThresh = NULL, doThresh =
     delete.edges(baseGraph, which(linkWeight > doThresh[i]))
   })
 
-  threshGraph$summary$nComponents <- unlist(lapply(threshGraph$th, function(x) clusters(x)$no))
+  threshGraph$summary$nComponents <- lapply(threshGraph$th, function(z) {
+    clusters(z)$no
+  }) %>%
+    unlist()
 
   return(threshGraph)
 }
