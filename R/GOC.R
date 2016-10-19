@@ -43,7 +43,7 @@ GOC <- function(x, ...) UseMethod("GOC")
 #'            polygons can be exported as shapefiles for use in other GIS applications.
 #'            But, please see details.
 #'
-#' @param verbose Set \code{verbose=1} for no progress information to console.
+#' @param verbose Set \code{verbose=0} for no progress information to console.
 #'
 #' @details
 #' This function can take a long time to run when \code{sp = TRUE}.
@@ -120,7 +120,7 @@ GOC <- function(x, ...) UseMethod("GOC")
 #' }
 #'
 GOC.mpg <- function(x, ..., nThresh = NULL, doThresh = NULL,
-                    weight = "lcpPerimWeight", sp = FALSE, verbose = 3) {
+                    weight = "lcpPerimWeight", sp = FALSE, verbose = 0) {
   if (isTRUE(sp) && !requireNamespace("rgeos", quietly = TRUE)) {
     stop("grainscape:  rgeos package must be installed to use sp = TRUE")
   }
@@ -148,9 +148,7 @@ GOC.mpg <- function(x, ..., nThresh = NULL, doThresh = NULL,
     doThresh <- doThresh[round(seq(1, length(doThresh), length = nThresh))]
   }
 
-  threshGraph$metaData <- x$metaData                      ## what is this doing? metaData is not an element of the mpg
   threshGraph$voronoi <- x$voronoi
-  threshGraph$voronoi[threshGraph$voronoi == -1] <- NA    ## WHAT IS THIS DOING?
   threshGraph$summary <- data.frame(maxLink = doThresh)
 
   ## Optionally retain a vectorized version of the smallest grain of connectivity
@@ -184,7 +182,7 @@ GOC.mpg <- function(x, ..., nThresh = NULL, doThresh = NULL,
   threshGraph$th <- vector("list", length(doThresh))
 
   for (iThresh in 1:length(doThresh)) {
-    if (verbose >= 1) message("Threshold ", iThresh, " of ", length(doThresh)) ## REMOVE THIS?
+    if (verbose >= 1) message("Threshold ", iThresh, " of ", length(doThresh))
     tGraph <- delete_edges(baseGraph, which(linkWeight > doThresh[iThresh]))
 
     ## Determine the component structure of the threshold graph
