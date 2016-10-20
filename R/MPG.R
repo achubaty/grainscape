@@ -21,14 +21,6 @@
 #' Reprojection of rasters should be considered to minimize these effects in
 #' other cases (see \code{\link{projectRaster}}).
 #'
-#' @param ...  Additional arguments.
-#'
-#' @export
-#'
-MPG <- function(cost, ...) UseMethod("MPG")
-
-
-
 #' @param cost   A \code{RasterLayer} giving a landscape resistance surface,
 #'               where the values of each raster cell are proportional to the
 #'               resistance to movement, dispersal, or gene flow for an organism
@@ -61,34 +53,9 @@ MPG <- function(cost, ...) UseMethod("MPG")
 #'                      To reduce accuracy and increase speed, set this as
 #'                      \code{spreadFactor=10} or \code{spreadFactor=100}.
 #'
-#' @return A \code{MPG} object, containing the following elements:
+#' @param ...  Additional arguments (not used).
 #'
-#' \describe{
-#'   \item{\code{mpg}}{the minimum planar graph as class \code{igraph}}
-#'
-#'   \item{\code{patchId}}{the input \code{patch} raster with patch cells
-#'   assigned to their id (\code{RasterLayer})}
-#'
-#'   \item{\code{voronoi}}{the Voronoi tessellation of the patches and
-#'   resistance surface (\code{RasterLayer})}
-#'
-#'   \item{\code{lcpPerimWeight}}{the paths of the links between patches and
-#'   their accumulated costs (\code{RasterLayer})}
-#'
-#'   \item{\code{lcpLinkId}}{the paths of the links between patches and their
-#'   id (\code{RasterLayer})}
-#'
-#'   \item{\code{mpgPlot}}{provides a quick way of visualizing the mpg (\code{RasterLayer})}
-#' }
-#'
-#' The \code{$mpg} has useful vertex and edge attributes.
-#' Vertex attributes give attributes of patches including patch area,
-#' the area of patch edges, the core area of each patch, and the coordinates
-#' of the patch centroid.
-#' All areal measurements are given as raster cell counts.
-#' Edge attributes give attributes of the graph links including link
-#' weights giving accumulated resistance/least-cost path distance,
-#' Euclidean distance, and the start and end coordinates of each link.
+#' @return A \code{\link[=mpg-class]{mpg}} object.
 #'
 #' @references
 #' Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien. (2007) Spatial graphs: Principles and applications for habitat connectivity. Ecosystems 10:448:461.
@@ -98,10 +65,11 @@ MPG <- function(cost, ...) UseMethod("MPG")
 #' @author Paul Galpern, Sam Doctolero, Alex Chubaty
 #' @docType methods
 #' @export
-#' @importFrom igraph '%>%' graph_from_data_frame
-#' @importFrom raster boundaries cellFromRowCol cellFromRowColCombine compareRaster getValues mask projection raster res writeRaster xyFromCell
+#' @importFrom raster boundaries cellFromRowCol cellFromRowColCombine compareRaster
+#' @importFrom raster getValues mask projection raster res writeRaster xyFromCell
 #' @importFrom sp coordinates
 #' @importFrom utils read.table
+#' @include classes.R
 #' @rdname MPG
 #' @seealso \code{\link{GOC}, \link{threshold}}
 #'
@@ -123,50 +91,41 @@ MPG <- function(cost, ...) UseMethod("MPG")
 #' graphdf(tinyPatchMPG)
 #'
 #' ## Find the mean patch area (see igraph manual for use of V() and E())
-#' mean(V(tinyPatchMPG$mpg)$patchArea.value)
+#' mean(V(tinyPatchMPG@mpg)$patchArea.value)
 #'
 #' ## Quick visualization of the MPG
-#' plot(tinyPatchMPG$mpgPlot, col = c("grey", "black"), legend = FALSE)
+#' plot(tinyPatchMPG, col = c("grey", "black"), legend = FALSE)
 #'
 #' ## Visualize the minimum spanning tree of the MPG
-#' tinyPatchMST <- mst(tinyPatchMPG$mpg)
+#' tinyPatchMST <- mst(tinyPatchMPG@mpg)
 #' MSTlinks <- edge_attr(tinyPatchMST, "linkId")
-#' plot(tinyPatchMPG$patchId, col = "black", legend = FALSE)
-#' plot((tinyPatchMPG$lcpLinkId * -1) %in% MSTlinks, add = TRUE, legend = FALSE, col = c(NA, "grey"))
+#' plot(tinyPatchMPG@patchId, col = "black", legend = FALSE)
+#' plot((tinyPatchMPG@lcpLinkId * -1) %in% MSTlinks, add = TRUE, legend = FALSE, col = c(NA, "grey"))
 #'
 #' ## Additional graph extraction scenarios
 #' ## Produce a lattice MPG where focal points are spaced 10 cells apart
 #' tinyLatticeMPG <- MPG(cost = tinyCost, patch = 10)
+#' plot(tinyLatticeMPG)
 #'
 #' ## Produce a patch-based MPG with a study area consisting of half of the map
 #' tinySa <- tinyCost
 #' tinySa[] <- 1
 #' tinySa[1:5000] <- 0
-#' tinyPatchMPG <- MPG(cost = tinyCost, patch = (tinyCost == 1), sa = tinySa)
+#' tinySaMPG <- MPG(cost = tinyCost, patch = (tinyCost == 1), sa = tinySa)
+#' plot(tinySaMPG)
 #' }
 #'
-MPG.RasterLayer <- function(cost, ..., patch, sa = NULL, filterPatch = NULL,
-                            spreadFactor = 0) {
-  ## Prepare a lattice patch if patch is numeric
-  if (inherits(patch, "numeric")) {
-    ## Produce the lattice patch rasters
-    focalPointDistFreq <- patch
-    patch <- cost
-    patch[] <- 0
-    patch[cellFromRowColCombine(patch,
-                                seq(1, nrow(patch), by = focalPointDistFreq) + focalPointDistFreq/2,
-                                seq(1, ncol(patch), by = focalPointDistFreq) + focalPointDistFreq/2)] <- 1
-    ## Remove lattice points that fall on NA cost cells
-    patch[is.na(cost)] <- 0
-  } else if (!inherits(patch, "RasterLayer")) {
-    stop("grainscape: patch must be a raster (patch-based model) OR an integer (lattice model).", call. = FALSE)
-  }
+setGeneric("MPG", function(cost, patch, ...) {
+  standardGeneric("MPG")
+})
 
-  ## Check that input rasters are of class RasterLayer
-  if (!inherits(cost, "RasterLayer")) {
-    stop("grainscape: cost raster must be of class RasterLayer.", call. = FALSE)
-  }
-
+#' @export
+#' @rdname MPG
+setMethod(
+  "MPG",
+  signature = c(cost = "RasterLayer", patch = "RasterLayer"),
+  definition = function(cost, patch, sa = NULL, filterPatch = NULL,
+                        spreadFactor = 0, ...) {
   ## Check patch and cost are comparable
   if (!compareRaster(patch, cost, res = TRUE, orig = TRUE, stopiffalse = FALSE)) {
     stop("grainscape: patch and cost rasters must be identical in extent, projection, origin and resolution.", call. = FALSE)
@@ -228,42 +187,38 @@ MPG.RasterLayer <- function(cost, ..., patch, sa = NULL, filterPatch = NULL,
   hce <- .habConnEngine(cost = rasCost, patches = rasPatch)
 
   ## Establish mpg object
-  mpg <- list()
-  mpg$landscapeType <- "cost"
-  mpg$landscape <- rasCost
+  patchId <- hce@patchLinks
+  patchId[hce@patchLinks < 0] <- NA
 
-  mpg$patchId <- hce$patchLinks
-  mpg$patchId[hce$patchLinks < 0] <- NA
+  voronoi <- hce@voronoi
 
-  mpg$voronoi <- hce$voronoi
+  lcpLinkId <- hce@patchLinks
+  lcpLinkId[hce@patchLinks >= 0] <- NA
 
-  mpg$lcpLinkId <- hce$patchLinks
-  mpg$lcpLinkId[hce$patchLinks >= 0] <- NA
+  lcpPerimWeight <- reclassify(lcpLinkId, rcl = matrix(c(
+    hce@linkData$LinkId, hce@linkData$PerimWeight), ncol = 2))
 
-  mpg$lcpPerimWeight <- reclassify(mpg$lcpLinkId, rcl = matrix(c(
-    hce$linkData$LinkId, hce$linkData$PerimWeight), ncol = 2))
-
-  mpg$mpgPlot <- hce$patchLinks              # TO BE REMOVED?
+  mpgPlot <- hce@patchLinks
 
   ## Get additional patch information
-  uniquePatches <- sort(unique(mpg$voronoi[]))
+  uniquePatches <- voronoi[] %>% unique() %>% sort()
 
   ## Patch edge
-  patchEdge <- mpg$patchId
+  patchEdge <- patchId
   patchEdge <- raster::boundaries(patchEdge, type = "inner")
   patchEdge[patchEdge == 0] <- NA
-  patchEdge <- mask(mpg$patchId, patchEdge)
+  patchEdge <- mask(patchId, patchEdge)
 
   ## Patch area and core area
-  patchArea <- freq(mpg$patchId, useNA = "no")
+  patchArea <- freq(patchId, useNA = "no")
   patchEdgeArea <- freq(patchEdge, useNA = "no")
   patch <- data.frame(name = uniquePatches, patchId = uniquePatches,
                       patchArea = patchArea, patchEdgeArea = patchEdgeArea,
                       coreArea = patchArea - patchEdgeArea)
 
   ## Find centroids of each patch
-  cellXY <- coordinates(mpg$patchId)
-  r <- rasX <- rasY <- mpg$patchId
+  cellXY <- coordinates(patchId)
+  r <- rasX <- rasY <- patchId
   r[r == 0] <- NA
   rasX[] <- cellXY[, 1]
   rasY[] <- cellXY[, 2]
@@ -275,17 +230,39 @@ MPG.RasterLayer <- function(cost, ..., patch, sa = NULL, filterPatch = NULL,
   toGraphV <- cbind(patch, centroidX = centroids$meanX, centroidY = centroids$meanY) %>%
     as.data.frame()
 
-  toGraphE <- data.frame(v1 = hce$linkData$StartId,
-                         v2 = hce$linkData$EndId,
-                         linkId = hce$linkData$LinkId * -1L,
-                         lcpPerimWeight = hce$linkData$PerimWeight,
-                         startPerimX = hce$linkData$StartRow,
-                         startPerimY = hce$linkData$StartColumn,
-                         endPerimX = hce$linkData$EndRow,
-                         endPerimY = hce$linkData$EndColumn)
-  mpg$mpg <- graph_from_data_frame(toGraphE, directed = FALSE, vertices = toGraphV)
+  toGraphE <- data.frame(v1 = hce@linkData$StartId,
+                         v2 = hce@linkData$EndId,
+                         linkId = hce@linkData$LinkId * -1L,
+                         lcpPerimWeight = hce@linkData$PerimWeight,
+                         startPerimX = hce@linkData$StartRow,
+                         startPerimY = hce@linkData$StartColumn,
+                         endPerimX = hce@linkData$EndRow,
+                         endPerimY = hce@linkData$EndColumn)
+  mpg.igraph <- graph_from_data_frame(toGraphE, directed = FALSE, vertices = toGraphV)
 
-  class(mpg) <- "mpg"
+  mpg <- new('mpg', mpg = mpg.igraph, patchId = patchId, voronoi = voronoi,
+             lcpPerimWeight = lcpPerimWeight, lcpLinkId = lcpLinkId, mpgPlot = mpgPlot)
 
   return(mpg)
-}
+})
+
+#' @export
+#' @rdname MPG
+setMethod(
+  "MPG",
+  signature = c(cost = "RasterLayer", patch = "numeric"),
+  definition = function(cost, patch, sa = NULL, filterPatch = NULL,
+                        spreadFactor = 0, ...) {
+    ## Produce the lattice patch rasters
+    focalPointDistFreq <- patch
+    patch <- cost
+    patch[] <- 0
+    patch[cellFromRowColCombine(patch,
+                                seq(1, nrow(patch), by = focalPointDistFreq) + focalPointDistFreq/2,
+                                seq(1, ncol(patch), by = focalPointDistFreq) + focalPointDistFreq/2)] <- 1
+    ## Remove lattice points that fall on NA cost cells
+    patch[is.na(cost)] <- 0
+
+    MPG(cost = cost, patch = patch, sa = sa, filterPatch = filterPatch,
+        spreadFactor = spreadFactor, ...)
+})

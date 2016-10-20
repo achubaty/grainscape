@@ -8,14 +8,6 @@
 #' N.B. Grains of connectivity (GOC) done by \code{\link{GOC}} is also a scalar
 #' analysis using Voronoi tessellations rather than patches (see Galpern et al., 2012).
 #'
-#' @param ...  Additional arguments.
-#'
-#' @export
-#'
-threshold <- function(x, ...) UseMethod("threshold")
-
-
-
 #' @param x       A \code{mpg} object produced by \code{\link{MPG}}.
 #'
 #' @param weight  A string giving the link weight or attribute to use for threshold.
@@ -36,6 +28,8 @@ threshold <- function(x, ...) UseMethod("threshold")
 #'                  Use \code{link{threshold}} to identify thresholds of interest.
 #'                  Provide either \code{nThresh} or \code{doThresh} not both.
 #'
+#' @param ...      Additional arguments (not used).
+#'
 #' @return A list object with the following elements:
 #'
 #' \describe{
@@ -53,15 +47,17 @@ threshold <- function(x, ...) UseMethod("threshold")
 #'
 #' Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis at multiple spatial scales in landscape genetics.  Molecular Ecology 21:3996-4009.
 #'
-#' @author Paul Galpern
+#' @author Paul Galpern and Alex Chubaty
 #' @docType methods
 #' @export
-#' @importFrom igraph '%>%' clusters delete.edges edge_attr
+#' @include classes.R
 #' @rdname threshold
 #' @seealso \code{\link{MPG}}
 #'
 #' @examples
 #' \dontrun{
+#' library(raster)
+#'
 #' # Load raster landscape
 #' tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape"))
 #'
@@ -78,36 +74,45 @@ threshold <- function(x, ...) UseMethod("threshold")
 #' print(tinyThresh$th[[7]], vertex = TRUE, edge = TRUE)
 #' }
 #'
-threshold.mpg <- function(x, ..., weight = "lcpPerimWeight", nThresh = NULL, doThresh = NULL) {
-  baseGraph <- x$mpg
+setGeneric("threshold", function(x, ...) {
+  standardGeneric("threshold")
+})
 
-  threshGraph <- vector("list")
+#' @export
+#' @rdname threshold
+setMethod(
+  "threshold",
+  signature = "mpg",
+  definition = function(x, weight = "lcpPerimWeight", nThresh = NULL, doThresh = NULL, ...) {
+    baseGraph <- x@mpg
 
-  linkWeight <- try(edge_attr(baseGraph, weight), silent = TRUE)
-  if (inherits(linkWeight, "try-error")) {
-    stop("grainscape: weight must be the name of an existing link attribute",
-         " to threshold (e.g., 'lcpPerimWeight')", call. = FALSE)
-  }
+    threshGraph <- vector("list")
 
-  if (is.null(nThresh) && is.null(doThresh)) {
-    stop("grainscape: either nThresh or doThresh must be specified", call. = FALSE)
-  } else if (!is.null(nThresh) && !is.null(doThresh)) {
-    stop("grainscape: only one of nThresh or doThresh must be specified", call. = FALSE)
-  } else if (is.null(doThresh)) {
-    doThresh <- seq(0, max(linkWeight), length = nThresh)
-  }
+    linkWeight <- try(edge_attr(baseGraph, weight), silent = TRUE)
 
-  threshGraph$summary <- data.frame(maxLink = doThresh)
+    if (inherits(linkWeight, "try-error")) {
+      stop("grainscape: weight must be the name of an existing link attribute",
+           " to threshold (e.g., 'lcpPerimWeight')", call. = FALSE)
+    }
 
-  threshGraph$th <- lapply(1:length(doThresh), function(i) {
-    delete.edges(baseGraph, which(linkWeight > doThresh[i]))
-  })
+    if (is.null(nThresh) && is.null(doThresh)) {
+      stop("grainscape: either nThresh or doThresh must be specified", call. = FALSE)
+    } else if (!is.null(nThresh) && !is.null(doThresh)) {
+      stop("grainscape: only one of nThresh or doThresh must be specified", call. = FALSE)
+    } else if (is.null(doThresh)) {
+      doThresh <- seq(0, max(linkWeight), length = nThresh)
+    }
 
-  threshGraph$summary$nComponents <- lapply(threshGraph$th, function(z) {
-    clusters(z)$no
-  }) %>%
-    unlist()
+    threshGraph$summary <- data.frame(maxLink = doThresh)
 
-  return(threshGraph)
-}
+    threshGraph$th <- lapply(1:length(doThresh), function(i) {
+      delete.edges(baseGraph, which(linkWeight > doThresh[i]))
+    })
 
+    threshGraph$summary$nComponents <- lapply(threshGraph$th, function(z) {
+      clusters(z)$no
+    }) %>%
+      unlist()
+
+    return(threshGraph)
+})

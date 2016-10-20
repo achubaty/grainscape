@@ -7,12 +7,6 @@
 #' Visualization is exclusively in vector format.
 #' \code{\link{GOC}} must be run using the \code{sp=TRUE} option.
 #'
-#' @param ...  Additional arguments.
-#'
-#' @export
-#'
-corridor <- function(x, ...) UseMethod("corridor")
-
 #' @param x       A \code{goc} object created by \code{\link{GOC}}.
 #'
 #' @param whichThresh  Integer giving the index of the threshold to visualize.
@@ -26,6 +20,8 @@ corridor <- function(x, ...) UseMethod("corridor")
 #'
 #' @param weight  The GOC graph link weight to use in calculating the distance.
 #'                Please see details in \code{\link{distance}}.
+#'
+#' @param ...     Additional arguments (not used).
 #'
 #' @return A list object:
 #'
@@ -54,18 +50,19 @@ corridor <- function(x, ...) UseMethod("corridor")
 #'
 #' Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis at multiple spatial scales in landscape genetics. Molecular Ecology 21:3996-4009.
 #'
-#' @author Paul Galpern
+#' @author Paul Galpern and Alex Chubaty
 #' @docType methods
 #' @export
 #' @importFrom graphics plot
-#' @importFrom igraph '%>%' as_edgelist edge_attr shortest_paths V
 #' @importFrom sp Line Lines SpatialLines SpatialLinesDataFrame SpatialPoints
-#' @include visualize.R
+#' @include classes.R visualize.R
 #' @rdname corridor
 #' @seealso \code{\link{GOC}}, \code{\link{visualize}}
 #'
 #' @examples
 #' \dontrun{
+#' library(raster)
+#'
 #' ## Load raster landscape
 #' tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape"))
 #'
@@ -94,87 +91,100 @@ corridor <- function(x, ...) UseMethod("corridor")
 #'             "resistance units"), side = 1)
 #' }
 #'
-corridor.goc <- function(x, ..., whichThresh, coords, doPlot = FALSE, weight = "meanWeight") {
+setGeneric("corridor", function(x, ...) {
+    standardGeneric("corridor")
+})
+
+#' @export
+#' @rdname corridor
+setMethod(
+  "corridor",
+  signature = "goc",
+  definition = function(x, whichThresh, coords, doPlot = 0, weight = "meanWeight", ...) {
   if (!requireNamespace("rgeos", quietly = TRUE)) {
     stop("grainscape:  rgeos package must be installed to use sp=TRUE")
   }
 
-  if (is.null(x$voronoiSP)) {
+  if (is.null(x@voronoiSP)) {
     stop("grainscape:  GOC object must be produced using sp=TRUE", call. = FALSE)
   }
 
   ## Check whichThresh
-  if ((length(whichThresh) > 1) || (!(whichThresh %in% 1:length(x$th)))) {
+  if ((length(whichThresh) > 1) || (!(whichThresh %in% 1:length(x@th)))) {
     stop("grainscape:  whichThresh must index a single threshold existing in the GOC object", call. = FALSE)
   }
 
-  if (!(weight %in% names(edge_attr(x$th[[1]]$goc)))) {
-    stop("grainscape:  link weight attribute with this name doesn't exist in GOC object", call. = FALSE)
-  }
-
-  if ((is.null(dim(coords))) & (!inherits(coords, "SpatialPoints"))) {
+  ## Check coords
+  if (is.null(dim(coords))) {
     coords <- t(as.matrix(coords))
   }
 
-  if (!inherits(coords, "SpatialPoints") && (dim(coords)[2] != 2)) {
+  if (ncol(coords) != 2) {
     stop("grainscape:  coords must be a SpatialPoints object or a matrix of two columns giving X and Y coordinates", call. = FALSE)
   }
 
-  if ((inherits(coords, "SpatialPoints") && (length(coords) > 2)) || (nrow(coords) > 2)) {
+  if (nrow(coords) > 2) {
     warning("grainscape:  using only first two sets of coordinates for corridor start and end points", call. = FALSE)
     coords <- coords[1:2, ]
   }
 
+  ## Check weight
+  if (!(weight %in% names(edge_attr(x@th[[1]]$goc)))) {
+    stop("grainscape:  link weight attribute with this name doesn't exist in GOC object", call. = FALSE)
+  }
+
   ## GOC Graph
-  edges <- as_edgelist(x$th[[whichThresh]]$goc)
+  edges <- as_edgelist(x@th[[whichThresh]]$goc)
   edges <- cbind(edgeNum = 1:nrow(edges),
                  v1 = sapply(edges[, 1], function(z) {
-                   which(V(x$th[[whichThresh]]$goc)$name == z)
+                   which(V(x@th[[whichThresh]]$goc)$name == z)
                   }),
                  v2 = sapply(edges[, 2], function(z) {
-                   which(V(x$th[[whichThresh]]$goc)$name == z)
+                   which(V(x@th[[whichThresh]]$goc)$name == z)
                   }))
   edgesGOC <- apply(edges, 1, function(i) {
-    cbind(c(V(x$th[[whichThresh]]$goc)$centroidX[i["v1"]],
-            V(x$th[[whichThresh]]$goc)$centroidX[i["v2"]]),
-          c(V(x$th[[whichThresh]]$goc)$centroidY[i["v1"]],
-            V(x$th[[whichThresh]]$goc)$centroidY[i["v2"]])) %>%
+    cbind(c(V(x@th[[whichThresh]]$goc)$centroidX[i["v1"]],
+            V(x@th[[whichThresh]]$goc)$centroidX[i["v2"]]),
+          c(V(x@th[[whichThresh]]$goc)$centroidY[i["v1"]],
+            V(x@th[[whichThresh]]$goc)$centroidY[i["v2"]])) %>%
       Line() %>%
       Lines(ID = as.character(i["edgeNum"]))
   }) %>%
     SpatialLines() %>%
-    SpatialLinesDataFrame(data = data.frame(
-      edgeNum = 1:nrow(edges),
-      weight = edge_attr(x$th[[whichThresh]]$goc, weight)
-    ))
+    SpatialLinesDataFrame(
+      data = data.frame(
+        edgeNum = 1:nrow(edges),
+        weight = edge_attr(x@th[[whichThresh]]$goc, weight)
+      )
+    )
 
-  verticesGOC <- SpatialPoints(cbind(V(x$th[[whichThresh]]$goc)$centroidX,
-                                     V(x$th[[whichThresh]]$goc)$centroidY))
+  verticesGOC <- SpatialPoints(cbind(V(x@th[[whichThresh]]$goc)$centroidX,
+                                     V(x@th[[whichThresh]]$goc)$centroidY))
 
   ## Shortest path
   startEndPolygons <- point(x, coords)$pointPolygon[, whichThresh]
-  startEndPath <- shortest_paths(x$th[[whichThresh]]$goc,
-                                 which(V(x$th[[whichThresh]]$goc)$polygonId == startEndPolygons[1]),
-                                 which(V(x$th[[whichThresh]]$goc)$polygonId == startEndPolygons[2]),
-                                 weights = V(x$th[[whichThresh]]$goc)$meanWeight) %>%
+  startEndPath <- shortest_paths(x@th[[whichThresh]]$goc,
+                                 which(V(x@th[[whichThresh]]$goc)$polygonId == startEndPolygons[1]),
+                                 which(V(x@th[[whichThresh]]$goc)$polygonId == startEndPolygons[2]),
+                                 weights = V(x@th[[whichThresh]]$goc)$meanWeight) %>%
     `[[`(1) %>%
     `[[`(1) %>%
     as.numeric()
 
-  shortestPathEdges <- cbind(V(x$th[[whichThresh]]$goc)$centroidX[startEndPath],
-                             V(x$th[[whichThresh]]$goc)$centroidY[startEndPath]) %>%
+  shortestPathEdges <- cbind(V(x@th[[whichThresh]]$goc)$centroidX[startEndPath],
+                             V(x@th[[whichThresh]]$goc)$centroidY[startEndPath]) %>%
     Line() %>%
     Lines(ID = "1") %>%
     list() %>%
     SpatialLines()
 
   shortestPathVertices <- SpatialPoints(cbind(
-    V(x$th[[whichThresh]]$goc)$centroidX[startEndPath],
-    V(x$th[[whichThresh]]$goc)$centroidY[startEndPath]))
+    V(x@th[[whichThresh]]$goc)$centroidX[startEndPath],
+    V(x@th[[whichThresh]]$goc)$centroidY[startEndPath]))
   pathDist <- distances(
-    x$th[[whichThresh]]$goc,
-    v = V(x$th[[whichThresh]]$goc)[startEndPath[1]],
-    weights = edge_attr(x$th[[whichThresh]]$goc, weight)
+    x@th[[whichThresh]]$goc,
+    v = V(x@th[[whichThresh]]$goc)[startEndPath[1]],
+    weights = edge_attr(x@th[[whichThresh]]$goc, weight)
   )[startEndPath[length(startEndPath)]]
 
   voronoiSP <- visualize(x, whichThresh, sp = TRUE)$voronoiSP
@@ -203,4 +213,4 @@ corridor.goc <- function(x, ..., whichThresh, coords, doPlot = FALSE, weight = "
     corridorLength = pathDist
   )
   return(result)
-}
+})

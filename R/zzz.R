@@ -1,4 +1,3 @@
-#' @importFrom methods loadMethod
 .onLoad <- function(libname, pkgname) {
 }
 

@@ -5,14 +5,6 @@
 #' by scalar analysis.
 #' Patch-based or lattice GOC modelling can be done with this function.
 #'
-#' @param ...  Additional arguments.
-#'
-#' @export
-#'
-GOC <- function(x, ...) UseMethod("GOC")
-
-
-
 #' @param x         A \code{mpg} object produced by \code{\link{MPG}}.
 #'                  For lattice GOC \code{MPG} must be run with patch set as an integer value.
 #'
@@ -37,7 +29,7 @@ GOC <- function(x, ...) UseMethod("GOC")
 #'
 #' @param sp  Logical.  If \code{TRUE} the \code{rgeos} package is used to create
 #'            a vector of class \code{\link{SpatialPolygonsDataFrame}} describing
-#'            the finest grain of connectivity.  This is very useful for visualizing
+#'            the finest grain of connectivity. This is very useful for visualizing
 #'            grains of connectivity models, especially for print purposes.
 #'            Equally, using the \code{maptools} or \code{rgdal} packages these
 #'            polygons can be exported as shapefiles for use in other GIS applications.
@@ -45,32 +37,13 @@ GOC <- function(x, ...) UseMethod("GOC")
 #'
 #' @param verbose Set \code{verbose=0} for no progress information to console.
 #'
+#' @param ...     Additional arguments (not used).
+#'
 #' @details
 #' This function can take a long time to run when \code{sp = TRUE}.
 #' Time taken is dependent on the dimensions of the \code{mpg$voronoi} raster.
 #'
-#' @return  A \code{GOC} object containing:
-#'
-#' \describe{
-#'   \item{\code{voronoi}}{ is a raster describing the regions of proximity in
-#'   resistance units around the focal patches or points (\code{RasterLayer});}
-#'
-#'   \item{\code{voronoiSP}}{is a vector representation of these regions of
-#'   proximity (\code{SpatialPolygons}; if \code{sp = TRUE});}
-#'
-#'   \item{\code{summary}}{summarizes the grains of connectivity generated and
-#'   their properties;}
-#'
-#'   \item{\code{th}}{is a list of length \code{nThresh} or \code{length(doThresh)}
-#'   giving the GOC graph at each threshold.}
-#' }
-#'
-#' Each element of \code{th} contains a \code{goc} object giving the GOC graph as class \code{\link{igraph}}.
-#' Vertex attributes describes qualities of each polygon including the coordinates of each polygon centroid,
-#' the area of these polygons, and the original patch IDs in the MPG that are included in each polygon.
-#' All areal measurements are given as raster cell counts.
-#' A variety of edge attributes are also given in the GOC graph.
-#' See \code{\link{distance}} for more information.
+#' @return  A \code{\link[=goc-class]{goc}} object.
 #'
 #' @note Researchers should consider whether the use of a patch-based GOC or a lattice
 #' GOC model is appropriate based on the patch-dependency of the organism under study.
@@ -87,10 +60,10 @@ GOC <- function(x, ...) UseMethod("GOC")
 #' @author Paul Galpern
 #' @docType methods
 #' @export
-#' @importFrom igraph components delete_edges E 'E<-' edge_attr ends graph_from_data_frame is_igraph V 'V<-' vcount
 #' @importFrom raster freq rasterToPolygons reclassify zonal
 #' @importFrom sp coordinates
 #' @importFrom stats median
+#' @include classes.R
 #' @rdname GOC
 #' @seealso \code{\link{MPG}}, \code{\link{visualize}},
 #'          \code{\link{distance}}, \code{\link{point}}
@@ -102,7 +75,7 @@ GOC <- function(x, ...) UseMethod("GOC")
 #' ## Load raster landscape
 #' tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape"))
 #'
-#' ## Create a resistance surface from a raster using an is-becomes reclassifyifyification
+#' ## Create a resistance surface from a raster using an is-becomes reclassication
 #' tinyCost <- reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
 #'
 #' ## Produce a patch-based MPG where patches are resistance features=1
@@ -112,21 +85,29 @@ GOC <- function(x, ...) UseMethod("GOC")
 #' tinyPatchGOC <- GOC(tinyPatchMPG, nThresh = 5)
 #'
 #' ## Examine the properties of the GOC graph of grain 3 of 5
-#' print(tinyPatchGOC$th[[3]]$goc, vertex = TRUE, edge = TRUE)
+#' print(tinyPatchGOC@th[[3]]$goc, vertex = TRUE, edge = TRUE)
 #'
 #' ## Extract specified grains of connectivity and produce a vector SpatialPolygons
 #' ## representation of the finest grain of connectivity (Threshold=0)
 #' tinyPatchGOC <- GOC(tinyPatchMPG, doThresh = c(0, 20, 40), sp = TRUE)
 #' }
 #'
-GOC.mpg <- function(x, ..., nThresh = NULL, doThresh = NULL,
-                    weight = "lcpPerimWeight", sp = FALSE, verbose = 0) {
+setGeneric("GOC", function(x, ...) {
+  standardGeneric("GOC")
+})
+
+#' @export
+#' @rdname GOC
+setMethod(
+  "GOC",
+  signature = "mpg",
+  definition = function(x, nThresh = NULL, doThresh = NULL,
+                        weight = "lcpPerimWeight", sp = FALSE, verbose = 0, ...) {
   if (isTRUE(sp) && !requireNamespace("rgeos", quietly = TRUE)) {
     stop("grainscape:  rgeos package must be installed to use sp = TRUE")
   }
 
-  threshGraph <- vector("list")
-  baseGraph <- x$mpg
+  baseGraph <- x@mpg
 
   linkWeight <- try(edge_attr(baseGraph, weight), silent = TRUE)
 
@@ -142,23 +123,25 @@ GOC.mpg <- function(x, ..., nThresh = NULL, doThresh = NULL,
     ## Determine nThresh unique thresholds covering the full range of possibilities
     ## in terms of the number of polygons
     allUniqueThresh <- t(sapply(sort(c(0, unique(linkWeight))), function(z) {
-      cbind(x, components(delete_edges(x$mpg, which(linkWeight > z)))$no)
+      cbind(z, components(delete_edges(x@mpg, which(linkWeight > z)))$no)
     }))
     doThresh <- allUniqueThresh[!duplicated(allUniqueThresh[, 2]), 1]
     doThresh <- doThresh[round(seq(1, length(doThresh), length = nThresh))]
   }
 
-  threshGraph$voronoi <- x$voronoi
-  threshGraph$summary <- data.frame(maxLink = doThresh)
+  voronoi <- x@voronoi
+  summary.df <- data.frame(maxLink = doThresh, stringsAsFactors = FALSE)
 
   ## Optionally retain a vectorized version of the smallest grain of connectivity
   ## that can later be used to create larger grains by aggregation
-  if (sp) {
+  if (isTRUE(sp)) {
     if (verbose >= 2) message("Creating SpatialPolygons for smallest grain.")
     if (verbose >= 3) {
       message("  Time for completion is dependent on the number of patches and the dimensions of the raster.")
     }
-    threshGraph$voronoiSP <- rasterToPolygons(threshGraph$voronoi, dissolve = TRUE)
+    voronoiSP <- rasterToPolygons(voronoi, dissolve = TRUE)
+  } else {
+    voronoiSP <- .emptySPDF()
   }
 
   allLinks <- ends(baseGraph, E(baseGraph))
@@ -178,8 +161,8 @@ GOC.mpg <- function(x, ..., nThresh = NULL, doThresh = NULL,
   }
 
   linkId <- edge_attr(baseGraph, "linkId")
-  cellXY <- coordinates(threshGraph$voronoi)
-  threshGraph$th <- vector("list", length(doThresh))
+  cellXY <- coordinates(voronoi)
+  th <- vector("list", length(doThresh))
 
   for (iThresh in 1:length(doThresh)) {
     if (verbose >= 1) message("Threshold ", iThresh, " of ", length(doThresh))
@@ -263,14 +246,14 @@ GOC.mpg <- function(x, ..., nThresh = NULL, doThresh = NULL,
           paste(as.character(V(baseGraph)$patchId[components == z]), collapse = ", "))
 
         ## Produce a raster representing this grain of connectivity
-        gocRaster <- threshGraph$voronoi
+        gocRaster <- voronoi
 
         rawreclassifyVor <- cbind(sourcePatchId, V(componentGraph)$polygonId)
         reclassifyVor <- matrix(0, 1, 2)
         for (j in 1:nrow(rawreclassifyVor)) {
           reclassifyVor <- rbind(reclassifyVor,
-                                 cbind(as.integer(strsplit(rawreclassifyVor[j,1], ", ")[[1]]),
-                                       as.integer(rawreclassifyVor[j,2])))
+                                 cbind(as.integer(strsplit(rawreclassifyVor[j, 1], ", ")[[1]]),
+                                       as.integer(rawreclassifyVor[j, 2])))
         }
         reclassifyVor <- reclassifyVor[2:nrow(reclassifyVor), ]
 
@@ -322,41 +305,43 @@ GOC.mpg <- function(x, ..., nThresh = NULL, doThresh = NULL,
         })
         E(componentGraph)$eucCentroidWeight <- eucCentroidWeight
 
-        threshGraph$th[[iThresh]]$goc <- componentGraph
+        th[[iThresh]]$goc <- componentGraph
       } else {
-        threshGraph$th[[iThresh]]$goc <- NA
+        th[[iThresh]]$goc <- NA
       }
     } else {
-      threshGraph$th[[iThresh]]$goc <- NA
+      th[[iThresh]]$goc <- NA
     }
   }
 
   ## Add data to the summary table
-  threshGraph$summary$nPolygon <- unlist(lapply(threshGraph$th, function(z) {
+  summary.df$nPolygon <- unlist(lapply(th, function(z) {
     if (is_igraph(z$goc)) vcount(z$goc) else NA
   }))
-  threshGraph$summary$maxPolygonArea <- unlist(lapply(threshGraph$th, function(z) {
+  summary.df$maxPolygonArea <- unlist(lapply(th, function(z) {
     if (is_igraph(z$goc)) max(V(z$goc)$polygonArea) else NA
   }))
-  threshGraph$summary$minPolygonArea <- unlist(lapply(threshGraph$th, function(z) {
+  summary.df$minPolygonArea <- unlist(lapply(th, function(z) {
     if (is_igraph(z$goc)) min(V(z$goc)$polygonArea) else NA
   }))
-  threshGraph$summary$meanPolygonArea <- unlist(lapply(threshGraph$th, function(z) {
+  summary.df$meanPolygonArea <- unlist(lapply(th, function(z) {
     if (is_igraph(z$goc)) mean(V(z$goc)$polygonArea) else NA
   }))
-  threshGraph$summary$medianPolygonArea <- unlist(lapply(threshGraph$th, function(z) {
+  summary.df$medianPolygonArea <- unlist(lapply(th, function(z) {
     if (is_igraph(z$goc)) median(V(z$goc)$polygonArea) else NA
   }))
 
   ## Find ECS (Expected cluster size; O'Brien et al, 2006) using totalPatchArea
-  threshGraph$summary$ECS <- unlist(lapply(threshGraph$th, function(z) {
+  summary.df$ECS <- unlist(lapply(th, function(z) {
     if (is_igraph(z$goc)) sum(V(z$goc)$totalPatchArea^2)/sum(V(z$goc)$totalPatchArea) else NA
   }))
   ## Find ECSCore (Expected cluster size; O'Brien et al, 2006) using totalCoreArea
-  threshGraph$summary$ECSCore <- unlist(lapply(threshGraph$th, function(z) {
+  summary.df$ECSCore <- unlist(lapply(th, function(z) {
     if (is_igraph(z$goc)) sum(V(z$goc)$totalCoreArea^2)/sum(V(z$goc)$totalCoreArea) else NA
   }))
-  class(threshGraph) <- "goc"
+
+  threshGraph <- new("goc", voronoi = voronoi, voronoiSP = voronoiSP,
+                     summary = summary.df, th = th)
 
   return(threshGraph)
-}
+})

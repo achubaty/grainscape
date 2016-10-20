@@ -3,14 +3,17 @@
 \docType{methods}
 \name{visualize}
 \alias{visualize}
+\alias{visualize,goc-method}
 \title{Visualize grains of connectivity (GOC) tessellations at a given scale}
 \usage{
-visualize(x, whichThresh, sp = FALSE, doPlot = FALSE)
+visualize(x, ...)
 
-visualize(x, whichThresh, sp = FALSE, doPlot = FALSE)
+\S4method{visualize}{goc}(x, whichThresh, sp = FALSE, doPlot = FALSE, ...)
 }
 \arguments{
-\item{x}{A \code{GOC} object created by \code{\link{GOC}}.}
+\item{x}{A \code{goc} object created by \code{\link{GOC}}.}
+
+\item{...}{Additional arguments to pass to \code{plot} if \code{doPlot = TRUE}).}
 
 \item{whichThresh}{Integer giving the index of the threshold to visualize.}
 
@@ -21,24 +24,22 @@ and that the \code{rgeos} package is installed.}
 
 \item{doPlot}{Logical.  If \code{TRUE} plots a raster (or vector if \code{sp=TRUE})
 of the Voronoi tessellation at \code{whichThresh} for quick visualizations.
-For full control, manually produce plots using the \code{$voronoi}
-or \code{$voronoiSP} objects created by this function.}
-
-\item{...}{Additional arguments.}
+For full control, manually produce plots using the \code{voronoi}
+or \code{voronoiSP} objects created by this function.}
 }
 \value{
 A list object containing the following elements:
 
 \describe{
-  \item{\code{$summary}}{gives the properties of the visualized scale of the GOC model;}
+  \item{\code{summary}}{gives the properties of the visualized scale of the GOC model;}
 
-  \item{\code{$voronoi}}{a \code{RasterLayer} giving the Voronoi tessellation;}
+  \item{\code{voronoi}}{a \code{RasterLayer} giving the Voronoi tessellation;}
 
-  \item{\code{$centroids}}{a \code{SpatialPoints} objects giving the centroids
+  \item{\code{centroids}}{a \code{SpatialPoints} objects giving the centroids
   of the polygons in the tessellation;}
 
-  \item{\code{$voronoiSP}}{vector representation of polygons in the tessellation
-  (\code{SpatialPolygonsDataFrame}; if \code{sp=TRUE})}
+  \item{\code{voronoiSP}}{vector representation of polygons in the tessellation
+  (\code{SpatialPolygonsDataFrame}; if \code{sp = TRUE})}
 }
 }
 \description{
@@ -48,6 +49,8 @@ Vector based visualization is also possible.
 }
 \examples{
 \dontrun{
+library(raster)
+
 ## Load raster landscape
 tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape"))
 
@@ -62,7 +65,7 @@ tinyPatchGOC <- GOC(tinyPatchMPG, nThresh = 5)
 
 ## Very quick visualization at the finest scale/grain/threshold
 ## Producing plot on the default graphics device
-visualize(tinyPatchGOC, whichThresh = 1, doPlot = TRUE)
+visualize(tinyPatchGOC, whichThresh = 1, doPlot = TRUE, col = topo.colors(10))
 
 ## Visualize the model at the finest scale/grain/threshold
 ## Manual control of plotting
@@ -73,13 +76,13 @@ plot(visualize(tinyPatchGOC, whichThresh = 1)$voronoi,
 tinyPatchGOC <- GOC(tinyPatchMPG, nThresh= 5 , sp = TRUE)
 
 ## Visualize the model at a selected scale/grain/threshold using vector polygons
-plot(tinyPatchMPG$patchId, col = "grey", legend = FALSE)
+plot(tinyPatchMPG@patchId, col = "grey", legend = FALSE)
 plot(visualize(tinyPatchGOC, whichThresh = 3, sp = TRUE)$voronoiSP, add = TRUE, lwd = 2)
 }
 
 }
 \author{
-Paul Galpern
+Paul Galpern and Alex Chubaty
 }
 \references{
 Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien. (2007) Spatial graphs: Principles and applications for habitat connectivity. Ecosystems 10:448:461.

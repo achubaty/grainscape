@@ -3,20 +3,26 @@
 \docType{methods}
 \name{distance}
 \alias{distance}
-\alias{distance.goc}
+\alias{distance,goc,SpatialPoints-method}
+\alias{distance,goc,matrix-method}
+\alias{distance,goc,numeric-method}
 \title{Find the grains of connectivity network distance}
 \usage{
-distance(x, ...)
+distance(x, y, ...)
 
-\method{distance}{goc}(x, ..., coords, weight = "meanWeight")
+\S4method{distance}{goc,SpatialPoints}(x, y, weight = "meanWeight", ...)
+
+\S4method{distance}{goc,matrix}(x, y, weight = "meanWeight", ...)
+
+\S4method{distance}{goc,numeric}(x, y, weight = "meanWeight", ...)
 }
 \arguments{
-\item{x}{A \code{GOC} object produced by \code{\link{GOC}}.}
+\item{x}{A \code{goc} object produced by \code{\link{GOC}}.}
 
-\item{...}{Additional arguments.}
-
-\item{coords}{A two column matrix or a \code{\link{SpatialPoints}} object
+\item{y}{A two column matrix or a \code{\link{SpatialPoints}} object
 giving the coordinates of points of interest.}
+
+\item{...}{Additional arguments (not used).}
 
 \item{weight}{The GOC graph link weight to use in calculating the distance.
 Please see Details for explanation.}
@@ -24,7 +30,7 @@ Please see Details for explanation.}
 \value{
 A list object giving a distance matrix for each threshold in the \code{GOC} object.
 Distance matrices give the pairwise grains of connectivity network distances between sampling locations.
-Matrix indices correspond to rows in the \code{coords} matrix.
+Matrix indices correspond to rows in the coords matrix (\code{y}).
 }
 \description{
 Find the shortest network distance between pairs of points using the GOC graph.
@@ -32,6 +38,8 @@ This can be used as an effective distance for landscape connectivity assessments
 }
 \examples{
 \dontrun{
+library(raster)
+
 ## Load raster landscape
 tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape"))
 
@@ -54,7 +62,7 @@ tinyDist <- distance(tinyPatchGOC, loc)
 
 }
 \author{
-Paul Galpern
+Paul Galpern and Alex Chubaty
 }
 \references{
 Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien. (2007) Spatial graphs: Principles and applications for habitat connectivity. Ecosystems 10:448:461.

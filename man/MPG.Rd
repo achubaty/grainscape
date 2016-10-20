@@ -3,13 +3,17 @@
 \docType{methods}
 \name{MPG}
 \alias{MPG}
-\alias{MPG.RasterLayer}
+\alias{MPG,RasterLayer,RasterLayer-method}
+\alias{MPG,RasterLayer,numeric-method}
 \title{Extract a minimum planar graph (MPG) model from a landscape resistance surface}
 \usage{
-MPG(cost, ...)
+MPG(cost, patch, ...)
 
-\method{MPG}{RasterLayer}(cost, ..., patch, sa = NULL, filterPatch = NULL,
-  spreadFactor = 0)
+\S4method{MPG}{RasterLayer,RasterLayer}(cost, patch, sa = NULL,
+  filterPatch = NULL, spreadFactor = 0, ...)
+
+\S4method{MPG}{RasterLayer,numeric}(cost, patch, sa = NULL,
+  filterPatch = NULL, spreadFactor = 0, ...)
 }
 \arguments{
 \item{cost}{A \code{RasterLayer} giving a landscape resistance surface,
@@ -21,8 +25,6 @@ Negative values are not.
 To extract an MPG with Euclidean links (i.e., and not least-cost
 path links) set \code{cost[] <- 1}.}
 
-\item{...}{Additional arguments.}
-
 \item{patch}{A raster of class \code{RasterLayer} for a patch-based analysis
 OR an integer for a lattice analysis.
 If a raster is given it must be of the same extent, origin and
@@ -30,6 +32,8 @@ projection as \code{cost} and be binary, without missing values,
 where patches=1 and non-patches=0.
 For lattice analyses, an integer gives the spacing in raster
 cells between focal points in the lattice.}
+
+\item{...}{Additional arguments (not used).}
 
 \item{sa}{Optional.  A raster of class \code{RasterLayer} of the same extent,
 origin and projection as \code{cost} indicating the study area
@@ -47,34 +51,7 @@ To reduce accuracy and increase speed, set this as
 \code{spreadFactor=10} or \code{spreadFactor=100}.}
 }
 \value{
-A \code{MPG} object, containing the following elements:
-
-\describe{
-  \item{\code{mpg}}{the minimum planar graph as class \code{igraph}}
-
-  \item{\code{patchId}}{the input \code{patch} raster with patch cells
-  assigned to their id (\code{RasterLayer})}
-
-  \item{\code{voronoi}}{the Voronoi tessellation of the patches and
-  resistance surface (\code{RasterLayer})}
-
-  \item{\code{lcpPerimWeight}}{the paths of the links between patches and
-  their accumulated costs (\code{RasterLayer})}
-
-  \item{\code{lcpLinkId}}{the paths of the links between patches and their
-  id (\code{RasterLayer})}
-
-  \item{\code{mpgPlot}}{provides a quick way of visualizing the mpg (\code{RasterLayer})}
-}
-
-The \code{$mpg} has useful vertex and edge attributes.
-Vertex attributes give attributes of patches including patch area,
-the area of patch edges, the core area of each patch, and the coordinates
-of the patch centroid.
-All areal measurements are given as raster cell counts.
-Edge attributes give attributes of the graph links including link
-weights giving accumulated resistance/least-cost path distance,
-Euclidean distance, and the start and end coordinates of each link.
+A \code{\link[=mpg-class]{mpg}} object.
 }
 \description{
 Extracts a minimum planar graph (MPG) and is also the first step
@@ -118,26 +95,28 @@ tinyPatchMPG <- MPG(cost = tinyCost, patch = (tinyCost == 1))
 graphdf(tinyPatchMPG)
 
 ## Find the mean patch area (see igraph manual for use of V() and E())
-mean(V(tinyPatchMPG$mpg)$patchArea.value)
+mean(V(tinyPatchMPG@mpg)$patchArea.value)
 
 ## Quick visualization of the MPG
-plot(tinyPatchMPG$mpgPlot, col = c("grey", "black"), legend = FALSE)
+plot(tinyPatchMPG, col = c("grey", "black"), legend = FALSE)
 
 ## Visualize the minimum spanning tree of the MPG
-tinyPatchMST <- mst(tinyPatchMPG$mpg)
+tinyPatchMST <- mst(tinyPatchMPG@mpg)
 MSTlinks <- edge_attr(tinyPatchMST, "linkId")
-plot(tinyPatchMPG$patchId, col = "black", legend = FALSE)
-plot((tinyPatchMPG$lcpLinkId * -1) \%in\% MSTlinks, add = TRUE, legend = FALSE, col = c(NA, "grey"))
+plot(tinyPatchMPG@patchId, col = "black", legend = FALSE)
+plot((tinyPatchMPG@lcpLinkId * -1) \%in\% MSTlinks, add = TRUE, legend = FALSE, col = c(NA, "grey"))
 
 ## Additional graph extraction scenarios
 ## Produce a lattice MPG where focal points are spaced 10 cells apart
 tinyLatticeMPG <- MPG(cost = tinyCost, patch = 10)
+plot(tinyLatticeMPG)
 
 ## Produce a patch-based MPG with a study area consisting of half of the map
 tinySa <- tinyCost
 tinySa[] <- 1
 tinySa[1:5000] <- 0
-tinyPatchMPG <- MPG(cost = tinyCost, patch = (tinyCost == 1), sa = tinySa)
+tinySaMPG <- MPG(cost = tinyCost, patch = (tinyCost == 1), sa = tinySa)
+plot(tinySaMPG)
 }
 
 }

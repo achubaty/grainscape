@@ -3,18 +3,18 @@
 \docType{methods}
 \name{threshold}
 \alias{threshold}
-\alias{threshold.mpg}
+\alias{threshold,mpg-method}
 \title{Produce a minimum planar graph (MPG) at multiple scales}
 \usage{
 threshold(x, ...)
 
-\method{threshold}{mpg}(x, ..., weight = "lcpPerimWeight", nThresh = NULL,
-  doThresh = NULL)
+\S4method{threshold}{mpg}(x, weight = "lcpPerimWeight", nThresh = NULL,
+  doThresh = NULL, ...)
 }
 \arguments{
 \item{x}{A \code{mpg} object produced by \code{\link{MPG}}.}
 
-\item{...}{Additional arguments.}
+\item{...}{Additional arguments (not used).}
 
 \item{weight}{A string giving the link weight or attribute to use for threshold.
 \code{"lcpPerimWeight"} uses the accumulated resistance or least-cost path
@@ -56,6 +56,8 @@ See \code{\link{MPG}} for warning related to areal measurements.
 }
 \examples{
 \dontrun{
+library(raster)
+
 # Load raster landscape
 tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape"))
 
@@ -74,7 +76,7 @@ print(tinyThresh$th[[7]], vertex = TRUE, edge = TRUE)
 
 }
 \author{
-Paul Galpern
+Paul Galpern and Alex Chubaty
 }
 \references{
 Brooks, C.P. (2003) A scalar analysis of landscape connectivity. Oikos 102:433-439.

@@ -3,19 +3,19 @@
 \docType{methods}
 \name{GOC}
 \alias{GOC}
-\alias{GOC.mpg}
+\alias{GOC,mpg-method}
 \title{Produce a grains of connectivity model at multiple scales (patch-based or lattice GOC)}
 \usage{
 GOC(x, ...)
 
-\method{GOC}{mpg}(x, ..., nThresh = NULL, doThresh = NULL,
-  weight = "lcpPerimWeight", sp = FALSE, verbose = 3)
+\S4method{GOC}{mpg}(x, nThresh = NULL, doThresh = NULL,
+  weight = "lcpPerimWeight", sp = FALSE, verbose = 0, ...)
 }
 \arguments{
 \item{x}{A \code{mpg} object produced by \code{\link{MPG}}.
 For lattice GOC \code{MPG} must be run with patch set as an integer value.}
 
-\item{...}{Additional arguments.}
+\item{...}{Additional arguments (not used).}
 
 \item{nThresh}{Optional.  An integer giving the number of thresholds (or scales)
 at which to create GOC models.  Thresholds are selected to produce
@@ -38,37 +38,16 @@ perimeters of patches as the link weight.}
 
 \item{sp}{Logical.  If \code{TRUE} the \code{rgeos} package is used to create
 a vector of class \code{\link{SpatialPolygonsDataFrame}} describing
-the finest grain of connectivity.  This is very useful for visualizing
+the finest grain of connectivity. This is very useful for visualizing
 grains of connectivity models, especially for print purposes.
 Equally, using the \code{maptools} or \code{rgdal} packages these
 polygons can be exported as shapefiles for use in other GIS applications.
 But, please see details.}
 
-\item{verbose}{Set \code{verbose=1} for no progress information to console.}
+\item{verbose}{Set \code{verbose=0} for no progress information to console.}
 }
 \value{
-A \code{GOC} object containing:
-
-\describe{
-  \item{\code{voronoi}}{ is a raster describing the regions of proximity in
-  resistance units around the focal patches or points (\code{RasterLayer});}
-
-  \item{\code{voronoiSP}}{is a vector representation of these regions of
-  proximity (\code{SpatialPolygons}; if \code{sp = TRUE});}
-
-  \item{\code{summary}}{summarizes the grains of connectivity generated and
-  their properties;}
-
-  \item{\code{th}}{is a list of length \code{nThresh} or \code{length(doThresh)}
-  giving the GOC graph at each threshold.}
-}
-
-Each element of \code{th} contains a \code{goc} object giving the GOC graph as class \code{\link{igraph}}.
-Vertex attributes describes qualities of each polygon including the coordinates of each polygon centroid,
-the area of these polygons, and the original patch IDs in the MPG that are included in each polygon.
-All areal measurements are given as raster cell counts.
-A variety of edge attributes are also given in the GOC graph.
-See \code{\link{distance}} for more information.
+A \code{\link[=goc-class]{goc}} object.
 }
 \description{
 Produce a grains of connectivity (GOC) model at multiple scales (resistance thresholds)
@@ -94,7 +73,7 @@ library(raster)
 ## Load raster landscape
 tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape"))
 
-## Create a resistance surface from a raster using an is-becomes reclassifyifyification
+## Create a resistance surface from a raster using an is-becomes reclassication
 tinyCost <- reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
 
 ## Produce a patch-based MPG where patches are resistance features=1
@@ -104,7 +83,7 @@ tinyPatchMPG <- MPG(cost = tinyCost, patch = tinyCost == 1)
 tinyPatchGOC <- GOC(tinyPatchMPG, nThresh = 5)
 
 ## Examine the properties of the GOC graph of grain 3 of 5
-print(tinyPatchGOC$th[[3]]$goc, vertex = TRUE, edge = TRUE)
+print(tinyPatchGOC@th[[3]]$goc, vertex = TRUE, edge = TRUE)
 
 ## Extract specified grains of connectivity and produce a vector SpatialPolygons
 ## representation of the finest grain of connectivity (Threshold=0)
