@@ -333,28 +333,28 @@ GOC.mpg <- function(x, ..., nThresh = NULL, doThresh = NULL,
 
   ## Add data to the summary table
   threshGraph$summary$nPolygon <- unlist(lapply(threshGraph$th, function(z) {
-    if (is_igraph(x$goc)) vcount(x$goc) else NA
+    if (is_igraph(z$goc)) vcount(z$goc) else NA
   }))
   threshGraph$summary$maxPolygonArea <- unlist(lapply(threshGraph$th, function(z) {
-    if (is_igraph(x$goc)) max(V(x$goc)$polygonArea) else NA
+    if (is_igraph(z$goc)) max(V(z$goc)$polygonArea) else NA
   }))
   threshGraph$summary$minPolygonArea <- unlist(lapply(threshGraph$th, function(z) {
-    if (is_igraph(x$goc)) min(V(x$goc)$polygonArea) else NA
+    if (is_igraph(z$goc)) min(V(z$goc)$polygonArea) else NA
   }))
   threshGraph$summary$meanPolygonArea <- unlist(lapply(threshGraph$th, function(z) {
-    if (is_igraph(x$goc)) mean(V(x$goc)$polygonArea) else NA
+    if (is_igraph(z$goc)) mean(V(z$goc)$polygonArea) else NA
   }))
   threshGraph$summary$medianPolygonArea <- unlist(lapply(threshGraph$th, function(z) {
-    if (is_igraph(x$goc)) median(V(x$goc)$polygonArea) else NA
+    if (is_igraph(z$goc)) median(V(z$goc)$polygonArea) else NA
   }))
 
   ## Find ECS (Expected cluster size; O'Brien et al, 2006) using totalPatchArea
   threshGraph$summary$ECS <- unlist(lapply(threshGraph$th, function(z) {
-    if (is_igraph(x$goc)) sum(V(x$goc)$totalPatchArea^2)/sum(V(x$goc)$totalPatchArea) else NA
+    if (is_igraph(z$goc)) sum(V(z$goc)$totalPatchArea^2)/sum(V(z$goc)$totalPatchArea) else NA
   }))
   ## Find ECSCore (Expected cluster size; O'Brien et al, 2006) using totalCoreArea
   threshGraph$summary$ECSCore <- unlist(lapply(threshGraph$th, function(z) {
-    if (is_igraph(x$goc)) sum(V(x$goc)$totalCoreArea^2)/sum(V(x$goc)$totalCoreArea) else NA
+    if (is_igraph(z$goc)) sum(V(z$goc)$totalCoreArea^2)/sum(V(z$goc)$totalCoreArea) else NA
   }))
   class(threshGraph) <- "goc"
 

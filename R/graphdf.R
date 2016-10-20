@@ -97,7 +97,7 @@ graphdf.list <- function(x) {
 #' @export
 #' @rdname graphdf
 graphdf.goc <- function(x) {
-  theseGraphs <- lapply(x$th, function(x) x$goc)
+  theseGraphs <- lapply(x@th, function(z) z$goc)
   graphdf.list(theseGraphs)
 }
 
