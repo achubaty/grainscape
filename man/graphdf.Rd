@@ -3,24 +3,26 @@
 \docType{methods}
 \name{graphdf}
 \alias{graphdf}
-\alias{graphdf.goc}
-\alias{graphdf.igraph}
-\alias{graphdf.list}
-\alias{graphdf.mpg}
+\alias{graphdf,goc-method}
+\alias{graphdf,igraph-method}
+\alias{graphdf,list-method}
+\alias{graphdf,mpg-method}
 \title{Produce a \code{data.frame} containing the structure and associated attributes}
 \usage{
-graphdf(x)
+graphdf(x, ...)
 
-\method{graphdf}{list}(x)
+\S4method{graphdf}{list}(x, ...)
 
-\method{graphdf}{goc}(x)
+\S4method{graphdf}{goc}(x, ...)
 
-\method{graphdf}{mpg}(x)
+\S4method{graphdf}{mpg}(x, ...)
 
-\method{graphdf}{igraph}(x)
+\S4method{graphdf}{igraph}(x, ...)
 }
 \arguments{
 \item{x}{A \code{goc}, \code{mpg}, \code{igraph}, or \code{list} object.}
+
+\item{...}{Additional arguments (not used).}
 }
 \value{
 A list object containing:
@@ -45,6 +47,8 @@ helpful for users unfamiliar with the structure of \code{igraph} objects.
 }
 \examples{
 \dontrun{
+library(raster)
+
 ## Load raster landscape
 tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape"))
 
@@ -64,12 +68,12 @@ tinyPatchMPG_df <- graphdf(tinyPatchMPG)
 tinyPatchGOC_df <- graphdf(tinyPatchGOC)
 
 ## Create a data.frame with the structure and attributes of any igraph object
-graphdf(tinyPatchGOC$th[[1]]$goc)
+graphdf(tinyPatchGOC@th[[1]]$goc)
 }
 
 }
 \author{
-Paul Galpern
+Paul Galpern and Alex Chubaty
 }
 \seealso{
 \code{\link{MPG}}, \code{\link{GOC}}

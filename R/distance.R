@@ -3,40 +3,36 @@
 #' Find the shortest network distance between pairs of points using the GOC graph.
 #' This can be used as an effective distance for landscape connectivity assessments.
 #'
-#' @param ...  Additional arguments.
+#' @param x        A \code{goc} object produced by \code{\link{GOC}}.
 #'
-#' @export
-#'
-distance <- function(x, ...) UseMethod("distance")
-
-
-
-#' @param x        A \code{GOC} object produced by \code{\link{GOC}}.
-#'
-#' @param  coords  A two column matrix or a \code{\link{SpatialPoints}} object
+#' @param  y       A two column matrix or a \code{\link{SpatialPoints}} object
 #'                 giving the coordinates of points of interest.
+#'
+#' @param ...      Additional arguments (not used).
 #'
 #' @param  weight  The GOC graph link weight to use in calculating the distance.
 #'                 Please see Details for explanation.
 #'
 #' @return  A list object giving a distance matrix for each threshold in the \code{GOC} object.
 #' Distance matrices give the pairwise grains of connectivity network distances between sampling locations.
-#' Matrix indices correspond to rows in the \code{coords} matrix.
+#' Matrix indices correspond to rows in the coords matrix (\code{y}).
 #'
 #' @references
 #' Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien. (2007) Spatial graphs: Principles and applications for habitat connectivity. Ecosystems 10:448:461.
 #'
 #' Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis at multiple spatial scales in landscape genetics.  Molecular Ecology 21:3996-4009.
 #'
-#' @author Paul Galpern
+#' @author Paul Galpern and Alex Chubaty
 #' @docType methods
 #' @export
-#' @importFrom igraph distances 'E<-' edge_attr is_igraph
+#' @include classes.R
 #' @rdname distance
 #' @seealso  \code{\link{GOC}}, \code{\link{point}}
 #'
 #' @examples
 #' \dontrun{
+#' library(raster)
+#'
 #' ## Load raster landscape
 #' tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape"))
 #'
@@ -57,35 +53,59 @@ distance <- function(x, ...) UseMethod("distance")
 #' tinyDist <- distance(tinyPatchGOC, loc)
 #' }
 #'
-distance.goc <- function(x, ..., coords, weight = "meanWeight") {
-  if ((is.null(dim(coords))) & !inherits(coords, "SpatialPoints")) {
-    coords <- t(as.matrix(coords))
-  }
+setGeneric("distance", function(x, y, ...) {
+    raster::distance(x, y, ...)
+})
 
-  if (!inherits(coords, "SpatialPoints") && (dim(coords)[2] != 2)) {
-    stop("grainscape:  coords must be a SpatialPoints object or a matrix of two columns giving X and Y coordinates", call. = FALSE)
-  }
-
-  if (!(weight %in% names(edge_attr(x$th[[1]]$goc)))) {
-    stop("grainscape:  link weight attribute with this name doesn't exist in GOC object", call. = FALSE)
-  }
-
-  whichGrain <- point(x, coords)$pointPolygon
-
-  results <- list()
-  results$metaData <- x$metaData
-  results$th <- vector("list", ncol(whichGrain))
-
-  for (iThresh in 1:ncol(whichGrain)) {
-    threshGraph <- x$th[[iThresh]]$goc
-
-    if (is_igraph(threshGraph)) {
-      E(threshGraph)$weight <- edge_attr(threshGraph, weight)
-      vertices <- sapply(whichGrain[, iThresh], function(z) which(V(threshGraph)$polygonId == z))
-      results$th[[iThresh]]$grainD <- distances(threshGraph, v = vertices)[, vertices]
-    } else {
-      results$th[[iThresh]] <- NA
+#' @export
+#' @rdname distance
+setMethod(
+  "distance",
+  signature = c(x = "goc", y = "SpatialPoints"),
+  definition = function(x, y, weight = "meanWeight", ...) {
+    if (!(weight %in% names(edge_attr(x@th[[1]]$goc)))) {
+      stop("grainscape:  link weight attribute with this name doesn't exist in GOC object", call. = FALSE)
     }
-  }
-  return(results)
-}
+
+    whichGrain <- point(x, y)$pointPolygon
+
+    results <- list()
+    results$th <- vector("list", ncol(whichGrain))
+
+    for (iThresh in 1:ncol(whichGrain)) {
+      threshGraph <- x@th[[iThresh]]$goc
+
+      if (is_igraph(threshGraph)) {
+        E(threshGraph)$weight <- edge_attr(threshGraph, weight)
+        vertices <- sapply(whichGrain[, iThresh], function(z) which(V(threshGraph)$polygonId == z))
+        results$th[[iThresh]]$grainD <- distances(threshGraph, v = vertices)[, vertices]
+      } else {
+        results$th[[iThresh]] <- NA
+      }
+    }
+    return(results)
+})
+
+#' @importFrom sp SpatialPoints
+#' @export
+#' @rdname distance
+setMethod(
+  "distance",
+  signature = c(x = "goc", y = "matrix"),
+  definition = function(x, y, weight = "meanWeight", ...) {
+    if (ncol(y) != 2) {
+      stop("grainscape:  y must be a matrix of two columns giving X and Y coordinates", call. = FALSE)
+    }
+
+    distance(x, SpatialPoints(y), weight, ...)
+})
+
+#' @export
+#' @rdname distance
+setMethod(
+  "distance",
+  signature = c(x = "goc", y = "numeric"),
+  definition = function(x, y, weight = "meanWeight", ...) {
+    distance(x, t(as.matrix(y)), weight, ...)
+})
+

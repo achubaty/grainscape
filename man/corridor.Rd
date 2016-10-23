@@ -3,18 +3,18 @@
 \docType{methods}
 \name{corridor}
 \alias{corridor}
-\alias{corridor.goc}
+\alias{corridor,goc-method}
 \title{Visualize corridors between two points using a grains of connectivity (GOC)}
 \usage{
 corridor(x, ...)
 
-\method{corridor}{goc}(x, ..., whichThresh, coords, doPlot = FALSE,
-  weight = "meanWeight")
+\S4method{corridor}{goc}(x, whichThresh, coords, doPlot = 0,
+  weight = "meanWeight", ...)
 }
 \arguments{
 \item{x}{A \code{goc} object created by \code{\link{GOC}}.}
 
-\item{...}{Additional arguments.}
+\item{...}{Additional arguments (not used).}
 
 \item{whichThresh}{Integer giving the index of the threshold to visualize.}
 
@@ -60,6 +60,8 @@ Visualization is exclusively in vector format.
 }
 \examples{
 \dontrun{
+library(raster)
+
 ## Load raster landscape
 tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape"))
 
@@ -90,7 +92,7 @@ mtext(paste("Corridor shortest path length:",
 
 }
 \author{
-Paul Galpern
+Paul Galpern and Alex Chubaty
 }
 \references{
 Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien. (2007) Spatial graphs: Principles and applications for habitat connectivity. Ecosystems 10:448:461.

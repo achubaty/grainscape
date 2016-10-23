@@ -3,18 +3,12 @@
 #' @description
 #' Identify the polygon containing a location at multiple scales.
 #'
-#' @param ...  Additional arguments.
-#'
-#' @export
-#'
-point <- function(x, coords) UseMethod("point")
-
-
-
 #' @param x       A \code{goc} object produced by \code{\link{GOC}}.
 #'
 #' @param coords  A two column matrix or a \code{\link{SpatialPoints}} object giving
 #'                the coordinates of points of interest.
+#'
+#' @param ...     Additional arguments (not used).
 #'
 #' @return A list with elements:
 #'
@@ -44,15 +38,17 @@ point <- function(x, coords) UseMethod("point")
 #'
 #' O'Brien, D., M. Manseau, A. Fall, and M.-J. Fortin. (2006) Testing the importance of spatial configuration of winter habitat for woodland caribou: An application of graph theory. Biological Conservation 130:70-83.
 #'
-#' @author Paul Galpern
+#' @author Paul Galpern and Alex Chubaty
 #' @docType methods
 #' @export
-#' @importFrom igraph is_igraph V
 #' @importFrom raster cellFromXY
+#' @include classes.R
 #' @rdname point
 #' @seealso \code{\link{GOC}}, \code{\link{distance}}
 #' @examples
 #' \dontrun{
+#' library(raster)
+#'
 #' ## Load raster landscape
 #' tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape"))
 #'
@@ -73,68 +69,77 @@ point <- function(x, coords) UseMethod("point")
 #' tinyPts <- point(tinyPatchGOC, loc)
 #' }
 #'
-point.goc <- function(x, coords) {
-  if (is.null(dim(coords)) & !inherits(coords, "SpatialPoints")) {
-    coords <- t(as.matrix(coords))
-  }
+setGeneric("point", function(x, ...) {
+  standardGeneric("point")
+})
 
-  if (!inherits(coords, "SpatialPoints") && (dim(coords)[2] != 2)) {
-    stop("grainscape:  coords must be a SpatialPoints object or a matrix of two columns giving X and Y coordinates", call. = FALSE)
-  }
-
-  if (!inherits(coords, "SpatialPoints")) {
-    coords <- SpatialPoints(coords)
-  }
-
-  ## Remove points that fall in NA locations
-  cellPoints <- cellFromXY(x$voronoi, coords)
-  if (suppressWarnings(sum(is.na(x$voronoi[cellPoints]))) > 0) {
-    cellPoints <- suppressWarnings(cellPoints[!is.na(x$voronoi[cellPoints])])
-    stop("grainscape:  there are coords that are not defined on the raster.\n", call. = FALSE)
-  }
-
-  grainPoints <- matrix(NA, nrow = length(cellPoints), ncol = length(x$th))
-  totalPatchAreaPoints <- grainPoints
-  totalCoreAreaPoints <- grainPoints
-
-  for (iThresh in 1:length(x$th)) {
-    if (is_igraph(x$th[[iThresh]]$goc)) {
-      threshGraph <- x$th[[iThresh]]$goc
-
-      ## Produce patchId and patchArea lookup tables with polygonId as the index
-      patchIdLookup <-  matrix(0, 1, 2)
-      for (i in 1:length(V(threshGraph)$polygonId)) {
-        patchIdLookup <- rbind(patchIdLookup,
-                               cbind(as.integer(V(threshGraph)$polygonId[i]),
-                                     as.integer(unlist(strsplit(V(threshGraph)$patchId[i], ", ")))))
-      }
-      patchIdLookup <- patchIdLookup[2:nrow(patchIdLookup), ]
-      patchAreaLookup <- cbind(V(threshGraph)$polygonId,
-                               V(threshGraph)$totalPatchArea,
-                               V(threshGraph)$totalPatchEdgeArea,
-                               V(threshGraph)$totalCoreArea)
-
-      ## Faster method which references the cells from the stored voronoi raster
-      ## and uses the graph vertex record to determine the polygonId
-
-      grainPoints[, iThresh] <- as.numeric(sapply(x$voronoi[cellPoints], function(z) {
-        patchIdLookup[patchIdLookup[, 2] == z, 1]
-      }))
-
-      totalPatchAreaPoints[, iThresh] <- as.numeric(sapply(grainPoints[, iThresh], function(z) {
-        patchAreaLookup[patchAreaLookup[, 1] == z, 2]
-      }))
-      totalCoreAreaPoints[, iThresh] <- as.numeric(sapply(grainPoints[, iThresh], function(z) {
-        patchAreaLookup[patchAreaLookup[, 1] == z, 4]
-      }))
+#' @export
+#' @rdname point
+setMethod(
+  "point",
+  signature = "goc",
+  definition = function(x, coords, ...) {
+    if (is.null(dim(coords)) & !inherits(coords, "SpatialPoints")) {
+      coords <- t(as.matrix(coords))
     }
-  }
 
-  results <- list()
-  results$pointPolygon <- grainPoints
-  results$pointTotalPatchArea <- totalPatchAreaPoints
-  results$pointTotalCoreArea <- totalCoreAreaPoints
-  results$pointECS <- apply(totalPatchAreaPoints, 2, mean)
-  results$pointECSCore <- apply(totalCoreAreaPoints, 2, mean)
-  return(results)
-}
+    if (!inherits(coords, "SpatialPoints") && (ncol(coords) != 2)) {
+      stop("grainscape:  coords must be a SpatialPoints object or a matrix of two columns giving X and Y coordinates", call. = FALSE)
+    }
+
+    if (!inherits(coords, "SpatialPoints")) {
+      coords <- SpatialPoints(coords)
+    }
+
+    ## Remove points that fall in NA locations
+    cellPoints <- cellFromXY(x@voronoi, coords)
+    if (suppressWarnings(sum(is.na(x@voronoi[cellPoints]))) > 0) {
+      cellPoints <- suppressWarnings(cellPoints[!is.na(x@voronoi[cellPoints])])
+      stop("grainscape:  there are coords that are not defined on the raster.\n", call. = FALSE)
+    }
+
+    grainPoints <- matrix(NA, nrow = length(cellPoints), ncol = length(x@th))
+    totalPatchAreaPoints <- grainPoints
+    totalCoreAreaPoints <- grainPoints
+
+    for (iThresh in 1:length(x@th)) {
+      if (is_igraph(x@th[[iThresh]]$goc)) {
+        threshGraph <- x@th[[iThresh]]$goc
+
+        ## Produce patchId and patchArea lookup tables with polygonId as the index
+        patchIdLookup <-  matrix(0, 1, 2)
+        for (i in 1:length(V(threshGraph)$polygonId)) {
+          patchIdLookup <- rbind(patchIdLookup,
+                                 cbind(as.integer(V(threshGraph)$polygonId[i]),
+                                       as.integer(unlist(strsplit(V(threshGraph)$patchId[i], ", ")))))
+        }
+        patchIdLookup <- patchIdLookup[2:nrow(patchIdLookup), ]
+        patchAreaLookup <- cbind(V(threshGraph)$polygonId,
+                                 V(threshGraph)$totalPatchArea,
+                                 V(threshGraph)$totalPatchEdgeArea,
+                                 V(threshGraph)$totalCoreArea)
+
+        ## Faster method which references the cells from the stored voronoi raster
+        ## and uses the graph vertex record to determine the polygonId
+
+        grainPoints[, iThresh] <- as.numeric(sapply(x@voronoi[cellPoints], function(z) {
+          patchIdLookup[patchIdLookup[, 2] == z, 1]
+        }))
+
+        totalPatchAreaPoints[, iThresh] <- as.numeric(sapply(grainPoints[, iThresh], function(z) {
+          patchAreaLookup[patchAreaLookup[, 1] == z, 2]
+        }))
+        totalCoreAreaPoints[, iThresh] <- as.numeric(sapply(grainPoints[, iThresh], function(z) {
+          patchAreaLookup[patchAreaLookup[, 1] == z, 4]
+        }))
+      }
+    }
+
+    results <- list()
+    results$pointPolygon <- grainPoints
+    results$pointTotalPatchArea <- totalPatchAreaPoints
+    results$pointTotalCoreArea <- totalCoreAreaPoints
+    results$pointECS <- apply(totalPatchAreaPoints, 2, mean)
+    results$pointECSCore <- apply(totalCoreAreaPoints, 2, mean)
+    return(results)
+})

@@ -14,8 +14,8 @@ vignette: >
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(cache = TRUE, echo = TRUE, eval = TRUE, fig.height = 5,
-                      fig.width = 5, message = FALSE, results = 'hold', warning = FALSE)
+knitr::opts_chunk$set(cache = TRUE, echo = TRUE, eval = TRUE, fig.height = 6,
+                      fig.width = 6, message = FALSE, results = 'hold', warning = FALSE)
 ```
 
 \newpage

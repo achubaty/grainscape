@@ -5,14 +5,7 @@
 #' Visualization is by default in raster format.
 #' Vector based visualization is also possible.
 #'
-#' @param ...  Additional arguments.
-#'
-#' @export
-visualize <- function(x, ...) UseMethod("visualize")
-
-
-
-#' @param x   A \code{GOC} object created by \code{\link{GOC}}.
+#' @param x   A \code{goc} object created by \code{\link{GOC}}.
 #'
 #' @param whichThresh  Integer giving the index of the threshold to visualize.
 #'
@@ -23,21 +16,23 @@ visualize <- function(x, ...) UseMethod("visualize")
 #'
 #' @param doPlot  Logical.  If \code{TRUE} plots a raster (or vector if \code{sp=TRUE})
 #'                of the Voronoi tessellation at \code{whichThresh} for quick visualizations.
-#'                For full control, manually produce plots using the \code{$voronoi}
-#'                or \code{$voronoiSP} objects created by this function.
+#'                For full control, manually produce plots using the \code{voronoi}
+#'                or \code{voronoiSP} objects created by this function.
+#'
+#' @param ...  Additional arguments to pass to \code{plot} if \code{doPlot = TRUE}).
 #'
 #' @return  A list object containing the following elements:
 #'
 #' \describe{
-#'   \item{\code{$summary}}{gives the properties of the visualized scale of the GOC model;}
+#'   \item{\code{summary}}{gives the properties of the visualized scale of the GOC model;}
 #'
-#'   \item{\code{$voronoi}}{a \code{RasterLayer} giving the Voronoi tessellation;}
+#'   \item{\code{voronoi}}{a \code{RasterLayer} giving the Voronoi tessellation;}
 #'
-#'   \item{\code{$centroids}}{a \code{SpatialPoints} objects giving the centroids
+#'   \item{\code{centroids}}{a \code{SpatialPoints} objects giving the centroids
 #'   of the polygons in the tessellation;}
 #'
-#'   \item{\code{$voronoiSP}}{vector representation of polygons in the tessellation
-#'   (\code{SpatialPolygonsDataFrame}; if \code{sp=TRUE})}
+#'   \item{\code{voronoiSP}}{vector representation of polygons in the tessellation
+#'   (\code{SpatialPolygonsDataFrame}; if \code{sp = TRUE})}
 #' }
 #'
 #' @references
@@ -45,19 +40,20 @@ visualize <- function(x, ...) UseMethod("visualize")
 #'
 #' Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis at multiple spatial scales in landscape genetics.  Molecular Ecology 21:3996-4009.
 #'
-#' @author Paul Galpern
+#' @author Paul Galpern and Alex Chubaty
 #' @docType methods
 #' @export
 #' @importFrom graphics plot
-#' @importFrom igraph 'E<-' is_igraph V
-#' @importFrom methods as
-#' @importFrom raster plot reclassify
+#' @importFrom raster as.data.frame plot reclassify
 #' @importFrom sp geometry plot SpatialPoints SpatialPolygonsDataFrame spChFIDs
+#' @include classes.R
 #' @rdname visualize
 #' @seealso \code{\link{GOC}}
 #'
 #' @examples
 #' \dontrun{
+#' library(raster)
+#'
 #' ## Load raster landscape
 #' tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape"))
 #'
@@ -72,7 +68,7 @@ visualize <- function(x, ...) UseMethod("visualize")
 #'
 #' ## Very quick visualization at the finest scale/grain/threshold
 #' ## Producing plot on the default graphics device
-#' visualize(tinyPatchGOC, whichThresh = 1, doPlot = TRUE)
+#' visualize(tinyPatchGOC, whichThresh = 1, doPlot = TRUE, col = topo.colors(10))
 #'
 #' ## Visualize the model at the finest scale/grain/threshold
 #' ## Manual control of plotting
@@ -83,89 +79,99 @@ visualize <- function(x, ...) UseMethod("visualize")
 #' tinyPatchGOC <- GOC(tinyPatchMPG, nThresh= 5 , sp = TRUE)
 #'
 #' ## Visualize the model at a selected scale/grain/threshold using vector polygons
-#' plot(tinyPatchMPG$patchId, col = "grey", legend = FALSE)
+#' plot(tinyPatchMPG@patchId, col = "grey", legend = FALSE)
 #' plot(visualize(tinyPatchGOC, whichThresh = 3, sp = TRUE)$voronoiSP, add = TRUE, lwd = 2)
 #' }
 #'
+setGeneric("visualize", function(x, ...) {
+  standardGeneric("visualize")
+})
+
 #' @export
-#'
-visualize <- function(x, whichThresh, sp = FALSE, doPlot = FALSE) {
-  if (isTRUE(sp) && !requireNamespace("rgeos", quietly = TRUE)) {
-    stop("grainscape:  rgeos package must be installed to use sp = TRUE")
-  }
-
-  ## Check whichThresh
-  if ((length(whichThresh) > 1) || (!(whichThresh %in% 1:length(x$th)))) {
-    stop("grainscape:  whichThresh must index a single threshold existing in the GOC object", call. = FALSE)
-  }
-
-  if (sp && is.null(x$voronoiSP)) {
-    stop("grainscape:  GOC object must also be produced using sp=TRUE", call. = FALSE)
-  }
-
-  results <- list()
-
-  results$summary <- x$summary[whichThresh, ]
-
-  if (is_igraph(x$th[[whichThresh]]$goc)) {
-    threshGraph <- x$th[[whichThresh]]$goc
-
-    ## Produce is-becomes reclassifyification table for voronoi raster
-    rclTable <-  matrix(0, 1, 2)
-    for (i in 1:length(V(threshGraph)$polygonId)) {
-      rclTable <- rbind(rclTable,
-                        cbind(as.integer(unlist(strsplit(V(threshGraph)$patchId[i], ", "))),
-                              as.integer(V(threshGraph)$polygonId[i])))
+#' @rdname visualize
+setMethod(
+  "visualize",
+  signature = "goc",
+  definition = function(x, whichThresh, sp = FALSE, doPlot = FALSE, ...) {
+    if (isTRUE(sp) && !requireNamespace("rgeos", quietly = TRUE)) {
+      stop("grainscape:  rgeos package must be installed to use sp = TRUE")
     }
-    rclTable <- rclTable[2:nrow(rclTable), ]
-    results$voronoi <- reclassify(x$voronoi, rcl = rclTable)
 
-    results$centroids <- SpatialPoints(cbind(V(threshGraph)$centroidX,
-                                             V(threshGraph)$centroidY))
+    ## Check whichThresh
+    if ((length(whichThresh) > 1) || (!(whichThresh %in% 1:length(x@th)))) {
+      stop("grainscape:  whichThresh must index a single threshold existing in the GOC object", call. = FALSE)
+    }
 
-    ## Take the SpatialPolygons object and combine polygons as necessary
-    if (sp) {
-      message("Creating SpatialPolygons.")
-      voronoiSP <- geometry(x$voronoiSP)
-      indexSP <- as(x$voronoiSP, "data.frame")[, 1]
-      newVoronoi <- NULL
+    ## Check sp
+    if (isTRUE(sp) && identical(x@voronoiSP, .emptySP())) {
+      stop("grainscape:  GOC object must also be produced using sp=TRUE", call. = FALSE)
+    }
+
+    results <- list()
+
+    results$summary <- x@summary[whichThresh, ]
+
+    if (is_igraph(x@th[[whichThresh]]$goc)) {
+      threshGraph <- x@th[[whichThresh]]$goc
+
+      ## Produce is-becomes reclassifyification table for voronoi raster
+      rclTable <-  matrix(0, 1, 2)
       for (i in 1:length(V(threshGraph)$polygonId)) {
-        fromId <- as.integer(unlist(strsplit(V(threshGraph)$patchId[i], ", ")))
-        toId <- as.character(as.integer(V(threshGraph)$polygonId[i]))
-        if (length(fromId) > 1) {
-          thisPolygon <- NULL
-          for (iFrom in 2:length(fromId)) {
-            if (is.null(thisPolygon)) {
-              thisPolygon <- rgeos::gUnion(voronoiSP[which(indexSP == fromId[iFrom - 1])],
-                                           voronoiSP[which(indexSP == fromId[iFrom])], id = toId)
-            } else {
-              thisPolygon <- rgeos::gUnion(thisPolygon, voronoiSP[which(indexSP == fromId[iFrom])], id = toId)
+        rclTable <- rbind(rclTable,
+                          cbind(as.integer(unlist(strsplit(V(threshGraph)$patchId[i], ", "))),
+                                as.integer(V(threshGraph)$polygonId[i])))
+      }
+      rclTable <- rclTable[2:nrow(rclTable), ]
+      results$voronoi <- reclassify(x@voronoi, rcl = rclTable)
+
+      results$centroids <- SpatialPoints(cbind(V(threshGraph)$centroidX,
+                                               V(threshGraph)$centroidY))
+
+      ## Take the SpatialPolygons object and combine polygons as necessary
+      if (isTRUE(sp)) {
+        message("Creating SpatialPolygons.") ## allow to be silenced
+        voronoiSP <- geometry(x@voronoiSP)
+        indexSP <- as.data.frame(x@voronoiSP)[, 1]
+        newVoronoi <- NULL
+        for (i in 1:length(V(threshGraph)$polygonId)) {
+          fromId <- as.integer(unlist(strsplit(V(threshGraph)$patchId[i], ", ")))
+          toId <- as.character(as.integer(V(threshGraph)$polygonId[i]))
+          if (length(fromId) > 1) {
+            thisPolygon <- NULL
+            for (iFrom in 2:length(fromId)) {
+              if (is.null(thisPolygon)) {
+                thisPolygon <- rgeos::gUnion(voronoiSP[which(indexSP == fromId[iFrom - 1])],
+                                             voronoiSP[which(indexSP == fromId[iFrom])], id = toId)
+              } else {
+                thisPolygon <- rgeos::gUnion(thisPolygon, voronoiSP[which(indexSP == fromId[iFrom])], id = toId)
+              }
             }
+          } else {
+            thisPolygon <- spChFIDs(voronoiSP[which(indexSP == fromId)], toId)
           }
-        } else {
-          thisPolygon <- spChFIDs(voronoiSP[which(indexSP == fromId)], toId)
+          if (is.null(newVoronoi)) {
+            newVoronoi <- thisPolygon
+          } else {
+            newVoronoi <- rbind(newVoronoi, thisPolygon)
+          }
         }
-        if (is.null(newVoronoi)) {
-          newVoronoi <- thisPolygon
+        results$voronoiSP <- SpatialPolygonsDataFrame(
+          newVoronoi,
+          data.frame(polygonId = V(threshGraph)$polygonId,
+                     row.names = V(threshGraph)$polygonId)
+        )
+      }
+
+      if (doPlot) {
+        if (isTRUE(sp)) {
+          sp::plot(results$voronoiSP, ...)
         } else {
-          newVoronoi <- rbind(newVoronoi, thisPolygon)
+          raster::plot(results$voronoi,
+                       main = paste(c("whichThresh=", whichThresh), collapse = ""),
+                       ...)
         }
       }
-      results$voronoiSP <- SpatialPolygonsDataFrame(
-        newVoronoi,
-        data.frame(polygonId = V(threshGraph)$polygonId,
-                   row.names = V(threshGraph)$polygonId)
-      )
     }
 
-    if (doPlot) {
-      if (sp) {
-        sp::plot(results$voronoiSP)
-      } else {
-        raster::plot(results$voronoi, main = paste(c("whichThresh=", whichThresh), collapse = ""))
-      }
-    }
-  }
-
-  return(results)
-}
+    return(results)
+})

@@ -17,8 +17,8 @@ vignette: >
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(cache = TRUE, echo = TRUE, eval = TRUE, fig.height = 5,
-                      fig.width = 5, message = FALSE, results = 'hold', warning = FALSE)
+knitr::opts_chunk$set(cache = TRUE, echo = TRUE, eval = TRUE, fig.height = 6,
+                      fig.width = 6, message = FALSE, results = 'hold', warning = FALSE)
 ```
 
 \newpage
@@ -128,7 +128,7 @@ Equally, we could use the `raster` package to load a binary raster produced manu
 A quick way to visualize the MPG is provided in the `MPG` object produced by `MPG()`.
 
 ```{r, eval=FALSE}
-plot(patchyMPG$mpgPlot)
+plot(patchyMPG)
 ```
 
 However, I've done something a little more advanced so that it shows up cleanly here.
@@ -136,17 +136,17 @@ The result is shown in \autoref{fig:mpgplot}.
 
 ```{r, fig.cap='\\label{fig:mpgplot}A quick visualization of the MPG. Black areas are patches (nodes or vertices) in the graph, and grey lines are links (edges) showing the least-cost path between the perimeters of the patches. In depth discussion of how the MPG is generated can be found elsewhere [@Fall:2007eo].'}
 ## Plot the patches / nodes
-plot(patchyMPG$patchId, col = "black", main = "", legend = FALSE)
+plot(patchyMPG@patchId, col = "black", main = "", legend = FALSE)
 
 ## Before plotting the links we'll make them wider so they print nicely
-links <- patchyMPG$lcpPerimWeight > 0
+links <- patchyMPG@lcpPerimWeight > 0
 links[boundaries(links, type = "outer")] <- 1
 plot(links, col = "darkgrey", add = TRUE, legend = FALSE)
 ```
 
 ### Step 4: Reporting on the MPG
 
-Following extraction, the MPG is available as an `igraph` object (see `patchyMPG$mpg`) and can be analyzed using any of the functions in this package.
+Following extraction, the MPG is available as an `igraph` object (see `patchyMPG@mpg`) and can be analyzed using any of the functions in this package.
 A quick way to report on the structure of the graph in tabular format is provided by the function `graphdf()`:
 
 ```{r, eval=FALSE}
@@ -201,10 +201,10 @@ This is visualized in \autoref{fig:thresholdedgraph}.
 
 ```{r, fig.cap='\\label{fig:thresholdedgraph}The thresholded MPG depicted with a link length of 200 resistance units. An organism that can disperse a maximum of 200 resistance units would experience this landscape as 6 connected regions in the depicted spatial configuration. Note that the plotting has been made a little more complicated than it needs to be in order to emphasize the links for printing.'}
 ## Plot the patches
-plot(patchyMPG$patchId, main = "", col = "black", legend = FALSE)
+plot(patchyMPG@patchId, main = "", col = "black", legend = FALSE)
 
 ## Plot the links, but emphasize them first for printing
-#thresholdLink <- (patchyMPG$lcpPerimWeight <= 200)
+#thresholdLink <- (patchyMPG@lcpPerimWeight <= 200)
 #thresholdLink[thresholdLink == 0] <- NA
 #thresholdLink[boundaries(thresholdLink, type = "outer")] <- 1
 #plot(thresholdLink, col = "darkgrey", add = TRUE, legend = FALSE)
@@ -215,8 +215,8 @@ plot(patchyMPG$patchId, main = "", col = "black", legend = FALSE)
 With the MPG in hand, all sorts of subsequent analyses about landscape connectivity are possible.
 Grains of connectivity (GOC), the subject of the next three tutorials, is an example of using the MPG and its complement the Voronoi tessellation.
 
-When programming your own analyses in R based on the MPG it is helpful to observe that the `patchyMPG$patchId` and `patchyMPG$lcpLinkId` rasters contain the numerical IDs of the patches (nodes) and links respectively.
-These are are also contained as attributes in the `igraph` object `patchyMPG$mpg`.
+When programming your own analyses in R based on the MPG it is helpful to observe that the `patchyMPG@patchId` and `patchyMPG@lcpLinkId` rasters contain the numerical IDs of the patches (nodes) and links respectively.
+These are are also contained as attributes in the `igraph` object `patchyMPG@mpg`.
 Using these three data objects together gives flexibility to visualize any graph analysis.
 To explore the attributes further use `graphdf()`.
 
@@ -254,14 +254,14 @@ The Voronoi tessellation was extracted by `MPG()` in order to build the MPG.
 It can be plotted simply as follows:
 
 ```{r, eval=FALSE}
-plot(patchyMPG$voronoi)
+plot(patchyMPG@voronoi)
 ```
 
 A plot with the Voronoi tessellation and the patches superimposed is shown in \autoref{fig:voronoitessellation}.
 
 ```{r, fig.cap='\\label{fig:voronoitessellation}A Voronoi tessellation. This is the complement of the MPG. The patches are used as generators, and regions of proximity (polygons of different colours) are found in cost or resistance units. The method was first described by @Fall:2007eo.'}
-plot(patchyMPG$voronoi, main = "")
-plot(patchyMPG$patchId, add = TRUE, col = "black", legend = FALSE)
+plot(patchyMPG@voronoi, main = "")
+plot(patchyMPG@patchId, add = TRUE, col = "black", legend = FALSE)
 ```
 
 ### Step 3: Building GOC models
@@ -313,7 +313,7 @@ A key advantage is that thresholding permits scaling of these distances for coar
 Here we'll use four locations on the landscape.
 
 ```{r, results='hide'}
-loc <- rbind(c(100,-100), c(200, -200), c(300, -300), c(100, -300))
+loc <- rbind(c(100, -100), c(200, -200), c(300, -300), c(100, -300))
 distGOC <- distance(patchyGOC, loc)
 ```
 
@@ -348,7 +348,7 @@ patchyMPGLattice <- MPG(patchyCost, patch = 40)
 Let's check how many focal points were actually used in this case:
 
 ```{r}
-max(patchyMPGLattice$patchId[], na.rm = TRUE)
+max(patchyMPGLattice@patchId[], na.rm = TRUE)
 ```
 
 Which is what we expected.
@@ -356,12 +356,12 @@ A visualization of these focal points and the MPG is shown in \autoref{fig:latti
 
 ```{r, fig.cap='\\label{fig:latticempg}A visualization of an MPG of a lattice of focal points for the resistance surface in \\autoref{fig:patchycost}. Again, we have complicated plotting a bit to emphasize the links better.'}
 ## Plot the links but make them wider so they print nicely
-links <- patchyMPGLattice$lcpPerimWeight > 0
+links <- (patchyMPGLattice@lcpPerimWeight > 0)
 links[boundaries(links, type = "outer")] <- 1
 plot(links, main = "", col = "darkgrey", legend = FALSE)
 
 ## Add the focal points. We'll get the locations from the MPG object
-focalPts <- cbind(V(patchyMPGLattice$mpg)$centroidX, V(patchyMPGLattice$mpg)$centroidY)
+focalPts <- cbind(V(patchyMPGLattice@mpg)$centroidX, V(patchyMPGLattice@mpg)$centroidY)
 points(focalPts, pch = "+", cex = 1.25)
 ```
 
@@ -384,7 +384,7 @@ plot(visualize(patchyGOCLattice, whichThresh = 35)$voronoi,
 ### Step 3: Next steps
 
 Further analyses can proceed as with the patch-based GOC model.
-For example `point` and `distance` can be used, as can `igraph` analyses of the graphs contained in `patchyGOCLattice$th` and `patchMPGLattice$mpg`.
+For example `point` and `distance` can be used, as can `igraph` analyses of the graphs contained in `patchyGOCLattice@th` and `patchMPGLattice@mpg`.
 
 ## Tutorial 4: Advanced visualization for grains of connectivity models
 
@@ -414,7 +414,7 @@ plot(patchyCost, legend = FALSE, main = "")
 plot(visualize(patchyGOCLattice_SP, whichThresh = 1, sp = TRUE)$voronoiSP,
      add = TRUE)
 
-focalPts <- cbind(V(patchyMPGLattice$mpg)$centroidX, V(patchyMPGLattice$mpg)$centroidY)
+focalPts <- cbind(V(patchyMPGLattice@mpg)$centroidX, V(patchyMPGLattice@mpg)$centroidY)
 points(focalPts, pch = "+", cex = 1.25)
 ```
 
@@ -437,11 +437,9 @@ mtext(paste("Shortest path between P and Q:",
 
 ```{r, fig.cap='\\label{fig:corridorlattice}A visualization of the complete lattice GOC model at a relatively coarse scale and the shortest path or least-cost corridor given the GOC graph between two locations on the map (P and Q) at this scale. Grey regions are Voronoi polygons in the lattice GOC model.'}
 loc <- rbind(c(50, -350), c(350, -50))
-corridor1 <- corridor(patchyGOCLattice_SP, whichThresh = 45,
-                           coords = loc, doPlot = TRUE)
+corridor1 <- corridor(patchyGOCLattice_SP, whichThresh = 45, coords = loc, doPlot = TRUE)
 points(loc, pch = c("P", "Q"), cex = 1.25)
-mtext(paste("Shortest path between P and Q:",
-            round(corridor1$corridorLength, 2), "resistance units",
+mtext(paste("Shortest path between P and Q:", round(corridor1$corridorLength, 2), "resistance units",
             sep = " "),
       side = 1)
 ```
@@ -460,8 +458,7 @@ tinyPatchGOC <- GOC(tinyPatchMPG, nThresh = 5, sp = TRUE)
 
 ## Visualization of a corridor
 corridorStartEnd <- rbind(c(10,10), c(90,90))
-tinyPatchCorridor <- corridor(tinyPatchGOC, whichThresh = 3,
-                                   coords = corridorStartEnd)
+tinyPatchCorridor <- corridor(tinyPatchGOC, whichThresh = 3, coords = corridorStartEnd)
 plot(tinyPatchCorridor$voronoiSP, col = "lightgrey", border = "white", lwd = 2)
 plot(tinyPatchCorridor$linksSP, col = "darkred", lty = "dashed", add = TRUE)
 plot(tinyPatchCorridor$nodesSP, col = "darkred", pch = 21, bg = "white", add = TRUE)

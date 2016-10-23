@@ -13,16 +13,7 @@
 \item{patches}{Logical raster indicating presence of habitat patches.}
 }
 \value{
-An object of class \code{HCE} containing the following components:
-
-\describe{
-  \item{\code{voronoi}}{a raster whose values indicate the voronoi tesselation;}
-
-  \item{\code{patchLinks}}{a raster whose values indicate patch ids (positive integers)
-  and link ids (negative integers);}
-
-  \item{\code{linkData}}{data.frame of link attributes.}
-}
+An object of class \code{\link[=hce-class]{hce}}.
 }
 \description{
 Internal function. Servesa s a wrapper around the habitat connectivity engine

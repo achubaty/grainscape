@@ -5,7 +5,9 @@
 #' This provides an easy way to create data tables describing graphs, particularly
 #' helpful for users unfamiliar with the structure of \code{igraph} objects.
 #'
-#' @param x  A \code{goc}, \code{mpg}, \code{igraph}, or \code{list} object.
+#' @param x    A \code{goc}, \code{mpg}, \code{igraph}, or \code{list} object.
+#'
+#' @param ...  Additional arguments (not used).
 #'
 #' @return A list object containing:
 #'
@@ -21,16 +23,18 @@
 #' an enumerated list of the same length as the number of thresholds is returned
 #' each containing \code{v} and \code{e} elements.
 #'
-#' @author Paul Galpern
+#' @author Paul Galpern and Alex Chubaty
 #' @docType methods
 #' @export
-#' @importFrom igraph as_edgelist edge_attr is_igraph vertex_attr
 #' @importFrom utils type.convert
+#' @include classes.R
 #' @rdname graphdf
 #' @seealso \code{\link{MPG}}, \code{\link{GOC}}
 #'
 #' @examples
 #' \dontrun{
+#' library(raster)
+#'
 #' ## Load raster landscape
 #' tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape"))
 #'
@@ -50,69 +54,84 @@
 #' tinyPatchGOC_df <- graphdf(tinyPatchGOC)
 #'
 #' ## Create a data.frame with the structure and attributes of any igraph object
-#' graphdf(tinyPatchGOC$th[[1]]$goc)
+#' graphdf(tinyPatchGOC@th[[1]]$goc)
 #' }
 #'
-graphdf <- function(x) UseMethod("graphdf")
-
-
+#' @export
+#' @rdname graphdf
+#'
+setGeneric("graphdf", function(x, ...) {
+  standardGeneric("graphdf")
+})
 
 #' @export
 #' @rdname graphdf
-graphdf.list <- function(x) {
-  results <- vector("list", length(x))
+setMethod(
+  "graphdf",
+  signature = "list",
+  definition = function(x, ...) {
+    results <- vector("list", length(x))
 
-  for (i in 1:length(x)) {
-    thisGraph <- x[[i]]
+    for (i in 1:length(x)) {
+      thisGraph <- x[[i]]
 
-    if (is_igraph(thisGraph))  {
-      results[[i]] <- list()
-      results[[i]]$v <- data.frame(sapply(names(vertex_attr(thisGraph)), function(z) {
-        vertex_attr(thisGraph, z)
-      }), stringsAsFactors = FALSE)
-      results[[i]]$e <- data.frame(as_edgelist(thisGraph), sapply(names(edge_attr(thisGraph)), function(z) {
-        edge_attr(thisGraph, z)
-      }), stringsAsFactors = FALSE)
-      edgeDfNames <- names(results[[i]]$e)
-      names(results[[i]]$e) <- c("e1", "e2", edgeDfNames[3:length(edgeDfNames)])
+      if (is_igraph(thisGraph))  {
+        results[[i]] <- list()
+        results[[i]]$v <- data.frame(sapply(names(vertex_attr(thisGraph)), function(z) {
+          vertex_attr(thisGraph, z)
+        }), stringsAsFactors = FALSE)
+        results[[i]]$e <- data.frame(as_edgelist(thisGraph), sapply(names(edge_attr(thisGraph)), function(z) {
+          edge_attr(thisGraph, z)
+        }), stringsAsFactors = FALSE)
+        edgeDfNames <- names(results[[i]]$e)
+        names(results[[i]]$e) <- c("e1", "e2", edgeDfNames[3:length(edgeDfNames)])
 
-      ## Clean-up storage mode structure of data.frames
-      results[[i]]$e <- as.data.frame(sapply(results[[i]]$e, as.character), stringsAsFactors = FALSE)
-      results[[i]]$v <- as.data.frame(sapply(results[[i]]$v, as.character), stringsAsFactors = FALSE)
-      results[[i]]$e <- as.data.frame(lapply(results[[i]]$e, function(z) {
-        type.convert(z, as.is = TRUE)
-      }), stringsAsFactors = FALSE)
-      results[[i]]$v <- as.data.frame(lapply(results[[i]]$v, function(z) {
-        type.convert(z, as.is = TRUE)
-      }), stringsAsFactors = FALSE)
-    } else {
-      results[[i]]$v <- NA
-      results[[i]]$e <- NA
+        ## Clean-up storage mode structure of data.frames
+        results[[i]]$e <- as.data.frame(sapply(results[[i]]$e, as.character), stringsAsFactors = FALSE)
+        results[[i]]$v <- as.data.frame(sapply(results[[i]]$v, as.character), stringsAsFactors = FALSE)
+        results[[i]]$e <- as.data.frame(lapply(results[[i]]$e, function(z) {
+          type.convert(z, as.is = TRUE)
+        }), stringsAsFactors = FALSE)
+        results[[i]]$v <- as.data.frame(lapply(results[[i]]$v, function(z) {
+          type.convert(z, as.is = TRUE)
+        }), stringsAsFactors = FALSE)
+      } else {
+        results[[i]]$v <- NA
+        results[[i]]$e <- NA
+      }
     }
-  }
 
-  return(results)
-}
-
-#' @export
-#' @rdname graphdf
-graphdf.goc <- function(x) {
-  theseGraphs <- lapply(x$th, function(x) x$goc)
-  graphdf.list(theseGraphs)
-}
+    return(results)
+})
 
 #' @export
 #' @rdname graphdf
-graphdf.mpg <- function(x) {
-  theseGraphs <- vector("list", 1)
-  theseGraphs[[1]] <- x$mpg
-  graphdf.list(theseGraphs)
-}
+setMethod(
+  "graphdf",
+  signature = "goc",
+  definition = function(x, ...) {
+    theseGraphs <- lapply(x@th, function(z) z$goc)
+    graphdf(theseGraphs)
+})
 
 #' @export
 #' @rdname graphdf
-graphdf.igraph <- function(x) {
-  theseGraphs <- vector("list", 1)
-  theseGraphs[[1]] <- x
-  graphdf.list(theseGraphs)
-}
+setMethod(
+  "graphdf",
+  signature = "mpg",
+  definition = function(x, ...) {
+    theseGraphs <- vector("list", 1)
+    theseGraphs[[1]] <- x@mpg
+    graphdf(theseGraphs)
+})
+
+#' @export
+#' @rdname graphdf
+setMethod(
+  "graphdf",
+  signature = "igraph",
+  definition = function(x, ...) {
+    theseGraphs <- vector("list", 1)
+    theseGraphs[[1]] <- x
+    graphdf(theseGraphs)
+})

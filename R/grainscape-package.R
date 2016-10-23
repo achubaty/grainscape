@@ -93,3 +93,13 @@ NULL
 #' @rdname grainscape-maps
 #' @format raster
 NULL
+
+################################################################################
+# package imports
+# See \url{http://r-pkgs.had.co.nz/namespace.html#imports}
+
+#' @import igraph
+NULL
+
+#' @import methods
+NULL

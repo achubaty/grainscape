@@ -8,6 +8,7 @@ version 0.3.0.9000
 * updated vignette / tutorial (#5)
 * Renamed functions to remove `gs` and `gsGOC` prefixes. Old names have been deprecated. (#10)
 * removed `gsMPGstitch()` as it was unreliable
+* use S4 classes and methods (#3, #19)
 
 version 0.3
 ===========

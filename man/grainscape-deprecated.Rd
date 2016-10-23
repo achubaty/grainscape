@@ -27,7 +27,7 @@ gsGraphDataFrame(x)
 gsMPG(cost, patch, sa = NULL, filterPatch = NULL, spreadFactor = 0)
 }
 \arguments{
-\item{mpg}{A \code{MPG} object.}
+\item{mpg}{A \code{mpg} object.}
 
 \item{nThresh}{Optional.  An integer giving the number of thresholds (or scales)
 at which to create GOC models.  Thresholds are selected to produce
@@ -50,15 +50,15 @@ perimeters of patches as the link weight.}
 
 \item{sp}{Logical.  If \code{TRUE} the \code{rgeos} package is used to create
 a vector of class \code{\link{SpatialPolygonsDataFrame}} describing
-the finest grain of connectivity.  This is very useful for visualizing
+the finest grain of connectivity. This is very useful for visualizing
 grains of connectivity models, especially for print purposes.
 Equally, using the \code{maptools} or \code{rgdal} packages these
 polygons can be exported as shapefiles for use in other GIS applications.
 But, please see details.}
 
-\item{verbose}{Set \code{verbose=1} for no progress information to console.}
+\item{verbose}{Set \code{verbose=0} for no progress information to console.}
 
-\item{GOC}{A \code{GOC} object.}
+\item{GOC}{A \code{goc} object.}
 
 \item{whichThresh}{Integer giving the index of the threshold to visualize.}
 

@@ -3,20 +3,20 @@
 \docType{methods}
 \name{point}
 \alias{point}
-\alias{point.goc}
+\alias{point,goc-method}
 \title{Identify the polygons containing locations in grains of connectivity (GOC) tessellations}
 \usage{
-point(x, coords)
+point(x, ...)
 
-\method{point}{goc}(x, coords)
+\S4method{point}{goc}(x, coords, ...)
 }
 \arguments{
 \item{x}{A \code{goc} object produced by \code{\link{GOC}}.}
 
+\item{...}{Additional arguments (not used).}
+
 \item{coords}{A two column matrix or a \code{\link{SpatialPoints}} object giving
 the coordinates of points of interest.}
-
-\item{...}{Additional arguments.}
 }
 \value{
 A list with elements:
@@ -46,6 +46,8 @@ See \code{\link{MPG}} for warning related to areal measurements.
 }
 \examples{
 \dontrun{
+library(raster)
+
 ## Load raster landscape
 tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape"))
 
@@ -68,7 +70,7 @@ tinyPts <- point(tinyPatchGOC, loc)
 
 }
 \author{
-Paul Galpern
+Paul Galpern and Alex Chubaty
 }
 \references{
 Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien. (2007) Spatial graphs: Principles and applications for habitat connectivity. Ecosystems 10:448:461.

@@ -9,7 +9,7 @@ Description: Given a landscape resistance surface, creates grains of
     project.org/projects/grainscape/).
 URL: https://github.com/achubaty/grainscape
 Version: 0.3.0.9000
-Date: 2016-10-17
+Date: 2016-10-19
 Authors@R: c(
     person("Paul", "Galpern", email = "pgalpern@gmail.com", role = c("aut", "cph", "cre")),
     person("Sam", "Doctolero", email = "sam.doctolero@gmail.com", role = "aut"),
@@ -35,16 +35,20 @@ VinetteBuilder: knitr, rmarkdown
 BugReports: https://github.com/achubaty/grainscape/issues
 ByteCompile: yes
 Collate:
+    'grainscape-package.R'
+    'classes.R'
     'GOC.R'
     'MPG.R'
     'RcppExports.R'
+    'aaa.R'
     'visualize.R'
     'corridor.R'
     'deprecated.R'
     'distance.R'
-    'grainscape-package.R'
+    'extract.R'
     'graphdf.R'
     'habitatConnectivityEngine.R'
+    'plot.R'
     'point.R'
     'threshold.R'
     'zzz.R'
