@@ -61,11 +61,13 @@ gsGraphDataFrame <- function(x) {
 
 #' @export gsMPG
 #' @inheritParams MPG
-#' @param sa No longer used.
+#' @param filterPatch,sa,spreadFactor  No longer used.
 #' @rdname grainscape-deprecated
 #'
 gsMPG <- function(cost, patch, sa = NULL, filterPatch = NULL, spreadFactor = 0) {
   .Deprecated("MPG", old = "gsMPG")
+  if (!is.null(filterPatch)) warning("gsMPG(): argument 'filterPatch' was supplied but will be ignored.")
   if (!is.null(sa)) warning("gsMPG(): argument 'sa' was supplied but will be ignored.")
-  MPG(cost, patch, filterPatch, spreadFactor)
+  if (spreadFactor != 0) warning("gsMPG(): argument 'spreadFactor' was supplied but will be ignored.")
+  MPG(cost, patch)
 }

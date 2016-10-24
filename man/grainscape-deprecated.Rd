@@ -89,14 +89,7 @@ where patches=1 and non-patches=0.
 For lattice analyses, an integer gives the spacing in raster
 cells between focal points in the lattice.}
 
-\item{sa}{No longer used.}
-
-\item{filterPatch}{Optional.  Remove patches from the analysis that are smaller
-than a given number of cells.}
-
-\item{spreadFactor}{Optional.  Fine-grained control over the accuracy of Voronoi polygons.
-To reduce accuracy and increase speed, set this as
-\code{spreadFactor=10} or \code{spreadFactor=100}.}
+\item{filterPatch, sa, spreadFactor}{No longer used.}
 }
 \description{
 These functions have been deprecated and will be removed in a future release.

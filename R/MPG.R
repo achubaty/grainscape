@@ -38,13 +38,6 @@
 #'               For lattice analyses, an integer gives the spacing in raster
 #'               cells between focal points in the lattice.
 #'
-#' @param filterPatch  Optional.  Remove patches from the analysis that are smaller
-#'                     than a given number of cells.
-#'
-#' @param spreadFactor  Optional.  Fine-grained control over the accuracy of Voronoi polygons.
-#'                      To reduce accuracy and increase speed, set this as
-#'                      \code{spreadFactor=10} or \code{spreadFactor=100}.
-#'
 #' @param ...  Additional arguments (not used).
 #'
 #' @return A \code{\link[=mpg-class]{mpg}} object.
@@ -109,8 +102,7 @@ setGeneric("MPG", function(cost, patch, ...) {
 setMethod(
   "MPG",
   signature = c(cost = "RasterLayer", patch = "RasterLayer"),
-  definition = function(cost, patch, filterPatch = NULL,
-                        spreadFactor = 0, ...) {
+  definition = function(cost, patch, ...) {
   ## Check patch and cost are comparable
   if (!compareRaster(patch, cost, res = TRUE, orig = TRUE, stopiffalse = FALSE)) {
     stop("grainscape: patch and cost rasters must be identical in extent, projection, origin and resolution.", call. = FALSE)
@@ -132,15 +124,6 @@ setMethod(
 
   rasCost[] <- getValues(cost)
   rasPatch[] <- getValues(patch)
-
-  ## Check filterPatch
-  if (is.null(filterPatch)) {
-    ## Set filterPatch smaller than area of cell
-    filterPatch <- (prod(res(rasCost))/10000) * 0.01
-  } else {
-    ## Set filterPatch as area in hectares
-    filterPatch <- (prod(res(rasCost))/10000) * abs(filterPatch)
-  }
 
   ## Check that patch raster is binary, first corecing NAs to zeroes
   rasPatch[is.na(rasPatch)] <- 0
@@ -221,7 +204,7 @@ setMethod(
 setMethod(
   "MPG",
   signature = c(cost = "RasterLayer", patch = "numeric"),
-  definition = function(cost, patch, filterPatch = NULL, spreadFactor = 0, ...) {
+  definition = function(cost, patch, ...) {
     ## Produce the lattice patch rasters
     focalPointDistFreq <- patch
     patch <- cost
@@ -232,6 +215,5 @@ setMethod(
     ## Remove lattice points that fall on NA cost cells
     patch[is.na(cost)] <- 0
 
-    MPG(cost = cost, patch = patch, filterPatch = filterPatch,
-        spreadFactor = spreadFactor, ...)
+    MPG(cost = cost, patch = patch, ...)
 })

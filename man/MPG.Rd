@@ -9,11 +9,9 @@
 \usage{
 MPG(cost, patch, ...)
 
-\S4method{MPG}{RasterLayer,RasterLayer}(cost, patch, filterPatch = NULL,
-  spreadFactor = 0, ...)
+\S4method{MPG}{RasterLayer,RasterLayer}(cost, patch, ...)
 
-\S4method{MPG}{RasterLayer,numeric}(cost, patch, filterPatch = NULL,
-  spreadFactor = 0, ...)
+\S4method{MPG}{RasterLayer,numeric}(cost, patch, ...)
 }
 \arguments{
 \item{cost}{A \code{RasterLayer} giving a landscape resistance surface,
@@ -34,13 +32,6 @@ For lattice analyses, an integer gives the spacing in raster
 cells between focal points in the lattice.}
 
 \item{...}{Additional arguments (not used).}
-
-\item{filterPatch}{Optional.  Remove patches from the analysis that are smaller
-than a given number of cells.}
-
-\item{spreadFactor}{Optional.  Fine-grained control over the accuracy of Voronoi polygons.
-To reduce accuracy and increase speed, set this as
-\code{spreadFactor=10} or \code{spreadFactor=100}.}
 }
 \value{
 A \code{\link[=mpg-class]{mpg}} object.
