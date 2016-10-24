@@ -89,13 +89,7 @@ where patches=1 and non-patches=0.
 For lattice analyses, an integer gives the spacing in raster
 cells between focal points in the lattice.}
 
-\item{sa}{Optional.  A raster of class \code{RasterLayer} of the same extent,
-origin and projection as \code{cost} indicating the study area
-(i.e., cells on the landscape to include in the analysis).
-If not supplied \code{sa} is the full extent of \code{cost}.
-To mask out areas of the landscape to exclude from analysis
-(e.g., at the edges of a map), supply a binary raster where
-included cells=1 and excluded cells=0.}
+\item{sa}{No longer used.}
 
 \item{filterPatch}{Optional.  Remove patches from the analysis that are smaller
 than a given number of cells.}

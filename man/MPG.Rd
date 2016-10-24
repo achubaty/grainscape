@@ -9,11 +9,11 @@
 \usage{
 MPG(cost, patch, ...)
 
-\S4method{MPG}{RasterLayer,RasterLayer}(cost, patch, sa = NULL,
-  filterPatch = NULL, spreadFactor = 0, ...)
+\S4method{MPG}{RasterLayer,RasterLayer}(cost, patch, filterPatch = NULL,
+  spreadFactor = 0, ...)
 
-\S4method{MPG}{RasterLayer,numeric}(cost, patch, sa = NULL,
-  filterPatch = NULL, spreadFactor = 0, ...)
+\S4method{MPG}{RasterLayer,numeric}(cost, patch, filterPatch = NULL,
+  spreadFactor = 0, ...)
 }
 \arguments{
 \item{cost}{A \code{RasterLayer} giving a landscape resistance surface,
@@ -34,14 +34,6 @@ For lattice analyses, an integer gives the spacing in raster
 cells between focal points in the lattice.}
 
 \item{...}{Additional arguments (not used).}
-
-\item{sa}{Optional.  A raster of class \code{RasterLayer} of the same extent,
-origin and projection as \code{cost} indicating the study area
-(i.e., cells on the landscape to include in the analysis).
-If not supplied \code{sa} is the full extent of \code{cost}.
-To mask out areas of the landscape to exclude from analysis
-(e.g., at the edges of a map), supply a binary raster where
-included cells=1 and excluded cells=0.}
 
 \item{filterPatch}{Optional.  Remove patches from the analysis that are smaller
 than a given number of cells.}
@@ -110,13 +102,6 @@ plot((tinyPatchMPG@lcpLinkId * -1) \%in\% MSTlinks, add = TRUE, legend = FALSE, 
 ## Produce a lattice MPG where focal points are spaced 10 cells apart
 tinyLatticeMPG <- MPG(cost = tinyCost, patch = 10)
 plot(tinyLatticeMPG)
-
-## Produce a patch-based MPG with a study area consisting of half of the map
-tinySa <- tinyCost
-tinySa[] <- 1
-tinySa[1:5000] <- 0
-tinySaMPG <- MPG(cost = tinyCost, patch = (tinyCost == 1), sa = tinySa)
-plot(tinySaMPG)
 }
 
 }

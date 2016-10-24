@@ -38,14 +38,6 @@
 #'               For lattice analyses, an integer gives the spacing in raster
 #'               cells between focal points in the lattice.
 #'
-#' @param sa  Optional.  A raster of class \code{RasterLayer} of the same extent,
-#'            origin and projection as \code{cost} indicating the study area
-#'            (i.e., cells on the landscape to include in the analysis).
-#'            If not supplied \code{sa} is the full extent of \code{cost}.
-#'            To mask out areas of the landscape to exclude from analysis
-#'            (e.g., at the edges of a map), supply a binary raster where
-#'            included cells=1 and excluded cells=0.
-#'
 #' @param filterPatch  Optional.  Remove patches from the analysis that are smaller
 #'                     than a given number of cells.
 #'
@@ -106,13 +98,6 @@
 #' ## Produce a lattice MPG where focal points are spaced 10 cells apart
 #' tinyLatticeMPG <- MPG(cost = tinyCost, patch = 10)
 #' plot(tinyLatticeMPG)
-#'
-#' ## Produce a patch-based MPG with a study area consisting of half of the map
-#' tinySa <- tinyCost
-#' tinySa[] <- 1
-#' tinySa[1:5000] <- 0
-#' tinySaMPG <- MPG(cost = tinyCost, patch = (tinyCost == 1), sa = tinySa)
-#' plot(tinySaMPG)
 #' }
 #'
 setGeneric("MPG", function(cost, patch, ...) {
@@ -124,7 +109,7 @@ setGeneric("MPG", function(cost, patch, ...) {
 setMethod(
   "MPG",
   signature = c(cost = "RasterLayer", patch = "RasterLayer"),
-  definition = function(cost, patch, sa = NULL, filterPatch = NULL,
+  definition = function(cost, patch, filterPatch = NULL,
                         spreadFactor = 0, ...) {
   ## Check patch and cost are comparable
   if (!compareRaster(patch, cost, res = TRUE, orig = TRUE, stopiffalse = FALSE)) {
@@ -142,8 +127,8 @@ setMethod(
     warning("grainscape:  projection suggests that all cells may not be of equal area; Note that grainscape assumes equal area in all calculations.", call. = FALSE)
   }
 
-  ## use `cost` raster as template for `rasCost`, `rasPatch`, and `rasSa`
-  rasCost <- rasPatch <- rasSa <- cost
+  ## use `cost` raster as template for `rasCost` and `rasPatch`
+  rasCost <- rasPatch <- cost
 
   rasCost[] <- getValues(cost)
   rasPatch[] <- getValues(patch)
@@ -155,21 +140,6 @@ setMethod(
   } else {
     ## Set filterPatch as area in hectares
     filterPatch <- (prod(res(rasCost))/10000) * abs(filterPatch)
-  }
-
-  ## Check sa is comparable with other rasters
-  if (!is.null(sa)) {
-    if (!inherits(sa, "RasterLayer")) {
-      stop("grainscape:  sa raster must be of class RasterLayer", call. = FALSE)
-    }
-    if (!compareRaster(cost, sa, res = TRUE, orig = TRUE, stopiffalse = FALSE)) {
-      stop("grainscape: patch, cost and sa rasters must be identical in extent, projection, origin and resolution", call. = FALSE)
-    }
-    rasSa[] <- getValues(sa)
-    rasCost[is.na(rasSa)] <- NA
-    rasPatch[is.na(rasSa)] <- NA
-  } else {
-    rasSa[] <- 1
   }
 
   ## Check that patch raster is binary, first corecing NAs to zeroes
@@ -251,8 +221,7 @@ setMethod(
 setMethod(
   "MPG",
   signature = c(cost = "RasterLayer", patch = "numeric"),
-  definition = function(cost, patch, sa = NULL, filterPatch = NULL,
-                        spreadFactor = 0, ...) {
+  definition = function(cost, patch, filterPatch = NULL, spreadFactor = 0, ...) {
     ## Produce the lattice patch rasters
     focalPointDistFreq <- patch
     patch <- cost
@@ -263,6 +232,6 @@ setMethod(
     ## Remove lattice points that fall on NA cost cells
     patch[is.na(cost)] <- 0
 
-    MPG(cost = cost, patch = patch, sa = sa, filterPatch = filterPatch,
+    MPG(cost = cost, patch = patch, filterPatch = filterPatch,
         spreadFactor = spreadFactor, ...)
 })
