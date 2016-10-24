@@ -4,7 +4,7 @@
 #' Habitat connectivity engine (C++)
 #'
 #' Internal function, not intended to be called directly.
-#' DESCRIPTION NEEDED
+#' DESCRIPTION NEEDED.
 #'
 #' @param cost              Numeric vector of habitat cost (resistance) values
 #'                          extracted from a raster cost map.

@@ -9,18 +9,19 @@ struct Cell
 
 struct Link
 {
-      Cell start, end;                  //start and end nodes
-      std::vector<Cell> connection;     //collection of cells that create the link
-      float cost;                       //cost of the link or path
+      Cell start, end;               //start and end nodes
+      std::vector<Cell> connection;  //collection of cells that create the link
+      float cost;                    //cost of the link or path
 };
 
 struct Patch
 {
-      std::vector<Cell> body;           //body of the patch
-      float id;                           //id of the patch
+      std::vector<Cell> body;        //body of the patch
+      float id;                      //id of the patch
 };
 
-//Map/Matrix container of type float - used to contain the output data (voronoi, link, and patches) as well as the cost map
+//Map/Matrix container of type float
+//used to contain the output data (voronoi, link, and patches) as well as the cost map
 typedef std::vector<float> flCol;
 typedef std::vector<flCol> flMap;
 
@@ -28,7 +29,7 @@ typedef std::vector<flCol> flMap;
 struct LinkCell
       : Cell   //inherits the cell structure
 {
-      Cell fromCell, originCell;      //fromCell - cell that it connects to | originCell - perimeter cell in the patch that the link came from
+      Cell fromCell, originCell;  //fromCell - cell that it connects to | originCell - perimeter cell in the patch that the link came from
       float distance, cost;
 };
 
@@ -66,7 +67,7 @@ struct ActiveCellHolder
       float value;
       std::vector<ActiveCell> list;
 
-    //adds the ActiveCell c in a specific order
+      //adds the ActiveCell c in a specific order
       void add(ActiveCell c)
       {
             if (list.size() <= 0)
@@ -84,7 +85,7 @@ struct ActiveCellHolder
             }
       }
 
-    //returns size of the vector
+      //returns size of the vector
       unsigned int size()
       {
             return list.size();
@@ -95,7 +96,7 @@ struct ActiveCellQueue
 {
       std::vector<ActiveCellHolder> holder_list;
 
-    //inserts the ActiveCellHolder h in a specific order
+      //inserts the ActiveCellHolder h in a specific order
       void insertH(ActiveCellHolder h)
       {
             int index = 0;

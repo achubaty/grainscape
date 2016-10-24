@@ -10,7 +10,7 @@ using namespace Rcpp;
 //' Habitat connectivity engine (C++)
 //'
 //' Internal function, not intended to be called directly.
-//' DESCRIPTION NEEDED
+//' DESCRIPTION NEEDED.
 //'
 //' @param cost              Numeric vector of habitat cost (resistance) values
 //'                          extracted from a raster cost map.
@@ -65,7 +65,8 @@ List habConnRcpp(NumericVector cost, NumericVector patches, int ncol, int nrow)
   //create NumericVector values for vector values of out_data
   NumericVector nmvor(cost.size());
   NumericVector nmpatch(cost.size());
-  //transfer the vector datat to the numericvector variables
+
+  //transfer the vector data to the numericvector variables
   for (unsigned int i = 0; i < cost.size(); i++)
   {
     nmvor[i] = (double)out_data.voronoi_map[i];
@@ -95,6 +96,6 @@ List habConnRcpp(NumericVector cost, NumericVector patches, int ncol, int nrow)
   }
 
   return List::create(Named("VoronoiVector", nmvor),
-    Named("PatchLinkIDsVector", nmpatch),
-    Named("LinkData", link_data_vec));
+                      Named("PatchLinkIDsVector", nmpatch),
+                      Named("LinkData", link_data_vec));
 }
