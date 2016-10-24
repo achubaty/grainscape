@@ -187,7 +187,7 @@ setMethod(
     weights = edge_attr(x@th[[whichThresh]]$goc, weight)
   )[startEndPath[length(startEndPath)]]
 
-  voronoiSP <- visualize(x, whichThresh, sp = TRUE)$voronoiSP
+  voronoiSP <- visualize(x, whichThresh = whichThresh, sp = TRUE)$voronoiSP
 
   ## Do plot
   if (doPlot == 1) {
