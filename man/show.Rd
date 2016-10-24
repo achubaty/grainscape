@@ -14,7 +14,7 @@
 Custom \code{show} method to safely print the contents of a \code{goc} object.
 }
 \note{
-When a \code{goc} object is created using `GOC(..., sp= FALSE)` (the default),
+When a \code{goc} object is created using \code{GOC(..., sp= FALSE)} (the default),
 an 'empty' \code{SpatialPointsDataFrame} is stored in the \code{goc}'s \code{voronoiSP}
 slot. This object cannot be safely printed, so the default \code{show} method
 is bypassed, printing each of the other slots and showing \code{voronoiSP} as \code{<empty>}.
