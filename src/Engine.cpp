@@ -316,9 +316,14 @@ void Engine::activeCellSpreadChecker(ActiveCell * ac)
 void Engine::createActiveCell(ActiveCell * ac, int row, int col)
 {
   //if not out of bounds and have not been conquered by other patches then create a new active cell
-  if (!outOfBounds(row, col, in_data->nrow, in_data->ncol) && voronoi_map[row][col] == 0.0f && !std::isnan(cost_map[row][col]))
+  if (!outOfBounds(row, col, in_data->nrow, in_data->ncol) && voronoi_map[row][col] == 0.0f )
   {
 
+    if(std::isnan(cost_map[row][col]))
+    {
+      voronoi_map[row][col] = std::numeric_limits<float>::quiet_NaN();
+      return;
+    }
     Cell c;                   //create an instance of Cell called 'c'
     c.row = row;              //set c's row to the parameter row
     c.column = col;           //set c's column to the parameter col
