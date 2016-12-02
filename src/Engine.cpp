@@ -318,6 +318,7 @@ void Engine::createActiveCell(ActiveCell * ac, int row, int col)
   //if not out of bounds and have not been conquered by other patches then create a new active cell
   if (!outOfBounds(row, col, in_data->nrow, in_data->ncol) && voronoi_map[row][col] == 0.0f && !std::isnan(cost_map[row][col]))
   {
+
     Cell c;                   //create an instance of Cell called 'c'
     c.row = row;              //set c's row to the parameter row
     c.column = col;           //set c's column to the parameter col
@@ -338,12 +339,13 @@ void Engine::createActiveCell(ActiveCell * ac, int row, int col)
 
     //if a no_data value in the cost_map is encountered then set the resistance and parent resistances to zero
     //this will cause the engine to automatically spread into the no_data cells and not connect them
-    if (std::isnan(cost_map[row][col]))//handle no data values
+   /* if (std::isnan(cost_map[row][col]))//handle no data values
     {
       new_ac.resistance = 0.0f;
       new_ac.parentResistance = 0.0f;
     }
     else //however, if no no_data cells are encountered create a link between the old active cell (ac) to the cell that it is spreading to (new_ac)
+      */
       connectCell(ac, row, col, cost_map[row][col]);
 
     //insert new_ac to the temporary_active_cell_holder as a new ActiveCell
