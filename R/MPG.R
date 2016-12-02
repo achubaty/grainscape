@@ -155,12 +155,14 @@ setMethod(
 
   ## Get additional patch information
   uniquePatches <- voronoi[] %>% unique() %>% sort()
+  uniquePatches <- uniquePatches[uniquePatches > 0]
 
   ## Patch edge
   patchEdge <- patchId
   patchEdge <- raster::boundaries(patchEdge, type = "inner")
   patchEdge[patchEdge == 0] <- NA
   patchEdge <- mask(patchId, patchEdge)
+
 
   ## Patch area and core area
   patchArea <- freq(patchId, useNA = "no")
