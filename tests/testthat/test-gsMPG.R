@@ -1,3 +1,46 @@
-test_that("numerical-comparisons: inRange handles various inputs", {
-  expect_true(TRUE) # temp placeholder
+test_that("MPG handles NA vaules correctly", {
+  library(igraph)
+  library(raster)
+
+  ## simplest case
+  x <- 100
+  y <- 100
+  m <- matrix(2L, ncol = y, nrow = y)
+  m[1:95, 46:55] <- NA_integer_
+  m[16:35, 24:35] <- 3L
+  m[16:35, 76:90] <- 3L
+
+  r <- raster(m)
+  c <- reclassify(r, rcl = cbind(c(1, 2, 3), c(10, 5, 1)))
+  p <- (c == 1)
+
+  mpg <- MPG(cost = c, patch = p)
+
+  NAs <- which(is.na(p[]))
+
+  ## no voronoi spread in the NA region
+  ids_v <- which(mpg@voronoi[] > 0)
+  expect_false(any(ids_v %in% NAs))
+
+  ## no links in the NA region
+  ids_l <- which(mpg@lcpLinkId[] < 0)
+  expect_false(any(ids_l %in% NAs))
+
+  ## more spohisticatied case
+  tinyNA <- raster(system.file("extdata/tiny.asc", package = "grainscape"))
+  tinyNA[1:95, 46:55] <- NA_integer_
+
+  tinyNACost <- reclassify(tinyNA, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
+
+  tinyPatchMPG <- MPG(cost = tinyNACost, patch = (tinyNACost == 1))
+
+  tinyNAs <- which(is.na(tinyNA[]))
+
+  ## no voronoi spread in the NA region
+  ids_v <- which(tinyPatchMPG@voronoi[] > 0)
+  expect_false(any(ids_v %in% tinyNAs))
+
+  ## no links in the NA region
+  ids_l <- which(tinyPatchMPG@lcpLinkId[] < 0)
+  expect_false(any(ids_l %in% tinyNAs))
 })

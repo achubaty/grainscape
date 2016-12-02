@@ -43,7 +43,7 @@ if (getRversion() >= "3.1.0") {
                       nrow = nrow(cost), ncol = ncol(cost))
 
   # convert `VoronoiVector` to a raster of identical dimensions etc. as `cost`
-  voronoi <- cost
+  voronoi <- patches
   voronoi[] <- hce$VoronoiVector
 
   # convert `PatchLinkIDsVector` to a raster of identical dimensions etc. as `cost`

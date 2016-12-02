@@ -53,6 +53,7 @@
 #' @importFrom raster boundaries cellFromRowCol cellFromRowColCombine compareRaster
 #' @importFrom raster getValues mask projection raster res writeRaster xyFromCell
 #' @importFrom sp coordinates
+#' @importFrom stats na.omit
 #' @importFrom utils read.table
 #' @include classes.R
 #' @rdname MPG
@@ -120,7 +121,8 @@ setMethod(
   }
 
   ## use `cost` raster as template for `rasCost` and `rasPatch`
-  rasCost <- rasPatch <- cost
+  rasCost <- cost
+  rasPatch <- patch
 
   rasCost[] <- getValues(cost)
   rasPatch[] <- getValues(patch)
@@ -154,15 +156,13 @@ setMethod(
   mpgPlot <- hce@patchLinks
 
   ## Get additional patch information
-  uniquePatches <- voronoi[] %>% unique() %>% sort()
-  uniquePatches <- uniquePatches[uniquePatches > 0]
+  uniquePatches <- voronoi[voronoi > 0] %>% na.omit() %>% unique() %>% sort()
 
   ## Patch edge
   patchEdge <- patchId
   patchEdge <- raster::boundaries(patchEdge, type = "inner")
   patchEdge[patchEdge == 0] <- NA
   patchEdge <- mask(patchId, patchEdge)
-
 
   ## Patch area and core area
   patchArea <- freq(patchId, useNA = "no")
