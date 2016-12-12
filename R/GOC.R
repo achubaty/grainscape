@@ -88,7 +88,7 @@
 #' print(tinyPatchGOC@th[[3]]$goc, vertex = TRUE, edge = TRUE)
 #'
 #' ## Extract specified grains of connectivity and produce a vector SpatialPolygons
-#' ## representation of the finest grain of connectivity (Threshold=0)
+#' ## representation of the finest grain of connectivity (Threshold = 0)
 #' tinyPatchGOC <- GOC(tinyPatchMPG, doThresh = c(0, 20, 40), sp = TRUE)
 #' }
 #'
@@ -251,9 +251,11 @@ setMethod(
         rawreclassifyVor <- cbind(sourcePatchId, V(componentGraph)$polygonId)
         reclassifyVor <- matrix(0, 1, 2)
         for (j in 1:nrow(rawreclassifyVor)) {
-          reclassifyVor <- rbind(reclassifyVor,
-                                 cbind(as.integer(strsplit(rawreclassifyVor[j, 1], ", ")[[1]]),
-                                       as.integer(rawreclassifyVor[j, 2])))
+          reclassifyVor <- rbind(
+            reclassifyVor,
+            cbind(as.integer(strsplit(rawreclassifyVor[j, 1], ", ")[[1]]),
+                  as.integer(rawreclassifyVor[j, 2]))
+          )
         }
         reclassifyVor <- reclassifyVor[2:nrow(reclassifyVor), ]
 
