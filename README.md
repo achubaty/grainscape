@@ -3,7 +3,7 @@
 ## Grains of connectivity and minimum planar graph modelling of landscape connectivity
 
 Given a landscape resistance surface, creates grains of connectivity and minimum planar graph models that can be used to calculate effective distances for landscape connectivity at multiple scales.
-This is a cross-platform reimplementation of the `grainscape` package (https://r-forge.r-project.org/projects/grainscape/).
+This is a cross-platform reimplementation and update of the `grainscape` package (https://r-forge.r-project.org/projects/grainscape/).
 
 ### Installation
 
