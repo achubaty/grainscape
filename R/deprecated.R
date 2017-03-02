@@ -71,3 +71,18 @@ gsMPG <- function(cost, patch, sa = NULL, filterPatch = NULL, spreadFactor = 0) 
   if (spreadFactor != 0) warning("gsMPG(): argument 'spreadFactor' was supplied but will be ignored.")
   MPG(cost, patch)
 }
+
+
+
+#' Defunct functions
+#'
+#' These functions have removed from \code{grainscape}.
+#'
+#' @export gsMPGstitch
+#' @param ... Any arguments passed to defunct functions.
+#' @rdname grainscape-defunct
+#'
+gsMPGstitch <- function(...) {
+  .Defunct("MPG", msg = paste("'gsMPGstitch' is defunct.\n",
+                              "'MPG' is now capable of handling larger rasters. Try it instead."))
+}

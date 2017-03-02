@@ -3,10 +3,10 @@
 \docType{methods}
 \name{graphdf}
 \alias{graphdf}
-\alias{graphdf,goc-method}
-\alias{graphdf,igraph-method}
 \alias{graphdf,list-method}
+\alias{graphdf,goc-method}
 \alias{graphdf,mpg-method}
+\alias{graphdf,igraph-method}
 \title{Produce a \code{data.frame} containing the structure and associated attributes}
 \usage{
 graphdf(x, ...)
@@ -72,10 +72,9 @@ graphdf(tinyPatchGOC@th[[1]]$goc)
 }
 
 }
-\author{
-Paul Galpern and Alex Chubaty
-}
 \seealso{
 \code{\link{MPG}}, \code{\link{GOC}}
 }
-
+\author{
+Paul Galpern and Alex Chubaty
+}
