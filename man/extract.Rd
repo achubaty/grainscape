@@ -4,9 +4,11 @@
 \name{$}
 \alias{$}
 \alias{$,goc-method}
-\alias{$,mpg-method}
 \alias{$<-}
 \alias{$<-,goc-method}
+\alias{$}
+\alias{$,mpg-method}
+\alias{$<-}
 \alias{$<-,mpg-method}
 \title{Extract or Replace Parts of an Object}
 \usage{
@@ -29,4 +31,3 @@ in which to replace element(s).}
 \description{
 Extract or Replace Parts of an Object
 }
-

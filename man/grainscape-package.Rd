@@ -2,8 +2,8 @@
 % Please edit documentation in R/grainscape-package.R
 \docType{package}
 \name{grainscape-package}
-\alias{grainscape}
 \alias{grainscape-package}
+\alias{grainscape}
 \title{Grains of connectivity and minimum planar graph modelling of landscape connectivity using resistance surfaces}
 \description{
 Given a landscape resistance surface, creates grains of connectivity and minimum
@@ -36,13 +36,6 @@ See \code{browseVignettes('grainscape')}.
 
 A detailed tutorial is available as a vignette.
 }
-\author{
-Paul Galpern
-
-Sam Doctolero
-
-Alex M. Chubaty
-}
 \references{
 Bivand, R.S. and C. Rundel. (2016). rgeos: Interface to Geometry Engine - Open Source (GEOS). R package version 0.3-19, \url{https://CRAN.R-project.org/package=rgeos}.
 
@@ -60,10 +53,16 @@ Hijmans, R.J. and J. van Etten. (2016). raster: Geographic analysis and modeling
 
 Pebesma, E.J. and R.S. Bivand. (2005). Classes and methods for spatial data in R. R News 5 (2), \url{http://cran.r-project.org/doc/Rnews/}.
 }
+\author{
+Paul Galpern
+
+Sam Doctolero
+
+Alex M. Chubaty
+}
 \keyword{connectivity,}
 \keyword{graph}
 \keyword{graph,}
 \keyword{minimum}
 \keyword{planar}
 \keyword{spatial}
-

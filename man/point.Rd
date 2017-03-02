@@ -69,9 +69,6 @@ tinyPts <- point(tinyPatchGOC, loc)
 }
 
 }
-\author{
-Paul Galpern and Alex Chubaty
-}
 \references{
 Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien. (2007) Spatial graphs: Principles and applications for habitat connectivity. Ecosystems 10:448:461.
 
@@ -82,4 +79,6 @@ O'Brien, D., M. Manseau, A. Fall, and M.-J. Fortin. (2006) Testing the importanc
 \seealso{
 \code{\link{GOC}}, \code{\link{distance}}
 }
-
+\author{
+Paul Galpern and Alex Chubaty
+}

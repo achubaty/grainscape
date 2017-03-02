@@ -75,9 +75,6 @@ print(tinyThresh$th[[7]], vertex = TRUE, edge = TRUE)
 }
 
 }
-\author{
-Paul Galpern and Alex Chubaty
-}
 \references{
 Brooks, C.P. (2003) A scalar analysis of landscape connectivity. Oikos 102:433-439.
 
@@ -88,4 +85,6 @@ Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis at
 \seealso{
 \code{\link{MPG}}
 }
-
+\author{
+Paul Galpern and Alex Chubaty
+}

@@ -17,5 +17,5 @@ Internal use only.
 Do not attempt to \code{print} or \code{show} these objects, as you'll get caught
 in an inifinite loop that requires termitation of the R process!
 }
-\keyword{internal}
 
+\keyword{internal}

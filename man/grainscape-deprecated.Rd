@@ -94,4 +94,3 @@ cells between focal points in the lattice.}
 \description{
 These functions have been deprecated and will be removed in a future release.
 }
-

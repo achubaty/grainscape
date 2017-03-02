@@ -18,8 +18,8 @@ surface (\code{RasterLayer}).}
 
 \item{\code{linkData}}{A \code{data.frame} of link attributes.}
 }}
+
 \author{
 Alex Chubaty and Sam Doctolero
 }
 \keyword{internal}
-

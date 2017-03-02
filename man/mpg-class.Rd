@@ -35,7 +35,7 @@ Edge attributes give attributes of the graph links including link
 weights giving accumulated resistance/least-cost path distance,
 Euclidean distance, and the start and end coordinates of each link.}
 }}
+
 \author{
 Alex Chubaty and Paul Galpern
 }
-

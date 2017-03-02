@@ -36,4 +36,3 @@ plot(tinyPatchMPG, col = c("grey", "black"), legend = FALSE)
 }
 
 }
-

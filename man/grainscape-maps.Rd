@@ -28,4 +28,3 @@ Typical analyses begin by reclassifying these to reflect resistance to movement.
 }
 }
 \keyword{maps}
-

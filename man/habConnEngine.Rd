@@ -32,11 +32,10 @@ if (interactive()) {
   plot(links$patchLinks) # plot the patches and links
 }
 }
-\author{
-Alex Chubaty
-}
 \seealso{
 \code{link{habConnRcpp}}
 }
+\author{
+Alex Chubaty
+}
 \keyword{internal}
-

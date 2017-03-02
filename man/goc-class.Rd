@@ -30,7 +30,7 @@ All areal measurements are given as raster cell counts.
 A variety of edge attributes are also given in the GOC graph.
 See \code{\link{distance}} for more information.}
 }}
+
 \author{
 Alex Chubaty and Paul Galpern
 }
-

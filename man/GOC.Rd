@@ -86,13 +86,10 @@ tinyPatchGOC <- GOC(tinyPatchMPG, nThresh = 5)
 print(tinyPatchGOC@th[[3]]$goc, vertex = TRUE, edge = TRUE)
 
 ## Extract specified grains of connectivity and produce a vector SpatialPolygons
-## representation of the finest grain of connectivity (Threshold=0)
+## representation of the finest grain of connectivity (Threshold = 0)
 tinyPatchGOC <- GOC(tinyPatchMPG, doThresh = c(0, 20, 40), sp = TRUE)
 }
 
-}
-\author{
-Paul Galpern
 }
 \references{
 Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien. (2007) Spatial graphs: Principles and applications for habitat connectivity. Ecosystems 10:448:461.
@@ -103,4 +100,6 @@ Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis at
 \code{\link{MPG}}, \code{\link{visualize}},
          \code{\link{distance}}, \code{\link{point}}
 }
-
+\author{
+Paul Galpern
+}

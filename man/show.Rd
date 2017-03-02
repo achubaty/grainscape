@@ -19,4 +19,3 @@ an 'empty' \code{SpatialPointsDataFrame} is stored in the \code{goc}'s \code{vor
 slot. This object cannot be safely printed, so the default \code{show} method
 is bypassed, printing each of the other slots and showing \code{voronoiSP} as \code{<empty>}.
 }
-
