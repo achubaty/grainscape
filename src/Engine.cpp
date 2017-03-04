@@ -723,12 +723,15 @@ void Engine::findPath(LinkCell &ac1, LinkCell &ac2, std::vector<Link> & path_lis
   lc_temp = iLinkMap[ac2.row][ac2.column];  //get the LinkCell from iLinkMap using ac2's location (row and column)
   path.end = parseMap(lc_temp, path);       //from ac2's location (or lc_temp's location) follow its connections until it reaches a path
 
-  //check if a cheaper indirect path is available
+  /*//check if a cheaper indirect path is available
   lookForIndirectPath(path_list, path);  //if a cheaper inderect path exists the
                                          //function updates the Link called 'path'
 
   //insert the new Link (path) in the path_list property of the Engine object
-  path_list.push_back(path);
+  path_list.push_back(path);*/
+
+  if(lookForIndirectPath(path_list, path))
+    path_list.push_back(path);
 }
 
 //' Parse a map
@@ -773,12 +776,12 @@ Cell Engine::parseMap(LinkCell lc, Link & path)
 //' @author Sam Doctolero
 //' @family C++ linking functions
 //' @keywords internal
-void Engine::lookForIndirectPath(std::vector<Link> & path_list, Link & path)
+bool Engine::lookForIndirectPath(std::vector<Link> & path_list, Link & path)
 {
   //if path_list is empty then no indirect paths are available to search
   if (path_list.size() <= 0)
   {
-    return;
+    return true;
   }
 
   //otherwise parse through all the paths currently in the memory and check for
@@ -818,10 +821,11 @@ void Engine::lookForIndirectPath(std::vector<Link> & path_list, Link & path)
                 path.connection.push_back(connection[k].connection[m]);
               }
             }
-            return;
+            return false;
           }
         }
       }
     }
   }
+  return true;
 }

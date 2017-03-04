@@ -83,7 +83,7 @@ private:
     //finds all the cells that create the link
     Cell parseMap(LinkCell lc, Link & path);
     //it looks for indirect path that's "cheaper" than the direct path and gives the new path the indirect path if found
-    void lookForIndirectPath(std::vector<Link> & path_list, Link & path);
+    bool lookForIndirectPath(std::vector<Link> & path_list, Link & path);
 
 public:
     //constructor that takes in a pointer to the input data, pointer to the output data,
