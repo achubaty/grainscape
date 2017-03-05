@@ -84,9 +84,9 @@ bool Engine::initialize()
   updateOutputMap(out_data->patch_map, voronoi_map);
 
   //get the initial active/spread cells
-  for (int i = 0; i < in_data->nrow; i++)
+  for (int i = in_data->nrow - 1; i >= 0; i--)
   {
-    for (int j = 0; j < in_data->ncol; j++)
+    for (int j = in_data->ncol - 1; j >= 0; j--)
     {
       if (voronoi_map[i][j] > 0.0f)
       {
@@ -204,10 +204,10 @@ void Engine::start()
       createActiveCell(&spread_list[i], spread_list[i].row - 1, spread_list[i].column);
       //bottom
       createActiveCell(&spread_list[i], spread_list[i].row + 1, spread_list[i].column);
-      //left
-      createActiveCell(&spread_list[i], spread_list[i].row, spread_list[i].column - 1);
       //right
       createActiveCell(&spread_list[i], spread_list[i].row, spread_list[i].column + 1);
+      //left
+      createActiveCell(&spread_list[i], spread_list[i].row, spread_list[i].column - 1);
     }
     //clear the spread list
     spread_list.clear();
@@ -743,8 +743,6 @@ void Engine::findPath(LinkCell &ac1, LinkCell &ac2, std::vector<Link> & path_lis
 //' @keywords internal
 Cell Engine::parseMap(LinkCell lc, Link & path)
 {
-  Cell mid = { lc.row, lc.column, lc.id };
-
   //go through all the connections starting from the input parameter lc's location
   //in the iLinkMap property of the Engine object
   Cell c1 = { lc.row, lc.column, lc.id };  //create an instance of a Cell, c1, and
