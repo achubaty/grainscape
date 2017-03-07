@@ -42,12 +42,21 @@ gsGOCPoint <- function(GOC, coords) {
 }
 
 #' @export gsGOCVisualize
-#' @inheritParams visualize
+#' @inheritParams grain
 #' @rdname grainscape-deprecated
 #'
 gsGOCVisualize <- function(GOC, whichThresh, sp = FALSE, doPlot = FALSE) {
-  .Deprecated("visualize", old = "gsGOCVisualize")
-  visualize(GOC, whichThresh, sp, doPlot)
+  .Deprecated("grain", old = "gsGOCVisualize")
+  grain(GOC, whichThresh, sp, doPlot)
+}
+
+#' @export gsGOCVisualize
+#' @inheritParams grain
+#' @rdname grainscape-deprecated
+#'
+visualize <- function(GOC, whichThresh, sp = FALSE, doPlot = FALSE) {
+  .Deprecated("grain", old = "visualize")
+  grain(GOC, whichThresh, sp, doPlot)
 }
 
 #' @export gsGraphDataFrame

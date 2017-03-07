@@ -6,6 +6,7 @@
 \alias{gsGOCDistance}
 \alias{gsGOCPoint}
 \alias{gsGOCVisualize}
+\alias{visualize}
 \alias{gsGraphDataFrame}
 \alias{gsMPG}
 \title{Deprecated functions}
@@ -21,6 +22,8 @@ gsGOCDistance(GOC, coords, weight = "meanWeight")
 gsGOCPoint(GOC, coords)
 
 gsGOCVisualize(GOC, whichThresh, sp = FALSE, doPlot = FALSE)
+
+visualize(GOC, whichThresh, sp = FALSE, doPlot = FALSE)
 
 gsGraphDataFrame(x)
 

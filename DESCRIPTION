@@ -34,14 +34,14 @@ Suggests:
 VinetteBuilder: knitr, rmarkdown
 BugReports: https://github.com/achubaty/grainscape/issues
 ByteCompile: yes
-Collate:
+Collate: 
     'grainscape-package.R'
     'classes.R'
     'GOC.R'
     'MPG.R'
     'RcppExports.R'
     'aaa.R'
-    'visualize.R'
+    'grain.R'
     'corridor.R'
     'deprecated.R'
     'distance.R'

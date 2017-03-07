@@ -55,7 +55,7 @@
 #' @export
 #' @importFrom graphics plot
 #' @importFrom sp Line Lines SpatialLines SpatialLinesDataFrame SpatialPoints
-#' @include classes.R visualize.R
+#' @include classes.R grain.R
 #' @rdname corridor
 #' @seealso \code{\link{GOC}}, \code{\link{visualize}}
 #'
@@ -187,7 +187,7 @@ setMethod(
     weights = edge_attr(x@th[[whichThresh]]$goc, weight)
   )[startEndPath[length(startEndPath)]]
 
-  voronoiSP <- visualize(x, whichThresh = whichThresh, sp = TRUE)$voronoiSP
+  voronoiSP <- grain(x, whichThresh = whichThresh, sp = TRUE)$voronoiSP
 
   ## Do plot
   if (doPlot == 1) {

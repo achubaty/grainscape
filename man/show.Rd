@@ -3,19 +3,25 @@
 \docType{methods}
 \name{show,goc-method}
 \alias{show,goc-method}
-\title{Show a \code{goc} object}
+\alias{show,grain-method}
+\title{Show a \code{grainscape} object}
 \usage{
 \S4method{show}{goc}(object)
+
+\S4method{show}{grain}(object)
 }
 \arguments{
-\item{object}{A \code{\link[=goc-class]{goc}} object created using \code{\link{GOC}}.}
+\item{object}{A \code{\link[=goc-class]{goc}} or
+\code{\link[=grain-class]{grain}} object.}
 }
 \description{
-Custom \code{show} method to safely print the contents of a \code{goc} object.
+Custom \code{show} method to safely print the contents of a \code{goc} or
+\code{grain} object.
 }
 \note{
-When a \code{goc} object is created using \code{GOC(..., sp= FALSE)} (the default),
-an 'empty' \code{SpatialPointsDataFrame} is stored in the \code{goc}'s \code{voronoiSP}
+When these objects are created using \code{sp = FALSE} (the default),
+an 'empty' \code{SpatialPointsDataFrame} is stored in the \code{voronoiSP}
 slot. This object cannot be safely printed, so the default \code{show} method
-is bypassed, printing each of the other slots and showing \code{voronoiSP} as \code{<empty>}.
+is bypassed, printing each of the other slots and showing \code{voronoiSP} as
+\code{<empty>}.
 }

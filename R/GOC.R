@@ -65,7 +65,7 @@
 #' @importFrom stats median
 #' @include classes.R
 #' @rdname GOC
-#' @seealso \code{\link{MPG}}, \code{\link{visualize}},
+#' @seealso \code{\link{MPG}}, \code{\link{grain}},
 #'          \code{\link{distance}}, \code{\link{point}}
 #'
 #' @examples

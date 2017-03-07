@@ -3,19 +3,23 @@
 \docType{methods}
 \name{plot,mpg,ANY-method}
 \alias{plot,mpg,ANY-method}
-\title{Plot a \code{mpg} object}
+\alias{plot,grain,ANY-method}
+\title{Plotting \code{grainscape} objects}
 \usage{
 \S4method{plot}{mpg,ANY}(x, y, ...)
+
+\S4method{plot}{grain,ANY}(x, y, ...)
 }
 \arguments{
-\item{x}{A \code{mpg} object produced by \code{\link{MPG}}.}
+\item{x}{A \code{mpg} object produced by \code{\link{MPG}} or \code{grain}
+object produced by \code{\link{grain}}.}
 
 \item{y}{Ignored.}
 
-\item{...}{Additional arguments passed to \code{raster::plot}.}
+\item{...}{Additional arguments passed to \code{plot}.}
 }
 \description{
-Plot a \code{mpg} object
+Plotting \code{grainscape} objects
 }
 \examples{
 \dontrun{

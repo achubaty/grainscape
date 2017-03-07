@@ -1,12 +1,14 @@
-#' Plot a \code{mpg} object
+#' Plotting \code{grainscape} objects
 #'
-#' @param x    A \code{mpg} object produced by \code{\link{MPG}}.
+#' @param x    A \code{mpg} object produced by \code{\link{MPG}} or \code{grain}
+#'             object produced by \code{\link{grain}}.
 #'
 #' @param y    Ignored.
 #'
-#' @param ...  Additional arguments passed to \code{raster::plot}.
+#' @param ...  Additional arguments passed to \code{plot}.
 #'
 #' @importFrom raster plot
+#' @importFrom sp plot
 #' @include classes.R
 #' @export
 #' @rdname plot
@@ -34,4 +36,24 @@ setMethod(
   signature = "mpg",
   definition = function(x, y, ...) {
     plot(x@mpgPlot, ...)
+})
+
+#' @export
+#' @rdname plot
+setMethod(
+  "plot",
+  signature = "grain",
+  definition = function(x, y, ...) {
+    dots <- list(...)
+    dots$main <- if (any(grepl(pattern = "main", names(dots)))) {
+      as.character(dots$main)
+    } else {
+      paste(c("whichThresh = ", x@summary$maxLink), collapse = "")
+    }
+
+    if (identical(x@voronoiSP, .emptySPDF())) {
+      raster::plot(x@voronoi, main = dots$main, ...)
+    } else {
+      sp::plot(x@voronoiSP, main = dots$main, ...)
+    }
 })
