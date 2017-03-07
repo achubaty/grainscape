@@ -11,7 +11,7 @@ This is a cross-platform reimplementation and update of the `grainscape` package
 
 Building packages from source requires the appropriate development libraries for your operating system:
 
-- **Windows:** install [Rtools](http://cran.r-project.org/bin/windows/Rtools/)).
+- **Windows:** install [Rtools](http://cran.r-project.org/bin/windows/Rtools/).
 
 - **macOS:** install Xcode commandline tools from the terminal: `xcode-select install`. 
 
