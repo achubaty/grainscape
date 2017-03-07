@@ -98,6 +98,7 @@ setMethod(
     }
 
     ## Check whichThresh
+    whichThresh <- which(x@summary$maxLink == whichThresh)
     if ((length(whichThresh) > 1) || (!(whichThresh %in% 1:length(x@th)))) {
       stop("grainscape:  whichThresh must index a single threshold existing in the GOC object", call. = FALSE)
     }
