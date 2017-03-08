@@ -11,25 +11,23 @@ This is a cross-platform reimplementation and update of the `grainscape` package
 
 ### Installation
 
-#### Install development libraries:
-
-Building packages from source requires the appropriate development libraries for your operating system:
-
-- **Windows:** install [Rtools](http://cran.r-project.org/bin/windows/Rtools/).
-
-- **macOS:** install Xcode commandline tools from the terminal: `xcode-select install`. 
-
-- **Debian/Ubuntu Linux:** ensure `r-base-dev` is installed.
-
-See [here](https://support.rstudio.com/hc/en-us/articles/200486498-Package-Development-Prerequisites) for more details.
-
-#### Install from GitHub:
+1. **Install development libraries:** building packages from source requires the appropriate development libraries for your operating system.
     
-```r
-#install.packages("devtools")
-library("devtools")
-install_github("achubaty/grainscape")
-```
+    - *Windows:* install [Rtools](http://cran.r-project.org/bin/windows/Rtools/).
+    
+    - *macOS:* install Xcode commandline tools from the terminal: `xcode-select install`. 
+    
+    - *Debian/Ubuntu Linux:* ensure `r-base-dev` is installed.
+    
+    See [here](https://support.rstudio.com/hc/en-us/articles/200486498-Package-Development-Prerequisites) for more details.
+
+2. **Install from GitHub:**
+    
+    ```r
+    #install.packages("devtools")
+    library("devtools")
+    install_github("achubaty/grainscape")
+    ```
 
 ### Reporting bugs
 
