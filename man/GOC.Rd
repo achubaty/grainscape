@@ -77,7 +77,7 @@ tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape"))
 tinyCost <- reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
 
 ## Produce a patch-based MPG where patches are resistance features=1
-tinyPatchMPG <- MPG(cost = tinyCost, patch = tinyCost == 1)
+tinyPatchMPG <- MPG(cost = tinyCost, patch = (tinyCost == 1))
 
 ## Extract a representative subset of 5 grains of connectivity
 tinyPatchGOC <- GOC(tinyPatchMPG, nThresh = 5)

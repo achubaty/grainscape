@@ -48,7 +48,7 @@ setMethod(
     dots$main <- if (any(grepl(pattern = "main", names(dots)))) {
       as.character(dots$main)
     } else {
-      paste(c("whichThresh = ", x@summary$maxLink), collapse = "")
+      paste(c("whichThresh = ", x@summary$id), collapse = "")
     }
 
     if (identical(x@voronoiSP, .emptySPDF())) {

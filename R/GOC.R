@@ -79,7 +79,7 @@
 #' tinyCost <- reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
 #'
 #' ## Produce a patch-based MPG where patches are resistance features=1
-#' tinyPatchMPG <- MPG(cost = tinyCost, patch = tinyCost == 1)
+#' tinyPatchMPG <- MPG(cost = tinyCost, patch = (tinyCost == 1))
 #'
 #' ## Extract a representative subset of 5 grains of connectivity
 #' tinyPatchGOC <- GOC(tinyPatchMPG, nThresh = 5)
@@ -127,10 +127,14 @@ setMethod(
     }))
     doThresh <- allUniqueThresh[!duplicated(allUniqueThresh[, 2]), 1]
     doThresh <- doThresh[round(seq(1, length(doThresh), length = nThresh))]
+    ids <- 1:length(doThresh)
+  } else {
+    ids <- doThresh
   }
 
   voronoi <- x@voronoi
-  summary.df <- data.frame(maxLink = doThresh, stringsAsFactors = FALSE)
+
+  summary.df <- data.frame(id = ids, maxLink = doThresh, stringsAsFactors = FALSE)
 
   ## Optionally retain a vectorized version of the smallest grain of connectivity
   ## that can later be used to create larger grains by aggregation

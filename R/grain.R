@@ -59,17 +59,14 @@
 #' ## Extract a representative subset of 5 grains of connectivity
 #' tinyPatchGOC <- GOC(tinyPatchMPG, nThresh = 5)
 #'
-#' ## look at the maxLink column for possible whichThresh values
-#' tinyPatchGOC@summary$maxLink ## 0, 30, 50, 64, 114
-#'
 #' ## Very quick visualization at the finest scale/grain/threshold,
 #' ## producing plot on the default graphics device
-#' tinyPatchGOCgrain <- grain(tinyPatchGOC, whichThresh = 0)
+#' tinyPatchGOCgrain <- grain(tinyPatchGOC, whichThresh = 1)
 #' plot(tinyPatchGOCgrain, col = topo.colors(10))
 #'
 #' ## Visualize the model at the finest scale/grain/threshold
 #' ## Manual control of plotting
-#' plot(grain(tinyPatchGOC, whichThresh = 0)@voronoi,
+#' plot(grain(tinyPatchGOC, whichThresh = 1)@voronoi,
 #'      col = sample(rainbow(100)), legend = FALSE, main = "Threshold 1")
 #'
 #' ## Extract a representative subset of 5 grains of connectivity for vector visualization
@@ -77,7 +74,7 @@
 #'
 #' ## grain the model at a selected scale/grain/threshold using vector polygons
 #' plot(tinyPatchMPG@patchId, col = "grey", legend = FALSE)
-#' plot(grain(tinyPatchGOC, whichThresh = 50, sp = TRUE)@voronoiSP, add = TRUE, lwd = 2)
+#' plot(grain(tinyPatchGOC, whichThresh = 3, sp = TRUE)@voronoiSP, add = TRUE, lwd = 2)
 #' }
 #'
 setGeneric("grain", function(x, ...) {
@@ -97,7 +94,8 @@ setMethod(
     dots <- list(...)
 
     ## Check whichThresh
-    if ((length(whichThresh) > 1) || (!(whichThresh %in% 1:length(x@th)))) {
+    thresholds <- x@summary$id
+    if ((length(whichThresh) > 1) || (!(whichThresh %in% thresholds))) {
       stop("grainscape:  whichThresh must index a single threshold existing in the GOC object", call. = FALSE)
     }
 
