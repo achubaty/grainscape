@@ -44,7 +44,6 @@ matrix:
   - os: linux
     dist: trusty
     cran: https://cran.rstudio.com/
-
     before_install:
     - tlmgr install xcolor
     - export DISPLAY=:99.0
@@ -62,9 +61,9 @@ matrix:
     before_install:
     - echo "options(repos = c(CRAN='https://cran.rstudio.com'))" >> ~/.Rprofile
 
-r_build_args: " "
+r_build_args: '--compact-vignettes="gs+qpdf"'
 
-r_check_args: "--as-cran"
+r_check_args: '--as-cran'
 
 warnings_are_errors: true
 
