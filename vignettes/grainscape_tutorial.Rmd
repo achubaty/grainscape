@@ -1,5 +1,6 @@
 ---
-title: "The `grainscape` package for R: Tutorials using simulated landscapes"
+title: "The `grainscape` package for R"
+subtitle: "Tutorials using simulated landscapes"
 author: "Paul Galpern (pgalpern@gmail.com)"
 date: '`r Sys.Date()`'
 output:
