@@ -56,7 +56,7 @@
 #' @docType package
 #' @keywords connectivity, minimum planar graph, spatial graph
 #' @importFrom Rcpp evalCpp
-#' @useDynLib grainscape
+#' @useDynLib grainscape, .registration = TRUE
 #'
 #' @author Paul Galpern
 #' @author Sam Doctolero

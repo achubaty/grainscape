@@ -31,7 +31,7 @@ Suggests:
     rgeos,
     rmarkdown,
     testthat
-VinetteBuilder: knitr, rmarkdown
+VignetteBuilder: knitr, rmarkdown
 BugReports: https://github.com/achubaty/grainscape/issues
 ByteCompile: yes
 Collate: 
