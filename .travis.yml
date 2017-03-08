@@ -68,6 +68,7 @@ r_check_args: '--as-cran'
 warnings_are_errors: true
 
 r_binary_packages:
+  - covr
   - igraph
   - knitr
   - raster
