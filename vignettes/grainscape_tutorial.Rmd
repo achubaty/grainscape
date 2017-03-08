@@ -1,5 +1,5 @@
 ---
-title: 'The `grainscape` package for R: Tutorials using simulated landscapes'
+title: "The `grainscape` package for R: Tutorials using simulated landscapes"
 author: "Paul Galpern (pgalpern@gmail.com)"
 date: '`r Sys.Date()`'
 output:
@@ -103,7 +103,7 @@ Other features are assigned values in between.
 The parameterization of resistance surfaces is itself a big topic [@Zeller:2012le].
 
 ```{r, fig.cap='\\label{fig:patchycost}Input raster resistance surface to create MPG. Features with value of 1 will be the patches in the graph. A river (dark green) has the highest resistance in this example.'}
-patchyCost <- reclassify(patchy, rcl = cbind(c(1,2,3,4,5), c(1, 10, 8, 3, 6)))
+patchyCost <- reclassify(patchy, rcl = cbind(c(1, 2, 3, 4, 5), c(1, 10, 8, 3, 6)))
 plot(patchyCost)
 ```
 
@@ -204,10 +204,10 @@ This is visualized in \autoref{fig:thresholdedgraph}.
 plot(patchyMPG@patchId, main = "", col = "black", legend = FALSE)
 
 ## Plot the links, but emphasize them first for printing
-#thresholdLink <- (patchyMPG@lcpPerimWeight <= 200)
-#thresholdLink[thresholdLink == 0] <- NA
-#thresholdLink[boundaries(thresholdLink, type = "outer")] <- 1
-#plot(thresholdLink, col = "darkgrey", add = TRUE, legend = FALSE)
+thresholdLink <- (patchyMPG@lcpPerimWeight <= 200)
+thresholdLink[thresholdLink == 0] <- NA
+thresholdLink[boundaries(thresholdLink, type = "outer")] <- 1
+plot(thresholdLink, col = "darkgrey", add = TRUE, legend = FALSE)
 ```
 
 ### Step 7: Next steps
@@ -238,7 +238,7 @@ Any of the variations imaginable for the MPG are equally valid here.
 
 ```{r}
 patchy <- raster(system.file("extdata/patchy.asc", package = "grainscape"))
-patchyCost <- reclassify(patchy, rcl = cbind(c(1,2,3,4,5), c(1, 10, 8, 3, 6)))
+patchyCost <- reclassify(patchy, rcl = cbind(c(1, 2, 3, 4, 5), c(1, 10, 8, 3, 6)))
 patchyMPG <- MPG(patchyCost, patch = (patchyCost == 1))
 ```
 
@@ -280,13 +280,13 @@ patchyGOC <- GOC(patchyMPG, nThresh = 100)
 
 ### Step 4: Visualizing a GOC model
 
-To get a quick sense of the connected regions described by a GOC model at a given threshold (or scale of movement) we can use the function `visualize()`.
+To get a quick sense of the connected regions described by a GOC model at a given threshold (or scale of movement) we can use the function `grain()`.
 This example uses the functions plotting mechanism to plot the 62nd threshold in the `patchyGOC` object.
 
 \autoref{fig:gocthresh} shows the resulting plot.
 
 ```{r, fig.cap='\\label{fig:gocthresh}A visualization of a GOC model. In this case it is the 62nd scale or threshold extracted, which represents a link threshold of 168 resistance units, and a landscape of 6 components. Voronoi polygons imply regions that are functionally-connected at the given movement threshold.'}
-visualize(patchyGOC, whichThresh = 62, doPlot = TRUE)
+plot(grain(patchyGOC, whichThresh = 62))
 ```
 
 ### Step 5: Identifying locations on a GOC model
@@ -377,8 +377,8 @@ patchyGOCLattice <- GOC(patchyMPGLattice, nThresh = 100)
 Visualization of the Voronoi tessellation for the 35th threshold is shown in \autoref{fig:goclatticethresh}.
 
 ```{r, fig.cap='\\label{fig:goclatticethresh}A visualization of a GOC model. In this case it is the 35th scale or threshold extracted, which represents a link threshold of 122 resistance units. Voronoi polygons imply regions that are functionally-connected at this movement threshold. It is easy to imagine, here, how using more lattice points makes it possible to define grains of connectivity with higher resolution.'}
-plot(visualize(patchyGOCLattice, whichThresh = 35)$voronoi,
-     col = sample(terrain.colors(100)), main = "whichThresh=35")
+plot(grain(patchyGOCLattice, whichThresh = 35)@voronoi,
+     col = sample(terrain.colors(100)))
 ```
 
 ### Step 3: Next steps
@@ -411,7 +411,7 @@ Note how we can now visualize the Voronoi tessellation also with the `sp=TRUE` p
 
 ```{r, fig.cap='\\label{fig:spvoronoi}A visualization of a lattice GOC model using vectorized Voronoi polygons, superimposed over the input resistance surface. In this case the Voronoi polygons show the finest grain possible using the 100 point lattice (+) initially specified. Plotting only the outlines of the Voronoi polygons makes it easier to show other information on this map (*e.g.*, resistance surface) and retain clarity. Recall, when interpreting this figure, that the polygons show regions of proximity from each focal lattice point given distance in resistance units.'}
 plot(patchyCost, legend = FALSE, main = "")
-plot(visualize(patchyGOCLattice_SP, whichThresh = 1, sp = TRUE)$voronoiSP,
+plot(grain(patchyGOCLattice_SP, whichThresh = 1, sp = TRUE)@voronoiSP,
      add = TRUE)
 
 focalPts <- cbind(V(patchyMPGLattice@mpg)$centroidX, V(patchyMPGLattice@mpg)$centroidY)
@@ -457,7 +457,7 @@ tinyPatchMPG <- MPG(cost = tinyCost, patch = (tinyCost == 1))
 tinyPatchGOC <- GOC(tinyPatchMPG, nThresh = 5, sp = TRUE)
 
 ## Visualization of a corridor
-corridorStartEnd <- rbind(c(10,10), c(90,90))
+corridorStartEnd <- rbind(c(10, 10), c(90, 90))
 tinyPatchCorridor <- corridor(tinyPatchGOC, whichThresh = 3, coords = corridorStartEnd)
 plot(tinyPatchCorridor$voronoiSP, col = "lightgrey", border = "white", lwd = 2)
 plot(tinyPatchCorridor$linksSP, col = "darkred", lty = "dashed", add = TRUE)
