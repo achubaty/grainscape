@@ -2,11 +2,11 @@ Package: grainscape
 Type: Package
 Title: Grains of connectivity and minimum planar graph modelling of landscape
     connectivity
-Description: Given a landscape resistance surface, creates grains of
-    connectivity and minimum planar graph models that can be used to calculate
-    effective distances for landscape connectivity at multiple scales. This is a
-    cross-platform reimplementation of the `grainscape` package (https://r-forge.r-
-    project.org/projects/grainscape/).
+Description: Given a landscape resistance surface, creates grains of connectivity
+    and minimum planar graph models that can be used to calculate effective
+    distances for landscape connectivity at multiple scales. This is a
+    cross-platform reimplementation of the 'grainscape' package
+    (https://r-forge.r-project.org/projects/grainscape/).
 URL: https://github.com/achubaty/grainscape
 Version: 0.3.0.9000
 Date: 2017-06-01
