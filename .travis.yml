@@ -17,7 +17,6 @@ matrix:
     dist: trusty
     r: oldrel
     before_install:
-    - tlmgr install xcolor
     - export DISPLAY=:99.0
     - sh -e /etc/init.d/xvfb start
 
@@ -25,7 +24,6 @@ matrix:
     dist: trusty
     r: release
     before_install:
-    - tlmgr install xcolor
     - export DISPLAY=:99.0
     - sh -e /etc/init.d/xvfb start
     after_success:
@@ -35,13 +33,11 @@ matrix:
     dist: trusty
     r: devel
     before_install:
-    - tlmgr install xcolor
     - export DISPLAY=:99.0
     - sh -e /etc/init.d/xvfb start
 
   - os: osx
-    osx_image: xcode8
-    cran: https://cran.rstudio.com/
+    osx_image: xcode8.2
     latex: false
     r_build_args: '--no-build-vignettes'
     r_check_args: '--as-cran --ignore-vignettes --no-examples'
