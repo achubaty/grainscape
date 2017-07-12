@@ -87,7 +87,8 @@ plot(tinyPatchMPG, col = c("grey", "black"), legend = FALSE)
 tinyPatchMST <- mst(tinyPatchMPG@mpg)
 MSTlinks <- edge_attr(tinyPatchMST, "linkId")
 plot(tinyPatchMPG@patchId, col = "black", legend = FALSE)
-plot((tinyPatchMPG@lcpLinkId * -1) \%in\% MSTlinks, add = TRUE, legend = FALSE, col = c(NA, "grey"))
+plot((tinyPatchMPG@lcpLinkId * -1) \%in\% MSTlinks, add = TRUE, legend = FALSE,
+     col = c(NA, "grey"))
 
 ## Additional graph extraction scenarios
 ## Produce a lattice MPG where focal points are spaced 10 cells apart
@@ -97,15 +98,21 @@ plot(tinyLatticeMPG)
 
 }
 \references{
-Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien. (2007) Spatial graphs: Principles and applications for habitat connectivity. Ecosystems 10:448:461.
+Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien. (2007) Spatial graphs:
+Principles and applications for habitat connectivity. Ecosystems 10:448:461.
 
-Galpern, P., M. Manseau. (2013a) Finding the functional grain: comparing methods for scaling resistance surfaces. Landscape Ecology 28:1269-1291.
+Galpern, P., M. Manseau. (2013a) Finding the functional grain: comparing methods
+for scaling resistance surfaces. Landscape Ecology 28:1269-1291.
 
-Galpern, P., M. Manseau. (2013b) Modelling the influence of landscape connectivity on animal distribution: a functional grain approach. Ecography 36:1004-1016.
+Galpern, P., M. Manseau. (2013b) Modelling the influence of landscape connectivity
+on animal distribution: a functional grain approach. Ecography 36:1004-1016.
 
-Galpern, P., M. Manseau, A. Fall. (2011) Patch-based graphs of landscape connectivity: a guide to construction, analysis, and application for conservation. Biological Conservation 144:44-55.
+Galpern, P., M. Manseau, A. Fall. (2011) Patch-based graphs of landscape connectivity:
+a guide to construction, analysis, and application for conservation.
+Biological Conservation 144:44-55.
 
-Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis at multiple spatial scales in landscape genetics. Molecular Ecology 21:3996-4009.
+Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis
+at multiple spatial scales in landscape genetics. Molecular Ecology 21:3996-4009.
 }
 \seealso{
 \code{\link{GOC}, \link{threshold}}

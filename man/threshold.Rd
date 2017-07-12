@@ -24,10 +24,13 @@ perimeters of patches as the link weight.}
 
 \item{nThresh}{Optional.  An integer giving the number of thresholds (or scales)
 at which to create GOC models.
-Thresholds are selected to produce a maximum number of unique grains (i.e., models).
-\code{nThresh} thresholds are also approximately evenly spread between 0 and
-the threshold at which all patches or focal points on the landscape are connected.
-This is a simple way to get a representative subset of all possible GOC models.
+Thresholds are selected to produce a maximum number of unique
+grains (i.e., models).
+\code{nThresh} thresholds are also approximately evenly spread
+between 0 and the threshold at which all patches or focal points
+on the landscape are connected.
+This is a simple way to get a representative subset of all
+possible GOC models.
 Provide either \code{nThresh} or \code{doThresh} not both.}
 
 \item{doThresh}{Optional.  A vector giving the link thresholds at which to create GOC models.
@@ -78,15 +81,21 @@ print(tinyThresh$th[[7]], vertex = TRUE, edge = TRUE)
 \references{
 Brooks, C.P. (2003) A scalar analysis of landscape connectivity. Oikos 102:433-439.
 
-Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien. (2007) Spatial graphs: Principles and applications for habitat connectivity. Ecosystems 10:448:461.
+Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien. (2007) Spatial graphs:
+Principles and applications for habitat connectivity. Ecosystems 10:448:461.
 
-Galpern, P., M. Manseau. (2013a) Finding the functional grain: comparing methods for scaling resistance surfaces. Landscape Ecology 28:1269-1291.
+Galpern, P., M. Manseau. (2013a) Finding the functional grain: comparing methods
+for scaling resistance surfaces. Landscape Ecology 28:1269-1291.
 
-Galpern, P., M. Manseau. (2013b) Modelling the influence of landscape connectivity on animal distribution: a functional grain approach. Ecography 36:1004-1016.
+Galpern, P., M. Manseau. (2013b) Modelling the influence of landscape connectivity
+on animal distribution: a functional grain approach. Ecography 36:1004-1016.
 
-Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis at multiple spatial scales in landscape genetics. Molecular Ecology 21:3996-4009.
+Galpern, P., M. Manseau, A. Fall. (2011) Patch-based graphs of landscape connectivity:
+a guide to construction, analysis, and application for conservation.
+Biological Conservation 144:44-55.
 
-Galpern, P., M. Manseau, A. Fall. (2011) Patch-based graphs of landscape connectivity: a guide to construction, analysis, and application for conservation. Biological Conservation 144:44-55.
+Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis
+at multiple spatial scales in landscape genetics. Molecular Ecology 21:3996-4009.
 }
 \seealso{
 \code{\link{MPG}}

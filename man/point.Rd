@@ -70,17 +70,25 @@ tinyPts <- point(tinyPatchGOC, loc)
 
 }
 \references{
-Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien. (2007) Spatial graphs: Principles and applications for habitat connectivity. Ecosystems 10:448:461.
+Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien. (2007) Spatial graphs:
+Principles and applications for habitat connectivity. Ecosystems 10:448:461.
 
-Galpern, P., M. Manseau. (2013a) Finding the functional grain: comparing methods for scaling resistance surfaces. Landscape Ecology 28:1269-1291.
+Galpern, P., M. Manseau. (2013a) Finding the functional grain: comparing methods
+for scaling resistance surfaces. Landscape Ecology 28:1269-1291.
 
-Galpern, P., M. Manseau. (2013b) Modelling the influence of landscape connectivity on animal distribution: a functional grain approach. Ecography 36:1004-1016.
+Galpern, P., M. Manseau. (2013b) Modelling the influence of landscape connectivity
+on animal distribution: a functional grain approach. Ecography 36:1004-1016.
 
-Galpern, P., M. Manseau, A. Fall. (2011) Patch-based graphs of landscape connectivity: a guide to construction, analysis, and application for conservation. Biological Conservation 144:44-55.
+Galpern, P., M. Manseau, A. Fall. (2011) Patch-based graphs of landscape connectivity:
+a guide to construction, analysis, and application for conservation.
+Biological Conservation 144:44-55.
 
-Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis at multiple spatial scales in landscape genetics. Molecular Ecology 21:3996-4009.
+Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis
+at multiple spatial scales in landscape genetics. Molecular Ecology 21:3996-4009.
 
-O'Brien, D., M. Manseau, A. Fall, and M.-J. Fortin. (2006) Testing the importance of spatial configuration of winter habitat for woodland caribou: An application of graph theory. Biological Conservation 130:70-83.
+O'Brien, D., M. Manseau, A. Fall, and M.-J. Fortin. (2006) Testing the importance of
+spatial configuration of winter habitat for woodland caribou: An application of graph theory.
+Biological Conservation 130:70-83.
 }
 \seealso{
 \code{\link{GOC}}, \code{\link{distance}}
