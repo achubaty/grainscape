@@ -35,15 +35,17 @@
 #' @details
 #' Grain or scalar analysis of connectivity may be appropriate for a variety of purposes, not
 #' limited to visualization and improving connectivity estimates for highly-mobile organisms.
-#' See Galpern et al. (2012), Galpern & Manseau (2013a, 2013b) for applications and review of
-#' these capabilities.
+#' See Galpern et al. (2012), Galpern & Manseau (2013a, 2013b) for applications
+#' and review of these capabilities.
 #'
 #' @return  A \code{\link[=goc-class]{goc}} object.
 #'
 #' @note Researchers should consider whether the use of a patch-based GOC or a lattice
 #' GOC model is appropriate based on the patch-dependency of the organism under study.
-#' Patch-based models make most sense when animals are restricted to, or dependent on, a resource patch.
-#' Lattice models can be used as a generalized and functional approach to scaling resistance surfaces.
+#' Patch-based models make most sense when animals are restricted to, or dependent on,
+#' a resource patch.
+#' Lattice models can be used as a generalized and functional approach to scaling
+#' resistance surfaces.
 #'
 #' See \code{\link{MPG}} for warning related to areal measurements.
 #'
@@ -119,14 +121,14 @@ setMethod(
     linkWeight <- try(edge_attr(baseGraph, weight), silent = TRUE)
 
     if (inherits(linkWeight, "try-error")) {
-      stop("grainscape: weight must be the name of an existing link attribute to threshold",
-           " (e.g., 'lcpPerimWeight')", call. = FALSE)
+      stop("weight must be the name of an existing link attribute to threshold",
+           " (e.g., 'lcpPerimWeight')")
     }
 
     if (is.null(nThresh) && is.null(doThresh)) {
-      stop("grainscape: either nThresh or doThresh must be specified", call. = FALSE)
+      stop("either nThresh or doThresh must be specified.")
     } else if (!is.null(nThresh) && !is.null(doThresh)) {
-      stop("grainscape: only one of nThresh or doThresh must be specified", call. = FALSE)
+      stop("only one of nThresh or doThresh must be specified.")
     } else if (is.null(doThresh)) {
       ## Determine nThresh unique thresholds covering the full range of possibilities
       ## in terms of the number of polygons
@@ -154,7 +156,7 @@ setMethod(
     if (length(unlinkedPatches) > 0) {
       for (iPatch in unlinkedPatches) {
         warning("patchId=", iPatch, " has no connecting links in the MPG.",
-                " This may be caused by a patch surrounded in missing values (NA cells).\n", call. = FALSE)
+                " This may be caused by a patch surrounded in missing values (NA cells).\n")
         baseGraph <- delete_vertices(baseGraph, as.character(iPatch))
       }
     }
@@ -164,7 +166,6 @@ setMethod(
     th <- vector("list", length(doThresh))
 
     for (iThresh in 1:length(doThresh)) {
-      #if (iThresh==3) browser()
       if (verbose >= 1) message("Threshold ", iThresh, " of ", length(doThresh))
       tGraph <- delete_edges(baseGraph, which(linkWeight > doThresh[iThresh]))
 
@@ -175,15 +176,18 @@ setMethod(
       if (componentList$no > 1) {
         components <- componentList$membership
 
-        ## Determine which edges have endpoints in different components, and create a lookup data frame
+        ## Determine which edges have endpoints in different components,
+        ## and create a lookup data frame
         linkComponentLookup <- cbind(linkId, edge_attr(baseGraph, weight), allLinks,
                                      t(apply(allLinks, 1, function(z) {
                                        c(components[z[1]], components[z[2]])
                                }))) %>%
           apply(., 2, as.numeric) %>%
           as.data.frame(stringsAsFactors = FALSE)
-        linkComponentLookup <- linkComponentLookup[linkComponentLookup[, 5] != linkComponentLookup[, 6],]
-        colnames(linkComponentLookup) <- c("linkId", "linkWeight", "node1", "node2", "compNode1", "compNode2")
+        linkComponentLookup <- linkComponentLookup[linkComponentLookup[, 5] !=
+                                                     linkComponentLookup[, 6], ]
+        colnames(linkComponentLookup) <- c("linkId", "linkWeight", "node1", "node2",
+                                           "compNode1", "compNode2")
 
         ## Deal with the case when there are exactly 2 components
         if (ncol(linkComponentLookup) == 1) {
@@ -201,10 +205,10 @@ setMethod(
             if (!done[i]) {
               c1 <- linkComponentLookup[i, "compNode1"]
               c2 <- linkComponentLookup[i, "compNode2"]
-              sameLink <- (linkComponentLookup[, "compNode1"] == c1) &
+              sameLink <- (linkComponentLookup[, "compNode1"] == c1) & # nolint
                 (linkComponentLookup[, "compNode2"] == c2) |
-                ((linkComponentLookup[, "compNode1"] == c2) &
-                   (linkComponentLookup[, "compNode2"] == c1))
+                ((linkComponentLookup[, "compNode1"] == c2) & # nolint
+                   (linkComponentLookup[, "compNode2"] == c1)) # nolint
               linkComponentLookup[sameLink, "compLinkId"] <- paste(c1, c2, sep = "_")
               done[sameLink] <- TRUE
             }
@@ -212,38 +216,63 @@ setMethod(
 
           ## Build data.frame for component graph
           ## Find maximum, minimum, mean, and median edge weights between components
-          maxWeight <- as.vector(sapply(unique(linkComponentLookup[, "compLinkId"]), function(z) {
-            max(linkComponentLookup[linkComponentLookup$compLinkId == z, "linkWeight"])
+          lCLid <- linkComponentLookup[, "compLinkId"]
+
+          maxWeight <- as.vector(sapply(unique(lCLid), function(z) {
+            ids <- linkComponentLookup$compLinkId == z
+            max(linkComponentLookup[ids, "linkWeight"])
           }))
-          linkIdMaxWeight <- as.vector(sapply(unique(linkComponentLookup[, "compLinkId"]), function(z)
-            linkComponentLookup[linkComponentLookup$compLinkId == z, "linkId"][which.max(linkComponentLookup[linkComponentLookup$compLinkId == z, "linkWeight"])]))
-          minWeight <- as.vector(sapply(unique(linkComponentLookup[, "compLinkId"]), function(z)
-            min(linkComponentLookup[linkComponentLookup$compLinkId == z, "linkWeight"])))
-          linkIdMinWeight <- as.vector(sapply(unique(linkComponentLookup[, "compLinkId"]), function(z)
-            linkComponentLookup[linkComponentLookup$compLinkId == z, "linkId"][which.min(linkComponentLookup[linkComponentLookup$compLinkId == z,"linkWeight"])]))
-          medianWeight <- as.vector(sapply(unique(linkComponentLookup[, "compLinkId"]), function(z)
-            median(linkComponentLookup[linkComponentLookup$compLinkId == z, "linkWeight"])))
-          meanWeight <- as.vector(sapply(unique(linkComponentLookup[, "compLinkId"]), function(z)
-            mean(linkComponentLookup[linkComponentLookup$compLinkId == z, "linkWeight"])))
-          numEdgesWeight <- as.vector(sapply(unique(linkComponentLookup[, "compLinkId"]), function(z)
-            sum(linkComponentLookup$compLinkId == z)))
+          linkIdMaxWeight <- as.vector(sapply(unique(lCLid), function(z) {
+            ids <- linkComponentLookup$compLinkId == z
+            linkComponentLookup[ids, "linkId"][
+              which.max(linkComponentLookup[ids, "linkWeight"])]
+          }))
+          minWeight <- as.vector(sapply(unique(lCLid), function(z) {
+            ids <- linkComponentLookup$compLinkId == z
+            min(linkComponentLookup[ids, "linkWeight"])
+          }))
+          linkIdMinWeight <- as.vector(sapply(unique(lCLid), function(z) {
+            ids <- linkComponentLookup$compLinkId == z
+            linkComponentLookup[ids, "linkId"][
+              which.min(linkComponentLookup[ids, "linkWeight"])]
+          }))
+          medianWeight <- as.vector(sapply(unique(lCLid), function(z) {
+            ids <- linkComponentLookup$compLinkId == z
+            median(linkComponentLookup[ids, "linkWeight"])
+          }))
+          meanWeight <- as.vector(sapply(unique(lCLid), function(z) {
+            ids <- linkComponentLookup$compLinkId == z
+            mean(linkComponentLookup[ids, "linkWeight"])
+          }))
+          numEdgesWeight <- as.vector(sapply(unique(lCLid), function(z) {
+            ids <- linkComponentLookup$compLinkId == z
+            sum(ids)
+          }))
 
           ## Get all linkIds between components and add them as a comma-delimited list
-          linkIdAll <- as.character(sapply(unique(linkComponentLookup[, "compLinkId"]), function(z)
-            paste(linkComponentLookup[linkComponentLookup$compLinkId == z, "linkId"], collapse = ", ")))
+          linkIdAll <- as.character(sapply(unique(lCLid), function(z) {
+            ids <- linkComponentLookup$compLinkId == z
+            paste(linkComponentLookup[ids, "linkId"], collapse = ", ")
+          }))
 
           ## Convert back from string representation of component linkIds to numeric
-          componentGraphNodes <- do.call(rbind,strsplit(unique(linkComponentLookup$compLinkId), "_"))
+          componentGraphNodes <- unique(linkComponentLookup$compLinkId) %>%
+            strsplit(., "_") %>%
+            do.call(rbind, .)
 
-          ## Produce component graph with all edge attributes, and vertex attributes containing a comma-delimited string of vertex names
+          ## Produce component graph with all edge attributes, and vertex attributeas.characters
+          ## containing a comma-delimited string of vertex names
           componentGraph <- data.frame(componentGraphNodes, maxWeight, linkIdMaxWeight,
                                        minWeight, linkIdMinWeight, medianWeight,
                                        meanWeight, numEdgesWeight, linkIdAll) %>%
             graph_from_data_frame(directed = FALSE)
 
           V(componentGraph)$polygonId <- V(componentGraph)$name
-          sourcePatchId <- sapply(as.numeric(as.character(V(componentGraph)$polygonId)), function(z)
-            paste(as.character(V(baseGraph)$patchId[components == z]), collapse = ", "))
+          sourcePatchId <- as.character(V(componentGraph)$polygonId) %>%
+            as.numeric() %>%
+            sapply(., function(z) {
+              paste(as.character(V(baseGraph)$patchId[components == z]), collapse = ", ")
+            })
 
           ## Produce a raster representing this grain of connectivity
           gocRaster <- voronoi
@@ -269,10 +298,10 @@ setMethod(
           rasX[] <- cellXY[, 1]
           rasY[] <- cellXY[, 2]
 
-          centroids <- cbind(zonal(rasX, gocRaster, fun = 'mean'),
-                             zonal(rasY, gocRaster, fun = 'mean')[, 2])
+          centroids <- cbind(zonal(rasX, gocRaster, fun = "mean"),
+                             zonal(rasY, gocRaster, fun = "mean")[, 2])
           centroids <- centroids[centroids[, 1] >= 0, 2:3]
-          centroids <- centroids[as.integer(uniquePolygons),]
+          centroids <- centroids[as.integer(uniquePolygons), ]
 
           V(componentGraph)$centroidX <- centroids[, 1]
           V(componentGraph)$centroidY <- centroids[, 2]
@@ -290,12 +319,21 @@ setMethod(
                                    V(baseGraph)$patchArea.count,
                                    V(baseGraph)$patchEdgeArea.count,
                                    V(baseGraph)$coreArea.count)
-          V(componentGraph)$totalPatchArea <- as.numeric(unlist(sapply(sourcePatchId, function(z)
-            sum(patchAreaLookup[patchAreaLookup[, 1] %in% as.numeric(strsplit(z, ", ")[[1]]), 2]))))
-          V(componentGraph)$totalPatchEdgeArea <- as.numeric(unlist(sapply(sourcePatchId, function(z)
-            sum(patchAreaLookup[patchAreaLookup[, 1] %in% as.numeric(strsplit(z, ", ")[[1]]), 3]))))
-          V(componentGraph)$totalCoreArea <- as.numeric(unlist(sapply(sourcePatchId, function(z)
-            sum(patchAreaLookup[patchAreaLookup[, 1] %in% as.numeric(strsplit(z, ", ")[[1]]), 4]))))
+          V(componentGraph)$totalPatchArea <- sapply(sourcePatchId, function(z) {
+            sum(patchAreaLookup[patchAreaLookup[, 1] %in% as.numeric(strsplit(z, ", ")[[1]]), 2])
+          }) %>%
+            unlist() %>%
+            as.numeric()
+          V(componentGraph)$totalPatchEdgeArea <- sapply(sourcePatchId, function(z) {
+            sum(patchAreaLookup[patchAreaLookup[, 1] %in% as.numeric(strsplit(z, ", ")[[1]]), 3])
+          }) %>%
+            unlist() %>%
+            as.numeric()
+          V(componentGraph)$totalCoreArea <- sapply(sourcePatchId, function(z) {
+            sum(patchAreaLookup[patchAreaLookup[, 1] %in% as.numeric(strsplit(z, ", ")[[1]]), 4])
+          }) %>%
+            unlist() %>%
+            as.numeric()
           V(componentGraph)$patchId <- sourcePatchId
 
           ## Find distances between each polygon centroid
@@ -303,7 +341,10 @@ setMethod(
             x1 <- which(uniquePolygons == z[1])
             x2 <- which(uniquePolygons == z[2])
 
-            return(sqrt((centroids[x2, 1] - centroids[x1, 1])^2 + (centroids[x2, 2] - centroids[x1, 2])^2))
+            return(sqrt(
+              (centroids[x2, 1] - centroids[x1, 1]) ^ 2 +
+                (centroids[x2, 2] - centroids[x1, 2]) ^ 2
+            ))
           })
           E(componentGraph)$eucCentroidWeight <- eucCentroidWeight
 
@@ -334,12 +375,12 @@ setMethod(
     }))
 
     ## Find ECS (Expected cluster size; O'Brien et al, 2006) using totalPatchArea
-    summary.df$ECS <- unlist(lapply(th, function(z) {
-      if (is_igraph(z$goc)) sum(V(z$goc)$totalPatchArea^2)/sum(V(z$goc)$totalPatchArea) else NA
+    summary.df$ECS <- unlist(lapply(th, function(z) { # nolint
+      if (is_igraph(z$goc)) sum(V(z$goc)$totalPatchArea ^ 2) / sum(V(z$goc)$totalPatchArea) else NA
     }))
     ## Find ECSCore (Expected cluster size; O'Brien et al, 2006) using totalCoreArea
-    summary.df$ECSCore <- unlist(lapply(th, function(z) {
-      if (is_igraph(z$goc)) sum(V(z$goc)$totalCoreArea^2)/sum(V(z$goc)$totalCoreArea) else NA
+    summary.df$ECSCore <- unlist(lapply(th, function(z) { # nolint
+      if (is_igraph(z$goc)) sum(V(z$goc)$totalCoreArea ^ 2) / sum(V(z$goc)$totalCoreArea) else NA
     }))
 
     threshGraph <- new("goc", voronoi = voronoi,

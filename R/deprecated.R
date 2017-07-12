@@ -1,4 +1,4 @@
-#' Deprecated functions
+#' \code{grainscape}: Deprecated
 #'
 #' These have been deprecated and will be removed in a future release.
 #'
@@ -25,7 +25,8 @@ gsGOC <- function(mpg, nThresh = NULL, doThresh = NULL,
 #' @param GOC  A \code{goc} object.
 #' @rdname grainscape-deprecated
 #'
-gsGOCCorridor <- function(GOC, whichThresh, coords, doPlot = FALSE, weight = "meanWeight") {
+gsGOCCorridor <- function(GOC, whichThresh, coords, doPlot = FALSE, # nolint
+                          weight = "meanWeight") {
   .Deprecated("corridor", old = "gsGOCCorridor")
   corridor(GOC, whichThresh, coords, doPlot, weight)
 }
@@ -34,7 +35,7 @@ gsGOCCorridor <- function(GOC, whichThresh, coords, doPlot = FALSE, weight = "me
 #' @inheritParams distance
 #' @rdname grainscape-deprecated
 #'
-gsGOCDistance <- function(GOC, coords, weight = "meanWeight") {
+gsGOCDistance <- function(GOC, coords, weight = "meanWeight") { # nolint
   .Deprecated("distance", old = "gsGOCDistance")
   corridor(GOC, coords, weight)
 }
@@ -43,7 +44,7 @@ gsGOCDistance <- function(GOC, coords, weight = "meanWeight") {
 #' @inheritParams distance
 #' @rdname grainscape-deprecated
 #'
-gsGOCPoint <- function(GOC, coords) {
+gsGOCPoint <- function(GOC, coords) { # nolint
   .Deprecated("point", old = "gsGOCPoint")
   point(GOC, coords)
 }
@@ -52,7 +53,7 @@ gsGOCPoint <- function(GOC, coords) {
 #' @inheritParams grain
 #' @rdname grainscape-deprecated
 #'
-gsGOCVisualize <- function(GOC, whichThresh, sp = FALSE, doPlot = FALSE) {
+gsGOCVisualize <- function(GOC, whichThresh, sp = FALSE, doPlot = FALSE) { # nolint
   .Deprecated("grain", old = "gsGOCVisualize")
   grain(GOC, whichThresh, sp, doPlot)
 }
@@ -61,7 +62,7 @@ gsGOCVisualize <- function(GOC, whichThresh, sp = FALSE, doPlot = FALSE) {
 #' @inheritParams grain
 #' @rdname grainscape-deprecated
 #'
-visualize <- function(GOC, whichThresh, sp = FALSE, doPlot = FALSE) {
+visualize <- function(GOC, whichThresh, sp = FALSE, doPlot = FALSE) { # nolint
   .Deprecated("grain", old = "visualize")
   if (!is.null(sp)) warning("visualize(): argument 'sp' was supplied but will be ignored.")
   grain(GOC, whichThresh, sp, doPlot)
@@ -83,15 +84,20 @@ gsGraphDataFrame <- function(x) {
 #'
 gsMPG <- function(cost, patch, sa = NULL, filterPatch = NULL, spreadFactor = 0) {
   .Deprecated("MPG", old = "gsMPG")
-  if (!is.null(filterPatch)) warning("gsMPG(): argument 'filterPatch' was supplied but will be ignored.")
-  if (!is.null(sa)) warning("gsMPG(): argument 'sa' was supplied but will be ignored.")
-  if (spreadFactor != 0) warning("gsMPG(): argument 'spreadFactor' was supplied but will be ignored.")
+  if (!is.null(filterPatch))
+    warning("gsMPG(): argument 'filterPatch' was supplied but will be ignored.")
+
+  if (!is.null(sa))
+    warning("gsMPG(): argument 'sa' was supplied but will be ignored.")
+
+  if (spreadFactor != 0)
+    warning("gsMPG(): argument 'spreadFactor' was supplied but will be ignored.")
   MPG(cost, patch)
 }
 
 
 
-#' Defunct functions
+#' \code{grainscape}: Defunct
 #'
 #' These functions have removed from \code{grainscape}.
 #'

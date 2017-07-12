@@ -49,14 +49,16 @@ Patch-based or lattice GOC modelling can be done with this function.
 \details{
 Grain or scalar analysis of connectivity may be appropriate for a variety of purposes, not
 limited to visualization and improving connectivity estimates for highly-mobile organisms.
-See Galpern et al. (2012), Galpern & Manseau (2013a, 2013b) for applications and review of
-these capabilities.
+See Galpern et al. (2012), Galpern & Manseau (2013a, 2013b) for applications
+and review of these capabilities.
 }
 \note{
 Researchers should consider whether the use of a patch-based GOC or a lattice
 GOC model is appropriate based on the patch-dependency of the organism under study.
-Patch-based models make most sense when animals are restricted to, or dependent on, a resource patch.
-Lattice models can be used as a generalized and functional approach to scaling resistance surfaces.
+Patch-based models make most sense when animals are restricted to, or dependent on,
+a resource patch.
+Lattice models can be used as a generalized and functional approach to scaling
+resistance surfaces.
 
 See \code{\link{MPG}} for warning related to areal measurements.
 }

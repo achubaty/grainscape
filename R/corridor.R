@@ -115,8 +115,8 @@ setMethod(
   definition = function(x, whichThresh, coords, doPlot = 0, weight = "meanWeight", ...) {
 
     ## Check whichThresh
-    if ((length(whichThresh) > 1) || (!(whichThresh %in% 1:length(x@th)))) {
-      stop("grainscape:  whichThresh must index a single threshold existing in the GOC object", call. = FALSE)
+    if ((length(whichThresh) > 1) || (!(whichThresh %in% 1:length(x@th)))) { # nolint
+      stop("whichThresh must index a single threshold existing in the GOC object")
     }
 
     ## Check coords
@@ -125,17 +125,18 @@ setMethod(
     }
 
     if (ncol(coords) != 2) {
-      stop("grainscape:  coords must be a SpatialPoints object or a matrix of two columns giving X and Y coordinates", call. = FALSE)
+      stop("coords must be a SpatialPoints object or a matrix of two columns",
+           "giving X and Y coordinates")
     }
 
     if (nrow(coords) > 2) {
-      warning("grainscape:  using only first two sets of coordinates for corridor start and end points", call. = FALSE)
+      warning("using only first two sets of coordinates for corridor start and end points")
       coords <- coords[1:2, ]
     }
 
     ## Check weight
     if (!(weight %in% names(edge_attr(x@th[[1]]$goc)))) {
-      stop("grainscape:  link weight attribute with this name doesn't exist in GOC object", call. = FALSE)
+      stop("link weight attribute with this name doesn't exist in GOC object")
     }
 
     ## GOC Graph
@@ -168,10 +169,12 @@ setMethod(
 
     ## Shortest path
     startEndPolygons <- point(x, coords)$pointPolygon[, whichThresh]
-    startEndPath <- shortest_paths(x@th[[whichThresh]]$goc,
-                                   which(V(x@th[[whichThresh]]$goc)$polygonId == startEndPolygons[1]),
-                                   which(V(x@th[[whichThresh]]$goc)$polygonId == startEndPolygons[2]),
-                                   weights = V(x@th[[whichThresh]]$goc)$meanWeight) %>%
+    startEndPath <- shortest_paths(
+      x@th[[whichThresh]]$goc,
+      which(V(x@th[[whichThresh]]$goc)$polygonId == startEndPolygons[1]),
+      which(V(x@th[[whichThresh]]$goc)$polygonId == startEndPolygons[2]),
+      weights = V(x@th[[whichThresh]]$goc)$meanWeight
+    ) %>%
       `[[`(1) %>%
       `[[`(1) %>%
       as.numeric()

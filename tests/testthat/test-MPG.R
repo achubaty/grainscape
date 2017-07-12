@@ -16,14 +16,14 @@ test_that("MPG handles NA values correctly (#28)", {
 
   mpg <- MPG(cost = c, patch = p)
 
-  NAs <- which(is.na(p[]))
+  NAs <- which(is.na(p[])) # nolint
 
   ## no voronoi spread in the NA region
-  ids_v <- which(mpg@voronoi[] > 0)
+  ids_v <- which(mpg@voronoi[] > 0) # nolint
   expect_false(any(ids_v %in% NAs))
 
   ## no links in the NA region
-  ids_l <- which(mpg@lcpLinkId[] < 0)
+  ids_l <- which(mpg@lcpLinkId[] < 0) # nolint
   expect_false(any(ids_l %in% NAs))
 
   ## more sophisticatied case
@@ -37,11 +37,11 @@ test_that("MPG handles NA values correctly (#28)", {
   tinyNAs <- which(is.na(tinyNA[]))
 
   ## no voronoi spread in the NA region
-  ids_v <- which(tinyPatchMPG@voronoi[] > 0)
+  ids_v <- which(tinyPatchMPG@voronoi[] > 0) # nolint
   expect_false(any(ids_v %in% tinyNAs))
 
   ## no links in the NA region
-  ids_l <- which(tinyPatchMPG@lcpLinkId[] < 0)
+  ids_l <- which(tinyPatchMPG@lcpLinkId[] < 0) # nolint
   expect_false(any(ids_l %in% tinyNAs))
 
   ## even more complex map with NA regions
@@ -52,11 +52,11 @@ test_that("MPG handles NA values correctly (#28)", {
   naErrorNAs <- which(is.na(naError[]))
 
   ## no voronoi spread in the NA region
-  ids_v <- which(naErrorMPG@voronoi[] > 0)
+  ids_v <- which(naErrorMPG@voronoi[] > 0) # nolint
   expect_false(any(ids_v %in% naErrorNAs))
 
   ## no links in the NA region
-  ids_l <- which(naErrorMPG@lcpLinkId[] < 0)
+  ids_l <- which(naErrorMPG@lcpLinkId[] < 0) # nolint
   expect_false(any(ids_l %in% naErrorNAs))
 })
 

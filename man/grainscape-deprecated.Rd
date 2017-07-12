@@ -9,7 +9,7 @@
 \alias{visualize}
 \alias{gsGraphDataFrame}
 \alias{gsMPG}
-\title{Deprecated functions}
+\title{\code{grainscape}: Deprecated}
 \usage{
 gsGOC(mpg, nThresh = NULL, doThresh = NULL, weight = "lcpPerimWeight",
   sp = FALSE, verbose = 3)
