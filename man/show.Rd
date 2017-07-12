@@ -18,10 +18,3 @@
 Custom \code{show} method to safely print the contents of a \code{goc} or
 \code{grain} object.
 }
-\note{
-When these objects are created using \code{sp = FALSE} (the default),
-an 'empty' \code{SpatialPointsDataFrame} is stored in the \code{voronoiSP}
-slot. This object cannot be safely printed, so the default \code{show} method
-is bypassed, printing each of the other slots and showing \code{voronoiSP} as
-\code{<empty>}.
-}

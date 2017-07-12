@@ -9,7 +9,7 @@
 GOC(x, ...)
 
 \S4method{GOC}{mpg}(x, nThresh = NULL, doThresh = NULL,
-  weight = "lcpPerimWeight", sp = FALSE, verbose = 0, ...)
+  weight = "lcpPerimWeight", verbose = 0, ...)
 }
 \arguments{
 \item{x}{A \code{mpg} object produced by \code{\link{MPG}}.
@@ -36,14 +36,6 @@ path distance from the perimeters of patches as the link weight.
 \code{"eucPerimWeight"} use the Euclidean distance from the
 perimeters of patches as the link weight.}
 
-\item{sp}{Logical.  If \code{TRUE} the \code{rgeos} package is used to create
-a vector of class \code{\link{SpatialPolygonsDataFrame}} describing
-the finest grain of connectivity. This is very useful for visualizing
-grains of connectivity models, especially for print purposes.
-Equally, using the \code{maptools} or \code{rgdal} packages these
-polygons can be exported as shapefiles for use in other GIS applications.
-But, please see details.}
-
 \item{verbose}{Set \code{verbose=0} for no progress information to console.}
 }
 \value{
@@ -55,8 +47,10 @@ by scalar analysis.
 Patch-based or lattice GOC modelling can be done with this function.
 }
 \details{
-This function can take a long time to run when \code{sp = TRUE}.
-Time taken is dependent on the dimensions of the \code{mpg$voronoi} raster.
+Grain or scalar analysis of connectivity may be appropriate for a variety of purposes, not
+limited to visualization and improving connectivity estimates for highly-mobile organisms.
+See Galpern et al. (2012), Galpern & Manseau (2013a, 2013b) for applications and review of
+these capabilities.
 }
 \note{
 Researchers should consider whether the use of a patch-based GOC or a lattice
@@ -94,7 +88,13 @@ tinyPatchGOC <- GOC(tinyPatchMPG, doThresh = c(0, 20, 40), sp = TRUE)
 \references{
 Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien. (2007) Spatial graphs: Principles and applications for habitat connectivity. Ecosystems 10:448:461.
 
+Galpern, P., M. Manseau. (2013a) Finding the functional grain: comparing methods for scaling resistance surfaces. Landscape Ecology 28:1269-1291.
+
+Galpern, P., M. Manseau. (2013b) Modelling the influence of landscape connectivity on animal distribution: a functional grain approach. Ecography 36:1004-1016.
+
 Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis at multiple spatial scales in landscape genetics. Molecular Ecology 21:3996-4009.
+
+#' Galpern, P., M. Manseau, A. Fall. (2011) Patch-based graphs of landscape connectivity: a guide to construction, analysis, and application for conservation. Biological Conservation 144:44-55.
 }
 \seealso{
 \code{\link{MPG}}, \code{\link{grain}},

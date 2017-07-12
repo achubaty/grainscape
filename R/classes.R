@@ -70,8 +70,6 @@ setClass(
 #' @slot voronoi    A \code{RasterLayer} describing the regions of proximity in
 #'                  resistance units around the focal patches or points.
 #'
-#' @slot voronoiSP  A \code{SpatialPolygonsDataFrame} object representation of
-#'                  these regions of proximity.
 #'
 #' @slot summary    A summary of the the grains of connectivity generated and
 #'                  their properties.
@@ -92,7 +90,7 @@ setClass(
 #' @importClassesFrom sp SpatialPolygons
 setClass(
   "goc",
-  slots = list(voronoi = "RasterLayer", voronoiSP = "SpatialPolygonsDataFrame",
+  slots = list(voronoi = "RasterLayer",
                summary = "data.frame", th = "list")
 )
 
@@ -102,14 +100,14 @@ setClass(
 #' @slot voronoi    A \code{RasterLayer} describing the regions of proximity in
 #'                  resistance units around the focal patches or points.
 #'
-#' @slot voronoiSP  A \code{SpatialPolygonsDataFrame} object representation of
-#'                  these regions of proximity.
-#'
 #' @slot summary    A summary of the the grains of connectivity generated and
 #'                  their properties.
 #'
 #' @slot centroids  A \code{SpatialPoints} object indicating the grain's polygon
 #'                  centroids.
+#'
+#' @slot th         A list of \code{igraph} objects giving the graphs describing the relationship
+#'                  among the polygons in that grain
 #'
 #' See \code{\link{grain}} for more information.
 #'
@@ -118,8 +116,9 @@ setClass(
 #' @importClassesFrom sp SpatialPoints SpatialPolygonsDataFrame
 setClass(
   "grain",
-  slots = list(voronoi = "RasterLayer", voronoiSP = "SpatialPolygonsDataFrame",
-               summary = "data.frame", centroids = "SpatialPoints")
+  slots = list(voronoi = "RasterLayer",
+               summary = "data.frame", centroids = "SpatialPoints",
+               th = "igraph")
 )
 
 #' Show a \code{grainscape} object
@@ -127,11 +126,6 @@ setClass(
 #' Custom \code{show} method to safely print the contents of a \code{goc} or
 #' \code{grain} object.
 #'
-#' @note When these objects are created using \code{sp = FALSE} (the default),
-#' an 'empty' \code{SpatialPointsDataFrame} is stored in the \code{voronoiSP}
-#' slot. This object cannot be safely printed, so the default \code{show} method
-#' is bypassed, printing each of the other slots and showing \code{voronoiSP} as
-#' \code{<empty>}.
 #'
 #' @param object  A \code{\link[=goc-class]{goc}} or
 #'                \code{\link[=grain-class]{grain}} object.
@@ -144,13 +138,6 @@ setMethod(
   definition = function(object) {
     cat("Slot voronoi:\n")
     cat(show(object@voronoi))
-
-    cat("\nSlot voronoiSP:\n")
-    if (identical(object@voronoiSP, .emptySPDF())) {
-      cat("<empty>\n")
-    } else {
-      cat(show(object@voronoiSP))
-    }
 
     cat("\nSlot summary:\n")
     cat(show(object@summary))
@@ -167,13 +154,6 @@ setMethod(
   definition = function(object) {
     cat("Slot voronoi:\n")
     cat(show(object@voronoi))
-
-    cat("\nSlot voronoiSP:\n")
-    if (identical(object@voronoiSP, .emptySPDF())) {
-      cat("<empty>\n")
-    } else {
-      cat(show(object@voronoiSP))
-    }
 
     cat("\nSlot summary:\n")
     cat(show(object@summary))

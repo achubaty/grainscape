@@ -1,44 +1,50 @@
 #' Extract a grain of connectivity (GOC) tessellation at a given scale
 #'
 #' @description
-#' Extract a tessellation (i.e., scales) from a GOC model.
+#' Extract a grain (i.e. a scaled version of a Voronoi tessellation) from a GOC model.
 #'
 #' @param x   A \code{goc} object created by \code{\link{GOC}}.
 #'
-#' @param whichThresh  Integer giving the grain threshold to extract.
+#' @param whichThresh  Integer giving the grain threshold to extract.  This is the index
+#' of the threshold extracted by \code{\link{GOC}}.
 #'
-#' @param sp  Logical.  If \code{TRUE} then produce a \code{\link{SpatialPolygonsDataFrame}}
-#'            representation of the selected threshold.
-#'            Requires also running \code{\link{GOC}} with \code{sp = TRUE},
-#'            and that the \code{rgeos} package is installed.
+#' @param ...     Additional arguments (not used).
 #'
-#' @param ...  Additional arguments to pass to \code{plot} if \code{doPlot = TRUE}).
 #'
 #' @return  A list object containing the following elements:
 #'
 #' \describe{
-#'   \item{\code{summary}}{gives the properties of the visualized scale of the GOC model;}
+#'   \item{\code{summary}}{gives the properties of the specified scale/grain \code{whichThresh}
+#'   of the GOC model;}
 #'
-#'   \item{\code{voronoi}}{a \code{RasterLayer} giving the Voronoi tessellation;}
+#'   \item{\code{voronoi}}{a \code{RasterLayer} giving the Voronoi tessellation the
+#'   specified scale/grain \code{whichThresh} of the GOC model;}
 #'
 #'   \item{\code{centroids}}{a \code{SpatialPoints} objects giving the centroids
-#'   of the polygons in the tessellation;}
+#'   of the polygons in the Voronoi tessellation at the specified scale/grain \code{whichThresh};}
 #'
-#'   \item{\code{voronoiSP}}{vector representation of polygons in the tessellation
-#'   (\code{SpatialPolygonsDataFrame}; if \code{sp = TRUE})}
+#'   \item{\code{th}}{a \code{igraph} object giving the graph describing the relationship
+#'   among the polygons at the specified scale/grain \code{whichThresh}}
+#'
 #' }
 #'
 #' @references
 #' Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien. (2007) Spatial graphs: Principles and applications for habitat connectivity. Ecosystems 10:448:461.
 #'
-#' Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis at multiple spatial scales in landscape genetics.  Molecular Ecology 21:3996-4009.
+#' Galpern, P., M. Manseau. (2013a) Finding the functional grain: comparing methods for scaling resistance surfaces. Landscape Ecology 28:1269-1291.
+#'
+#' Galpern, P., M. Manseau. (2013b) Modelling the influence of landscape connectivity on animal distribution: a functional grain approach. Ecography 36:1004-1016.
+#'
+#' Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis at multiple spatial scales in landscape genetics. Molecular Ecology 21:3996-4009.
+#'
+#' Galpern, P., M. Manseau, A. Fall. (2011) Patch-based graphs of landscape connectivity: a guide to construction, analysis, and application for conservation. Biological Conservation 144:44-55.
 #'
 #' @author Paul Galpern and Alex Chubaty
 #' @docType methods
 #' @export
 #' @importFrom graphics plot
 #' @importFrom raster as.data.frame plot reclassify
-#' @importFrom sp geometry plot SpatialPoints SpatialPolygonsDataFrame spChFIDs
+#' @importFrom sp geometry plot SpatialPoints SpatialPolygonsDataFrame
 #' @include classes.R
 #' @rdname grain
 #' @seealso \code{\link{GOC}}
@@ -69,12 +75,6 @@
 #' plot(grain(tinyPatchGOC, whichThresh = 1)@voronoi,
 #'      col = sample(rainbow(100)), legend = FALSE, main = "Threshold 1")
 #'
-#' ## Extract a representative subset of 5 grains of connectivity for vector visualization
-#' tinyPatchGOC <- GOC(tinyPatchMPG, nThresh = 5, sp = TRUE)
-#'
-#' ## grain the model at a selected scale/grain/threshold using vector polygons
-#' plot(tinyPatchMPG@patchId, col = "grey", legend = FALSE)
-#' plot(grain(tinyPatchGOC, whichThresh = 3, sp = TRUE)@voronoiSP, add = TRUE, lwd = 2)
 #' }
 #'
 setGeneric("grain", function(x, ...) {
@@ -86,22 +86,12 @@ setGeneric("grain", function(x, ...) {
 setMethod(
   "grain",
   signature = "goc",
-  definition = function(x, whichThresh, sp = FALSE, ...) {
-    if (isTRUE(sp) && !requireNamespace("rgeos", quietly = TRUE)) {
-      stop("grainscape:  rgeos package must be installed to use sp = TRUE")
-    }
-
-    dots <- list(...)
+  definition = function(x, whichThresh, ...) {
 
     ## Check whichThresh
     thresholds <- x@summary$id
-    if ((length(whichThresh) > 1) || (!(whichThresh %in% thresholds))) {
+    if ((length(whichThresh) > 1) || (!(whichThresh %in% 1:length(thresholds)))) {
       stop("grainscape:  whichThresh must index a single threshold existing in the GOC object", call. = FALSE)
-    }
-
-    ## Check sp
-    if (isTRUE(sp) && identical(x@voronoiSP, .emptySP())) {
-      stop("grainscape:  GOC object must also be produced using sp=TRUE", call. = FALSE)
     }
 
     results <- list()
@@ -111,7 +101,7 @@ setMethod(
     if (is_igraph(x@th[[whichThresh]]$goc)) {
       threshGraph <- x@th[[whichThresh]]$goc
 
-      ## Produce is-becomes reclassifyification table for voronoi raster
+      ## Produce is-becomes reclassification table for voronoi raster
       rclTable <-  matrix(0, 1, 2)
       for (i in 1:length(V(threshGraph)$polygonId)) {
         rclTable <- rbind(rclTable,
@@ -125,52 +115,10 @@ setMethod(
       results$centroids <- SpatialPoints(cbind(V(threshGraph)$centroidX,
                                                V(threshGraph)$centroidY))
 
-      ## Take the SpatialPolygons object and combine polygons as necessary
-      if (isTRUE(sp)) {
-        message("Creating SpatialPolygons.") ## allow to be silenced
-        voronoiSP <- geometry(x@voronoiSP)
-        indexSP <- as.data.frame(x@voronoiSP)[, 1]
-        newVoronoi <- NULL
-
-        for (i in 1:length(V(threshGraph)$polygonId)) {
-          fromId <- as.integer(unlist(strsplit(V(threshGraph)$patchId[i], ", ")))
-          toId <- as.character(as.integer(V(threshGraph)$polygonId[i]))
-          if (length(fromId) > 1) {
-            thisPolygon <- NULL
-            for (iFrom in 2:length(fromId)) {
-              if (is.null(thisPolygon)) {
-                thisPolygon <- rgeos::gUnion(voronoiSP[which(indexSP == fromId[iFrom - 1])],
-                                             voronoiSP[which(indexSP == fromId[iFrom])], id = toId)
-              } else {
-                thisPolygon <- rgeos::gUnion(thisPolygon, voronoiSP[which(indexSP == fromId[iFrom])], id = toId)
-              }
-            }
-          } else {
-            thisPolygon <- spChFIDs(voronoiSP[which(indexSP == fromId)], toId)
-          }
-          if (is.null(newVoronoi)) {
-            newVoronoi <- thisPolygon
-          } else {
-            newVoronoi <- rbind(newVoronoi, thisPolygon)
-          }
-        }
-
-        results$voronoiSP <- SpatialPolygonsDataFrame(
-          newVoronoi,
-          data.frame(polygonId = V(threshGraph)$polygonId,
-                     row.names = V(threshGraph)$polygonId)
-        )
-      } else {
-        results$voronoiSP <- .emptySPDF()
-      }
-
-      if (any(grepl(pattern = "doPlot", names(dots)))) {
-        warning("Use of doPlot is deprecated. Use plot(grain(goc, ...)) instead.")
-      }
     }
 
-    out <- new("grain", voronoi = results$voronoi, voronoiSP = results$voronoiSP,
-               summary = results$summary, centroids = results$centroids)
+    out <- new("grain", voronoi = results$voronoi,
+               summary = results$summary, centroids = results$centroids, th = threshGraph)
 
     return(out)
 })

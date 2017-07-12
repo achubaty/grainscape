@@ -8,37 +8,36 @@
 \usage{
 grain(x, ...)
 
-\S4method{grain}{goc}(x, whichThresh, sp = FALSE, ...)
+\S4method{grain}{goc}(x, whichThresh, ...)
 }
 \arguments{
 \item{x}{A \code{goc} object created by \code{\link{GOC}}.}
 
-\item{...}{Additional arguments to pass to \code{plot} if \code{doPlot = TRUE}).}
+\item{...}{Additional arguments (not used).}
 
-\item{whichThresh}{Integer giving the grain threshold to extract.}
-
-\item{sp}{Logical.  If \code{TRUE} then produce a \code{\link{SpatialPolygonsDataFrame}}
-representation of the selected threshold.
-Requires also running \code{\link{GOC}} with \code{sp = TRUE},
-and that the \code{rgeos} package is installed.}
+\item{whichThresh}{Integer giving the grain threshold to extract.  This is the index
+of the threshold extracted by \code{\link{GOC}}.}
 }
 \value{
 A list object containing the following elements:
 
 \describe{
-  \item{\code{summary}}{gives the properties of the visualized scale of the GOC model;}
+  \item{\code{summary}}{gives the properties of the specified scale/grain \code{whichThresh}
+  of the GOC model;}
 
-  \item{\code{voronoi}}{a \code{RasterLayer} giving the Voronoi tessellation;}
+  \item{\code{voronoi}}{a \code{RasterLayer} giving the Voronoi tessellation the
+  specified scale/grain \code{whichThresh} of the GOC model;}
 
   \item{\code{centroids}}{a \code{SpatialPoints} objects giving the centroids
-  of the polygons in the tessellation;}
+  of the polygons in the Voronoi tessellation at the specified scale/grain \code{whichThresh};}
 
-  \item{\code{voronoiSP}}{vector representation of polygons in the tessellation
-  (\code{SpatialPolygonsDataFrame}; if \code{sp = TRUE})}
+  \item{\code{th}}{a \code{igraph} object giving the graph describing the relationship
+  among the polygons at the specified scale/grain \code{whichThresh}}
+
 }
 }
 \description{
-Extract a tessellation (i.e., scales) from a GOC model.
+Extract a grain (i.e. a scaled version of a Voronoi tessellation) from a GOC model.
 }
 \examples{
 \dontrun{
@@ -66,19 +65,19 @@ plot(tinyPatchGOCgrain, col = topo.colors(10))
 plot(grain(tinyPatchGOC, whichThresh = 1)@voronoi,
      col = sample(rainbow(100)), legend = FALSE, main = "Threshold 1")
 
-## Extract a representative subset of 5 grains of connectivity for vector visualization
-tinyPatchGOC <- GOC(tinyPatchMPG, nThresh = 5, sp = TRUE)
-
-## grain the model at a selected scale/grain/threshold using vector polygons
-plot(tinyPatchMPG@patchId, col = "grey", legend = FALSE)
-plot(grain(tinyPatchGOC, whichThresh = 3, sp = TRUE)@voronoiSP, add = TRUE, lwd = 2)
 }
 
 }
 \references{
 Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien. (2007) Spatial graphs: Principles and applications for habitat connectivity. Ecosystems 10:448:461.
 
-Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis at multiple spatial scales in landscape genetics.  Molecular Ecology 21:3996-4009.
+Galpern, P., M. Manseau. (2013a) Finding the functional grain: comparing methods for scaling resistance surfaces. Landscape Ecology 28:1269-1291.
+
+Galpern, P., M. Manseau. (2013b) Modelling the influence of landscape connectivity on animal distribution: a functional grain approach. Ecography 36:1004-1016.
+
+Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis at multiple spatial scales in landscape genetics. Molecular Ecology 21:3996-4009.
+
+Galpern, P., M. Manseau, A. Fall. (2011) Patch-based graphs of landscape connectivity: a guide to construction, analysis, and application for conservation. Biological Conservation 144:44-55.
 }
 \seealso{
 \code{\link{GOC}}

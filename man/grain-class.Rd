@@ -13,14 +13,14 @@ The \code{grain} class
 \item{\code{voronoi}}{A \code{RasterLayer} describing the regions of proximity in
 resistance units around the focal patches or points.}
 
-\item{\code{voronoiSP}}{A \code{SpatialPolygonsDataFrame} object representation of
-these regions of proximity.}
-
 \item{\code{summary}}{A summary of the the grains of connectivity generated and
 their properties.}
 
 \item{\code{centroids}}{A \code{SpatialPoints} object indicating the grain's polygon
-                 centroids.
+centroids.}
+
+\item{\code{th}}{A list of \code{igraph} objects giving the graphs describing the relationship
+                 among the polygons in that grain
 
 See \code{\link{grain}} for more information.}
 }}

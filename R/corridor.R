@@ -4,8 +4,9 @@
 #' Given a series of GOC models built at different scales, visualize the corridor
 #' (or shortest path) between two points using one of the tessellations
 #' (i.e., scales) in these models.
-#' Visualization is exclusively in vector format.
-#' \code{\link{GOC}} must be run using the \code{sp=TRUE} option.
+#'
+#' This is an experimental function.
+#'
 #'
 #' @param x       A \code{goc} object created by \code{\link{GOC}}.
 #'
@@ -26,8 +27,8 @@
 #' @return A list object:
 #'
 #' \describe{
-#'   \item{\code{voronoiSP}}{vector representation of polygons in the tessellation
-#'   (\code{SpatialPolygonsDataFrame})}
+#'   \item{\code{voronoi}}{a raster representation of the boundaries of the
+#'   voronoi polygons (\code{RasterLayer})}
 #'
 #'   \item{\code{linksSP}}{vector representation of links in the grains of
 #'   connectivity graph (\code{SpatialLinesDataFrame})}
@@ -48,7 +49,13 @@
 #' @references
 #' Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien. (2007) Spatial graphs: Principles and applications for habitat connectivity. Ecosystems 10:448:461.
 #'
+#' Galpern, P., M. Manseau. (2013a) Finding the functional grain: comparing methods for scaling resistance surfaces. Landscape Ecology 28:1269-1291.
+#'
+#' Galpern, P., M. Manseau. (2013b) Modelling the influence of landscape connectivity on animal distribution: a functional grain approach. Ecography 36:1004-1016.
+#'
 #' Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis at multiple spatial scales in landscape genetics. Molecular Ecology 21:3996-4009.
+#'
+#' Galpern, P., M. Manseau, A. Fall. (2011) Patch-based graphs of landscape connectivity: a guide to construction, analysis, and application for conservation. Biological Conservation 144:44-55.
 #'
 #' @author Paul Galpern and Alex Chubaty
 #' @docType methods
@@ -72,8 +79,8 @@
 #' ## Produce a patch-based MPG where patches are resistance features=1
 #' tinyPatchMPG <- MPG(cost = tinyCost, patch = (tinyCost == 1))
 #'
-#' ## Extract a representative subset of 5 grains of connectivity using sp=TRUE
-#' tinyPatchGOC <- GOC(tinyPatchMPG, nThresh = 5, sp = TRUE)
+#' ## Extract a representative subset of 5 grains of connectivity
+#' tinyPatchGOC <- GOC(tinyPatchMPG, nThresh = 5)
 #'
 #' ## Quick visualization of a corridor
 #' corridorStartEnd <- rbind(c(10,10), c(90,90))
@@ -81,7 +88,7 @@
 #'
 #' ## More control over a corridor visualization
 #' tinyPatchCorridor <- corridor(tinyPatchGOC, whichThresh = 3, coords = corridorStartEnd)
-#' plot(tinyPatchCorridor$voronoiSP, col = "lightgrey", border = "white", lwd = 2)
+#' plot(tinyPatchCorridor$voronoi, col = "lightgrey", border = "white", lwd = 2)
 #' plot(tinyPatchCorridor$linksSP, col = "darkred", lty = "dashed", add = TRUE)
 #' plot(tinyPatchCorridor$nodesSP, col = "darkred", pch = 21, bg="white", add = TRUE)
 #' plot(tinyPatchCorridor$shortestLinksSP, col = "darkred", lty = "solid", lwd = 2, add = TRUE)
@@ -101,13 +108,6 @@ setMethod(
   "corridor",
   signature = "goc",
   definition = function(x, whichThresh, coords, doPlot = 0, weight = "meanWeight", ...) {
-    if (!requireNamespace("rgeos", quietly = TRUE)) {
-      stop("grainscape:  rgeos package must be installed to use sp=TRUE")
-    }
-
-    if (is.null(x@voronoiSP)) {
-      stop("grainscape:  GOC object must be produced using sp=TRUE", call. = FALSE)
-    }
 
     ## Check whichThresh
     if ((length(whichThresh) > 1) || (!(whichThresh %in% 1:length(x@th)))) {
@@ -115,8 +115,8 @@ setMethod(
     }
 
     ## Check coords
-    if (is.null(dim(coords))) {
-      coords <- t(as.matrix(coords))
+    if (class(coords) %in% c("SpatialPoints", "SpatialPointsDataFrame")) {
+      coords <- coordinates(coords)
     }
 
     if (ncol(coords) != 2) {
@@ -187,17 +187,17 @@ setMethod(
       weights = edge_attr(x@th[[whichThresh]]$goc, weight)
     )[startEndPath[length(startEndPath)]]
 
-    voronoiSP <- grain(x, whichThresh = whichThresh, sp = TRUE)@voronoiSP
+    voronoiBound <- boundaries(grain(x, whichThresh = whichThresh)@voronoi, classes=TRUE)
 
     ## Do plot
     if (doPlot == 1) {
-      plot(voronoiSP, border = "white", col = "grey88", lwd = 2)
+      plot(voronoiBound, col=c("white", "black"))
       plot(edgesGOC, add = TRUE, col = "grey60", lwd = 1.5)
       plot(verticesGOC, add = TRUE, pch = 21, col = "grey60", bg = "white", cex = 0.75)
       plot(shortestPathEdges, add = TRUE, col = "black", lwd = 2)
       plot(shortestPathVertices, add = TRUE,  pch = 21, col = "black", bg = "white", cex = 0.75)
     } else if (doPlot == 2) {
-      plot(voronoiSP, border = "black", lwd = 0.75)
+      plot(voronoiBound, col=c("white", "black"))
       plot(edgesGOC, add = TRUE, col = "darkgray", lwd = 1.5)
       plot(verticesGOC, add = TRUE, pch = 21, col = "darkgrey", bg = "white", cex = 0.75)
       plot(shortestPathEdges, add = TRUE, col = "black", lwd = 2)
@@ -205,7 +205,7 @@ setMethod(
     }
 
     result <- list(
-      voronoiSP = voronoiSP,
+      voronoi = voronoiBound,
       linksSP = edgesGOC,
       nodesSP = verticesGOC,
       shortestLinksSP = shortestPathEdges,

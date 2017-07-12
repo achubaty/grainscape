@@ -32,8 +32,8 @@ Please see details in \code{\link{distance}}.}
 A list object:
 
 \describe{
-  \item{\code{voronoiSP}}{vector representation of polygons in the tessellation
-  (\code{SpatialPolygonsDataFrame})}
+  \item{\code{voronoi}}{a raster representation of the boundaries of the
+  voronoi polygons (\code{RasterLayer})}
 
   \item{\code{linksSP}}{vector representation of links in the grains of
   connectivity graph (\code{SpatialLinesDataFrame})}
@@ -55,8 +55,8 @@ A list object:
 Given a series of GOC models built at different scales, visualize the corridor
 (or shortest path) between two points using one of the tessellations
 (i.e., scales) in these models.
-Visualization is exclusively in vector format.
-\code{\link{GOC}} must be run using the \code{sp=TRUE} option.
+
+This is an experimental function.
 }
 \examples{
 \dontrun{
@@ -71,8 +71,8 @@ tinyCost <- reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
 ## Produce a patch-based MPG where patches are resistance features=1
 tinyPatchMPG <- MPG(cost = tinyCost, patch = (tinyCost == 1))
 
-## Extract a representative subset of 5 grains of connectivity using sp=TRUE
-tinyPatchGOC <- GOC(tinyPatchMPG, nThresh = 5, sp = TRUE)
+## Extract a representative subset of 5 grains of connectivity
+tinyPatchGOC <- GOC(tinyPatchMPG, nThresh = 5)
 
 ## Quick visualization of a corridor
 corridorStartEnd <- rbind(c(10,10), c(90,90))
@@ -80,7 +80,7 @@ corridor(tinyPatchGOC, whichThresh = 3, coords = corridorStartEnd, doPlot = TRUE
 
 ## More control over a corridor visualization
 tinyPatchCorridor <- corridor(tinyPatchGOC, whichThresh = 3, coords = corridorStartEnd)
-plot(tinyPatchCorridor$voronoiSP, col = "lightgrey", border = "white", lwd = 2)
+plot(tinyPatchCorridor$voronoi, col = "lightgrey", border = "white", lwd = 2)
 plot(tinyPatchCorridor$linksSP, col = "darkred", lty = "dashed", add = TRUE)
 plot(tinyPatchCorridor$nodesSP, col = "darkred", pch = 21, bg="white", add = TRUE)
 plot(tinyPatchCorridor$shortestLinksSP, col = "darkred", lty = "solid", lwd = 2, add = TRUE)
@@ -94,7 +94,13 @@ mtext(paste("Corridor shortest path length:",
 \references{
 Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien. (2007) Spatial graphs: Principles and applications for habitat connectivity. Ecosystems 10:448:461.
 
+Galpern, P., M. Manseau. (2013a) Finding the functional grain: comparing methods for scaling resistance surfaces. Landscape Ecology 28:1269-1291.
+
+Galpern, P., M. Manseau. (2013b) Modelling the influence of landscape connectivity on animal distribution: a functional grain approach. Ecography 36:1004-1016.
+
 Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis at multiple spatial scales in landscape genetics. Molecular Ecology 21:3996-4009.
+
+Galpern, P., M. Manseau, A. Fall. (2011) Patch-based graphs of landscape connectivity: a guide to construction, analysis, and application for conservation. Biological Conservation 144:44-55.
 }
 \seealso{
 \code{\link{GOC}}, \code{\link{visualize}}

@@ -27,21 +27,16 @@
 #'                  \code{"eucPerimWeight"} use the Euclidean distance from the
 #'                  perimeters of patches as the link weight.
 #'
-#' @param sp  Logical.  If \code{TRUE} the \code{rgeos} package is used to create
-#'            a vector of class \code{\link{SpatialPolygonsDataFrame}} describing
-#'            the finest grain of connectivity. This is very useful for visualizing
-#'            grains of connectivity models, especially for print purposes.
-#'            Equally, using the \code{maptools} or \code{rgdal} packages these
-#'            polygons can be exported as shapefiles for use in other GIS applications.
-#'            But, please see details.
 #'
 #' @param verbose Set \code{verbose=0} for no progress information to console.
 #'
 #' @param ...     Additional arguments (not used).
 #'
 #' @details
-#' This function can take a long time to run when \code{sp = TRUE}.
-#' Time taken is dependent on the dimensions of the \code{mpg$voronoi} raster.
+#' Grain or scalar analysis of connectivity may be appropriate for a variety of purposes, not
+#' limited to visualization and improving connectivity estimates for highly-mobile organisms.
+#' See Galpern et al. (2012), Galpern & Manseau (2013a, 2013b) for applications and review of
+#' these capabilities.
 #'
 #' @return  A \code{\link[=goc-class]{goc}} object.
 #'
@@ -55,7 +50,13 @@
 #' @references
 #' Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien. (2007) Spatial graphs: Principles and applications for habitat connectivity. Ecosystems 10:448:461.
 #'
+#' Galpern, P., M. Manseau. (2013a) Finding the functional grain: comparing methods for scaling resistance surfaces. Landscape Ecology 28:1269-1291.
+#'
+#' Galpern, P., M. Manseau. (2013b) Modelling the influence of landscape connectivity on animal distribution: a functional grain approach. Ecography 36:1004-1016.
+#'
 #' Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis at multiple spatial scales in landscape genetics. Molecular Ecology 21:3996-4009.
+#'
+#' #' Galpern, P., M. Manseau, A. Fall. (2011) Patch-based graphs of landscape connectivity: a guide to construction, analysis, and application for conservation. Biological Conservation 144:44-55.
 #'
 #' @author Paul Galpern
 #' @docType methods
@@ -102,10 +103,7 @@ setMethod(
   "GOC",
   signature = "mpg",
   definition = function(x, nThresh = NULL, doThresh = NULL,
-                        weight = "lcpPerimWeight", sp = FALSE, verbose = 0, ...) {
-  if (isTRUE(sp) && !requireNamespace("rgeos", quietly = TRUE)) {
-    stop("grainscape:  rgeos package must be installed to use sp = TRUE")
-  }
+                        weight = "lcpPerimWeight", verbose = 0, ...) {
 
   baseGraph <- x@mpg
 
@@ -136,32 +134,19 @@ setMethod(
 
   summary.df <- data.frame(id = ids, maxLink = doThresh, stringsAsFactors = FALSE)
 
-  ## Optionally retain a vectorized version of the smallest grain of connectivity
-  ## that can later be used to create larger grains by aggregation
-  if (isTRUE(sp)) {
-    if (verbose >= 2) message("Creating SpatialPolygons for smallest grain.")
-    if (verbose >= 3) {
-      message("  Time for completion is dependent on the number of patches and the dimensions of the raster.")
-    }
-    voronoiSP <- rasterToPolygons(voronoi, dissolve = TRUE)
-  } else {
-    voronoiSP <- .emptySPDF()
-  }
 
   allLinks <- ends(baseGraph, E(baseGraph))
 
-  ## Check MPG for orphaned patches
-  ## A workaround has not yet been implemented
+  ## Report on orphaned patches in the MPG
+
   id <- sapply(V(baseGraph)$name, function(z) sum(allLinks == as.integer(z)))
   unlinkedPatches <- as.integer(V(baseGraph)$name[which(id == 0)])
   if (length(unlinkedPatches) > 0) {
     for (iPatch in unlinkedPatches) {
       warning("patchId=", iPatch, " has no connecting links in the MPG.",
-              " This is likely caused by a patch surrounded in missing values (NA cells).\n",
-              "At present, all patches must be linked to at least one other patch in the MPG for GOC analyses.\n",
-              "Replacing NA cells in the cost or sa rasters may be required\n", call. = FALSE)
+              " This may be caused by a patch surrounded in missing values (NA cells).\n", call. = FALSE)
+      baseGraph <- delete_vertices(baseGraph, as.character(iPatch))
     }
-    stop("grainscape:  cost, patch and/or sa rasters used to create the MPG present a limit case for GOC analyses.  Generated warnings may indicated cause.\nWorkaround for these cases has not yet been implemented.  Please contact the package author for more information.", call. = FALSE)
   }
 
   linkId <- edge_attr(baseGraph, "linkId")
@@ -169,6 +154,7 @@ setMethod(
   th <- vector("list", length(doThresh))
 
   for (iThresh in 1:length(doThresh)) {
+    #if (iThresh==3) browser()
     if (verbose >= 1) message("Threshold ", iThresh, " of ", length(doThresh))
     tGraph <- delete_edges(baseGraph, which(linkWeight > doThresh[iThresh]))
 
@@ -346,7 +332,7 @@ setMethod(
     if (is_igraph(z$goc)) sum(V(z$goc)$totalCoreArea^2)/sum(V(z$goc)$totalCoreArea) else NA
   }))
 
-  threshGraph <- new("goc", voronoi = voronoi, voronoiSP = voronoiSP,
+  threshGraph <- new("goc", voronoi = voronoi,
                      summary = summary.df, th = th)
 
   return(threshGraph)
