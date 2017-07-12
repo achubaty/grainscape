@@ -1,15 +1,22 @@
 #' Deprecated functions
 #'
-#' These functions have been deprecated and will be removed in a future release.
+#' These have been deprecated and will be removed in a future release.
+#'
+#' @note the \code{sp} argument has also been deprecated from all functions.
 #'
 #' @export gsGOC
 #' @inheritParams GOC
 #' @param mpg  A \code{mpg} object.
+#' @param sp   Logical.  If \code{TRUE} the \code{rgeos} package is used to create
+#'            a vector of class \code{\link{SpatialPolygonsDataFrame}} describing
+#'            the finest grain of connectivity.
+#'
 #' @rdname grainscape-deprecated
 #'
 gsGOC <- function(mpg, nThresh = NULL, doThresh = NULL,
                   weight = "lcpPerimWeight", sp = FALSE, verbose = 3) {
   .Deprecated("GOC", old = "gsGOC")
+  if (!is.null(sp)) warning("gsGOC(): argument 'sp' was supplied but will be ignored.")
   GOC(mpg, nThresh, doThresh, weight, sp, verbose)
 }
 
@@ -56,6 +63,7 @@ gsGOCVisualize <- function(GOC, whichThresh, sp = FALSE, doPlot = FALSE) {
 #'
 visualize <- function(GOC, whichThresh, sp = FALSE, doPlot = FALSE) {
   .Deprecated("grain", old = "visualize")
+  if (!is.null(sp)) warning("visualize(): argument 'sp' was supplied but will be ignored.")
   grain(GOC, whichThresh, sp, doPlot)
 }
 

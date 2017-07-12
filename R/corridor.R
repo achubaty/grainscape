@@ -5,8 +5,7 @@
 #' (or shortest path) between two points using one of the tessellations
 #' (i.e., scales) in these models.
 #'
-#' This is an experimental function.
-#'
+#' @note This is an experimental function.
 #'
 #' @param x       A \code{goc} object created by \code{\link{GOC}}.
 #'
@@ -47,15 +46,21 @@
 #' }
 #'
 #' @references
-#' Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien. (2007) Spatial graphs: Principles and applications for habitat connectivity. Ecosystems 10:448:461.
+#' Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien. (2007) Spatial graphs:
+#' Principles and applications for habitat connectivity. Ecosystems 10:448:461.
 #'
-#' Galpern, P., M. Manseau. (2013a) Finding the functional grain: comparing methods for scaling resistance surfaces. Landscape Ecology 28:1269-1291.
+#' Galpern, P., M. Manseau. (2013a) Finding the functional grain: comparing methods
+#' for scaling resistance surfaces. Landscape Ecology 28:1269-1291.
 #'
-#' Galpern, P., M. Manseau. (2013b) Modelling the influence of landscape connectivity on animal distribution: a functional grain approach. Ecography 36:1004-1016.
+#' Galpern, P., M. Manseau. (2013b) Modelling the influence of landscape connectivity
+#' on animal distribution: a functional grain approach. Ecography 36:1004-1016.
 #'
-#' Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis at multiple spatial scales in landscape genetics. Molecular Ecology 21:3996-4009.
+#' Galpern, P., M. Manseau, A. Fall. (2011) Patch-based graphs of landscape connectivity:
+#' a guide to construction, analysis, and application for conservation.
+#' Biological Conservation 144:44-55.
 #'
-#' Galpern, P., M. Manseau, A. Fall. (2011) Patch-based graphs of landscape connectivity: a guide to construction, analysis, and application for conservation. Biological Conservation 144:44-55.
+#' Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis
+#' at multiple spatial scales in landscape genetics. Molecular Ecology 21:3996-4009.
 #'
 #' @author Paul Galpern and Alex Chubaty
 #' @docType methods
@@ -187,17 +192,17 @@ setMethod(
       weights = edge_attr(x@th[[whichThresh]]$goc, weight)
     )[startEndPath[length(startEndPath)]]
 
-    voronoiBound <- boundaries(grain(x, whichThresh = whichThresh)@voronoi, classes=TRUE)
+    voronoiBound <- boundaries(grain(x, whichThresh = whichThresh)@voronoi, classes = TRUE)
 
     ## Do plot
     if (doPlot == 1) {
-      plot(voronoiBound, col=c("white", "black"))
+      plot(voronoiBound, col = c("white", "black"))
       plot(edgesGOC, add = TRUE, col = "grey60", lwd = 1.5)
       plot(verticesGOC, add = TRUE, pch = 21, col = "grey60", bg = "white", cex = 0.75)
       plot(shortestPathEdges, add = TRUE, col = "black", lwd = 2)
       plot(shortestPathVertices, add = TRUE,  pch = 21, col = "black", bg = "white", cex = 0.75)
     } else if (doPlot == 2) {
-      plot(voronoiBound, col=c("white", "black"))
+      plot(voronoiBound, col = c("white", "black"))
       plot(edgesGOC, add = TRUE, col = "darkgray", lwd = 1.5)
       plot(verticesGOC, add = TRUE, pch = 21, col = "darkgrey", bg = "white", cex = 0.75)
       plot(shortestPathEdges, add = TRUE, col = "black", lwd = 2)

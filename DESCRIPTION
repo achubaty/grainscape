@@ -13,7 +13,7 @@ Date: 2017-06-01
 Authors@R: c(
     person("Paul", "Galpern", email = "pgalpern@gmail.com", role = c("aut", "cph")),
     person("Sam", "Doctolero", email = "sam.doctolero@gmail.com", role = "aut"),
-    person(c("Alex", "M"), "Chubaty", email = "alexander.chubaty@canada.ca", role = c("aut", "cre"))
+    person("Alex M", "Chubaty", email = "alexander.chubaty@canada.ca", role = c("aut", "cre"))
     )
 License: GPL (>= 2)
 Imports:
@@ -22,7 +22,7 @@ Imports:
     methods,
     sp,
     raster,
-    Rcpp (>= 0.12.5),
+    Rcpp (>= 0.12.11.4),
     utils
 LinkingTo: Rcpp
 Suggests:
@@ -32,6 +32,8 @@ Suggests:
     rgeos,
     rmarkdown,
     testthat
+Remotes:
+    Rcppcore/Rcpp
 VignetteBuilder: knitr, rmarkdown
 BugReports: https://github.com/achubaty/grainscape/issues
 ByteCompile: yes

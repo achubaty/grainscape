@@ -15,8 +15,8 @@ grain(x, ...)
 
 \item{...}{Additional arguments (not used).}
 
-\item{whichThresh}{Integer giving the grain threshold to extract.  This is the index
-of the threshold extracted by \code{\link{GOC}}.}
+\item{whichThresh}{Integer giving the grain threshold to extract.
+This is the index of the threshold extracted by \code{\link{GOC}}.}
 }
 \value{
 A list object containing the following elements:
@@ -33,7 +33,6 @@ A list object containing the following elements:
 
   \item{\code{th}}{a \code{igraph} object giving the graph describing the relationship
   among the polygons at the specified scale/grain \code{whichThresh}}
-
 }
 }
 \description{
@@ -69,15 +68,21 @@ plot(grain(tinyPatchGOC, whichThresh = 1)@voronoi,
 
 }
 \references{
-Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien. (2007) Spatial graphs: Principles and applications for habitat connectivity. Ecosystems 10:448:461.
+Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien. (2007) Spatial graphs:
+Principles and applications for habitat connectivity. Ecosystems 10:448:461.
 
-Galpern, P., M. Manseau. (2013a) Finding the functional grain: comparing methods for scaling resistance surfaces. Landscape Ecology 28:1269-1291.
+Galpern, P., M. Manseau. (2013a) Finding the functional grain: comparing methods
+for scaling resistance surfaces. Landscape Ecology 28:1269-1291.
 
-Galpern, P., M. Manseau. (2013b) Modelling the influence of landscape connectivity on animal distribution: a functional grain approach. Ecography 36:1004-1016.
+Galpern, P., M. Manseau. (2013b) Modelling the influence of landscape connectivity
+on animal distribution: a functional grain approach. Ecography 36:1004-1016.
 
-Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis at multiple spatial scales in landscape genetics. Molecular Ecology 21:3996-4009.
+Galpern, P., M. Manseau, A. Fall. (2011) Patch-based graphs of landscape connectivity:
+a guide to construction, analysis, and application for conservation.
+Biological Conservation 144:44-55.
 
-Galpern, P., M. Manseau, A. Fall. (2011) Patch-based graphs of landscape connectivity: a guide to construction, analysis, and application for conservation. Biological Conservation 144:44-55.
+Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis
+at multiple spatial scales in landscape genetics. Molecular Ecology 21:3996-4009.
 }
 \seealso{
 \code{\link{GOC}}

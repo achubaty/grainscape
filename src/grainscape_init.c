@@ -3,15 +3,15 @@
 #include <stdlib.h> // for NULL
 #include <R_ext/Rdynload.h>
 
-/* FIXME: 
+/* FIXME:
    Check these declarations against the C/Fortran source code.
 */
 
 /* .Call calls */
-extern SEXP grainscape_habConnRcpp(SEXP, SEXP, SEXP, SEXP);
+extern SEXP _grainscape_habConnRcpp(SEXP, SEXP, SEXP, SEXP);
 
 static const R_CallMethodDef CallEntries[] = {
-    {"grainscape_habConnRcpp", (DL_FUNC) &grainscape_habConnRcpp, 4},
+    {"_grainscape_habConnRcpp", (DL_FUNC) &_grainscape_habConnRcpp, 4},
     {NULL, NULL, 0}
 };
 

@@ -7,7 +7,7 @@ using namespace Rcpp;
 
 // habConnRcpp
 List habConnRcpp(NumericVector cost, NumericVector patches, int ncol, int nrow);
-RcppExport SEXP grainscape_habConnRcpp(SEXP costSEXP, SEXP patchesSEXP, SEXP ncolSEXP, SEXP nrowSEXP) {
+RcppExport SEXP _grainscape_habConnRcpp(SEXP costSEXP, SEXP patchesSEXP, SEXP ncolSEXP, SEXP nrowSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;

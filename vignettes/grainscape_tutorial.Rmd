@@ -397,23 +397,23 @@ In the two sections of this tutorial we demonstrate how to use the `rgeos` packa
 
 ### Section 1: Visualizing GOC models with vectorized Voronoi polygons
 
-For final analyses where visualization is a goal, build the GOC model with the `sp=TRUE` parameter set.
+For final analyses where visualization is a goal, build the GOC model with the `sp=TRUE` parameter set. **[TO DO: `sp` argument has been deprecated.]**
 Also, the `rgeos` package must be installed.
 Here, we do this for both the patch-based and lattice GOC models of Tutorials 2 and 3, respectively.
 **Note that this can be very slow, consuming orders of magnitude more computational time!**
 
 ```{r, results='hide'}
-patchyGOC_SP <- GOC(patchyMPG, nThresh = 100, sp = TRUE)
-patchyGOCLattice_SP <- GOC(patchyMPGLattice, nThresh = 100, sp = TRUE)
+#patchyGOC_SP <- GOC(patchyMPG, nThresh = 100) ## TO DO
+#patchyGOCLattice_SP <- GOC(patchyMPGLattice, nThresh = 100) ## TO DO
 ```
 
-Note how we can now visualize the Voronoi tessellation also with the `sp=TRUE` parameter to make things sharper.
+Note how we can now visualize the Voronoi tessellation also with the `sp=TRUE` parameter to make things sharper. **[TO DO: `sp` argument has been deprecated.]**
 \autoref{fig:spvoronoi} shows this for the lattice GOC model at the finest threshold possible, superimposed over the input resistance surface used to generate the GOC model.
 
 ```{r, fig.cap='\\label{fig:spvoronoi}A visualization of a lattice GOC model using vectorized Voronoi polygons, superimposed over the input resistance surface. In this case the Voronoi polygons show the finest grain possible using the 100 point lattice (+) initially specified. Plotting only the outlines of the Voronoi polygons makes it easier to show other information on this map (*e.g.*, resistance surface) and retain clarity. Recall, when interpreting this figure, that the polygons show regions of proximity from each focal lattice point given distance in resistance units.'}
 plot(patchyCost, legend = FALSE, main = "")
-plot(grain(patchyGOCLattice_SP, whichThresh = 1, sp = TRUE)@voronoiSP,
-     add = TRUE)
+#plot(grain(patchyGOCLattice_SP, whichThresh = 1, sp = TRUE)@voronoiSP,
+#     add = TRUE) ## TO DO
 
 focalPts <- cbind(V(patchyMPGLattice@mpg)$centroidX, V(patchyMPGLattice@mpg)$centroidY)
 points(focalPts, pch = "+", cex = 1.25)
@@ -427,22 +427,22 @@ points(focalPts, pch = "+", cex = 1.25)
 Finally \autoref{fig:corridorfancy} demonstrates how to take manual control of the visualization to liven up the product!
 
 ```{r, fig.cap='\\label{fig:corridorpatch}A visualization of the complete patch-based GOC model at its finest scale and the shortest path or least-cost corridor given the GOC graph between two locations on the map (P and Q) at this scale. Grey regions are Voronoi polygons in the patch-based GOC model.'}
-loc <- rbind(c(50, -350), c(350, -50))
-corridor1 <- corridor(patchyGOC_SP, whichThresh = 1, coords = loc, doPlot = TRUE)
-points(loc, pch = c("P", "Q"), cex = 1.25)
-mtext(paste("Shortest path between P and Q:",
-            round(corridor1$corridorLength, 2), "resistance units",
-            sep = " "),
-      side = 1)
+#loc <- rbind(c(50, -350), c(350, -50))
+#corridor1 <- corridor(patchyGOC_SP, whichThresh = 1, coords = loc, doPlot = TRUE) ## TO DO
+#points(loc, pch = c("P", "Q"), cex = 1.25)
+#mtext(paste("Shortest path between P and Q:",
+#            round(corridor1$corridorLength, 2), "resistance units",
+#            sep = " "),
+#      side = 1)
 ```
 
 ```{r, fig.cap='\\label{fig:corridorlattice}A visualization of the complete lattice GOC model at a relatively coarse scale and the shortest path or least-cost corridor given the GOC graph between two locations on the map (P and Q) at this scale. Grey regions are Voronoi polygons in the lattice GOC model.'}
-loc <- rbind(c(50, -350), c(350, -50))
-corridor1 <- corridor(patchyGOCLattice_SP, whichThresh = 45, coords = loc, doPlot = TRUE)
-points(loc, pch = c("P", "Q"), cex = 1.25)
-mtext(paste("Shortest path between P and Q:", round(corridor1$corridorLength, 2), "resistance units",
-            sep = " "),
-      side = 1)
+#loc <- rbind(c(50, -350), c(350, -50))
+#corridor1 <- corridor(patchyGOCLattice_SP, whichThresh = 45, coords = loc, doPlot = TRUE)
+#points(loc, pch = c("P", "Q"), cex = 1.25)
+#mtext(paste("Shortest path between P and Q:", round(corridor1$corridorLength, 2), "resistance units",
+#            sep = " "),
+#      side = 1)
 ```
 
 ```{r, fig.cap='\\label{fig:corridorfancy}More control over a corridor visualization using an example from the manual, and the tiny.asc resistance surface.'}
@@ -455,22 +455,22 @@ tinyCost <- reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
 tinyPatchMPG <- MPG(cost = tinyCost, patch = (tinyCost == 1))
 
 ## Extract a representative subset of 5 grains of connectivity using sp=TRUE
-tinyPatchGOC <- GOC(tinyPatchMPG, nThresh = 5, sp = TRUE)
+tinyPatchGOC <- GOC(tinyPatchMPG, nThresh = 5)
 
 ## Visualization of a corridor
 corridorStartEnd <- rbind(c(10, 10), c(90, 90))
 tinyPatchCorridor <- corridor(tinyPatchGOC, whichThresh = 3, coords = corridorStartEnd)
-plot(tinyPatchCorridor$voronoiSP, col = "lightgrey", border = "white", lwd = 2)
-plot(tinyPatchCorridor$linksSP, col = "darkred", lty = "dashed", add = TRUE)
-plot(tinyPatchCorridor$nodesSP, col = "darkred", pch = 21, bg = "white", add = TRUE)
-plot(tinyPatchCorridor$shortestLinksSP, col = "darkred", lty = "solid",
-     lwd = 2, add = TRUE)
-plot(tinyPatchCorridor$shortestNodesSP, col = "darkred", pch = 21,
-     bg = "darkred", add = TRUE)
-mtext(paste("Corridor shortest path length:",
-            round(tinyPatchCorridor$corridorLength, 2),
-            "resistance units"),
-      side = 1)
+#plot(tinyPatchCorridor$voronoiSP, col = "lightgrey", border = "white", lwd = 2) ## TO DO
+#plot(tinyPatchCorridor$linksSP, col = "darkred", lty = "dashed", add = TRUE)
+#plot(tinyPatchCorridor$nodesSP, col = "darkred", pch = 21, bg = "white", add = TRUE)
+#plot(tinyPatchCorridor$shortestLinksSP, col = "darkred", lty = "solid",
+#     lwd = 2, add = TRUE)
+#plot(tinyPatchCorridor$shortestNodesSP, col = "darkred", pch = 21,
+#     bg = "darkred", add = TRUE)
+#mtext(paste("Corridor shortest path length:",
+#            round(tinyPatchCorridor$corridorLength, 2),
+#            "resistance units"),
+#      side = 1)
 ```
 
 \newpage
