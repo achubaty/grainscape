@@ -43,7 +43,6 @@ Collate:
     'GOC.R'
     'MPG.R'
     'RcppExports.R'
-    'aaa.R'
     'grain.R'
     'corridor.R'
     'deprecated.R'
