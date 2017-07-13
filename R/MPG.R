@@ -171,8 +171,8 @@ setMethod(
   patchEdge <- mask(patchId, patchEdge)
 
   ## Patch area and core area
-  patchArea <- freq(patchId, useNA = "no")
-  patchEdgeArea <- freq(patchEdge, useNA = "no")
+  patchArea <- freq(patchId, useNA = "no")[,2] * res(cost)[1] * res(cost)[2]
+  patchEdgeArea <- freq(patchEdge, useNA = "no")[,2] * res(cost)[1] * res(cost)[2]
   patch <- data.frame(name = uniquePatches, patchId = uniquePatches,
                       patchArea = patchArea, patchEdgeArea = patchEdgeArea,
                       coreArea = patchArea - patchEdgeArea)

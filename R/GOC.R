@@ -279,9 +279,9 @@ setMethod(
         ## Find the total patch area, total patch edge area, and total core area
         ##   in each polygon and add as vertex attributes.
         patchAreaLookup <- cbind(V(baseGraph)$patchId,
-                                 V(baseGraph)$patchArea.count,
-                                 V(baseGraph)$patchEdgeArea.count,
-                                 V(baseGraph)$coreArea.count)
+                                 V(baseGraph)$patchArea,
+                                 V(baseGraph)$patchEdgeArea,
+                                 V(baseGraph)$coreArea)
         V(componentGraph)$totalPatchArea <- as.numeric(unlist(sapply(sourcePatchId, function(z)
           sum(patchAreaLookup[patchAreaLookup[, 1] %in% as.numeric(strsplit(z, ", ")[[1]]), 2]))))
         V(componentGraph)$totalPatchEdgeArea <- as.numeric(unlist(sapply(sourcePatchId, function(z)
