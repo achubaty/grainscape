@@ -261,16 +261,18 @@ setMethod(
 
         centroids <- cbind(zonal(rasX, gocRaster, fun = 'mean'),
                            zonal(rasY, gocRaster, fun = 'mean')[, 2])
-        centroids <- centroids[centroids[, 1] >= 0, 2:3]
-        centroids <- centroids[as.integer(uniquePolygons),]
+        centroids <- centroids[centroids[,1] %in% as.integer(uniquePolygons),]
+        row.names(centroids) <- centroids[,1]
+        centroids <- centroids[uniquePolygons, 2:3]
+
 
         V(componentGraph)$centroidX <- centroids[, 1]
         V(componentGraph)$centroidY <- centroids[, 2]
 
         ## Find areas of each polygon and add as a vertex attribute
         polygonArea <- freq(gocRaster)
-        polygonArea <- polygonArea[polygonArea[, 1] >= 0, 2]
-        polygonArea <- polygonArea[as.integer(uniquePolygons)]
+        row.names(polygonArea) <- polygonArea[,1]
+        polygonArea <- polygonArea[uniquePolygons, 2]
 
         V(componentGraph)$polygonArea <- polygonArea
 
