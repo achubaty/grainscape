@@ -160,4 +160,7 @@ setMethod(
 
     cat("\nSlot centroids:\n")
     cat("SpatialPoints objects with ", length(object@centroids), " features", "\n")
+
+    cat("\nSlot th:\n")
+    cat(show(object@th))
 })
