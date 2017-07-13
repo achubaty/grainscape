@@ -195,10 +195,10 @@ setMethod(
                          v2 = hce@linkData$EndId,
                          linkId = hce@linkData$LinkId * -1L,
                          lcpPerimWeight = hce@linkData$PerimWeight,
-                         startPerimX = hce@linkData$StartRow,
-                         startPerimY = hce@linkData$StartColumn,
-                         endPerimX = hce@linkData$EndRow,
-                         endPerimY = hce@linkData$EndColumn)
+                         startPerimX = xFromCol(cost, hce@linkData$StartColumn),
+                         startPerimY = yFromRow(cost, hce@linkData$StartRow),
+                         endPerimX = xFromCol(cost, hce@linkData$EndColumn),
+                         endPerimY = yFromRow(cost, hce@linkData$EndRow))
   mpg.igraph <- graph_from_data_frame(toGraphE, directed = FALSE, vertices = toGraphV)
 
   mpg <- new('mpg', mpg = mpg.igraph, patchId = patchId, voronoi = voronoi,
