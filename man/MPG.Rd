@@ -53,12 +53,13 @@ Patch-based models make most sense when animals are restricted to, or dependent 
 a resource patch.  Lattice models can be used as a generalized and functional
 approach to scaling resistance surfaces.
 
-Areal measurements are given as raster cell counts.
-If the raster projection is one where cell sizes are approximately constant in area (e.g., UTM),
-or the raster covers a relatively small geographic extent (e.g., < 1000 km in dimension)
-areal measurements will often be adequate.
-Reprojection of rasters should be considered to minimize these effects in
-other cases (see \code{\link{projectRaster}}).
+Rasters should be projected and not in geographic coordinates (i.e. \code{projection(cost)}
+should not contain \code{"+proj=longlat"}) or the function will issue a warning.
+In unprojected cases consider using \code{\link{projectRaster}} to change to an appropriate
+coordinate system for the location and extent of interest that balances both distance and areal
+accuracy.  See \code{\url{http://www.spatialreference.org}} for location-specific suggestions.
+Use of geographic coordinates will result in inaccurate areal and distance measurements,
+rendering the models themselves inaccurate.
 }
 \examples{
 \dontrun{

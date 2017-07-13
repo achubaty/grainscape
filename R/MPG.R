@@ -14,12 +14,13 @@
 #' a resource patch.  Lattice models can be used as a generalized and functional
 #' approach to scaling resistance surfaces.
 #'
-#' Areal measurements are given as raster cell counts.
-#' If the raster projection is one where cell sizes are approximately constant in area (e.g., UTM),
-#' or the raster covers a relatively small geographic extent (e.g., < 1000 km in dimension)
-#' areal measurements will often be adequate.
-#' Reprojection of rasters should be considered to minimize these effects in
-#' other cases (see \code{\link{projectRaster}}).
+#' Rasters should be projected and not in geographic coordinates (i.e. \code{projection(cost)}
+#' should not contain \code{"+proj=longlat"}) or the function will issue a warning.
+#' In unprojected cases consider using \code{\link{projectRaster}} to change to an appropriate
+#' coordinate system for the location and extent of interest that balances both distance and areal
+#' accuracy.  See \url{http://www.spatialreference.org} for location-specific suggestions.
+#' Use of geographic coordinates will result in inaccurate areal and distance measurements,
+#' rendering the models themselves inaccurate.
 #'
 #' @param cost   A \code{RasterLayer} giving a landscape resistance surface,
 #'               where the values of each raster cell are proportional to the
@@ -112,18 +113,14 @@ setMethod(
   definition = function(cost, patch, ...) {
   ## Check patch and cost are comparable
   if (!compareRaster(patch, cost, res = TRUE, orig = TRUE, stopiffalse = FALSE)) {
-    stop("grainscape: patch and cost rasters must be identical in extent, projection, origin and resolution.", call. = FALSE)
+    stop("patch and cost rasters must be identical in extent, projection, origin and resolution.")
   }
 
-  ## Check additional geographic features of input rasters
-  if (res(cost)[1] != res(cost)[2]) {
-    warning(paste0("grainscape:  raster cells are not square;  assuming a square cell of ",
-                   res(cost)[1], " units."), call. = FALSE)
-  }
-
-  ## Check projection
-  if (!is.na(projection(cost)) && (!grepl("UTM|utm", toupper(projection(cost))))) {
-    warning("grainscape:  projection suggests that all cells may not be of equal area; Note that grainscape assumes equal area in all calculations.", call. = FALSE)
+  if ((!is.na(projection(cost))) && (grepl("longlat", projection(cost)))) {
+    warning("input rasters in geographic coordinates (i.e. '+proj=longlat') are unlikely",
+            " to produce reliable estimates of area or distance.",
+            " For accurate results, project rasters with an appropriate coordinate",
+            " system for the location and extent of interest.", immediate.=TRUE)
   }
 
   ## use `cost` raster as template for `rasCost` and `rasPatch`
@@ -133,7 +130,7 @@ setMethod(
   rasCost[] <- getValues(cost)
   rasPatch[] <- getValues(patch)
 
-  ## Check that patch raster is binary, first corecing NAs to zeroes
+  ## Check that patch raster is binary, first coercing NAs to zeroes
   rasPatch[is.na(rasPatch)] <- 0
   if (!all(unique(rasPatch[]) %in% c(FALSE, TRUE))) {
     stop("grainscape:  patch must be a binary raster (=1 for patches; =0 for non-patches).", call. = FALSE)
