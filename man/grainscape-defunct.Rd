@@ -2,7 +2,7 @@
 % Please edit documentation in R/deprecated.R
 \name{gsMPGstitch}
 \alias{gsMPGstitch}
-\title{Defunct functions}
+\title{\code{grainscape}: Defunct}
 \usage{
 gsMPGstitch(...)
 }

@@ -8,7 +8,6 @@
 #' @param ...  Additional arguments passed to \code{plot}.
 #'
 #' @importFrom raster plot
-#' @importFrom sp plot
 #' @include classes.R
 #' @export
 #' @rdname plot
@@ -51,9 +50,5 @@ setMethod(
       paste(c("whichThresh = ", x@summary$id), collapse = "")
     }
 
-    if (identical(x@voronoiSP, .emptySPDF())) {
-      raster::plot(x@voronoi, main = dots$main, ...)
-    } else {
-      sp::plot(x@voronoiSP, main = dots$main, ...)
-    }
+    raster::plot(x@voronoi, main = dots$main, ...)
 })

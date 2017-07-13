@@ -80,15 +80,18 @@ setMethod(
         results[[i]]$v <- data.frame(sapply(names(vertex_attr(thisGraph)), function(z) {
           vertex_attr(thisGraph, z)
         }), stringsAsFactors = FALSE)
-        results[[i]]$e <- data.frame(as_edgelist(thisGraph), sapply(names(edge_attr(thisGraph)), function(z) {
+        results[[i]]$e <- data.frame(as_edgelist(thisGraph),
+                                     sapply(names(edge_attr(thisGraph)), function(z) {
           edge_attr(thisGraph, z)
         }), stringsAsFactors = FALSE)
         edgeDfNames <- names(results[[i]]$e)
         names(results[[i]]$e) <- c("e1", "e2", edgeDfNames[3:length(edgeDfNames)])
 
         ## Clean-up storage mode structure of data.frames
-        results[[i]]$e <- as.data.frame(sapply(results[[i]]$e, as.character), stringsAsFactors = FALSE)
-        results[[i]]$v <- as.data.frame(sapply(results[[i]]$v, as.character), stringsAsFactors = FALSE)
+        results[[i]]$e <- as.data.frame(sapply(results[[i]]$e, as.character),
+                                        stringsAsFactors = FALSE)
+        results[[i]]$v <- as.data.frame(sapply(results[[i]]$v, as.character),
+                                        stringsAsFactors = FALSE)
         results[[i]]$e <- as.data.frame(lapply(results[[i]]$e, function(z) {
           type.convert(z, as.is = TRUE)
         }), stringsAsFactors = FALSE)

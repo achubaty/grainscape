@@ -5,8 +5,7 @@
 #' (or shortest path) between two points using one of the tessellations
 #' (i.e., scales) in these models.
 #'
-#' This is an experimental function.
-#'
+#' @note This is an experimental function.
 #'
 #' @param x       A \code{goc} object created by \code{\link{GOC}}.
 #'
@@ -47,15 +46,21 @@
 #' }
 #'
 #' @references
-#' Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien. (2007) Spatial graphs: Principles and applications for habitat connectivity. Ecosystems 10:448:461.
+#' Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien. (2007) Spatial graphs:
+#' Principles and applications for habitat connectivity. Ecosystems 10:448:461.
 #'
-#' Galpern, P., M. Manseau. (2013a) Finding the functional grain: comparing methods for scaling resistance surfaces. Landscape Ecology 28:1269-1291.
+#' Galpern, P., M. Manseau. (2013a) Finding the functional grain: comparing methods
+#' for scaling resistance surfaces. Landscape Ecology 28:1269-1291.
 #'
-#' Galpern, P., M. Manseau. (2013b) Modelling the influence of landscape connectivity on animal distribution: a functional grain approach. Ecography 36:1004-1016.
+#' Galpern, P., M. Manseau. (2013b) Modelling the influence of landscape connectivity
+#' on animal distribution: a functional grain approach. Ecography 36:1004-1016.
 #'
-#' Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis at multiple spatial scales in landscape genetics. Molecular Ecology 21:3996-4009.
+#' Galpern, P., M. Manseau, A. Fall. (2011) Patch-based graphs of landscape connectivity:
+#' a guide to construction, analysis, and application for conservation.
+#' Biological Conservation 144:44-55.
 #'
-#' Galpern, P., M. Manseau, A. Fall. (2011) Patch-based graphs of landscape connectivity: a guide to construction, analysis, and application for conservation. Biological Conservation 144:44-55.
+#' Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis
+#' at multiple spatial scales in landscape genetics. Molecular Ecology 21:3996-4009.
 #'
 #' @author Paul Galpern and Alex Chubaty
 #' @docType methods
@@ -110,8 +115,8 @@ setMethod(
   definition = function(x, whichThresh, coords, doPlot = 0, weight = "meanWeight", ...) {
 
     ## Check whichThresh
-    if ((length(whichThresh) > 1) || (!(whichThresh %in% 1:length(x@th)))) {
-      stop("grainscape:  whichThresh must index a single threshold existing in the GOC object", call. = FALSE)
+    if ((length(whichThresh) > 1) || (!(whichThresh %in% 1:length(x@th)))) { # nolint
+      stop("whichThresh must index a single threshold existing in the GOC object")
     }
 
     ## Check coords
@@ -120,17 +125,18 @@ setMethod(
     }
 
     if (ncol(coords) != 2) {
-      stop("grainscape:  coords must be a SpatialPoints object or a matrix of two columns giving X and Y coordinates", call. = FALSE)
+      stop("coords must be a SpatialPoints object or a matrix of two columns",
+           "giving X and Y coordinates")
     }
 
     if (nrow(coords) > 2) {
-      warning("grainscape:  using only first two sets of coordinates for corridor start and end points", call. = FALSE)
+      warning("using only first two sets of coordinates for corridor start and end points")
       coords <- coords[1:2, ]
     }
 
     ## Check weight
     if (!(weight %in% names(edge_attr(x@th[[1]]$goc)))) {
-      stop("grainscape:  link weight attribute with this name doesn't exist in GOC object", call. = FALSE)
+      stop("link weight attribute with this name doesn't exist in GOC object")
     }
 
     ## GOC Graph
@@ -163,10 +169,12 @@ setMethod(
 
     ## Shortest path
     startEndPolygons <- point(x, coords)$pointPolygon[, whichThresh]
-    startEndPath <- shortest_paths(x@th[[whichThresh]]$goc,
-                                   which(V(x@th[[whichThresh]]$goc)$polygonId == startEndPolygons[1]),
-                                   which(V(x@th[[whichThresh]]$goc)$polygonId == startEndPolygons[2]),
-                                   weights = V(x@th[[whichThresh]]$goc)$meanWeight) %>%
+    startEndPath <- shortest_paths(
+      x@th[[whichThresh]]$goc,
+      which(V(x@th[[whichThresh]]$goc)$polygonId == startEndPolygons[1]),
+      which(V(x@th[[whichThresh]]$goc)$polygonId == startEndPolygons[2]),
+      weights = V(x@th[[whichThresh]]$goc)$meanWeight
+    ) %>%
       `[[`(1) %>%
       `[[`(1) %>%
       as.numeric()
@@ -187,17 +195,17 @@ setMethod(
       weights = edge_attr(x@th[[whichThresh]]$goc, weight)
     )[startEndPath[length(startEndPath)]]
 
-    voronoiBound <- boundaries(grain(x, whichThresh = whichThresh)@voronoi, classes=TRUE)
+    voronoiBound <- boundaries(grain(x, whichThresh = whichThresh)@voronoi, classes = TRUE)
 
     ## Do plot
     if (doPlot == 1) {
-      plot(voronoiBound, col=c("white", "black"))
+      plot(voronoiBound, col = c("white", "black"))
       plot(edgesGOC, add = TRUE, col = "grey60", lwd = 1.5)
       plot(verticesGOC, add = TRUE, pch = 21, col = "grey60", bg = "white", cex = 0.75)
       plot(shortestPathEdges, add = TRUE, col = "black", lwd = 2)
       plot(shortestPathVertices, add = TRUE,  pch = 21, col = "black", bg = "white", cex = 0.75)
     } else if (doPlot == 2) {
-      plot(voronoiBound, col=c("white", "black"))
+      plot(voronoiBound, col = c("white", "black"))
       plot(edgesGOC, add = TRUE, col = "darkgray", lwd = 1.5)
       plot(verticesGOC, add = TRUE, pch = 21, col = "darkgrey", bg = "white", cex = 0.75)
       plot(shortestPathEdges, add = TRUE, col = "black", lwd = 2)

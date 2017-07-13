@@ -49,14 +49,16 @@ Patch-based or lattice GOC modelling can be done with this function.
 \details{
 Grain or scalar analysis of connectivity may be appropriate for a variety of purposes, not
 limited to visualization and improving connectivity estimates for highly-mobile organisms.
-See Galpern et al. (2012), Galpern & Manseau (2013a, 2013b) for applications and review of
-these capabilities.
+See Galpern et al. (2012), Galpern & Manseau (2013a, 2013b) for applications
+and review of these capabilities.
 }
 \note{
 Researchers should consider whether the use of a patch-based GOC or a lattice
 GOC model is appropriate based on the patch-dependency of the organism under study.
-Patch-based models make most sense when animals are restricted to, or dependent on, a resource patch.
-Lattice models can be used as a generalized and functional approach to scaling resistance surfaces.
+Patch-based models make most sense when animals are restricted to, or dependent on,
+a resource patch.
+Lattice models can be used as a generalized and functional approach to scaling
+resistance surfaces.
 
 See \code{\link{MPG}} for warning related to areal measurements.
 }
@@ -86,15 +88,21 @@ tinyPatchGOC <- GOC(tinyPatchMPG, doThresh = c(0, 20, 40), sp = TRUE)
 
 }
 \references{
-Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien. (2007) Spatial graphs: Principles and applications for habitat connectivity. Ecosystems 10:448:461.
+Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien. (2007) Spatial graphs:
+Principles and applications for habitat connectivity. Ecosystems 10:448:461.
 
-Galpern, P., M. Manseau. (2013a) Finding the functional grain: comparing methods for scaling resistance surfaces. Landscape Ecology 28:1269-1291.
+Galpern, P., M. Manseau. (2013a) Finding the functional grain: comparing methods
+for scaling resistance surfaces. Landscape Ecology 28:1269-1291.
 
-Galpern, P., M. Manseau. (2013b) Modelling the influence of landscape connectivity on animal distribution: a functional grain approach. Ecography 36:1004-1016.
+Galpern, P., M. Manseau. (2013b) Modelling the influence of landscape connectivity
+on animal distribution: a functional grain approach. Ecography 36:1004-1016.
 
-Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis at multiple spatial scales in landscape genetics. Molecular Ecology 21:3996-4009.
+Galpern, P., M. Manseau, A. Fall. (2011) Patch-based graphs of landscape connectivity:
+a guide to construction, analysis, and application for conservation.
+Biological Conservation 144:44-55.
 
-#' Galpern, P., M. Manseau, A. Fall. (2011) Patch-based graphs of landscape connectivity: a guide to construction, analysis, and application for conservation. Biological Conservation 144:44-55.
+Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis
+at multiple spatial scales in landscape genetics. Molecular Ecology 21:3996-4009.
 }
 \seealso{
 \code{\link{MPG}}, \code{\link{grain}},

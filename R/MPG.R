@@ -44,15 +44,21 @@
 #' @return A \code{\link[=mpg-class]{mpg}} object.
 #'
 #' @references
-#' Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien. (2007) Spatial graphs: Principles and applications for habitat connectivity. Ecosystems 10:448:461.
+#' Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien. (2007) Spatial graphs:
+#' Principles and applications for habitat connectivity. Ecosystems 10:448:461.
 #'
-#' Galpern, P., M. Manseau. (2013a) Finding the functional grain: comparing methods for scaling resistance surfaces. Landscape Ecology 28:1269-1291.
+#' Galpern, P., M. Manseau. (2013a) Finding the functional grain: comparing methods
+#' for scaling resistance surfaces. Landscape Ecology 28:1269-1291.
 #'
-#' Galpern, P., M. Manseau. (2013b) Modelling the influence of landscape connectivity on animal distribution: a functional grain approach. Ecography 36:1004-1016.
+#' Galpern, P., M. Manseau. (2013b) Modelling the influence of landscape connectivity
+#' on animal distribution: a functional grain approach. Ecography 36:1004-1016.
 #'
-#' Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis at multiple spatial scales in landscape genetics. Molecular Ecology 21:3996-4009.
+#' Galpern, P., M. Manseau, A. Fall. (2011) Patch-based graphs of landscape connectivity:
+#' a guide to construction, analysis, and application for conservation.
+#' Biological Conservation 144:44-55.
 #'
-#' Galpern, P., M. Manseau, A. Fall. (2011) Patch-based graphs of landscape connectivity: a guide to construction, analysis, and application for conservation. Biological Conservation 144:44-55.
+#' Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis
+#' at multiple spatial scales in landscape genetics. Molecular Ecology 21:3996-4009.
 #'
 #' @author Paul Galpern, Sam Doctolero, Alex Chubaty
 #' @docType methods
@@ -93,7 +99,8 @@
 #' tinyPatchMST <- mst(tinyPatchMPG@mpg)
 #' MSTlinks <- edge_attr(tinyPatchMST, "linkId")
 #' plot(tinyPatchMPG@patchId, col = "black", legend = FALSE)
-#' plot((tinyPatchMPG@lcpLinkId * -1) %in% MSTlinks, add = TRUE, legend = FALSE, col = c(NA, "grey"))
+#' plot((tinyPatchMPG@lcpLinkId * -1) %in% MSTlinks, add = TRUE, legend = FALSE,
+#'      col = c(NA, "grey"))
 #'
 #' ## Additional graph extraction scenarios
 #' ## Produce a lattice MPG where focal points are spaced 10 cells apart
@@ -133,12 +140,12 @@ setMethod(
   ## Check that patch raster is binary, first coercing NAs to zeroes
   rasPatch[is.na(rasPatch)] <- 0
   if (!all(unique(rasPatch[]) %in% c(FALSE, TRUE))) {
-    stop("grainscape:  patch must be a binary raster (=1 for patches; =0 for non-patches).", call. = FALSE)
+    stop("patch must be a binary raster (=1 for patches; =0 for non-patches).")
   }
 
   ## Check that cost raster is not equal to NA at patches
   if (sum(is.na(rasCost[rasPatch == 1]) > 0)) {
-    stop("grainscape:  cost raster must not contain missing values at patch cells", call. = FALSE)
+    stop("cost raster must not contain missing values at patch cells.")
   }
 
   ## Call the habitat connectivity engine
@@ -159,7 +166,7 @@ setMethod(
   mpgPlot <- hce@patchLinks
 
   ## Get additional patch information
-  uniquePatches <- voronoi[voronoi > 0] %>% na.omit() %>% unique() %>% sort()
+  uniquePatches <- voronoi[voronoi > 0] %>% na.omit() %>% unique() %>% sort() # nolint
 
   ## Patch edge
   patchEdge <- patchId
@@ -180,8 +187,8 @@ setMethod(
   r[r == 0] <- NA
   rasX[] <- cellXY[, 1]
   rasY[] <- cellXY[, 2]
-  centroids <- cbind(zonal(rasX, r, fun = 'mean', na.rm = TRUE),
-                     zonal(rasY, r, fun = 'mean', na.rm = TRUE)[, 2]) %>%
+  centroids <- cbind(zonal(rasX, r, fun = "mean", na.rm = TRUE),
+                     zonal(rasY, r, fun = "mean", na.rm = TRUE)[, 2]) %>%
     as.data.frame()
   colnames(centroids) <- c("zone", "meanX", "meanY")
 
@@ -196,9 +203,9 @@ setMethod(
                          startPerimY = yFromRow(cost, hce@linkData$StartRow),
                          endPerimX = xFromCol(cost, hce@linkData$EndColumn),
                          endPerimY = yFromRow(cost, hce@linkData$EndRow))
-  mpg.igraph <- graph_from_data_frame(toGraphE, directed = FALSE, vertices = toGraphV)
+  mpgIgraph <- graph_from_data_frame(toGraphE, directed = FALSE, vertices = toGraphV)
 
-  mpg <- new('mpg', mpg = mpg.igraph, patchId = patchId, voronoi = voronoi,
+  mpg <- new("mpg", mpg = mpgIgraph, patchId = patchId, voronoi = voronoi,
              lcpPerimWeight = lcpPerimWeight, lcpLinkId = lcpLinkId, mpgPlot = mpgPlot)
 
   return(mpg)
@@ -214,9 +221,13 @@ setMethod(
     focalPointDistFreq <- patch
     patch <- cost
     patch[] <- 0
-    patch[cellFromRowColCombine(patch,
-                                seq(1, nrow(patch), by = focalPointDistFreq) + focalPointDistFreq/2,
-                                seq(1, ncol(patch), by = focalPointDistFreq) + focalPointDistFreq/2)] <- 1
+
+    ids <- cellFromRowColCombine(
+      patch,
+      seq(1, nrow(patch), by = focalPointDistFreq) + focalPointDistFreq / 2,
+      seq(1, ncol(patch), by = focalPointDistFreq) + focalPointDistFreq / 2
+    )
+    patch[ids] <- 1
     ## Remove lattice points that fall on NA cost cells
     patch[is.na(cost)] <- 0
 
