@@ -118,6 +118,16 @@ setMethod(
 #' @rdname graphdf
 setMethod(
   "graphdf",
+  signature = "grain",
+  definition = function(x, ...) {
+    theseGraphs <- list(x@th)
+    graphdf(theseGraphs)
+  })
+
+#' @export
+#' @rdname graphdf
+setMethod(
+  "graphdf",
   signature = "mpg",
   definition = function(x, ...) {
     theseGraphs <- vector("list", 1)

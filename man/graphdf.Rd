@@ -5,6 +5,7 @@
 \alias{graphdf}
 \alias{graphdf,list-method}
 \alias{graphdf,goc-method}
+\alias{graphdf,grain-method}
 \alias{graphdf,mpg-method}
 \alias{graphdf,igraph-method}
 \title{Produce a \code{data.frame} containing the structure and associated attributes}
@@ -14,6 +15,8 @@ graphdf(x, ...)
 \S4method{graphdf}{list}(x, ...)
 
 \S4method{graphdf}{goc}(x, ...)
+
+\S4method{graphdf}{grain}(x, ...)
 
 \S4method{graphdf}{mpg}(x, ...)
 
