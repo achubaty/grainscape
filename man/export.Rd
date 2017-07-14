@@ -5,6 +5,7 @@
 \alias{export}
 \alias{export,mpg-method}
 \alias{export,grain-method}
+\alias{export,goc-method}
 \title{Export spatial data from MPG and GOC models}
 \usage{
 export(x, dirname = NULL, path = ".", rasterFormat = "GTiff",
@@ -15,6 +16,10 @@ export(x, dirname = NULL, path = ".", rasterFormat = "GTiff",
   vorBound = FALSE, ...)
 
 \S4method{export}{grain}(x, dirname = NULL, path = ".",
+  rasterFormat = "GTiff", overwrite = FALSE, R = FALSE,
+  vorBound = FALSE, ...)
+
+\S4method{export}{goc}(x, dirname = NULL, path = ".",
   rasterFormat = "GTiff", overwrite = FALSE, R = FALSE,
   vorBound = FALSE, ...)
 }
@@ -35,14 +40,16 @@ native \code{raster} package format.}
 \item{overwrite}{If directory already exists will overwrite existing files inside.
 Defaults to \code{FALSE}.}
 
-\item{R}{If \code{TRUE}, return the spatial objects that would be written to files.  Do not
-write these files and ignore \code{dirname, path, rasterFormat, overwrite}
-parameters.  This is useful for visualization using R plotting functions, or
-spatial analysis within R. Defaults to \code{FALSE}}
+\item{R}{If \code{TRUE}, return the spatial objects that would be written to files.
+Do not write these files and ignore \code{dirname}, \code{path},
+\code{rasterFormat}, \code{overwrite} parameters.
+This is useful for visualization using R plotting functions,
+or spatial analysis within R. Defaults to \code{FALSE}}
 
-\item{vorBound}{Specify whether to create a raster with the boundaries of the Voronoi
-polygons \code{=1} and the remainder \code{=NA}.  This may be useful
-for visualizing relationships among polygons in a grain of connectivity.
+\item{vorBound}{Specify whether to create a raster with the boundaries of
+the Voronoi polygons \code{=1} and the remainder \code{=NA}.
+This may be useful for visualizing relationships among
+polygons in a grain of connectivity.
 This can add time to the export on very large rasters.
 Defaults to \code{FALSE}.}
 
@@ -51,27 +58,26 @@ Defaults to \code{FALSE}.}
 \value{
 Invisibly returns the path to the folder created.
 
-  Side effect of exporting files representing raster and vector spatial data
-  in the object.
+Side effect of exporting files representing raster and vector spatial data
+in the object.
 
-  Please note that for vector data export the attribute name is limited
-  to 8 characters in shape files.  See the tables below for the abbreviations
-  used and their meaning.
+Please note that for vector data export the attribute name is limited
+to 8 characters in shape files.  See the tables below for the abbreviations
+used and their meaning.
 
-  \strong{Exported from \code{mpg} objects:}
+\strong{Exported from \code{mpg} objects:}
 
-  \code{nodes, linksCentroid, linksPerim} are shape files giving the
-  locations of the patch centroids, links among centroids, and links
-  among perimeters of patches respectively.  \code{patchId, voronoi} are
-  rasters giving the patch identifier of the patch, or of the patch that
-  the Voronoi polygon refers to.  \code{lcpPerimWeight, lcpLinkId} give
-  the weight in cost surface units of the shortest paths between perimeters,
-  and the identifiers of those links respectively.  \code{vorBound} gives
-  the boundaries of the Voronoi polygons (if specified).
+\code{nodes}, \code{linksCentroid}, \code{linksPerim} are shape files giving
+the locations of the patch centroids, links among centroids, and links
+among perimeters of patches respectively.  \code{patchId, voronoi} are
+rasters giving the patch identifier of the patch, or of the patch that
+the Voronoi polygon refers to.  \code{lcpPerimWeight, lcpLinkId} give
+the weight in cost surface units of the shortest paths between perimeters,
+and the identifiers of those links respectively.  \code{vorBound} gives
+the boundaries of the Voronoi polygons (if specified).
 
-  Description of node (vertex) and link (edge) weights in \code{mpg}
-  objects  and their corresponding attribute names in the
-  shape files created.
+Description of node (vertex) and link (edge) weights in \code{mpg} objects
+and their corresponding attribute names in the shape files created.
 
 \tabular{llll}{
   \strong{type} \tab \strong{MPG name} \tab \strong{SHP name} \tab \strong{Description}\cr
@@ -91,16 +97,15 @@ Invisibly returns the path to the folder created.
   link \tab endPerimY \tab endPerY \tab Coordinate of link endpoint on second patch (Y)\cr
 }
 
-  \strong{Exported from \code{grain} objects:}
+\strong{Exported from \code{grain} objects:}
 
-  \code{nodes, linksCentroid} are shape files giving the locations of the
-  Voronoi polygon centroids and links among them respectively. \code{voronoi}
-  are rasters gives the polygon identifier of each cluster of patches.
-  \code{vorBound} gives the boundaries of the Voronoi polygons (if specified).
+\code{nodes, linksCentroid} are shape files giving the locations of the
+Voronoi polygon centroids and links among them respectively. \code{voronoi}
+are rasters gives the polygon identifier of each cluster of patches.
+\code{vorBound} gives the boundaries of the Voronoi polygons (if specified).
 
-  Description of node (vertex) and link (edge) weights in \code{grain}
-  objects  and their corresponding attribute names in the
-  shape files created.
+Description of node (vertex) and link (edge) weights in \code{grain}
+objects  and their corresponding attribute names in the shape files created.
 
 \tabular{llll}{
   \strong{type} \tab \strong{GOC name} \tab \strong{SHP name} \tab \strong{Description}\cr
@@ -157,7 +162,8 @@ tinyPatchGOC <- GOC(tinyPatchMPG, nThresh = 5)
 export(tinyPatchMPG)
 
 ## Export raster and vectors of a grain to a specified directory
-export(grain(tinyPatchGOC, 2), dirname = 'tiny_goc_thresh2')
+tmpDir <- file.path(tempdir(), "tiny_goc_thresh2")
+export(grain(tinyPatchGOC, 2), dirname = tmpDir)
 }
 
 }

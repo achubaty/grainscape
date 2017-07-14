@@ -64,7 +64,8 @@
 #' @docType methods
 #' @export
 #' @importFrom raster boundaries cellFromRowCol cellFromRowColCombine compareRaster
-#' @importFrom raster getValues mask projection raster res writeRaster xyFromCell
+#' @importFrom raster getValues mask projection raster res writeRaster
+#' @importFrom raster xFromCol xyFromCell yFromRow
 #' @importFrom sp coordinates
 #' @importFrom stats na.omit
 #' @importFrom utils read.table
@@ -123,11 +124,11 @@ setMethod(
     stop("patch and cost rasters must be identical in extent, projection, origin and resolution.")
   }
 
-  if ((!is.na(projection(cost))) && (grepl("longlat", projection(cost)))) {
+  if (!is.na(projection(cost)) && grepl("longlat", projection(cost))) {
     warning("input rasters in geographic coordinates (i.e. '+proj=longlat') are unlikely",
             " to produce reliable estimates of area or distance.",
             " For accurate results, project rasters with an appropriate coordinate",
-            " system for the location and extent of interest.", immediate.=TRUE)
+            " system for the location and extent of interest.", immediate. = TRUE)
   }
 
   ## use `cost` raster as template for `rasCost` and `rasPatch`
@@ -175,8 +176,8 @@ setMethod(
   patchEdge <- mask(patchId, patchEdge)
 
   ## Patch area and core area
-  patchArea <- freq(patchId, useNA = "no")[,2] * res(cost)[1] * res(cost)[2]
-  patchEdgeArea <- freq(patchEdge, useNA = "no")[,2] * res(cost)[1] * res(cost)[2]
+  patchArea <- freq(patchId, useNA = "no")[, 2] * res(cost)[1] * res(cost)[2]
+  patchEdgeArea <- freq(patchEdge, useNA = "no")[, 2] * res(cost)[1] * res(cost)[2]
   patch <- data.frame(name = uniquePatches, patchId = uniquePatches,
                       patchArea = patchArea, patchEdgeArea = patchEdgeArea,
                       coreArea = patchArea - patchEdgeArea)

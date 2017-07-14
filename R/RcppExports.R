@@ -22,6 +22,5 @@
 #' @keywords internal
 #' @rdname habConnRcpp
 .habConnRcpp <- function(cost, patches, ncol, nrow) {
-    .Call(grainscape_habConnRcpp, cost, patches, ncol, nrow)
+    .Call(`_grainscape_habConnRcpp`, cost, patches, ncol, nrow)
 }
-

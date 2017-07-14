@@ -298,10 +298,10 @@ setMethod(
           rasX[] <- cellXY[, 1]
           rasY[] <- cellXY[, 2]
 
-          centroids <- cbind(zonal(rasX, gocRaster, fun = 'mean'),
-                             zonal(rasY, gocRaster, fun = 'mean')[, 2])
-          centroids <- centroids[centroids[,1] %in% as.integer(uniquePolygons),]
-          row.names(centroids) <- centroids[,1]
+          centroids <- cbind(zonal(rasX, gocRaster, fun = "mean"),
+                             zonal(rasY, gocRaster, fun = "mean")[, 2])
+          centroids <- centroids[centroids[, 1] %in% as.integer(uniquePolygons), ]
+          row.names(centroids) <- centroids[, 1]
           centroids <- centroids[uniquePolygons, 2:3]
 
 
@@ -310,7 +310,7 @@ setMethod(
 
           ## Find areas of each polygon and add as a vertex attribute
           polygonArea <- freq(gocRaster)
-          row.names(polygonArea) <- polygonArea[,1]
+          row.names(polygonArea) <- polygonArea[, 1]
           polygonArea <- polygonArea[uniquePolygons, 2]
 
           V(componentGraph)$polygonArea <- polygonArea
@@ -321,12 +321,25 @@ setMethod(
                                    V(baseGraph)$patchArea,
                                    V(baseGraph)$patchEdgeArea,
                                    V(baseGraph)$coreArea)
-          V(componentGraph)$totalPatchArea <- as.numeric(unlist(sapply(sourcePatchId, function(z)
-            sum(patchAreaLookup[patchAreaLookup[, 1] %in% as.numeric(strsplit(z, ", ")[[1]]), 2]))))
-          V(componentGraph)$totalPatchEdgeArea <- as.numeric(unlist(sapply(sourcePatchId, function(z)
-            sum(patchAreaLookup[patchAreaLookup[, 1] %in% as.numeric(strsplit(z, ", ")[[1]]), 3]))))
-          V(componentGraph)$totalCoreArea <- as.numeric(unlist(sapply(sourcePatchId, function(z)
-            sum(patchAreaLookup[patchAreaLookup[, 1] %in% as.numeric(strsplit(z, ", ")[[1]]), 4]))))
+
+          V(componentGraph)$totalPatchArea <- sapply(sourcePatchId, function(z) {
+            sum(patchAreaLookup[patchAreaLookup[, 1] %in% as.numeric(strsplit(z, ", ")[[1]]), 2])
+          }) %>%
+            unlist() %>%
+            as.numeric()
+
+          V(componentGraph)$totalPatchEdgeArea <- sapply(sourcePatchId, function(z) {
+            sum(patchAreaLookup[patchAreaLookup[, 1] %in% as.numeric(strsplit(z, ", ")[[1]]), 3])
+          }) %>%
+            unlist() %>%
+            as.numeric()
+
+          V(componentGraph)$totalCoreArea <- sapply(sourcePatchId, function(z) {
+            sum(patchAreaLookup[patchAreaLookup[, 1] %in% as.numeric(strsplit(z, ", ")[[1]]), 4])
+          }) %>%
+            unlist() %>%
+            as.numeric()
+
           V(componentGraph)$patchId <- sourcePatchId
 
           ## Find distances between each polygon centroid
@@ -334,7 +347,9 @@ setMethod(
             x1 <- which(uniquePolygons == z[1])
             x2 <- which(uniquePolygons == z[2])
 
-            return(sqrt((centroids[x2, 1] - centroids[x1, 1])^2 + (centroids[x2, 2] - centroids[x1, 2])^2))
+            out <- sqrt((centroids[x2, 1] - centroids[x1, 1]) ^ 2 +
+                          (centroids[x2, 2] - centroids[x1, 2]) ^ 2)
+            return(out)
           })
           E(componentGraph)$eucCentroidWeight <- eucCentroidWeight
 
