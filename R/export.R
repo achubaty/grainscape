@@ -251,7 +251,7 @@ setMethod(
 
     ## Create voronoi boundaries
     if (vorBound) {
-      cat("Extracting voronoi boundaries\n")
+      message("Extracting voronoi boundaries...")
       vorB <- boundaries(x@voronoi, class = TRUE, asNA = TRUE)
     } else {
       vorB <- "Not created. Use vorBound=TRUE."
@@ -275,7 +275,7 @@ setMethod(
       .wRas(x@lcpLinkId, "lcpLinkId", dirpath, rasterFormat, overwrite)
       if (vorBound) .wRas(vorB, "vorBound", dirpath, rasterFormat, overwrite)
 
-      cat("Exported to:", normalizePath(dirpath), "\n")
+      message("Exported to:", normalizePath(dirpath))
       invisible(normalizePath(dirpath))
     }
     else {
@@ -329,7 +329,7 @@ setMethod(
 
     ## Create voronoi boundaries
     if (vorBound) {
-      cat("Extracting voronoi boundaries\n")
+      message("Extracting voronoi boundaries...")
       vorB <- boundaries(x@voronoi, class = TRUE, asNA = TRUE)
     }
     else {
@@ -350,7 +350,7 @@ setMethod(
       .wRas(x@voronoi, "voronoi", dirpath, rasterFormat, overwrite)
       if (vorBound) .wRas(vorB, "vorBound", dirpath, rasterFormat, overwrite)
 
-      cat("Exported to:", normalizePath(dirpath), "\n")
+      message("Exported to:", normalizePath(dirpath))
       invisible(normalizePath(dirpath))
     } else {
       returnSpatial <- list(
