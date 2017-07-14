@@ -4,13 +4,18 @@
 #'
 #' @note the \code{sp} argument has also been deprecated from all functions.
 #'
-#' @export gsGOC
 #' @inheritParams GOC
+#'
 #' @param mpg  A \code{mpg} object.
-#' @param sp   Logical.  If \code{TRUE} the \code{rgeos} package is used to create
+#'
+#' @param sp   Logical. If \code{TRUE} the \code{rgeos} package is used to create
 #'            a vector of class \code{\link{SpatialPolygonsDataFrame}} describing
 #'            the finest grain of connectivity.
 #'
+#' @param doPlot  Logical. If \code{TRUE} plots a vector visualization of the
+#'                corridor at the given scale
+#'
+#' @export gsGOC
 #' @rdname grainscape-deprecated
 #'
 gsGOC <- function(mpg, nThresh = NULL, doThresh = NULL,

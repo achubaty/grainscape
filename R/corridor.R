@@ -5,8 +5,6 @@
 #' (or shortest path) between two points using one of the tessellations
 #' (i.e., scales) in these models.
 #'
-#' @note This is an experimental function.
-#'
 #' @param x       A \code{goc} object created by \code{\link{GOC}}.
 #'
 #' @param whichThresh  Integer giving the index of the threshold to visualize.
@@ -14,36 +12,12 @@
 #' @param coords  A two column matrix or a \code{\link{SpatialPoints}} object
 #'                giving coordinates at the end points of the corridor.
 #'
-#' @param doPlot  Logical.  If \code{TRUE} plots a vector visualization of the
-#'                corridor at the given scale.
-#'                For full control, manually produce plots using the outputs of this function.
-#'
 #' @param weight  The GOC graph link weight to use in calculating the distance.
 #'                Please see details in \code{\link{distance}}.
 #'
 #' @param ...     Additional arguments (not used).
 #'
-#' @return A list object:
-#'
-#' \describe{
-#'   \item{\code{voronoi}}{a raster representation of the boundaries of the
-#'   voronoi polygons (\code{RasterLayer})}
-#'
-#'   \item{\code{linksSP}}{vector representation of links in the grains of
-#'   connectivity graph (\code{SpatialLinesDataFrame})}
-#'
-#'   \item{\code{nodesSP}}{vector representation of the nodes in the grains of
-#'   connectivity graph (\code{SpatialPoints})}
-#'
-#'   \item{\code{shortestLinksSP}}{vector representation of the links in the
-#'   shortest path between coordinates (\code{SpatialLines})}
-#'
-#'   \item{\code{shortestNodesSP}}{vector representation of the nodes in the
-#'   shortest path between coordinates (\code{SpatialPoints})}
-#'
-#'   \item{\code{corridorLength}}{gives the length of the shortest path between
-#'   coordinates in accumulated resistance units}
-#' }
+#' @return An object of class \code{\linkS4class{corridor}}.
 #'
 #' @references
 #' Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien. (2007) Spatial graphs:
@@ -89,17 +63,17 @@
 #'
 #' ## Quick visualization of a corridor
 #' corridorStartEnd <- rbind(c(10,10), c(90,90))
-#' corridor(tinyPatchGOC, whichThresh = 3, coords = corridorStartEnd, doPlot = TRUE)
+#' tinyPatchCorridor <- corridor(tinyPatchGOC, whichThresh = 3, coords = corridorStartEnd)
+#' plot(tinyPatchCorridor)
 #'
 #' ## More control over a corridor visualization
-#' tinyPatchCorridor <- corridor(tinyPatchGOC, whichThresh = 3, coords = corridorStartEnd)
-#' plot(tinyPatchCorridor$voronoi, col = "lightgrey", border = "white", lwd = 2)
-#' plot(tinyPatchCorridor$linksSP, col = "darkred", lty = "dashed", add = TRUE)
-#' plot(tinyPatchCorridor$nodesSP, col = "darkred", pch = 21, bg="white", add = TRUE)
-#' plot(tinyPatchCorridor$shortestLinksSP, col = "darkred", lty = "solid", lwd = 2, add = TRUE)
-#' plot(tinyPatchCorridor$shortestNodesSP, col = "darkred", pch = 21, bg = "darkred", add = TRUE)
+#' plot(tinyPatchCorridor@voronoi, col = "lightgrey", lwd = 2)
+#' plot(tinyPatchCorridor@linksSP, col = "darkred", lty = "dashed", add = TRUE)
+#' plot(tinyPatchCorridor@nodesSP, col = "darkred", pch = 21, bg="white", add = TRUE)
+#' plot(tinyPatchCorridor@shortestLinksSP, col = "darkred", lty = "solid", lwd = 2, add = TRUE)
+#' plot(tinyPatchCorridor@shortestNodesSP, col = "darkred", pch = 21, bg = "darkred", add = TRUE)
 #' mtext(paste("Corridor shortest path length:",
-#'             round(tinyPatchCorridor$corridorLength, 2),
+#'             round(tinyPatchCorridor@corridorLength, 2),
 #'             "resistance units"), side = 1)
 #' }
 #'
@@ -112,7 +86,11 @@ setGeneric("corridor", function(x, ...) {
 setMethod(
   "corridor",
   signature = "goc",
-  definition = function(x, whichThresh, coords, doPlot = 0, weight = "meanWeight", ...) {
+  definition = function(x, whichThresh, coords, weight = "meanWeight", ...) {
+    dots <- list(...)
+    if (!is.null(dots$doPlot)) {
+      warning("Argument 'doPlot' is deprecated and will be ignored.")
+    }
 
     ## Check whichThresh
     if ((length(whichThresh) > 1) || (!(whichThresh %in% 1:length(x@th)))) { # nolint
@@ -197,28 +175,13 @@ setMethod(
 
     voronoiBound <- boundaries(grain(x, whichThresh = whichThresh)@voronoi, classes = TRUE)
 
-    ## Do plot
-    if (doPlot == 1) {
-      plot(voronoiBound, col = c("white", "black"))
-      plot(edgesGOC, add = TRUE, col = "grey60", lwd = 1.5)
-      plot(verticesGOC, add = TRUE, pch = 21, col = "grey60", bg = "white", cex = 0.75)
-      plot(shortestPathEdges, add = TRUE, col = "black", lwd = 2)
-      plot(shortestPathVertices, add = TRUE,  pch = 21, col = "black", bg = "white", cex = 0.75)
-    } else if (doPlot == 2) {
-      plot(voronoiBound, col = c("white", "black"))
-      plot(edgesGOC, add = TRUE, col = "darkgray", lwd = 1.5)
-      plot(verticesGOC, add = TRUE, pch = 21, col = "darkgrey", bg = "white", cex = 0.75)
-      plot(shortestPathEdges, add = TRUE, col = "black", lwd = 2)
-      plot(shortestPathVertices, add = TRUE,  pch = 21, col = "black", bg = "white", cex = 0.75)
-    }
+    result <- new("corridor",
+                  voronoi = voronoiBound,
+                  linksSP = edgesGOC,
+                  nodesSP = verticesGOC,
+                  shortestLinksSP = shortestPathEdges,
+                  shortestNodesSP = shortestPathVertices,
+                  corridorLength = pathDist)
 
-    result <- list(
-      voronoi = voronoiBound,
-      linksSP = edgesGOC,
-      nodesSP = verticesGOC,
-      shortestLinksSP = shortestPathEdges,
-      shortestNodesSP = shortestPathVertices,
-      corridorLength = pathDist
-    )
     return(result)
 })
