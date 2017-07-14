@@ -16,18 +16,16 @@ theme_grainscape(base_size = 9, base_family = "")
 A theme suitable for use with \code{\link{ggplot}}
 }
 \description{
-This is a \code{\link{ggplot2}} theme designed for grainscape.  It is based on the
+A \code{\link{ggplot2}} theme designed for grainscape based on the
 \code{\link[ggthemes]{theme_map}} theme, with several modifications.
 }
 \examples{
 \dontrun{
-library(raster)
-
 ## Load raster landscape
-tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape"))
+tiny <- raster::raster(system.file("extdata/tiny.asc", package = "grainscape"))
 
 ## Create a resistance surface from a raster using an is-becomes reclassification
-tinyCost <- reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
+tinyCost <- raster::reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
 
 ## Produce a patch-based MPG where patches are resistance features=1
 tinyPatchMPG <- MPG(cost = tinyCost, patch = tinyCost == 1)
@@ -36,8 +34,9 @@ tinyPatchMPG <- MPG(cost = tinyCost, patch = tinyCost == 1)
 tinyPatchGOC <- GOC(tinyPatchMPG, nThresh = 5)
 
 ## Plot the patches in a minimum planar graph
-ggplot() + geom_raster(ggGSPrep(tinyPatchMPG, "patchId"),
-    aes(x = x, y = y, fill = value)) + theme_grainscape()
+ggplot() +
+  geom_raster(ggGSPrep(tinyPatchMPG, "patchId"), aes(x = x, y = y, fill = value)) +
+  theme_grainscape()
 }
 
 }

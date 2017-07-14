@@ -9,7 +9,7 @@ Description: Given a landscape resistance surface, creates grains of connectivit
     (https://r-forge.r-project.org/projects/grainscape/).
 URL: https://github.com/achubaty/grainscape
 Version: 0.3.0.9000
-Date: 2017-07-13
+Date: 2017-07-14
 Authors@R: c(
     person("Paul", "Galpern", email = "pgalpern@gmail.com", role = c("aut", "cph")),
     person("Sam", "Doctolero", email = "sam.doctolero@gmail.com", role = "aut"),
@@ -17,6 +17,7 @@ Authors@R: c(
     )
 License: GPL (>= 2)
 Imports:
+    ggplot2,
     graphics,
     igraph,
     methods,
@@ -27,6 +28,7 @@ Imports:
     utils
 LinkingTo: Rcpp
 Suggests:
+    ggthemes,
     grDevices,
     knitr,
     parallel,

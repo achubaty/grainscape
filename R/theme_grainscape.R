@@ -1,7 +1,7 @@
 #' A ggplot theme for grainscape
 #'
 #' @description
-#' This is a \code{\link{ggplot2}} theme designed for grainscape.  It is based on the
+#' A \code{\link{ggplot2}} theme designed for grainscape based on the
 #' \code{\link[ggthemes]{theme_map}} theme, with several modifications.
 #'
 #' @param base_size     Base font size
@@ -10,23 +10,20 @@
 #'
 #' @return A theme suitable for use with \code{\link{ggplot}}
 #'
-#'
 #' @author Paul Galpern and Alex Chubaty
 #' @docType methods
 #' @export
-#' @importFrom ggplot2 theme theme_bw
+#' @importFrom ggplot2 %+replace% element_blank theme theme_bw unit
 #' @rdname theme_grainscape
 #' @seealso \code{\link{ggGS}}, \code{\link{plot}}, \code{\link[ggthemes]{theme_map}}
 #'
 #' @examples
 #' \dontrun{
-#' library(raster)
-#'
 #' ## Load raster landscape
-#' tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape"))
+#' tiny <- raster::raster(system.file("extdata/tiny.asc", package = "grainscape"))
 #'
 #' ## Create a resistance surface from a raster using an is-becomes reclassification
-#' tinyCost <- reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
+#' tinyCost <- raster::reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
 #'
 #' ## Produce a patch-based MPG where patches are resistance features=1
 #' tinyPatchMPG <- MPG(cost = tinyCost, patch = tinyCost == 1)
@@ -35,14 +32,12 @@
 #' tinyPatchGOC <- GOC(tinyPatchMPG, nThresh = 5)
 #'
 #' ## Plot the patches in a minimum planar graph
-#' ggplot() + geom_raster(ggGSPrep(tinyPatchMPG, "patchId"),
-#'     aes(x = x, y = y, fill = value)) + theme_grainscape()
+#' ggplot() +
+#'   geom_raster(ggGSPrep(tinyPatchMPG, "patchId"), aes(x = x, y = y, fill = value)) +
+#'   theme_grainscape()
 #' }
 #'
-#' @export
-#' @rdname theme_grainscape
-theme_grainscape <- function(base_size = 9, base_family = "")
-{
+theme_grainscape <- function(base_size = 9, base_family = "") {
   theme_bw(base_size = base_size, base_family = base_family) %+replace%
     theme(axis.line = element_blank(), axis.text = element_blank(),
           axis.ticks = element_blank(), axis.title = element_blank(),

@@ -33,10 +33,9 @@ is supplied.}
 \item{...}{Additional arguments (not used).}
 }
 \value{
-A \code{data.frame} suitable for plotting with \code{\link{ggplot}}
+A \code{data.frame} suitable for plotting with \code{\link{ggplot}}.
 
-Where \code{type} is a raster the \code{data.frame} will have the following
-columns:
+Where \code{type} is a raster the \code{data.frame} will have the following columns:
 
 \describe{
   \item{\code{value}}{the value of the raster cell}
@@ -45,8 +44,7 @@ columns:
   \item{\code{y}}{the y coordinate of the centre of the raster cell}
 }
 
-Where \code{type = 'nodes'} the \code{data.frame} will have
-the following columns:
+Where \code{type = 'nodes'} the \code{data.frame} will have the following columns:
 
 \describe{
   \item{\code{x}}{the x coordinate of the node}
@@ -56,8 +54,7 @@ the following columns:
   \item{\code{...}}{other attributes associated with the network nodes}
 }
 
-Where \code{type = 'links'} the \code{data.frame} will have
-the following columns:
+Where \code{type = 'links'} the \code{data.frame} will have the following columns:
 
 \describe{
   \item{\code{x1}}{the x coordinate of the first node}
@@ -81,23 +78,23 @@ This is an informal \code{fortify}-type method that prepares either
 
  If a \code{RasterLayer} is supplied \code{type} is optional.
 
- For \code{mpg} \code{type} options are \code{'node'} or \code{'links'}.  This
- prepares the nodes and links of the minimum planar graph network for
- plotting,  Also \code{'patchId'}, \code{'voronoi'}, \code{'lcpPerimWeight'},
- \code{'lcpLinkId'}, \code{'mpgPlot'} will prepare rasters for plotting.
+ For \code{mpg} \code{type} options are \code{"node"} or \code{"links"}.
+ This prepares the nodes and links of the minimum planar graph network for
+ plotting,  Also \code{"patchId"}, \code{"voronoi"}, \code{"lcpPerimWeight"},
+ \code{"lcpLinkId"}, \code{"mpgPlot"} will prepare rasters for plotting.
 
- For \code{grain} objects \code{type}  options are \code{'nodes'} or\code{'links'}
+ For \code{grain} objects \code{type}  options are \code{"nodes"} or\code{"links"}
  to prepare the nodes and links of the grains of connectivity network  for
- plotting.  Also \code{'voronoi'}  will
- prepare the grains of connectivity Voronoi polygons raster for plotting.
+ plotting.  Also \code{"voronoi"} will prepare the grains of connectivity
+ Voronoi polygons raster for plotting.
 
- For either \code{mpg} or \code{grain} objects \code{type = 'vorBound'}
+ For either \code{mpg} or \code{grain} objects \code{type = "vorBound"}
  will identify the boundaries of the Voronoi polygons for plotting.
  This is potentially time consuming for large rasters.
 }
 \examples{
 \dontrun{
-library(raster)
+library(ggplot2)
 
 ## Load raster landscape
 tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape"))
@@ -113,34 +110,34 @@ tinyPatchGOC <- GOC(tinyPatchMPG, nThresh = 5)
 
 ## Plot the patches in a minimum planar graph
 theme_set(theme_grainscape())
-ggplot() + geom_raster(data = ggGS(tinyPatchMPG, "patchId"),
-   aes(x = x, y = y, fill = value))
+ggplot() +
+  geom_raster(data = ggGS(tinyPatchMPG, "patchId"), aes(x = x, y = y, fill = value))
 
 ## Plot the grain polygons in a grain of connectivity
-ggplot() + geom_raster(data = ggGS(grain(tinyPatchGOC, 3), "voronoi"),
-  aes(x = x, y = y, fill = value))
+ggplot() +
+  geom_raster(data = ggGS(grain(tinyPatchGOC, 3), "voronoi"),
+              aes(x = x, y = y, fill = value))
 
 ## Plot the grain polygon boundaries
-ggplot() + geom_raster(data = ggGS(grain(tinyPatchGOC, 3), "vorBound"),
-  aes(x = x, y = y, fill = value))
+ggplot() +
+  geom_raster(data = ggGS(grain(tinyPatchGOC, 3), "vorBound"),
+              aes(x = x, y = y, fill = value))
 
 ## Plot the nodes and links of a minimum planar graph
 ggplot() +
-  geom_point(data = ggGS(tinyPatchMPG, "nodes"),
-    aes(x = x, y = y)) +
+  geom_point(data = ggGS(tinyPatchMPG, "nodes"), aes(x = x, y = y)) +
   geom_segment(data = ggGS(tinyPatchMPG, "links"),
-    aes(x = x1, y = y1, xend = x2, yend = y2))
+               aes(x = x1, y = y1, xend = x2, yend = y2))
 
 ## Plot the nodes and links of a grains of connectivity network
 ## superimposed over the grain polygons
 focalGrain <- grain(tinyPatchGOC, 3)
 ggplot() +
   geom_raster(data = ggGS(focalGrain, "vorBound"),
-    aes(x = x, y = y, fill = value)) +
-  geom_point(data = ggGS(focalGrain, "nodes"),
-    aes(x = x, y = y)) +
+              aes(x = x, y = y, fill = value)) +
+  geom_point(data = ggGS(focalGrain, "nodes"), aes(x = x, y = y)) +
   geom_segment(data = ggGS(focalGrain, "links"),
-    aes(x = x1, y = y1, xend = x2, yend = y2))
+               aes(x = x1, y = y1, xend = x2, yend = y2))
 }
 }
 \seealso{

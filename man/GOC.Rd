@@ -76,7 +76,7 @@ tinyPatchMPG <- MPG(cost = tinyCost, patch = (tinyCost == 1))
 tinyPatchGOC <- GOC(tinyPatchMPG, nThresh = 5)
 
 ## Examine the properties of the GOC graph of grain 3 of 5
-graphdf(grain(tinyPatchGOC, nThresh = 3))
+#graphdf(grain(tinyPatchGOC, nThresh = 3))
 
 ## Extract grains of connectivity
 ## representation of the finest grain and three others
