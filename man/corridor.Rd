@@ -31,9 +31,6 @@ Given a series of GOC models built at different scales, visualize the corridor
 (or shortest path) between two points using one of the tessellations
 (i.e., scales) in these models.
 }
-\note{
-This is an experimental function.
-}
 \examples{
 \dontrun{
 library(raster)

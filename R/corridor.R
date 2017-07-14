@@ -5,8 +5,6 @@
 #' (or shortest path) between two points using one of the tessellations
 #' (i.e., scales) in these models.
 #'
-#' @note This is an experimental function.
-#'
 #' @param x       A \code{goc} object created by \code{\link{GOC}}.
 #'
 #' @param whichThresh  Integer giving the index of the threshold to visualize.
