@@ -2,10 +2,10 @@
 #' @keywords internal
 .createDir  <- function(xType, dirname, path, overwrite) {
   if (is.null(dirname)) {
-    dirname <- paste0(xType, "_", format(Sys.time(), "%d%h%y%_%H%M%S"))
+    dirname <- paste0(xType, "_", format(Sys.time(), "%Y%m%d_%H%M%S"))
   }
 
-  newdir <- paste0(gsub("\\\\", "/", paste0(gsub("\\\\$|/$", "", path), "/")), dirname)
+  newdir <- normalizePath(file.path(path, dirname), mustWork = FALSE)
 
   if (dir.exists(newdir) && !overwrite) {
     stop(paste0("directory ", newdir, " already exists. Use overwrite = TRUE."))
@@ -16,17 +16,18 @@
 }
 
 #' @author Paul Galpern
-#' @importFrom raster writeRaster
+#' @importFrom raster extension<- writeRaster
 #' @keywords internal
 .wRas <- function(ras, fname, dirpath, rasterFormat, overwrite) {
   extensions <- data.frame(
     format = c("raster", "ascii", "SAGA", "IDRISI", "CDF", "GTiff", "ENVI", "EHdr", "HFA"),
-    ext = c("grd", "asc", "sdat", "rst", "nc", "tif", "envi", "bil", "img"),
+    ext = paste0(".", c("grd", "asc", "sdat", "rst", "nc", "tif", "envi", "bil", "img")),
     stringsAsFactors = FALSE
   )
-  writeRaster(ras, filename = file.path(dirpath, "/", fname, ".",
-                                        extensions[extensions$format == rasterFormat, "ext"]),
-              format = rasterFormat, overwrite = overwrite)
+  id <- which(extensions$format == rasterFormat)
+  filename <- file.path(dirpath, fname)
+  extension(filename) <- extensions[id, "ext"]
+  writeRaster(ras, filename = filename, format = rasterFormat, overwrite = overwrite)
 }
 
 #' @author Paul Galpern
@@ -190,13 +191,10 @@
 #' ## Extract a representative subset of 5 grains of connectivity
 #' tinyPatchGOC <- GOC(tinyPatchMPG, nThresh = 5)
 #'
-#' ## Export rasters and vectors of the MPG to the current working directory
-#' export(tinyPatchMPG)
-#'
 #' ## Export raster and vectors of a grain to a specified directory
-#' tmpDir <- file.path(tempdir(), "tiny_goc_thresh2")
-#' export(grain(tinyPatchGOC, 2), dirname = tmpDir)
-#' }
+#' tmpdir <- tempdir()
+#' export(grain(tinyPatchGOC, 2), dirname = "tiny_goc_thresh2", path = tmpdir)
+#' unlink(file.path(tmpdir, "tiny_goc_thresh2"), recursive = TRUE)
 #'
 setGeneric(
   "export",

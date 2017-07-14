@@ -166,13 +166,10 @@ tinyPatchMPG <- MPG(cost = tinyCost, patch = tinyCost == 1)
 ## Extract a representative subset of 5 grains of connectivity
 tinyPatchGOC <- GOC(tinyPatchMPG, nThresh = 5)
 
-## Export rasters and vectors of the MPG to the current working directory
-export(tinyPatchMPG)
-
 ## Export raster and vectors of a grain to a specified directory
-tmpDir <- file.path(tempdir(), "tiny_goc_thresh2")
-export(grain(tinyPatchGOC, 2), dirname = tmpDir)
-}
+tmpdir <- tempdir()
+export(grain(tinyPatchGOC, 2), dirname = "tiny_goc_thresh2", path = tmpdir)
+unlink(file.path(tmpdir, "tiny_goc_thresh2"), recursive = TRUE)
 
 }
 \seealso{
