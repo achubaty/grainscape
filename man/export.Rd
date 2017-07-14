@@ -108,7 +108,7 @@ Description of node (vertex) and link (edge) weights in \code{grain}
 objects  and their corresponding attribute names in the shape files created.
 
 \tabular{llll}{
-  \strong{type} \tab \strong{GOC name} \tab \strong{SHP name} \tab \strong{Description}\cr
+  \strong{Type} \tab \strong{GOC name} \tab \strong{SHP name} \tab \strong{Description}\cr
   node \tab polygonId \tab polyId \tab Polygon id from grain voronoi raster \cr
   node \tab polygonArea \tab polyA \tab Area of polygon from grain voronoi raster \cr
   node \tab totalPatchArea \tab patchA \tab Total area of all patches in polygon\cr
@@ -118,14 +118,22 @@ objects  and their corresponding attribute names in the shape files created.
   node \tab centroidY \tab ctrY \tab Centroid of the polygon (Y)\cr
   link \tab e1 \tab e1 \tab Id of first patch at end of link\cr
   link \tab e2 \tab e2 \tab Id of second patch at end of link\cr
-  link \tab maxWeight \tab maxWt \tab The maximum weight of all links connecting patches between polygons\cr
-  link \tab linkIdMaxWeight \tab maxWt \tab The link id of that maximum weight link (lcpLinkId)\cr
-  link \tab minWeight \tab min \tab The minimum weight of all links connecting patches between polygons\cr
-  link \tab linkIdMinWeight \tab minWt \tab The link id of that minimum weight link (lcpLinkId)\cr
-  link \tab medianWeight \tab medWt \tab The median weight of all links connecting patches between polygons\cr
-  link \tab meanWeight \tab meanWT \tab The minimum weight of all links connecting patches between polygons\cr
-  link \tab numlinksWeight \tab numEWt \tab The number of links connecting patches between polygons\cr
-  link \tab eucCentroidWeight \tab eucCtrWt \tab The Euclidean distance between centroids of polygons\cr
+  link \tab maxWeight \tab maxWt \tab The maximum weight of all links connecting
+                                      patches between polygons\cr
+  link \tab linkIdMaxWeight \tab maxWt \tab The link id of that maximum weight
+                                            link (lcpLinkId)\cr
+  link \tab minWeight \tab min \tab The minimum weight of all links connecting
+                                    patches between polygons\cr
+  link \tab linkIdMinWeight \tab minWt \tab The link id of that minimum weight
+                                       link (lcpLinkId)\cr
+  link \tab medianWeight \tab medWt \tab The median weight of all links connecting
+                                         patches between polygons\cr
+  link \tab meanWeight \tab meanWT \tab The minimum weight of all links connecting
+                                        patches between polygons\cr
+  link \tab numlinksWeight \tab numEWt \tab The number of links connecting patches
+                                            between polygons\cr
+  link \tab eucCentroidWeight \tab eucCtrWt \tab The Euclidean distance between
+                                                 centroids of polygons\cr
 }
 }
 \description{

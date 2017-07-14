@@ -1,21 +1,17 @@
 #' Filter out patches smaller than a specified area
 #'
-#' @description
-#' This function is to pre-process patch rasters prior to their
-#' use with \code{\link{MPG}}.
+#' Pre-process patch rasters prior to their use with \code{\link{MPG}}.
 #'
-#' It examines a binary raster to identify all
-#' patches or clumps of cells with values \code{=1}, determines their area, and
-#' returns a binary raster where only patches of area greater than or equal to
-#' the specified amount are represented.
+#' It examines a binary raster to identify all patches or clumps of cells with
+#' values \code{=1}, determines their area, and returns a binary raster where
+#' only patches of area greater than or equal to the specified amount are represented.
 #'
-#' This is helpful when analyzing habitat connectivity models
-#' where patches represent a land cover or habitat type.  For example,
-#' a raster may have patches of a certain habitat type of insufficient
-#' area to support the ecological process of interest.  Another use case is remote
-#' sensing classification errors that have introduced artifacts.  Filtering can
-#' help in both cases.
-#'
+#' This is helpful when analyzing habitat connectivity models where patches
+#' represent a land cover or habitat type.
+#' For example, a raster may have patches of a certain habitat type of insufficient
+#' area to support the ecological process of interest.
+#' Another use case is remote sensing classification errors that have introduced artifacts.
+#' Filtering can help in both cases.
 #'
 #' @param x             A binary raster (i.e. consisting of \code{0}, \code{1},
 #'                      or \code{NA} cells), where cells \code{=1} represent
@@ -37,15 +33,14 @@
 #'                      about which cells constitute a patch.
 #'
 #' @return   A binary raster where all patches (i.e. clumped areas \code{=1})
-#' are greater than the specified area.
+#'           are greater than the specified area.
 #'
 #' @author Paul Galpern and Alex Chubaty
 #' @docType methods
 #' @export
-#' @importFrom raster clump res
-#'
+#' @importFrom raster clump freq res
 #' @include classes.R
-#' @rdname patchfilter
+#' @rdname patchFilter
 #' @seealso \code{\link{MPG}}
 #' @examples
 #' \dontrun{
@@ -59,30 +54,30 @@
 #'
 #' ## Produce a patch-based MPG where patches are resistance features = 10
 #' ## and all patches are greater than or equal to 2 cells in size.
-#' tinyPatchMPG <- MPG(cost = tinyCost, patch = patchfilter(tinyCost == 10, cells = 2))
+#' tinyPatchMPG <- MPG(cost = tinyCost, patch = patchFilter(tinyCost == 10, cells = 2))
 #' plot(tinyPatchMPG)
 #'
 #' ## Compare to removal of patches greater than or equal to 40 cells in size!
-#' tinyPatchMPG <- MPG(cost = tinyCost, patch = patchfilter(tinyCost == 10, cells = 40))
+#' tinyPatchMPG <- MPG(cost = tinyCost, patch = patchFilter(tinyCost == 10, cells = 40))
 #' plot(tinyPatchMPG)
 #'
 #' ## Use a rook/castle 4-direction case rather than the queen 8-direction case
 #' ## to identify neighbouring cells in a patch
-#' tinyPatchMPG <- MPG(cost = tinyCost,
-#'    patch = patchfilter(tinyCost == 10, cells = 40, directions = 4))
+#' filteredPatch <- patchFilter(tinyCost == 10, cells = 40, directions = 4)
+#' tinyPatchMPG <- MPG(cost = tinyCost, patch = filteredPatch)
 #' plot(tinyPatchMPG)
 #' }
 #'
 setGeneric(
-  "patchfilter",
+  "patchFilter",
   function(x, cells = NULL, area = NULL, ...) {
-    standardGeneric("patchfilter")
+    standardGeneric("patchFilter")
 })
 
 #' @export
-#' @rdname export
+#' @rdname patchFilter
 setMethod(
-  "patchfilter",
+  "patchFilter",
   signature = "RasterLayer",
   definition = function(x, cells = NULL, area = NULL, ...) {
 
@@ -94,22 +89,19 @@ setMethod(
     stop("x must be a binary raster containing 0, 1 or NA values")
   }
 
-  if (!is.null(area)) {
-    cellThresh <- ceiling(area / (res(x)[1] * res(x)[2]))
-  }
-  else {
-    cellThresh <- cells
+  cellThresh <- if (!is.null(area)) {
+    ceiling(area / (res(x)[1] * res(x)[2]))
+  } else {
+    cells
   }
 
   patch <- clump(x, ...)
   fp <- freq(patch)
-  rmpatch <- fp[fp[,2] < cellThresh, 1]
+  rmpatch <- fp[fp[, 2] < cellThresh, 1]
 
   out <- patch
   out[patch[] %in% rmpatch] <- NA
   out <- !is.na(out)
 
   return(out)
-
 })
-

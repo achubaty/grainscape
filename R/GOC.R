@@ -347,7 +347,7 @@ setMethod(
             x1 <- which(uniquePolygons == z[1])
             x2 <- which(uniquePolygons == z[2])
 
-            out <- sqrt((centroids[x2, 1] - centroids[x1, 1]) ^ 2 +
+            out <- sqrt((centroids[x2, 1] - centroids[x1, 1]) ^ 2 + # nolint
                           (centroids[x2, 2] - centroids[x1, 2]) ^ 2)
             return(out)
           })

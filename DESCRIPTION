@@ -52,6 +52,7 @@ Collate:
     'extract.R'
     'graphdf.R'
     'habitatConnectivityEngine.R'
+    'patchFilter.R'
     'plot.R'
     'point.R'
     'threshold.R'
