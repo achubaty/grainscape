@@ -1,0 +1,256 @@
+#' Prepare \code{MPG} and \code{grain} objects for use with \code{ggplot2}
+#'
+#' @description
+#' This is an informal \code{fortify}-type method that prepares either
+#' \code{RasterLayer} or \code{igraph} objects contained as slots within
+#' \code{MPG} or \code{grain} objects for easy plotting with \code{\link{ggplot}}.
+#'
+#'
+#' @param x       A \code{mpg}, \code{grain}, or \code{RasterLayer} object.
+#'
+#' @param type    If a \code{mpg} or \code{grain} object is supplied, this
+#'                gives the name of the slot to prepare for plotting. Options
+#'                are discussed below.  Not required if a \code{RasterLayer}
+#'                is supplied.
+#'
+#'
+#' @param ...  Additional arguments (not used).
+#'
+#' @return A \code{data.frame} suitable for plotting with \code{\link{ggplot}}
+#'
+#' Where \code{type} is a raster the \code{data.frame} will have the following
+#' columns:
+#'
+#' \describe{
+#'   \item{\code{value}}{the value of the raster cell}
+
+#'   \item{\code{x}}{the x coordinate of the centre of the raster cell}
+#'
+#'   \item{\code{y}}{the y coordinate of the centre of the raster cell}
+#' }
+#'
+#' Where \code{type = 'nodes'} the \code{data.frame} will have
+#' the following columns:
+#'
+#' \describe{
+#'   \item{\code{x}}{the x coordinate of the node}
+#'
+#'   \item{\code{y}}{the y coordinate of the node}
+#'
+#'   \item{\code{...}}{other attributes associated with the network nodes}
+#' }
+#'
+#' Where \code{type = 'links'} the \code{data.frame} will have
+#' the following columns:
+#'
+#' \describe{
+#'   \item{\code{x1}}{the x coordinate of the first node}
+#'
+#'   \item{\code{y1}}{the y coordinate of the first node}
+#'
+#'   \item{\code{x2}}{the x coordinate of the second node}
+#'
+#'   \item{\code{y2}}{the y coordinate of the second node}
+#'
+#'   \item{\code{...}}{other attributes associated with the network links}
+#' }
+#'
+#' @note
+#'  \strong{Options for \code{type} parameter}
+#'
+#'  If a \code{RasterLayer} is supplied \code{type} is optional.
+#'
+#'  For \code{mpg} \code{type} options are \code{'node'} or \code{'links'}.  This
+#'  prepares the nodes and links of the minimum planar graph network for
+#'  plotting,  Also \code{'patchId'}, \code{'voronoi'}, \code{'lcpPerimWeight'},
+#'  \code{'lcpLinkId'}, \code{'mpgPlot'} will prepare rasters for plotting.
+#'
+#'  For \code{grain} objects \code{type}  options are \code{'nodes'} or\code{'links'}
+#'  to prepare the nodes and links of the grains of connectivity network  for
+#'  plotting.  Also \code{'voronoi'}  will
+#'  prepare the grains of connectivity Voronoi polygons raster for plotting.
+#'
+#'  For either \code{mpg} or \code{grain} objects \code{type = 'vorBound'}
+#'  will identify the boundaries of the Voronoi polygons for plotting.
+#'  This is potentially time consuming for large rasters.
+#'
+#'
+#' @author Paul Galpern and Alex Chubaty
+#' @docType methods
+#' @export
+#' @importFrom utils type.convert
+#' @importFrom sp SpatialPixelsDataFrame
+#' @importFrom raster boundaries
+#' @include classes.R
+#' @rdname ggGS
+#' @seealso \code{\link{MPG}}, \code{\link{GOC}}
+#'
+#' @examples
+#' \dontrun{
+#' library(raster)
+#'
+#' ## Load raster landscape
+#' tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape"))
+#'
+#' ## Create a resistance surface from a raster using an is-becomes reclassification
+#' tinyCost <- reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
+#'
+#' ## Produce a patch-based MPG where patches are resistance features=1
+#' tinyPatchMPG <- MPG(cost = tinyCost, patch = tinyCost == 1)
+#'
+#' ## Extract a representative subset of 5 grains of connectivity
+#' tinyPatchGOC <- GOC(tinyPatchMPG, nThresh = 5)
+#'
+#' ## Plot the patches in a minimum planar graph
+#' theme_set(theme_grainscape())
+#' ggplot() + geom_raster(data = ggGS(tinyPatchMPG, "patchId"),
+#'    aes(x = x, y = y, fill = value))
+#'
+#' ## Plot the grain polygons in a grain of connectivity
+#' ggplot() + geom_raster(data = ggGS(grain(tinyPatchGOC, 3), "voronoi"),
+#'   aes(x = x, y = y, fill = value))
+#'
+#' ## Plot the grain polygon boundaries
+#' ggplot() + geom_raster(data = ggGS(grain(tinyPatchGOC, 3), "vorBound"),
+#'   aes(x = x, y = y, fill = value))
+#'
+#' ## Plot the nodes and links of a minimum planar graph
+#' ggplot() +
+#'   geom_point(data = ggGS(tinyPatchMPG, "nodes"),
+#'     aes(x = x, y = y)) +
+#'   geom_segment(data = ggGS(tinyPatchMPG, "links"),
+#'     aes(x = x1, y = y1, xend = x2, yend = y2))
+#'
+#' ## Plot the nodes and links of a grains of connectivity network
+#' ## superimposed over the grain polygons
+#' focalGrain <- grain(tinyPatchGOC, 3)
+#' ggplot() +
+#'   geom_raster(data = ggGS(focalGrain, "vorBound"),
+#'     aes(x = x, y = y, fill = value)) +
+#'   geom_point(data = ggGS(focalGrain, "nodes"),
+#'     aes(x = x, y = y)) +
+#'   geom_segment(data = ggGS(focalGrain, "links"),
+#'     aes(x = x1, y = y1, xend = x2, yend = y2))
+#' }
+#' @export
+#' @rdname ggGS
+#'
+setGeneric("ggGS", function(x, type=NULL, ...) {
+  standardGeneric("ggGS")
+})
+
+#' @export
+#' @rdname ggGS
+setMethod(
+  "ggGS",
+  signature = "RasterLayer",
+  definition = function(x, type=NULL, ...) {
+
+  out <- as.data.frame(as(x, "SpatialPixelsDataFrame"))
+  names(out) <- c("value", "x", "y")
+  return(out)
+
+})
+
+#' @export
+#' @rdname ggGS
+setMethod(
+  "ggGS",
+  signature = "list",
+  definition = function(x, type, ...) {
+
+  if (type == "nodes") {
+    out <- x[[1]]$v
+    names(out)[names(out)=="centroidX"] <- "x"
+    names(out)[names(out)=="centroidY"] <- "y"
+    return(out)
+  }
+  else if (type == "links") {
+    nodes <- x[[1]]$v
+    links <- x[[1]]$e
+    names(nodes) <- gsub("polygonId", "patchId", names(nodes))
+    first <- nodes[match(links$e1, nodes$patchId), c("centroidX", "centroidY")]
+    names(first) <- c("x1", "y1")
+    second <- nodes[match(links$e2, nodes$patchId), c("centroidX", "centroidY")]
+    names(second) <- c("x2", "y2")
+    out <- data.frame(first, second, links)
+    return(out)
+  }
+  else {
+    stop("type parameter not valid for a list object")
+  }
+
+})
+
+
+#' @export
+#' @rdname ggGS
+setMethod(
+  "ggGS",
+  signature = "mpg",
+  definition = function(x, type, ...) {
+
+  if (is.null(type)) {
+    stop("type parameter must be supplied with mpg objects")
+  }
+  if (type %in% slotNames(x)[-which(slotNames(x) %in% c("voronoi", "mpg"))]) {
+    ggGS(slot(x, type))
+  }
+  else if (type == "voronoi") {
+    out <- slot(x, type)
+    out[out[] == 0] <- NA
+    ggGS(out)
+  }
+  else if (type == "vorBound") {
+    message("Extracting voronoi boundaries...")
+    out <- x@voronoi
+    out[out[] == 0] <- NA
+    out <- boundaries(out, classes=TRUE)
+    ggGS(out)
+  }
+  else if (type %in% c("nodes", "links")) {
+    ggGS(graphdf(x), type=type)
+  }
+  else {
+    stop("type parameter not valid for an mpg object")
+  }
+
+})
+
+#' @export
+#' @rdname ggGS
+setMethod(
+  "ggGS",
+  signature = "grain",
+  definition = function(x, type, ...) {
+
+  if (type == "voronoi") {
+    out <- slot(x, type)
+    out[out[] == 0] <- NA
+    ggGS(out)
+  }
+  else if (type == "vorBound") {
+    message("Extracting voronoi boundaries...")
+    out <- x@voronoi
+    out[out[] == 0] <- NA
+    out <- boundaries(out, classes=TRUE)
+    ggGS(out)
+  }
+  else if (type %in% c("nodes", "links")) {
+    ggGS(graphdf(x), type=type)
+  }
+  else {
+    stop("type parameter not valid for a grain object")
+  }
+})
+
+#' @export
+#' @rdname ggGS
+setMethod(
+  "ggGS",
+  signature = "goc",
+  definition = function(x, type, ...) {
+
+  message("Use grain() first to prepare GOC objects for plotting.")
+
+})

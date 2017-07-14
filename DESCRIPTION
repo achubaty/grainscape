@@ -50,11 +50,13 @@ Collate:
     'distance.R'
     'export.R'
     'extract.R'
+    'ggGS.R'
     'graphdf.R'
     'habitatConnectivityEngine.R'
     'patchFilter.R'
     'plot.R'
     'point.R'
+    'theme_grainscape.R'
     'threshold.R'
     'zzz.R'
 RoxygenNote: 6.0.1
