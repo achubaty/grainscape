@@ -4,11 +4,14 @@
 \name{show,goc-method}
 \alias{show,goc-method}
 \alias{show,grain-method}
+\alias{show,corridor-method}
 \title{Show a \code{grainscape} object}
 \usage{
 \S4method{show}{goc}(object)
 
 \S4method{show}{grain}(object)
+
+\S4method{show}{corridor}(object)
 }
 \arguments{
 \item{object}{A \code{\link[=goc-class]{goc}} or

@@ -51,7 +51,7 @@ path distance from the perimeters of patches as the link weight.
 \code{"eucPerimWeight"} use the Euclidean distance from the
 perimeters of patches as the link weight.}
 
-\item{sp}{Logical.  If \code{TRUE} the \code{rgeos} package is used to create
+\item{sp}{Logical. If \code{TRUE} the \code{rgeos} package is used to create
 a vector of class \code{\link{SpatialPolygonsDataFrame}} describing
 the finest grain of connectivity.}
 
@@ -64,9 +64,8 @@ the finest grain of connectivity.}
 \item{coords}{A two column matrix or a \code{\link{SpatialPoints}} object
 giving coordinates at the end points of the corridor.}
 
-\item{doPlot}{Logical.  If \code{TRUE} plots a vector visualization of the
-corridor at the given scale.
-For full control, manually produce plots using the outputs of this function.}
+\item{doPlot}{Logical. If \code{TRUE} plots a vector visualization of the
+corridor at the given scale}
 
 \item{x}{A \code{mpg} object produced by \code{\link{MPG}}.
 For lattice GOC \code{MPG} must be run with patch set as an integer value.}
