@@ -194,8 +194,10 @@
 #' export(tinyPatchMPG)
 #'
 #' ## Export raster and vectors of a grain to a specified directory
-#' tmpDir <- file.path(tempdir(), "tiny_goc_thresh2")
-#' export(grain(tinyPatchGOC, 2), dirname = tmpDir)
+#' export(grain(tinyPatchGOC, 2), dirname = "tiny_goc_thresh2", path = tempdir())
+#'
+#' ## Export rasters and vectors of the MPG and place in an R object
+#' sp_tinyPatchMPG <- export(tinyPatchMPG, R = TRUE)
 #' }
 #'
 setGeneric(

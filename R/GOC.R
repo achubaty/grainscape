@@ -95,11 +95,12 @@
 #' tinyPatchGOC <- GOC(tinyPatchMPG, nThresh = 5)
 #'
 #' ## Examine the properties of the GOC graph of grain 3 of 5
-#' print(tinyPatchGOC@th[[3]]$goc, vertex = TRUE, edge = TRUE)
+#' graphdf(grain(tinyPatchGOC, nThresh = 3))
 #'
-#' ## Extract specified grains of connectivity and produce a vector SpatialPolygons
-#' ## representation of the finest grain of connectivity (Threshold = 0)
-#' tinyPatchGOC <- GOC(tinyPatchMPG, doThresh = c(0, 20, 40), sp = TRUE)
+#' ## Extract grains of connectivity
+#' ## representation of the finest grain and three others
+#' ## by giving thresholds in link weights (doThresh)
+#' tinyPatchGOC <- GOC(tinyPatchMPG, doThresh = c(0, 20, 40))
 #' }
 #'
 setGeneric("GOC", function(x, ...) {
