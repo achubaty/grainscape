@@ -45,14 +45,11 @@ Identify the polygon containing a location at multiple scales.
 See \code{\link{MPG}} for warning related to areal measurements.
 }
 \examples{
-\dontrun{
-library(raster)
-
 ## Load raster landscape
-tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape"))
+tiny <- raster::raster(system.file("extdata/tiny.asc", package = "grainscape"))
 
 ## Create a resistance surface from a raster using an is-becomes reclassification
-tinyCost <- reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
+tinyCost <- raster::reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
 
 ## Produce a patch-based MPG where patches are resistance features=1
 tinyPatchMPG <- MPG(cost = tinyCost, patch = tinyCost == 1)
@@ -66,7 +63,6 @@ loc <- cbind(c(30, 60, 90), c(30, 60, 90))
 ## Find the GOC polygon containing these three locations
 ## for each of the 5 grains of connectivity
 tinyPts <- point(tinyPatchGOC, loc)
-}
 
 }
 \references{

@@ -46,14 +46,11 @@
 #' @seealso \code{\link{GOC}}, \code{\link{visualize}}
 #'
 #' @examples
-#' \dontrun{
-#' library(raster)
-#'
 #' ## Load raster landscape
-#' tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape"))
+#' tiny <- raster::raster(system.file("extdata/tiny.asc", package = "grainscape"))
 #'
 #' ## Create a resistance surface from a raster using an is-becomes reclassification
-#' tinyCost <- reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
+#' tinyCost <- raster::reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
 #'
 #' ## Produce a patch-based MPG where patches are resistance features=1
 #' tinyPatchMPG <- MPG(cost = tinyCost, patch = (tinyCost == 1))
@@ -64,17 +61,18 @@
 #' ## Quick visualization of a corridor
 #' corridorStartEnd <- rbind(c(10,10), c(90,90))
 #' tinyPatchCorridor <- corridor(tinyPatchGOC, whichThresh = 3, coords = corridorStartEnd)
-#' plot(tinyPatchCorridor)
+#' if (interactive()) plot(tinyPatchCorridor)
 #'
 #' ## More control over a corridor visualization
-#' plot(tinyPatchCorridor@voronoi, col = "lightgrey", lwd = 2)
-#' plot(tinyPatchCorridor@linksSP, col = "darkred", lty = "dashed", add = TRUE)
-#' plot(tinyPatchCorridor@nodesSP, col = "darkred", pch = 21, bg="white", add = TRUE)
-#' plot(tinyPatchCorridor@shortestLinksSP, col = "darkred", lty = "solid", lwd = 2, add = TRUE)
-#' plot(tinyPatchCorridor@shortestNodesSP, col = "darkred", pch = 21, bg = "darkred", add = TRUE)
-#' mtext(paste("Corridor shortest path length:",
-#'             round(tinyPatchCorridor@corridorLength, 2),
-#'             "resistance units"), side = 1)
+#' if (interactive())  {
+#'   plot(tinyPatchCorridor@voronoi, col = "lightgrey", lwd = 2)
+#'   plot(tinyPatchCorridor@linksSP, col = "darkred", lty = "dashed", add = TRUE)
+#'   plot(tinyPatchCorridor@nodesSP, col = "darkred", pch = 21, bg="white", add = TRUE)
+#'   plot(tinyPatchCorridor@shortestLinksSP, col = "darkred", lty = "solid", lwd = 2, add = TRUE)
+#'   plot(tinyPatchCorridor@shortestNodesSP, col = "darkred", pch = 21, bg = "darkred", add = TRUE)
+#'   mtext(paste("Corridor shortest path length:",
+#'               round(tinyPatchCorridor@corridorLength, 2),
+#'               "resistance units"), side = 1)
 #' }
 #'
 setGeneric("corridor", function(x, ...) {

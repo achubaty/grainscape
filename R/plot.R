@@ -16,24 +16,6 @@
 #'          \code{\linkS4class{grain}},
 #'          \code{\linkS4class{mpg}}
 #'
-#' @examples
-#' \dontrun{
-#' library(igraph)
-#' library(raster)
-#'
-#' ## Load raster landscape
-#' tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape"))
-#'
-#' ## Create a resistance surface from a raster using an is-becomes reclassifyification
-#' tinyCost <- reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
-#'
-#' ## Produce a patch-based MPG where patches are resistance features=1
-#' tinyPatchMPG <- MPG(cost = tinyCost, patch = (tinyCost == 1))
-#'
-#' ## Quick visualization of the MPG
-#' plot(tinyPatchMPG, col = c("grey", "black"), legend = FALSE)
-#' }
-#'
 setMethod(
   "plot",
   signature = "corridor",

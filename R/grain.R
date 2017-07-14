@@ -54,14 +54,11 @@
 #' @seealso \code{\link{GOC}}
 #'
 #' @examples
-#' \dontrun{
-#' library(raster)
-#'
 #' ## Load raster landscape
-#' tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape"))
+#' tiny <- raster::raster(system.file("extdata/tiny.asc", package = "grainscape"))
 #'
 #' ## Create a resistance surface from a raster using an is-becomes reclassification
-#' tinyCost <- reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
+#' tinyCost <- raster::reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
 #'
 #' ## Produce a patch-based MPG where patches are resistance features=1
 #' tinyPatchMPG <- MPG(cost = tinyCost, patch = (tinyCost == 1))
@@ -72,13 +69,13 @@
 #' ## Very quick visualization at the finest scale/grain/threshold,
 #' ## producing plot on the default graphics device
 #' tinyPatchGOCgrain <- grain(tinyPatchGOC, whichThresh = 1)
-#' plot(tinyPatchGOCgrain, col = topo.colors(10))
+#' if (interactive()) plot(tinyPatchGOCgrain, col = topo.colors(10))
 #'
 #' ## Visualize the model at the finest scale/grain/threshold
 #' ## Manual control of plotting
-#' plot(grain(tinyPatchGOC, whichThresh = 1)@voronoi,
-#'      col = sample(rainbow(100)), legend = FALSE, main = "Threshold 1")
-#'
+#' if (interactive()) {
+#'   plot(grain(tinyPatchGOC, whichThresh = 1)@voronoi,
+#'        col = sample(rainbow(100)), legend = FALSE, main = "Threshold 1")
 #' }
 #'
 setGeneric("grain", function(x, ...) {

@@ -10,7 +10,7 @@ if (getRversion() >= "3.1.0") {
 #' @param cost      Numeric raster cost (resistance) map.
 #' @param patches   Logical raster indicating presence of habitat patches.
 #'
-#' @return An object of class \code{\link[=hce-class]{hce}}.
+#' @return An object of class \code{\linkS4class{hce}}.
 #'
 #' @author Alex Chubaty
 #' @docType methods
@@ -29,8 +29,8 @@ if (getRversion() >= "3.1.0") {
 #'
 #' if (interactive()) {
 #'   links                  # examine the object
-#'   plot(links$voronoi)    # plot the voronoi tesselation
-#'   plot(links$patchLinks) # plot the patches and links
+#'   plot(links@voronoi)    # plot the voronoi tesselation
+#'   plot(links@patchLinks) # plot the patches and links
 #' }
 .habConnEngine <- function(cost, patches) {
   stopifnot(inherits(cost, "RasterLayer"),

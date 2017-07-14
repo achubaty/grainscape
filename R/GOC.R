@@ -79,14 +79,11 @@
 #'          \code{\link{distance}}, \code{\link{point}}
 #'
 #' @examples
-#' \dontrun{
-#' library(raster)
-#'
 #' ## Load raster landscape
-#' tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape"))
+#' tiny <- raster::raster(system.file("extdata/tiny.asc", package = "grainscape"))
 #'
 #' ## Create a resistance surface from a raster using an is-becomes reclassication
-#' tinyCost <- reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
+#' tinyCost <- raster::reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
 #'
 #' ## Produce a patch-based MPG where patches are resistance features=1
 #' tinyPatchMPG <- MPG(cost = tinyCost, patch = (tinyCost == 1))
@@ -99,8 +96,7 @@
 #'
 #' ## Extract specified grains of connectivity and produce a vector SpatialPolygons
 #' ## representation of the finest grain of connectivity (Threshold = 0)
-#' tinyPatchGOC <- GOC(tinyPatchMPG, doThresh = c(0, 20, 40), sp = TRUE)
-#' }
+#' tinyPatchGOC <- GOC(tinyPatchMPG, doThresh = c(0, 20, 40))
 #'
 setGeneric("GOC", function(x, ...) {
   standardGeneric("GOC")

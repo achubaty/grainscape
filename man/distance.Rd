@@ -38,14 +38,11 @@ Find the shortest network distance between pairs of points using the GOC graph.
 This can be used as an effective distance for landscape connectivity assessments.
 }
 \examples{
-\dontrun{
-library(raster)
-
 ## Load raster landscape
-tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape"))
+tiny <- raster::raster(system.file("extdata/tiny.asc", package = "grainscape"))
 
 ## Create a resistance surface from a raster using an is-becomes reclassifification
-tinyCost <- reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
+tinyCost <- raster::reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
 
 ## Produce a patch-based MPG where patches are resistance features=1
 tinyPatchMPG <- MPG(cost = tinyCost, patch = tinyCost == 1)
@@ -58,8 +55,7 @@ loc <- cbind(c(30, 60, 90), c(30, 60, 90))
 
 ## Find the GOC network distance matrices between these points
 ## for each of the 5 grains of connectivity
-tinyDist <- distance(tinyPatchGOC, loc)
-}
+tinyDist <- grainscape::distance(tinyPatchGOC, loc)
 
 }
 \references{

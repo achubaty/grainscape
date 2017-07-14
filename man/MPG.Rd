@@ -62,15 +62,11 @@ Use of geographic coordinates will result in inaccurate areal and distance measu
 rendering the models themselves inaccurate.
 }
 \examples{
-\dontrun{
-library(igraph)
-library(raster)
-
 ## Load raster landscape
-tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape"))
+tiny <- raster::raster(system.file("extdata/tiny.asc", package = "grainscape"))
 
 ## Create a resistance surface from a raster using an is-becomes reclassifyification
-tinyCost <- reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
+tinyCost <- raster::reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
 
 ## Produce a patch-based MPG where patches are resistance features=1
 tinyPatchMPG <- MPG(cost = tinyCost, patch = (tinyCost == 1))
@@ -79,23 +75,15 @@ tinyPatchMPG <- MPG(cost = tinyCost, patch = (tinyCost == 1))
 graphdf(tinyPatchMPG)
 
 ## Find the mean patch area (see igraph manual for use of V() and E())
-mean(V(tinyPatchMPG@mpg)$patchArea.value)
+mean(igraph::V(tinyPatchMPG@mpg)$patchArea)
 
 ## Quick visualization of the MPG
-plot(tinyPatchMPG, col = c("grey", "black"), legend = FALSE)
-
-## Visualize the minimum spanning tree of the MPG
-tinyPatchMST <- mst(tinyPatchMPG@mpg)
-MSTlinks <- edge_attr(tinyPatchMST, "linkId")
-plot(tinyPatchMPG@patchId, col = "black", legend = FALSE)
-plot((tinyPatchMPG@lcpLinkId * -1) \%in\% MSTlinks, add = TRUE, legend = FALSE,
-     col = c(NA, "grey"))
+if (interactive()) plot(tinyPatchMPG, col = c("grey", "black"), legend = FALSE)
 
 ## Additional graph extraction scenarios
 ## Produce a lattice MPG where focal points are spaced 10 cells apart
 tinyLatticeMPG <- MPG(cost = tinyCost, patch = 10)
-plot(tinyLatticeMPG)
-}
+if (interactive()) plot(tinyLatticeMPG)
 
 }
 \references{

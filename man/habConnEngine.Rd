@@ -13,7 +13,7 @@
 \item{patches}{Logical raster indicating presence of habitat patches.}
 }
 \value{
-An object of class \code{\link[=hce-class]{hce}}.
+An object of class \code{\linkS4class{hce}}.
 }
 \description{
 Internal function. Servesa s a wrapper around the habitat connectivity engine
@@ -28,8 +28,8 @@ links <- grainscape:::.habConnEngine(cost, patches = (cost == 1))
 
 if (interactive()) {
   links                  # examine the object
-  plot(links$voronoi)    # plot the voronoi tesselation
-  plot(links$patchLinks) # plot the patches and links
+  plot(links@voronoi)    # plot the voronoi tesselation
+  plot(links@patchLinks) # plot the patches and links
 }
 }
 \seealso{

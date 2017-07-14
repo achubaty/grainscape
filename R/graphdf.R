@@ -32,14 +32,11 @@
 #' @seealso \code{\link{MPG}}, \code{\link{GOC}}
 #'
 #' @examples
-#' \dontrun{
-#' library(raster)
-#'
 #' ## Load raster landscape
-#' tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape"))
+#' tiny <- raster::raster(system.file("extdata/tiny.asc", package = "grainscape"))
 #'
 #' ## Create a resistance surface from a raster using an is-becomes reclassification
-#' tinyCost <- reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
+#' tinyCost <- raster::reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
 #'
 #' ## Produce a patch-based MPG where patches are resistance features=1
 #' tinyPatchMPG <- MPG(cost = tinyCost, patch = tinyCost == 1)
@@ -55,7 +52,6 @@
 #'
 #' ## Create a data.frame with the structure and attributes of any igraph object
 #' graphdf(tinyPatchGOC@th[[1]]$goc)
-#' }
 #'
 #' @export
 #' @rdname graphdf

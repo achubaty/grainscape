@@ -58,14 +58,11 @@ analysis using Voronoi tessellations rather than patches (see Galpern et al., 20
 See \code{\link{MPG}} for warning related to areal measurements.
 }
 \examples{
-\dontrun{
-library(raster)
-
 # Load raster landscape
-tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape"))
+tiny <- raster::raster(system.file("extdata/tiny.asc", package = "grainscape"))
 
 ## Create a resistance surface from a raster using an is-becomes reclassification
-tinyCost <- reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
+tinyCost <- raster::reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
 
 ## Produce a patch-based MPG where patches are resistance features=1
 tinyPatchMPG <- MPG(cost = tinyCost, patch = tinyCost == 1)
@@ -75,7 +72,6 @@ tinyThresh <- threshold(tinyPatchMPG, nThresh = 10)
 
 ## Examine the properties of one of these threshold graphs
 print(tinyThresh$th[[7]], vertex = TRUE, edge = TRUE)
-}
 
 }
 \references{
