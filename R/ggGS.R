@@ -1,4 +1,4 @@
-#' Prepare \code{MPG} and \code{grain} objects for use with \code{ggplot2}
+#' Prepare data in \code{MPG} and \code{grain} objects for use with \code{ggplot2}
 #'
 #' @description
 #' This is an informal \code{fortify}-type method that prepares either
@@ -21,9 +21,7 @@
 #'
 #' \describe{
 #'   \item{\code{value}}{the value of the raster cell}
-
 #'   \item{\code{x}}{the x coordinate of the centre of the raster cell}
-#'
 #'   \item{\code{y}}{the y coordinate of the centre of the raster cell}
 #' }
 #'
@@ -31,9 +29,7 @@
 #'
 #' \describe{
 #'   \item{\code{x}}{the x coordinate of the node}
-#'
 #'   \item{\code{y}}{the y coordinate of the node}
-#'
 #'   \item{\code{...}}{other attributes associated with the network nodes}
 #' }
 #'
@@ -41,13 +37,13 @@
 #'
 #' \describe{
 #'   \item{\code{x1}}{the x coordinate of the first node}
-#'
 #'   \item{\code{y1}}{the y coordinate of the first node}
-#'
 #'   \item{\code{x2}}{the x coordinate of the second node}
-#'
 #'   \item{\code{y2}}{the y coordinate of the second node}
-#'
+#'   \item{\code{x1p}}{the x coordinate at the perimeter of the first node}
+#'   \item{\code{y1p}}{the y coordinate at the perimeter of the first node}
+#'   \item{\code{x2p}}{the x coordinate at the perimeter of the second node}
+#'   \item{\code{y2p}}{the y coordinate at the perimeter of the second node}
 #'   \item{\code{...}}{other attributes associated with the network links}
 #' }
 #'
@@ -100,7 +96,8 @@
 #' ## Plot the patches in a minimum planar graph
 #' theme_set(theme_grainscape())
 #' ggplot() +
-#'   geom_raster(data = ggGS(tinyPatchMPG, "patchId"), aes(x = x, y = y, fill = value))
+#'   geom_raster(data = ggGS(tinyPatchMPG, "patchId"),
+#'               aes(x = x, y = y, fill = value))
 #'
 #' ## Plot the grain polygons in a grain of connectivity
 #' ggplot() +
@@ -112,11 +109,20 @@
 #'   geom_raster(data = ggGS(grain(tinyPatchGOC, 3), "vorBound"),
 #'               aes(x = x, y = y, fill = value))
 #'
-#' ## Plot the nodes and links of a minimum planar graph
+#' ## Plot the patches and perimeter links of a minimum planar graph
 #' ggplot() +
-#'   geom_point(data = ggGS(tinyPatchMPG, "nodes"), aes(x = x, y = y)) +
+#'   geom_raster(data = ggGS(tinyPatchMPG, "patchId"),
+#'               aes(x = x, y = y, fill = value)) +
 #'   geom_segment(data = ggGS(tinyPatchMPG, "links"),
-#'                aes(x = x1, y = y1, xend = x2, yend = y2))
+#'                aes(x = x1p, y = y1p, xend = x2p, yend = y2p))
+#'
+#' ## Plot the patches and linear representations of the perimeter links
+#' ## of a minimum planar graph
+#' ggplot() +
+#'   geom_raster(data = ggGS(tinyPatchMPG, "patchId"),
+#'                aes(x = x, y = y, fill = value)) +
+#'   geom_segment(data = ggGS(tinyPatchMPG, "links"),
+#'                aes(x = x1p, y = y1p, xend = x2p, yend = y2p))
 #'
 #' ## Plot the nodes and links of a grains of connectivity network
 #' ## superimposed over the grain polygons
@@ -168,6 +174,12 @@ setMethod(
     second <- nodes[match(links$e2, nodes$patchId), c("centroidX", "centroidY")]
     names(second) <- c("x2", "y2")
     out <- data.frame(first, second, links)
+
+    ## Rename perimeter columns (in mpg objects only)
+    names(out)[names(out) == "startPerimX"] <- "x1p"
+    names(out)[names(out) == "startPerimY"] <- "y1p"
+    names(out)[names(out) == "endPerimX"] <- "x2p"
+    names(out)[names(out) == "endPerimY"] <- "y2p"
     return(out)
   } else {
     stop("parameter 'type' not valid for a list object")
