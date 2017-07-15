@@ -78,10 +78,10 @@ setGeneric(
 setMethod(
   "patchFilter",
   signature = "RasterLayer",
-  definition = function(x, cells = NULL, area = NULL, ...) {
+  definition = function(x, cells, area, ...) {
 
   if (!xor(is.null(cells), is.null(area))) {
-    stop("either the cells or area parameter must be specified")
+    stop("either the cells or area parameter must be specified, not both.")
   }
 
   if (any(!(unique(x[]) %in% c(NA, 0, 1)))) {
