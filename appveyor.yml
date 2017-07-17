@@ -46,7 +46,7 @@ clone_depth: 5
 
 build_script:
   - travis-tool.sh install_deps
-  - Rscript -e  "install.packages('dplyr', type = 'source', repos = 'https://cran.rstudio.com')"
+  - Rscript -e  "install.packages(c('Rcpp', 'dplyr'), type = 'source', repos = 'https://cran.rstudio.com')"
 
 test_script:
   - travis-tool.sh run_tests
