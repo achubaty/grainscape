@@ -30,7 +30,6 @@ Imports:
 LinkingTo: Rcpp
 Suggests:
     ggthemes,
-    grDevices,
     knitr,
     parallel,
     rgeos,
