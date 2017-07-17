@@ -53,34 +53,35 @@ For high-resolution visualization and the greatest level of control use
 \code{\link{export}} to export spatial objects for cartographic representation
 in a geographic information system (GIS).
 }
-\note{
-\strong{Types of visualization available with the \code{quick} parameter}
+\section{Types of visualization available with the \code{quick} parameter}{
 
-\code{'mpgPerimPlot'} gives a a vector rendering of the minimum planar
+
+\code{"mpgPerimPlot"} gives a a vector rendering of the minimum planar
 graph with vector links connecting the perimeters of the patches.  This
 doesn't accurately represent the sinuosity of paths of the links between patches
 but offers a good approximation that renders better at large extents.
 Default for \code{mpg} objects. Not available for other objects.
 
-\code{'mpgPlot'} gives a raster-only rendering of the minimum planar graph
+\code{"mpgPlot"} gives a raster-only rendering of the minimum planar graph
 where \code{patchId} are positive integers, and \code{linkId} are negative
 integers showing the shortest paths between patches  Only available for
 \code{mpg} objects.
 
-\code{'network'} gives a vector rendering of the minimum planar graph or
+\code{"network"} gives a vector rendering of the minimum planar graph or
 the grains of connectivity network with nodes and links plotted at the
 patch or polygon centroid locations. Available for \code{mpg} and \code{grain}
 objects. Default for \code{grain} objects.
 
-\code{'grainPlot'} gives a raster and vector rendering of the grains of
+\code{"grainPlot"} gives a raster and vector rendering of the grains of
 connectivity network with nodes and links plotted at polygon centroid locations,
 superimposed over the boundaries of the Voronoi polygons.  Can be time
 consuming on large rasters due to the Voronoi boundary extraction.
 Only available for \code{grain} objects.
 
-\code{'corridorPlot'} renders the output of a \code{\link{corridor}} analysis.
+\code{"corridorPlot"} renders the output of a \code{\link{corridor}} analysis.
 It is the only option available with \code{corridor} objects and the default.
 }
+
 \examples{
 \dontrun{
 ## Load raster landscape

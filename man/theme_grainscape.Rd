@@ -3,7 +3,7 @@
 \docType{methods}
 \name{theme_grainscape}
 \alias{theme_grainscape}
-\title{A ggplot theme for grainscape}
+\title{A \code{ggplot2} theme for \code{grainscape}}
 \usage{
 theme_grainscape(base_size = 9, base_family = "")
 }
@@ -16,7 +16,7 @@ theme_grainscape(base_size = 9, base_family = "")
 A theme suitable for use with \code{\link{ggplot}}
 }
 \description{
-A \code{\link{ggplot2}} theme designed for grainscape based on the
+A \code{\link{ggplot2}} theme designed for \code{grainscape} based on the
 \code{\link[ggthemes]{theme_map}} theme, with several modifications.
 }
 \examples{

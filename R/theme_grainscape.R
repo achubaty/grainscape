@@ -1,7 +1,6 @@
-#' A ggplot theme for grainscape
+#' A \code{ggplot2} theme for \code{grainscape}
 #'
-#' @description
-#' A \code{\link{ggplot2}} theme designed for grainscape based on the
+#' A \code{\link{ggplot2}} theme designed for \code{grainscape} based on the
 #' \code{\link[ggthemes]{theme_map}} theme, with several modifications.
 #'
 #' @param base_size     Base font size
@@ -45,5 +44,5 @@ theme_grainscape <- function(base_size = 9, base_family = "") {
           panel.grid = element_blank(),
           panel.spacing = unit(0, "lines"), plot.background = element_blank(),
           legend.justification = c(0, 0), legend.position = "none",
-          aspect.ratio=1)
+          aspect.ratio = 1)
 }

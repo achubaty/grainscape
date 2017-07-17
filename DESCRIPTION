@@ -19,6 +19,7 @@ License: GPL (>= 2)
 Imports:
     ggplot2,
     graphics,
+    grDevices,
     igraph,
     methods,
     sp,

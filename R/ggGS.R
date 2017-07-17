@@ -186,7 +186,6 @@ setMethod(
   }
 })
 
-
 #' @export
 #' @rdname ggGS
 setMethod(
@@ -199,13 +198,11 @@ setMethod(
   }
   if (type %in% slotNames(x)[-which(slotNames(x) %in% c("voronoi", "mpg"))]) {
     ggGS(slot(x, type))
-  }
-  else if (type == "voronoi") {
+  } else if (type == "voronoi") {
     out <- slot(x, type)
     out[out[] == 0] <- NA
     ggGS(out)
-  }
-  else if (type == "vorBound") {
+  } else if (type == "vorBound") {
     message("Extracting voronoi boundaries...")
     out <- x@voronoi
     out[out[] == 0] <- NA
@@ -238,7 +235,7 @@ setMethod(
   } else if (type %in% c("nodes", "links")) {
     ggGS(graphdf(x), type = type)
   } else {
-    stop("type parameter not valid for a grain object")
+    stop("type parameter not valid for a grain object.")
   }
 })
 
