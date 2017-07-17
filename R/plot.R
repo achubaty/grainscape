@@ -4,6 +4,9 @@
   if (theme) {
     g <- g + theme_grainscape() + coord_equal()
   }
+  else {
+    g <- g + theme(aspect.ratio=1)
+  }
   if (!print) {
     invisible(g)
   }
