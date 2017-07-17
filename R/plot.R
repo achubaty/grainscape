@@ -1,5 +1,6 @@
 if (getRversion() >= "3.1.0") {
-  utils::globalVariables(c("cols", "sz", "value", "x1", "x1p", "x2", "y1", "y1p", "y2"))
+  utils::globalVariables(c("cols", "sz", "value", "x1", "x1p", "x2", "x2p",
+                           "y1", "y1p", "y2", "y2p"))
 }
 
 #' \code{.gFinal}
@@ -52,7 +53,7 @@ if (getRversion() >= "3.1.0") {
 #' @param print   Render the \code{ggplot} on the default graphics device.
 #'                Default is \code{TRUE}.
 #'
-#' @param theme   Apply grainscape theme and scale aesthetics.  Default is \code{TRUE}.                     .
+#' @param theme   Apply grainscape theme and scale aesthetics.  Default is \code{TRUE}.
 #'
 #' @param ...     Additional arguments (not used).
 
@@ -207,17 +208,17 @@ setMethod(
   "plot",
   signature = "grain",
   definition = function(x, y, quick = NULL, print = TRUE, theme = TRUE, ...) {
-    if ((is.null(quick)) || (quick == "network")) {
+    if (is.null(quick) || (quick == "network")) {
 
-      col.par <- function(n) {
+      colPar <- function(n) {
         sample(seq(0.3, 1, length.out = 50), n, replace = TRUE)
       }
 
       vor <- ggGS(x, "voronoi")
       nVor <- max(vor$value, na.rm = TRUE)
       cols <- data.frame(n = 1:nVor,
-                         col = rainbow(nVor, s = col.par(nVor),
-                                       v = col.par(nVor))[sample(nVor, replace = TRUE)],
+                         col = rainbow(nVor, s = colPar(nVor),
+                                       v = colPar(nVor))[sample(nVor, replace = TRUE)],
                          stringsAsFactors = FALSE)
       vor <- cbind(vor, cols = cols[match(vor$value, cols$n), "col"])
       g <- ggplot() +
@@ -262,7 +263,7 @@ setMethod(
   "plot",
   signature = "mpg",
   definition = function(x, y, quick = NULL, print = TRUE, theme = TRUE, ...) {
-    if ((is.null(quick)) || (quick == "mpgPerimPlot")) {
+    if (is.null(quick) || (quick == "mpgPerimPlot")) {
       g <- ggplot() +
         geom_raster(data = ggGS(x, "patchId"), aes(x = x, y = y, fill = value > 0)) +
         scale_fill_manual(values = "grey")

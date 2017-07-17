@@ -220,4 +220,3 @@ setMethod(
     cat("\nSlot corridorLength:\n")
     cat(show(object@corridorLength))
 })
-

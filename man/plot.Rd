@@ -28,7 +28,7 @@ description of the available quick plots, and the defaults.}
 \item{print}{Render the \code{ggplot} on the default graphics device.
 Default is \code{TRUE}.}
 
-\item{theme}{Apply grainscape theme and scale aesthetics.  Default is \code{TRUE}.                     .}
+\item{theme}{Apply grainscape theme and scale aesthetics.  Default is \code{TRUE}.}
 
 \item{...}{Additional arguments (not used).}
 }

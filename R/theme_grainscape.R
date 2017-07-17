@@ -36,7 +36,7 @@
 #'   theme_grainscape()
 #' }
 #'
-theme_grainscape <- function(base_size = 9, base_family = "") {
+theme_grainscape <- function(base_size = 9, base_family = "") { # nolint
   theme_bw(base_size = base_size, base_family = base_family) %+replace%
     theme(axis.line = element_blank(), axis.text = element_blank(),
           axis.ticks = element_blank(), axis.title = element_blank(),
