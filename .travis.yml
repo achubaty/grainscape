@@ -1,18 +1,8 @@
-# Sample .travis.yml for R projects.
-#
-# See README.md for instructions, or for more configuration options,
-# see the wiki:
-#   https://github.com/craigcitro/r-travis/wiki
-
 sudo: required
-
 language: r
-
 cran: https://cran.rstudio.com/
-
 matrix:
   include:
-
   - os: linux
     dist: trusty
     r: oldrel
@@ -26,7 +16,6 @@ matrix:
     - sh -e /etc/init.d/xvfb start
     before_script:
     - Rscript -e 'install.packages("dplyr", dependencies = TRUE)'
-
   - os: linux
     dist: trusty
     r: release
@@ -45,9 +34,8 @@ matrix:
     before_script:
     - Rscript -e 'install.packages("dplyr", dependencies = TRUE)'
     after_success:
-    - Rscript -e 'library(covr); coveralls(coverage = print(package_coverage(quiet = FALSE)))'
-    - Rscript -e 'library(lintr); lint_package()'
-
+    - Rscript -e 'covr::coveralls(type = "all", quiet = FALSE)'
+    - Rscript -e 'lintr::lint_package()'
   - os: linux
     dist: trusty
     r: devel
@@ -61,7 +49,6 @@ matrix:
     - sh -e /etc/init.d/xvfb start
     before_script:
     - Rscript -e 'install.packages("dplyr", dependencies = TRUE)'
-
   - os: osx
     osx_image: xcode8.2
     latex: false
@@ -69,18 +56,13 @@ matrix:
     r_check_args: '--as-cran --ignore-vignettes --no-examples'
     before_script:
     - Rscript -e 'install.packages(c("Rcpp", "dplyr"), type = "source")'
-
 r_build_args: '--compact-vignettes="gs+qpdf"'
-
 r_check_args: '--as-cran'
-
 warnings_are_errors: true
-
 notifications:
   email:
     on_success: change
     on_failure: change
-
 branches:
   only:
     - master
