@@ -9,24 +9,27 @@ Description: Given a landscape resistance surface, creates grains of connectivit
     (https://r-forge.r-project.org/projects/grainscape/).
 URL: https://github.com/achubaty/grainscape
 Version: 0.3.0.9000
-Date: 2017-06-01
+Date: 2017-07-17
 Authors@R: c(
     person("Paul", "Galpern", email = "pgalpern@gmail.com", role = c("aut", "cph")),
     person("Sam", "Doctolero", email = "sam.doctolero@gmail.com", role = "aut"),
-    person(c("Alex", "M"), "Chubaty", email = "alexander.chubaty@canada.ca", role = c("aut", "cre"))
+    person("Alex M", "Chubaty", email = "alexander.chubaty@canada.ca", role = c("aut", "cre"))
     )
 License: GPL (>= 2)
 Imports:
+    ggplot2,
     graphics,
+    grDevices,
     igraph,
     methods,
     sp,
     raster,
-    Rcpp (>= 0.12.5),
+    Rcpp (>= 0.12.11.4),
+    rgdal,
     utils
 LinkingTo: Rcpp
 Suggests:
-    grDevices,
+    ggthemes,
     knitr,
     parallel,
     rgeos,
@@ -41,16 +44,19 @@ Collate:
     'GOC.R'
     'MPG.R'
     'RcppExports.R'
-    'aaa.R'
     'grain.R'
     'corridor.R'
     'deprecated.R'
     'distance.R'
+    'export.R'
     'extract.R'
+    'ggGS.R'
     'graphdf.R'
     'habitatConnectivityEngine.R'
+    'patchFilter.R'
     'plot.R'
     'point.R'
+    'theme_grainscape.R'
     'threshold.R'
     'zzz.R'
 RoxygenNote: 6.0.1

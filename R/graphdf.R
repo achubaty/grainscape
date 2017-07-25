@@ -32,14 +32,11 @@
 #' @seealso \code{\link{MPG}}, \code{\link{GOC}}
 #'
 #' @examples
-#' \dontrun{
-#' library(raster)
-#'
 #' ## Load raster landscape
-#' tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape"))
+#' tiny <- raster::raster(system.file("extdata/tiny.asc", package = "grainscape"))
 #'
 #' ## Create a resistance surface from a raster using an is-becomes reclassification
-#' tinyCost <- reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
+#' tinyCost <- raster::reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
 #'
 #' ## Produce a patch-based MPG where patches are resistance features=1
 #' tinyPatchMPG <- MPG(cost = tinyCost, patch = tinyCost == 1)
@@ -55,7 +52,6 @@
 #'
 #' ## Create a data.frame with the structure and attributes of any igraph object
 #' graphdf(tinyPatchGOC@th[[1]]$goc)
-#' }
 #'
 #' @export
 #' @rdname graphdf
@@ -80,15 +76,18 @@ setMethod(
         results[[i]]$v <- data.frame(sapply(names(vertex_attr(thisGraph)), function(z) {
           vertex_attr(thisGraph, z)
         }), stringsAsFactors = FALSE)
-        results[[i]]$e <- data.frame(as_edgelist(thisGraph), sapply(names(edge_attr(thisGraph)), function(z) {
+        results[[i]]$e <- data.frame(as_edgelist(thisGraph),
+                                     sapply(names(edge_attr(thisGraph)), function(z) {
           edge_attr(thisGraph, z)
         }), stringsAsFactors = FALSE)
         edgeDfNames <- names(results[[i]]$e)
         names(results[[i]]$e) <- c("e1", "e2", edgeDfNames[3:length(edgeDfNames)])
 
         ## Clean-up storage mode structure of data.frames
-        results[[i]]$e <- as.data.frame(sapply(results[[i]]$e, as.character), stringsAsFactors = FALSE)
-        results[[i]]$v <- as.data.frame(sapply(results[[i]]$v, as.character), stringsAsFactors = FALSE)
+        results[[i]]$e <- as.data.frame(sapply(results[[i]]$e, as.character),
+                                        stringsAsFactors = FALSE)
+        results[[i]]$v <- as.data.frame(sapply(results[[i]]$v, as.character),
+                                        stringsAsFactors = FALSE)
         results[[i]]$e <- as.data.frame(lapply(results[[i]]$e, function(z) {
           type.convert(z, as.is = TRUE)
         }), stringsAsFactors = FALSE)
@@ -113,6 +112,16 @@ setMethod(
     theseGraphs <- lapply(x@th, function(z) z$goc)
     graphdf(theseGraphs)
 })
+
+#' @export
+#' @rdname graphdf
+setMethod(
+  "graphdf",
+  signature = "grain",
+  definition = function(x, ...) {
+    theseGraphs <- list(x@th)
+    graphdf(theseGraphs)
+  })
 
 #' @export
 #' @rdname graphdf

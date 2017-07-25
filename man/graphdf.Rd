@@ -5,6 +5,7 @@
 \alias{graphdf}
 \alias{graphdf,list-method}
 \alias{graphdf,goc-method}
+\alias{graphdf,grain-method}
 \alias{graphdf,mpg-method}
 \alias{graphdf,igraph-method}
 \title{Produce a \code{data.frame} containing the structure and associated attributes}
@@ -14,6 +15,8 @@ graphdf(x, ...)
 \S4method{graphdf}{list}(x, ...)
 
 \S4method{graphdf}{goc}(x, ...)
+
+\S4method{graphdf}{grain}(x, ...)
 
 \S4method{graphdf}{mpg}(x, ...)
 
@@ -46,14 +49,11 @@ This provides an easy way to create data tables describing graphs, particularly
 helpful for users unfamiliar with the structure of \code{igraph} objects.
 }
 \examples{
-\dontrun{
-library(raster)
-
 ## Load raster landscape
-tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape"))
+tiny <- raster::raster(system.file("extdata/tiny.asc", package = "grainscape"))
 
 ## Create a resistance surface from a raster using an is-becomes reclassification
-tinyCost <- reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
+tinyCost <- raster::reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
 
 ## Produce a patch-based MPG where patches are resistance features=1
 tinyPatchMPG <- MPG(cost = tinyCost, patch = tinyCost == 1)
@@ -69,7 +69,6 @@ tinyPatchGOC_df <- graphdf(tinyPatchGOC)
 
 ## Create a data.frame with the structure and attributes of any igraph object
 graphdf(tinyPatchGOC@th[[1]]$goc)
-}
 
 }
 \seealso{

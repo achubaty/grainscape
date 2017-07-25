@@ -9,4 +9,3 @@ src/*.so
 .RData
 .Ruserdata
 vignettes/*_cache
-

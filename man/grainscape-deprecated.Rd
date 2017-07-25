@@ -9,7 +9,7 @@
 \alias{visualize}
 \alias{gsGraphDataFrame}
 \alias{gsMPG}
-\title{Deprecated functions}
+\title{\code{grainscape}: Deprecated}
 \usage{
 gsGOC(mpg, nThresh = NULL, doThresh = NULL, weight = "lcpPerimWeight",
   sp = FALSE, verbose = 3)
@@ -51,13 +51,9 @@ path distance from the perimeters of patches as the link weight.
 \code{"eucPerimWeight"} use the Euclidean distance from the
 perimeters of patches as the link weight.}
 
-\item{sp}{Logical.  If \code{TRUE} the \code{rgeos} package is used to create
+\item{sp}{Logical. If \code{TRUE} the \code{rgeos} package is used to create
 a vector of class \code{\link{SpatialPolygonsDataFrame}} describing
-the finest grain of connectivity. This is very useful for visualizing
-grains of connectivity models, especially for print purposes.
-Equally, using the \code{maptools} or \code{rgdal} packages these
-polygons can be exported as shapefiles for use in other GIS applications.
-But, please see details.}
+the finest grain of connectivity.}
 
 \item{verbose}{Set \code{verbose=0} for no progress information to console.}
 
@@ -68,9 +64,8 @@ But, please see details.}
 \item{coords}{A two column matrix or a \code{\link{SpatialPoints}} object
 giving coordinates at the end points of the corridor.}
 
-\item{doPlot}{Logical.  If \code{TRUE} plots a vector visualization of the
-corridor at the given scale.
-For full control, manually produce plots using the outputs of this function.}
+\item{doPlot}{Logical. If \code{TRUE} plots a vector visualization of the
+corridor at the given scale}
 
 \item{x}{A \code{mpg} object produced by \code{\link{MPG}}.
 For lattice GOC \code{MPG} must be run with patch set as an integer value.}
@@ -95,5 +90,8 @@ cells between focal points in the lattice.}
 \item{filterPatch, sa, spreadFactor}{No longer used.}
 }
 \description{
-These functions have been deprecated and will be removed in a future release.
+These have been deprecated and will be removed in a future release.
+}
+\note{
+the \code{sp} argument has also been deprecated from all functions.
 }

@@ -14,12 +14,13 @@
 #' a resource patch.  Lattice models can be used as a generalized and functional
 #' approach to scaling resistance surfaces.
 #'
-#' Areal measurements are given as raster cell counts.
-#' If the raster projection is one where cell sizes are approximately constant in area (e.g., UTM),
-#' or the raster covers a relatively small geographic extent (e.g., < 1000 km in dimension)
-#' areal measurements will often be adequate.
-#' Reprojection of rasters should be considered to minimize these effects in
-#' other cases (see \code{\link{projectRaster}}).
+#' Rasters should be projected and not in geographic coordinates (i.e. \code{projection(cost)}
+#' should not contain \code{"+proj=longlat"}) or the function will issue a warning.
+#' In unprojected cases consider using \code{\link{projectRaster}} to change to an appropriate
+#' coordinate system for the location and extent of interest that balances both distance and areal
+#' accuracy.  See \url{http://www.spatialreference.org} for location-specific suggestions.
+#' Use of geographic coordinates will result in inaccurate areal and distance measurements,
+#' rendering the models themselves inaccurate.
 #'
 #' @param cost   A \code{RasterLayer} giving a landscape resistance surface,
 #'               where the values of each raster cell are proportional to the
@@ -43,15 +44,28 @@
 #' @return A \code{\link[=mpg-class]{mpg}} object.
 #'
 #' @references
-#' Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien. (2007) Spatial graphs: Principles and applications for habitat connectivity. Ecosystems 10:448:461.
+#' Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien. (2007) Spatial graphs:
+#' Principles and applications for habitat connectivity. Ecosystems 10:448:461.
 #'
-#' Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis at multiple spatial scales in landscape genetics.  Molecular Ecology 21:3996-4009.
+#' Galpern, P., M. Manseau. (2013a) Finding the functional grain: comparing methods
+#' for scaling resistance surfaces. Landscape Ecology 28:1269-1291.
+#'
+#' Galpern, P., M. Manseau. (2013b) Modelling the influence of landscape connectivity
+#' on animal distribution: a functional grain approach. Ecography 36:1004-1016.
+#'
+#' Galpern, P., M. Manseau, A. Fall. (2011) Patch-based graphs of landscape connectivity:
+#' a guide to construction, analysis, and application for conservation.
+#' Biological Conservation 144:44-55.
+#'
+#' Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis
+#' at multiple spatial scales in landscape genetics. Molecular Ecology 21:3996-4009.
 #'
 #' @author Paul Galpern, Sam Doctolero, Alex Chubaty
 #' @docType methods
 #' @export
 #' @importFrom raster boundaries cellFromRowCol cellFromRowColCombine compareRaster
-#' @importFrom raster getValues mask projection raster res writeRaster xyFromCell
+#' @importFrom raster getValues mask projection raster res writeRaster
+#' @importFrom raster xFromCol xyFromCell yFromRow
 #' @importFrom sp coordinates
 #' @importFrom stats na.omit
 #' @importFrom utils read.table
@@ -60,8 +74,6 @@
 #' @seealso \code{\link{GOC}, \link{threshold}}
 #'
 #' @examples
-#' \dontrun{
-#' library(igraph)
 #' library(raster)
 #'
 #' ## Load raster landscape
@@ -77,22 +89,15 @@
 #' graphdf(tinyPatchMPG)
 #'
 #' ## Find the mean patch area (see igraph manual for use of V() and E())
-#' mean(V(tinyPatchMPG@mpg)$patchArea.value)
+#' mean(igraph::V(tinyPatchMPG@mpg)$patchArea)
 #'
 #' ## Quick visualization of the MPG
 #' plot(tinyPatchMPG, col = c("grey", "black"), legend = FALSE)
-#'
-#' ## Visualize the minimum spanning tree of the MPG
-#' tinyPatchMST <- mst(tinyPatchMPG@mpg)
-#' MSTlinks <- edge_attr(tinyPatchMST, "linkId")
-#' plot(tinyPatchMPG@patchId, col = "black", legend = FALSE)
-#' plot((tinyPatchMPG@lcpLinkId * -1) %in% MSTlinks, add = TRUE, legend = FALSE, col = c(NA, "grey"))
 #'
 #' ## Additional graph extraction scenarios
 #' ## Produce a lattice MPG where focal points are spaced 10 cells apart
 #' tinyLatticeMPG <- MPG(cost = tinyCost, patch = 10)
 #' plot(tinyLatticeMPG)
-#' }
 #'
 setGeneric("MPG", function(cost, patch, ...) {
   standardGeneric("MPG")
@@ -106,18 +111,14 @@ setMethod(
   definition = function(cost, patch, ...) {
   ## Check patch and cost are comparable
   if (!compareRaster(patch, cost, res = TRUE, orig = TRUE, stopiffalse = FALSE)) {
-    stop("grainscape: patch and cost rasters must be identical in extent, projection, origin and resolution.", call. = FALSE)
+    stop("patch and cost rasters must be identical in extent, projection, origin and resolution.")
   }
 
-  ## Check additional geographic features of input rasters
-  if (res(cost)[1] != res(cost)[2]) {
-    warning(paste0("grainscape:  raster cells are not square;  assuming a square cell of ",
-                   res(cost)[1], " units."), call. = FALSE)
-  }
-
-  ## Check projection
-  if (!is.na(projection(cost)) && (!grepl("UTM|utm", toupper(projection(cost))))) {
-    warning("grainscape:  projection suggests that all cells may not be of equal area; Note that grainscape assumes equal area in all calculations.", call. = FALSE)
+  if (!is.na(projection(cost)) && grepl("longlat", projection(cost))) {
+    warning("input rasters in geographic coordinates (i.e. '+proj=longlat') are unlikely",
+            " to produce reliable estimates of area or distance.",
+            " For accurate results, project rasters with an appropriate coordinate",
+            " system for the location and extent of interest.", immediate. = TRUE)
   }
 
   ## use `cost` raster as template for `rasCost` and `rasPatch`
@@ -127,15 +128,15 @@ setMethod(
   rasCost[] <- getValues(cost)
   rasPatch[] <- getValues(patch)
 
-  ## Check that patch raster is binary, first corecing NAs to zeroes
+  ## Check that patch raster is binary, first coercing NAs to zeroes
   rasPatch[is.na(rasPatch)] <- 0
   if (!all(unique(rasPatch[]) %in% c(FALSE, TRUE))) {
-    stop("grainscape:  patch must be a binary raster (=1 for patches; =0 for non-patches).", call. = FALSE)
+    stop("patch must be a binary raster (=1 for patches; =0 for non-patches).")
   }
 
   ## Check that cost raster is not equal to NA at patches
   if (sum(is.na(rasCost[rasPatch == 1]) > 0)) {
-    stop("grainscape:  cost raster must not contain missing values at patch cells", call. = FALSE)
+    stop("cost raster must not contain missing values at patch cells.")
   }
 
   ## Call the habitat connectivity engine
@@ -156,7 +157,7 @@ setMethod(
   mpgPlot <- hce@patchLinks
 
   ## Get additional patch information
-  uniquePatches <- voronoi[voronoi > 0] %>% na.omit() %>% unique() %>% sort()
+  uniquePatches <- voronoi[voronoi > 0] %>% na.omit() %>% unique() %>% sort() # nolint
 
   ## Patch edge
   patchEdge <- patchId
@@ -165,8 +166,8 @@ setMethod(
   patchEdge <- mask(patchId, patchEdge)
 
   ## Patch area and core area
-  patchArea <- freq(patchId, useNA = "no")
-  patchEdgeArea <- freq(patchEdge, useNA = "no")
+  patchArea <- freq(patchId, useNA = "no")[, 2] * res(cost)[1] * res(cost)[2]
+  patchEdgeArea <- freq(patchEdge, useNA = "no")[, 2] * res(cost)[1] * res(cost)[2]
   patch <- data.frame(name = uniquePatches, patchId = uniquePatches,
                       patchArea = patchArea, patchEdgeArea = patchEdgeArea,
                       coreArea = patchArea - patchEdgeArea)
@@ -177,8 +178,8 @@ setMethod(
   r[r == 0] <- NA
   rasX[] <- cellXY[, 1]
   rasY[] <- cellXY[, 2]
-  centroids <- cbind(zonal(rasX, r, fun = 'mean', na.rm = TRUE),
-                     zonal(rasY, r, fun = 'mean', na.rm = TRUE)[, 2]) %>%
+  centroids <- cbind(zonal(rasX, r, fun = "mean", na.rm = TRUE),
+                     zonal(rasY, r, fun = "mean", na.rm = TRUE)[, 2]) %>%
     as.data.frame()
   colnames(centroids) <- c("zone", "meanX", "meanY")
 
@@ -189,13 +190,13 @@ setMethod(
                          v2 = hce@linkData$EndId,
                          linkId = hce@linkData$LinkId * -1L,
                          lcpPerimWeight = hce@linkData$PerimWeight,
-                         startPerimX = hce@linkData$StartRow,
-                         startPerimY = hce@linkData$StartColumn,
-                         endPerimX = hce@linkData$EndRow,
-                         endPerimY = hce@linkData$EndColumn)
-  mpg.igraph <- graph_from_data_frame(toGraphE, directed = FALSE, vertices = toGraphV)
+                         startPerimX = xFromCol(cost, hce@linkData$StartColumn),
+                         startPerimY = yFromRow(cost, hce@linkData$StartRow),
+                         endPerimX = xFromCol(cost, hce@linkData$EndColumn),
+                         endPerimY = yFromRow(cost, hce@linkData$EndRow))
+  mpgIgraph <- graph_from_data_frame(toGraphE, directed = FALSE, vertices = toGraphV)
 
-  mpg <- new('mpg', mpg = mpg.igraph, patchId = patchId, voronoi = voronoi,
+  mpg <- new("mpg", mpg = mpgIgraph, patchId = patchId, voronoi = voronoi,
              lcpPerimWeight = lcpPerimWeight, lcpLinkId = lcpLinkId, mpgPlot = mpgPlot)
 
   return(mpg)
@@ -211,9 +212,13 @@ setMethod(
     focalPointDistFreq <- patch
     patch <- cost
     patch[] <- 0
-    patch[cellFromRowColCombine(patch,
-                                seq(1, nrow(patch), by = focalPointDistFreq) + focalPointDistFreq/2,
-                                seq(1, ncol(patch), by = focalPointDistFreq) + focalPointDistFreq/2)] <- 1
+
+    ids <- cellFromRowColCombine(
+      patch,
+      seq(1, nrow(patch), by = focalPointDistFreq) + focalPointDistFreq / 2,
+      seq(1, ncol(patch), by = focalPointDistFreq) + focalPointDistFreq / 2
+    )
+    patch[ids] <- 1
     ## Remove lattice points that fall on NA cost cells
     patch[is.na(cost)] <- 0
 

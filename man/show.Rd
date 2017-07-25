@@ -4,11 +4,14 @@
 \name{show,goc-method}
 \alias{show,goc-method}
 \alias{show,grain-method}
+\alias{show,corridor-method}
 \title{Show a \code{grainscape} object}
 \usage{
 \S4method{show}{goc}(object)
 
 \S4method{show}{grain}(object)
+
+\S4method{show}{corridor}(object)
 }
 \arguments{
 \item{object}{A \code{\link[=goc-class]{goc}} or
@@ -17,11 +20,4 @@
 \description{
 Custom \code{show} method to safely print the contents of a \code{goc} or
 \code{grain} object.
-}
-\note{
-When these objects are created using \code{sp = FALSE} (the default),
-an 'empty' \code{SpatialPointsDataFrame} is stored in the \code{voronoiSP}
-slot. This object cannot be safely printed, so the default \code{show} method
-is bypassed, printing each of the other slots and showing \code{voronoiSP} as
-\code{<empty>}.
 }

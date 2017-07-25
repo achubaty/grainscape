@@ -62,16 +62,12 @@ setClass(
                mpgPlot = "RasterLayer")
 )
 
-
-
 #' The \code{goc} class
 #'
 #'
 #' @slot voronoi    A \code{RasterLayer} describing the regions of proximity in
 #'                  resistance units around the focal patches or points.
 #'
-#' @slot voronoiSP  A \code{SpatialPolygonsDataFrame} object representation of
-#'                  these regions of proximity.
 #'
 #' @slot summary    A summary of the the grains of connectivity generated and
 #'                  their properties.
@@ -92,34 +88,8 @@ setClass(
 #' @importClassesFrom sp SpatialPolygons
 setClass(
   "goc",
-  slots = list(voronoi = "RasterLayer", voronoiSP = "SpatialPolygonsDataFrame",
+  slots = list(voronoi = "RasterLayer",
                summary = "data.frame", th = "list")
-)
-
-#' The \code{grain} class
-#'
-#'
-#' @slot voronoi    A \code{RasterLayer} describing the regions of proximity in
-#'                  resistance units around the focal patches or points.
-#'
-#' @slot voronoiSP  A \code{SpatialPolygonsDataFrame} object representation of
-#'                  these regions of proximity.
-#'
-#' @slot summary    A summary of the the grains of connectivity generated and
-#'                  their properties.
-#'
-#' @slot centroids  A \code{SpatialPoints} object indicating the grain's polygon
-#'                  centroids.
-#'
-#' See \code{\link{grain}} for more information.
-#'
-#' @author Alex Chubaty and Paul Galpern
-#' @importClassesFrom raster RasterLayer
-#' @importClassesFrom sp SpatialPoints SpatialPolygonsDataFrame
-setClass(
-  "grain",
-  slots = list(voronoi = "RasterLayer", voronoiSP = "SpatialPolygonsDataFrame",
-               summary = "data.frame", centroids = "SpatialPoints")
 )
 
 #' Show a \code{grainscape} object
@@ -127,11 +97,6 @@ setClass(
 #' Custom \code{show} method to safely print the contents of a \code{goc} or
 #' \code{grain} object.
 #'
-#' @note When these objects are created using \code{sp = FALSE} (the default),
-#' an 'empty' \code{SpatialPointsDataFrame} is stored in the \code{voronoiSP}
-#' slot. This object cannot be safely printed, so the default \code{show} method
-#' is bypassed, printing each of the other slots and showing \code{voronoiSP} as
-#' \code{<empty>}.
 #'
 #' @param object  A \code{\link[=goc-class]{goc}} or
 #'                \code{\link[=grain-class]{grain}} object.
@@ -145,19 +110,39 @@ setMethod(
     cat("Slot voronoi:\n")
     cat(show(object@voronoi))
 
-    cat("\nSlot voronoiSP:\n")
-    if (identical(object@voronoiSP, .emptySPDF())) {
-      cat("<empty>\n")
-    } else {
-      cat(show(object@voronoiSP))
-    }
-
     cat("\nSlot summary:\n")
     cat(show(object@summary))
 
     cat("\nSlot th:\n")
     cat("List of ", length(object@th), " goc elements", "\n")
 })
+
+#' The \code{grain} class
+#'
+#'
+#' @slot voronoi    A \code{RasterLayer} describing the regions of proximity in
+#'                  resistance units around the focal patches or points.
+#'
+#' @slot summary    A summary of the the grains of connectivity generated and
+#'                  their properties.
+#'
+#' @slot centroids  A \code{SpatialPoints} object indicating the grain's polygon
+#'                  centroids.
+#'
+#' @slot th         A list of \code{igraph} objects giving the graphs describing the relationship
+#'                  among the polygons in that grain
+#'
+#' See \code{\link{grain}} for more information.
+#'
+#' @author Alex Chubaty and Paul Galpern
+#' @importClassesFrom raster RasterLayer
+#' @importClassesFrom sp SpatialPoints SpatialPolygonsDataFrame
+setClass(
+  "grain",
+  slots = list(voronoi = "RasterLayer",
+               summary = "data.frame", centroids = "SpatialPoints",
+               th = "igraph")
+)
 
 #' @export
 #' @rdname show
@@ -168,16 +153,71 @@ setMethod(
     cat("Slot voronoi:\n")
     cat(show(object@voronoi))
 
-    cat("\nSlot voronoiSP:\n")
-    if (identical(object@voronoiSP, .emptySPDF())) {
-      cat("<empty>\n")
-    } else {
-      cat(show(object@voronoiSP))
-    }
-
     cat("\nSlot summary:\n")
     cat(show(object@summary))
 
     cat("\nSlot centroids:\n")
     cat("SpatialPoints objects with ", length(object@centroids), " features", "\n")
+
+    cat("\nSlot th:\n")
+    cat(show(object@th))
+})
+
+#' The \code{corridor} class
+#'
+#' @slot voronoi          A \code{RasterLayer} representation of the boundaries
+#'                        of the voronoi polygons.
+#'
+#' @slot linksSP          A \code{SpatialLinesDataFrame} representation of links
+#'                        in the grains of connectivity graph.
+#'
+#' @slot nodesSP          A \code{SpatialPoints} epresentation of the nodes in
+#'                        the grains of connectivity graph
+#'
+#' @slot shortestLinksSP  A \code{SpatialLines} representation of the links in
+#'                        the shortest path between coordinates
+#'
+#' @slot shortestNodesSP  A \code{SpatialPoints} representation of the nodes in
+#'                        the shortest path between coordinates
+#'
+#' @slot corridorLength   A \code{numeric} of length 1 giving the length of the
+#'                        shortest path between coordinates in accumulated
+#'                        resistance units.
+#'
+#' See \code{\link{corridor}} for more information.
+#'
+#' @author Alex Chubaty and Paul Galpern
+#' @importClassesFrom raster RasterLayer
+#' @importClassesFrom sp SpatialLines SpatialLinesDataFrame SpatialPoints
+#'
+setClass(
+  "corridor",
+  slots = list(voronoi = "RasterLayer", linksSP = "SpatialLinesDataFrame",
+               nodesSP = "SpatialPoints", shortestLinksSP = "SpatialLines",
+               shortestNodesSP = "SpatialPoints", corridorLength = "numeric")
+)
+
+#' @export
+#' @rdname show
+setMethod(
+  "show",
+  signature = "corridor",
+  definition = function(object) {
+    cat("Slot voronoi:\n")
+    cat(show(object@voronoi))
+
+    cat("\nSlot linksSP:\n")
+    cat(show(object@linksSP))
+
+    cat("\nSlot nodesSP:\n")
+    cat(show(object@nodesSP))
+
+    cat("\nSlot shortestLinksSP:\n")
+    cat(show(object@shortestLinksSP))
+
+    cat("\nSlot shortestNodesSP:\n")
+    cat(show(object@shortestNodesSP))
+
+    cat("\nSlot corridorLength:\n")
+    cat(show(object@corridorLength))
 })

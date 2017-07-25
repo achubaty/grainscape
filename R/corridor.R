@@ -4,8 +4,6 @@
 #' Given a series of GOC models built at different scales, visualize the corridor
 #' (or shortest path) between two points using one of the tessellations
 #' (i.e., scales) in these models.
-#' Visualization is exclusively in vector format.
-#' \code{\link{GOC}} must be run using the \code{sp=TRUE} option.
 #'
 #' @param x       A \code{goc} object created by \code{\link{GOC}}.
 #'
@@ -14,41 +12,29 @@
 #' @param coords  A two column matrix or a \code{\link{SpatialPoints}} object
 #'                giving coordinates at the end points of the corridor.
 #'
-#' @param doPlot  Logical.  If \code{TRUE} plots a vector visualization of the
-#'                corridor at the given scale.
-#'                For full control, manually produce plots using the outputs of this function.
-#'
 #' @param weight  The GOC graph link weight to use in calculating the distance.
 #'                Please see details in \code{\link{distance}}.
 #'
 #' @param ...     Additional arguments (not used).
 #'
-#' @return A list object:
-#'
-#' \describe{
-#'   \item{\code{voronoiSP}}{vector representation of polygons in the tessellation
-#'   (\code{SpatialPolygonsDataFrame})}
-#'
-#'   \item{\code{linksSP}}{vector representation of links in the grains of
-#'   connectivity graph (\code{SpatialLinesDataFrame})}
-#'
-#'   \item{\code{nodesSP}}{vector representation of the nodes in the grains of
-#'   connectivity graph (\code{SpatialPoints})}
-#'
-#'   \item{\code{shortestLinksSP}}{vector representation of the links in the
-#'   shortest path between coordinates (\code{SpatialLines})}
-#'
-#'   \item{\code{shortestNodesSP}}{vector representation of the nodes in the
-#'   shortest path between coordinates (\code{SpatialPoints})}
-#'
-#'   \item{\code{corridorLength}}{gives the length of the shortest path between
-#'   coordinates in accumulated resistance units}
-#' }
+#' @return An object of class \code{\linkS4class{corridor}}.
 #'
 #' @references
-#' Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien. (2007) Spatial graphs: Principles and applications for habitat connectivity. Ecosystems 10:448:461.
+#' Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien. (2007) Spatial graphs:
+#' Principles and applications for habitat connectivity. Ecosystems 10:448:461.
 #'
-#' Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis at multiple spatial scales in landscape genetics. Molecular Ecology 21:3996-4009.
+#' Galpern, P., M. Manseau. (2013a) Finding the functional grain: comparing methods
+#' for scaling resistance surfaces. Landscape Ecology 28:1269-1291.
+#'
+#' Galpern, P., M. Manseau. (2013b) Modelling the influence of landscape connectivity
+#' on animal distribution: a functional grain approach. Ecography 36:1004-1016.
+#'
+#' Galpern, P., M. Manseau, A. Fall. (2011) Patch-based graphs of landscape connectivity:
+#' a guide to construction, analysis, and application for conservation.
+#' Biological Conservation 144:44-55.
+#'
+#' Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis
+#' at multiple spatial scales in landscape genetics. Molecular Ecology 21:3996-4009.
 #'
 #' @author Paul Galpern and Alex Chubaty
 #' @docType methods
@@ -60,7 +46,6 @@
 #' @seealso \code{\link{GOC}}, \code{\link{visualize}}
 #'
 #' @examples
-#' \dontrun{
 #' library(raster)
 #'
 #' ## Load raster landscape
@@ -72,24 +57,23 @@
 #' ## Produce a patch-based MPG where patches are resistance features=1
 #' tinyPatchMPG <- MPG(cost = tinyCost, patch = (tinyCost == 1))
 #'
-#' ## Extract a representative subset of 5 grains of connectivity using sp=TRUE
-#' tinyPatchGOC <- GOC(tinyPatchMPG, nThresh = 5, sp = TRUE)
+#' ## Extract a representative subset of 5 grains of connectivity
+#' tinyPatchGOC <- GOC(tinyPatchMPG, nThresh = 5)
 #'
 #' ## Quick visualization of a corridor
 #' corridorStartEnd <- rbind(c(10,10), c(90,90))
-#' corridor(tinyPatchGOC, whichThresh = 3, coords = corridorStartEnd, doPlot = TRUE)
+#' tinyPatchCorridor <- corridor(tinyPatchGOC, whichThresh = 3, coords = corridorStartEnd)
+#' plot(tinyPatchCorridor)
 #'
 #' ## More control over a corridor visualization
-#' tinyPatchCorridor <- corridor(tinyPatchGOC, whichThresh = 3, coords = corridorStartEnd)
-#' plot(tinyPatchCorridor$voronoiSP, col = "lightgrey", border = "white", lwd = 2)
-#' plot(tinyPatchCorridor$linksSP, col = "darkred", lty = "dashed", add = TRUE)
-#' plot(tinyPatchCorridor$nodesSP, col = "darkred", pch = 21, bg="white", add = TRUE)
-#' plot(tinyPatchCorridor$shortestLinksSP, col = "darkred", lty = "solid", lwd = 2, add = TRUE)
-#' plot(tinyPatchCorridor$shortestNodesSP, col = "darkred", pch = 21, bg = "darkred", add = TRUE)
+#' plot(tinyPatchCorridor@voronoi, col = "lightgrey", lwd = 2)
+#' plot(tinyPatchCorridor@linksSP, col = "darkred", lty = "dashed", add = TRUE)
+#' plot(tinyPatchCorridor@nodesSP, col = "darkred", pch = 21, bg="white", add = TRUE)
+#' plot(tinyPatchCorridor@shortestLinksSP, col = "darkred", lty = "solid", lwd = 2, add = TRUE)
+#' plot(tinyPatchCorridor@shortestNodesSP, col = "darkred", pch = 21, bg = "darkred", add = TRUE)
 #' mtext(paste("Corridor shortest path length:",
-#'             round(tinyPatchCorridor$corridorLength, 2),
+#'             round(tinyPatchCorridor@corridorLength, 2),
 #'             "resistance units"), side = 1)
-#' }
 #'
 setGeneric("corridor", function(x, ...) {
     standardGeneric("corridor")
@@ -100,37 +84,35 @@ setGeneric("corridor", function(x, ...) {
 setMethod(
   "corridor",
   signature = "goc",
-  definition = function(x, whichThresh, coords, doPlot = 0, weight = "meanWeight", ...) {
-    if (!requireNamespace("rgeos", quietly = TRUE)) {
-      stop("grainscape:  rgeos package must be installed to use sp=TRUE")
-    }
-
-    if (is.null(x@voronoiSP)) {
-      stop("grainscape:  GOC object must be produced using sp=TRUE", call. = FALSE)
+  definition = function(x, whichThresh, coords, weight = "meanWeight", ...) {
+    dots <- list(...)
+    if (!is.null(dots$doPlot)) {
+      warning("Argument 'doPlot' is deprecated and will be ignored.")
     }
 
     ## Check whichThresh
-    if ((length(whichThresh) > 1) || (!(whichThresh %in% 1:length(x@th)))) {
-      stop("grainscape:  whichThresh must index a single threshold existing in the GOC object", call. = FALSE)
+    if ((length(whichThresh) > 1) || (!(whichThresh %in% 1:length(x@th)))) { # nolint
+      stop("whichThresh must index a single threshold existing in the GOC object")
     }
 
     ## Check coords
-    if (is.null(dim(coords))) {
-      coords <- t(as.matrix(coords))
+    if (class(coords) %in% c("SpatialPoints", "SpatialPointsDataFrame")) {
+      coords <- coordinates(coords)
     }
 
     if (ncol(coords) != 2) {
-      stop("grainscape:  coords must be a SpatialPoints object or a matrix of two columns giving X and Y coordinates", call. = FALSE)
+      stop("coords must be a SpatialPoints object or a matrix of two columns",
+           "giving X and Y coordinates")
     }
 
     if (nrow(coords) > 2) {
-      warning("grainscape:  using only first two sets of coordinates for corridor start and end points", call. = FALSE)
+      warning("using only first two sets of coordinates for corridor start and end points")
       coords <- coords[1:2, ]
     }
 
     ## Check weight
     if (!(weight %in% names(edge_attr(x@th[[1]]$goc)))) {
-      stop("grainscape:  link weight attribute with this name doesn't exist in GOC object", call. = FALSE)
+      stop("link weight attribute with this name doesn't exist in GOC object")
     }
 
     ## GOC Graph
@@ -163,10 +145,12 @@ setMethod(
 
     ## Shortest path
     startEndPolygons <- point(x, coords)$pointPolygon[, whichThresh]
-    startEndPath <- shortest_paths(x@th[[whichThresh]]$goc,
-                                   which(V(x@th[[whichThresh]]$goc)$polygonId == startEndPolygons[1]),
-                                   which(V(x@th[[whichThresh]]$goc)$polygonId == startEndPolygons[2]),
-                                   weights = V(x@th[[whichThresh]]$goc)$meanWeight) %>%
+    startEndPath <- shortest_paths(
+      x@th[[whichThresh]]$goc,
+      which(V(x@th[[whichThresh]]$goc)$polygonId == startEndPolygons[1]),
+      which(V(x@th[[whichThresh]]$goc)$polygonId == startEndPolygons[2]),
+      weights = V(x@th[[whichThresh]]$goc)$meanWeight
+    ) %>%
       `[[`(1) %>%
       `[[`(1) %>%
       as.numeric()
@@ -187,30 +171,15 @@ setMethod(
       weights = edge_attr(x@th[[whichThresh]]$goc, weight)
     )[startEndPath[length(startEndPath)]]
 
-    voronoiSP <- grain(x, whichThresh = whichThresh, sp = TRUE)@voronoiSP
+    voronoiBound <- boundaries(grain(x, whichThresh = whichThresh)@voronoi, classes = TRUE)
 
-    ## Do plot
-    if (doPlot == 1) {
-      plot(voronoiSP, border = "white", col = "grey88", lwd = 2)
-      plot(edgesGOC, add = TRUE, col = "grey60", lwd = 1.5)
-      plot(verticesGOC, add = TRUE, pch = 21, col = "grey60", bg = "white", cex = 0.75)
-      plot(shortestPathEdges, add = TRUE, col = "black", lwd = 2)
-      plot(shortestPathVertices, add = TRUE,  pch = 21, col = "black", bg = "white", cex = 0.75)
-    } else if (doPlot == 2) {
-      plot(voronoiSP, border = "black", lwd = 0.75)
-      plot(edgesGOC, add = TRUE, col = "darkgray", lwd = 1.5)
-      plot(verticesGOC, add = TRUE, pch = 21, col = "darkgrey", bg = "white", cex = 0.75)
-      plot(shortestPathEdges, add = TRUE, col = "black", lwd = 2)
-      plot(shortestPathVertices, add = TRUE,  pch = 21, col = "black", bg = "white", cex = 0.75)
-    }
+    result <- new("corridor",
+                  voronoi = voronoiBound,
+                  linksSP = edgesGOC,
+                  nodesSP = verticesGOC,
+                  shortestLinksSP = shortestPathEdges,
+                  shortestNodesSP = shortestPathVertices,
+                  corridorLength = pathDist)
 
-    result <- list(
-      voronoiSP = voronoiSP,
-      linksSP = edgesGOC,
-      nodesSP = verticesGOC,
-      shortestLinksSP = shortestPathEdges,
-      shortestNodesSP = shortestPathVertices,
-      corridorLength = pathDist
-    )
     return(result)
 })

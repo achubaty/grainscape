@@ -13,9 +13,6 @@ The \code{goc} class
 \item{\code{voronoi}}{A \code{RasterLayer} describing the regions of proximity in
 resistance units around the focal patches or points.}
 
-\item{\code{voronoiSP}}{A \code{SpatialPolygonsDataFrame} object representation of
-these regions of proximity.}
-
 \item{\code{summary}}{A summary of the the grains of connectivity generated and
 their properties.}
 

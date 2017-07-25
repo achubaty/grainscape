@@ -53,16 +53,15 @@ Patch-based models make most sense when animals are restricted to, or dependent 
 a resource patch.  Lattice models can be used as a generalized and functional
 approach to scaling resistance surfaces.
 
-Areal measurements are given as raster cell counts.
-If the raster projection is one where cell sizes are approximately constant in area (e.g., UTM),
-or the raster covers a relatively small geographic extent (e.g., < 1000 km in dimension)
-areal measurements will often be adequate.
-Reprojection of rasters should be considered to minimize these effects in
-other cases (see \code{\link{projectRaster}}).
+Rasters should be projected and not in geographic coordinates (i.e. \code{projection(cost)}
+should not contain \code{"+proj=longlat"}) or the function will issue a warning.
+In unprojected cases consider using \code{\link{projectRaster}} to change to an appropriate
+coordinate system for the location and extent of interest that balances both distance and areal
+accuracy.  See \url{http://www.spatialreference.org} for location-specific suggestions.
+Use of geographic coordinates will result in inaccurate areal and distance measurements,
+rendering the models themselves inaccurate.
 }
 \examples{
-\dontrun{
-library(igraph)
 library(raster)
 
 ## Load raster landscape
@@ -78,28 +77,33 @@ tinyPatchMPG <- MPG(cost = tinyCost, patch = (tinyCost == 1))
 graphdf(tinyPatchMPG)
 
 ## Find the mean patch area (see igraph manual for use of V() and E())
-mean(V(tinyPatchMPG@mpg)$patchArea.value)
+mean(igraph::V(tinyPatchMPG@mpg)$patchArea)
 
 ## Quick visualization of the MPG
 plot(tinyPatchMPG, col = c("grey", "black"), legend = FALSE)
-
-## Visualize the minimum spanning tree of the MPG
-tinyPatchMST <- mst(tinyPatchMPG@mpg)
-MSTlinks <- edge_attr(tinyPatchMST, "linkId")
-plot(tinyPatchMPG@patchId, col = "black", legend = FALSE)
-plot((tinyPatchMPG@lcpLinkId * -1) \%in\% MSTlinks, add = TRUE, legend = FALSE, col = c(NA, "grey"))
 
 ## Additional graph extraction scenarios
 ## Produce a lattice MPG where focal points are spaced 10 cells apart
 tinyLatticeMPG <- MPG(cost = tinyCost, patch = 10)
 plot(tinyLatticeMPG)
-}
 
 }
 \references{
-Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien. (2007) Spatial graphs: Principles and applications for habitat connectivity. Ecosystems 10:448:461.
+Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien. (2007) Spatial graphs:
+Principles and applications for habitat connectivity. Ecosystems 10:448:461.
 
-Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis at multiple spatial scales in landscape genetics.  Molecular Ecology 21:3996-4009.
+Galpern, P., M. Manseau. (2013a) Finding the functional grain: comparing methods
+for scaling resistance surfaces. Landscape Ecology 28:1269-1291.
+
+Galpern, P., M. Manseau. (2013b) Modelling the influence of landscape connectivity
+on animal distribution: a functional grain approach. Ecography 36:1004-1016.
+
+Galpern, P., M. Manseau, A. Fall. (2011) Patch-based graphs of landscape connectivity:
+a guide to construction, analysis, and application for conservation.
+Biological Conservation 144:44-55.
+
+Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis
+at multiple spatial scales in landscape genetics. Molecular Ecology 21:3996-4009.
 }
 \seealso{
 \code{\link{GOC}, \link{threshold}}
