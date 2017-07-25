@@ -189,6 +189,7 @@ setMethod(
 #' @author Alex Chubaty and Paul Galpern
 #' @importClassesFrom raster RasterLayer
 #' @importClassesFrom sp SpatialLines SpatialLinesDataFrame SpatialPoints
+#'
 setClass(
   "corridor",
   slots = list(voronoi = "RasterLayer", linksSP = "SpatialLinesDataFrame",
