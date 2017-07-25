@@ -50,7 +50,6 @@ Another use case is remote sensing classification errors that have introduced ar
 Filtering can help in both cases.
 }
 \examples{
-\dontrun{
 ## Load raster landscape
 tiny <- raster::raster(system.file("extdata/tiny.asc", package = "grainscape"))
 
@@ -58,7 +57,7 @@ tiny <- raster::raster(system.file("extdata/tiny.asc", package = "grainscape"))
 tinyCost <- raster::reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
 
 ## Produce a patch-based MPG where patches are resistance features = 10
-## and all patches are greater than or equal to 2 cells in size.
+## and all patches are greater than or equal to 2 cells in size
 filteredPatch <- patchFilter(tinyCost == 10, cells = 2)
 tinyPatchMPG <- MPG(cost = tinyCost, patch = filteredPatch)
 plot(tinyPatchMPG)
@@ -73,7 +72,7 @@ plot(tinyPatchMPG)
 filteredPatch <- patchFilter(tinyCost == 10, cells = 40, directions = 4)
 tinyPatchMPG <- MPG(cost = tinyCost, patch = filteredPatch)
 plot(tinyPatchMPG)
-}
+
 }
 \seealso{
 \code{\link{MPG}}
