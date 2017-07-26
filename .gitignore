@@ -9,3 +9,5 @@ src/*.so
 .RData
 .Ruserdata
 vignettes/*_cache
+vignettes/images/figure*.png
+vignettes/images/part*.png

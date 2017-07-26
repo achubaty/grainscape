@@ -29,6 +29,7 @@ Imports:
     utils
 LinkingTo: Rcpp
 Suggests:
+    cowplot,
     ggthemes,
     knitr,
     parallel,
