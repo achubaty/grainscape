@@ -6,4 +6,7 @@
 CONTRIBUTING\.md
 cran-comments\.md
 LICENSE
+^docs$
+^_pkgdown\.yml$
 ^vignettes/.*_cache$
+

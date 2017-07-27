@@ -1,11 +1,12 @@
 ---
-title: "The Minimum Planar Graph algorithm"
+title: "Calculating the Minimum Planar Graph and genereating Voronoi tesselations"
 author: "Sam Doctolero and Alex M Chubaty"
 date: '`r Sys.Date()`'
 output:
   pdf_document:
     toc: yes
     toc_depth: 3
+bibliography: bibliography.bib
 fontsize: 11pt
 vignette: >
   %\VignetteIndexEntry{grainscape MPG algorithm}
@@ -14,23 +15,36 @@ vignette: >
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(cache = TRUE, echo = TRUE, eval = TRUE, fig.height = 6,
-                      fig.width = 6, message = FALSE, results = 'hold', warning = FALSE)
+library(knitr)
+
+opts_chunk$set(cache = TRUE)
+opts_chunk$set(echo = TRUE)
+opts_chunk$set(eval = TRUE)
+opts_chunk$set(fig.height = 6)
+opts_chunk$set(fig.width = 6)
+opts_chunk$set(message = FALSE)
+opts_chunk$set(results = 'hold')
+opts_chunk$set(warning = FALSE)
 ```
 
 \newpage
 
-# Overview
+# Introduction to spatial graphs
 
-The Minimimum Planar Graph (MPG) Algorithm is used to find the voronoi boundaries and approximate least cost paths between patches.
-The voronoi boundaries are created using a spreading or marching algorithm.
-Each perimeter cell in the patches spread out to adjacent cells, that have not been visited yet or are not part of any patch, and are given a patch ID to mark the voronoi territory.
-A voronoi boundary is found when a cell is visited twice by two different voronoi territories or IDs.
-Using a marching algorithm to find the voronoi boundaries makes it possible to implement a linking algorithm that can run in parallel with the marching algorithm.
-As a cell is spread into, let's call it a child cell, it then creates a link or connection between the child cell and the cell that it spreaded from, let's call that a parent cell.
+[@Fall:2007eo]
+
+# Overview of the MPG algorthim implemented in `grainscpae`
+
+The Minimimum Planar Graph (MPG) algorithm is used to find the Voronoi boundaries and approximate least cost paths between patches.
+The Voronoi boundaries are created using a spreading or marching algorithm.
+Each perimeter cell in the patches spread out to adjacent cells, that have not been visited yet or are not part of any patch, and are given a patch ID to mark the Voronoi territory.
+A Voronoi boundary is found when a cell is visited twice by two different Voronoi territories or IDs.
+Using a marching algorithm to find the Voronoi boundaries makes it possible to implement a linking algorithm that can run in parallel with the marching algorithm.
+As a cell is spread into, let's call it a child cell, it then creates a link or connection between the child cell and the cell that it spread from, which we call a parent cell.
 Finding the least cost path this way is only possible with the use of storing the child cells, which will eventually become parent cells, in a queueing table that sorts the cells in a certain order.
 The child cells are sorted by increasing eucledian distance between the child cell and their origin cell, the perimeter cell that the connection originally spawned from.
-A link or path between patches is then created at the first voronoi boundary between two patches. 
+A link or path between patches is then created at the first Voronoi boundary between two patches. 
+
 ## Terminologies
 
 - *Cell:* A box or element in a map.
@@ -89,7 +103,7 @@ It creates the minimum planar graph (MPG) using the MPG algorithm, finds least c
 `temporary_active_cell_holder`   | ActiveCellQueue       | Similar to `active_cell_holder`, except it acts as an intermediate or temporary holder of `ActiveCells`. Required for vector resizing and comparing.
 `spread_list`                    | vector of ActiveCells | Stores all the `ActiveCells` that are ready to spread to all 4 adjacent cells, if possible.
 `iLinkMap`                       | LinkMap               | A map that keeps track of all the connections between cells due to the spreading and queuing functions.
-`voronoi_map`                    | flMap                 | A map that contains floating point values, it stores the voronoi boundaries/polygons.
+`voronoi_map`                    | flMap                 | A map that contains floating point values, it stores the Voronoi boundaries/polygons.
 `cost_map`                       | flMap                 | A map that contains the resistance or cost in each cell/element.
 `error_message`                  | Char Pointer          | Stores the erorr messages that occur in the engine. It acts as a way to diagnose problems in the engine.
 
@@ -147,7 +161,7 @@ Static functions are functions that can be used without delcaring an object of t
 
 -----
 
-# General MPG Algorithm
+## General MPG Algorithm
 
 The MPG algorithm has the following steps:  
 
@@ -163,7 +177,7 @@ The linking algorithm is embedded within the spreading functions of the MPG algo
 
 -----
 
-# How to Use the Engine
+## How to Use the Engine
 
 1. Create `InputData` and `OutputData` objects.
 2. Initialize the `InputData` object's fields. Keep in mind that the vectors in the InputData and Output data structures are all of type `float`.
@@ -210,5 +224,8 @@ vector<float> EngineInterface(vector<float> resistance, vector<float> patches ,i
 ```
 
 Note that the current Engine has two lines of code that are meant for interfacing with R.
-In order to make the Engine run with any programming or scripting language, remove those two line.
-One of them is an include statement for Rcpp, at the very top of source code, and the other is inside the start function, the first line inside the while loop. Those two lines are convenient for R users when they want to interrupt or stop the MPG algorithm safely, without crashing their console and possibly losing their data. 
+In order to make the Engine run with any programming or scripting language, remove those two lines.
+One of them is an `include` statement for `Rcpp`, at the very top of source code, and the other is inside the `start` function, the first line inside the `while` loop.
+Those two lines are convenient for R users when they want to interrupt or stop the MPG algorithm safely, without crashing their console and possibly losing their data.
+
+# References
