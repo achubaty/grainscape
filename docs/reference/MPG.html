@@ -349,11 +349,11 @@ at multiple spatial scales in landscape genetics. Molecular Ecology 21:3996-4009
 <span class='co'>## Find the mean patch area (see igraph manual for use of V() and E())</span>
 <span class='fu'>mean</span>(<span class='kw pkg'>igraph</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/igraph/topics/V'>V</a></span>(<span class='no'>tinyPatchMPG</span>@<span class='kw'>mpg</span>)$<span class='no'>patchArea</span>)</div><div class='output co'>#&gt; [1] 21.67442</div><div class='input'>
 <span class='co'>## Quick visualization of the MPG</span>
-<span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/plot'>plot</a></span>(<span class='no'>tinyPatchMPG</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"grey"</span>, <span class='st'>"black"</span>), <span class='kw'>legend</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='img'><img src='MPG-3.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+<span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/plot'>plot</a></span>(<span class='no'>tinyPatchMPG</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"grey"</span>, <span class='st'>"black"</span>), <span class='kw'>legend</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='img'><img src='MPG-5.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
 <span class='co'>## Additional graph extraction scenarios</span>
 <span class='co'>## Produce a lattice MPG where focal points are spaced 10 cells apart</span>
 <span class='no'>tinyLatticeMPG</span> <span class='kw'>&lt;-</span> <span class='fu'>MPG</span>(<span class='kw'>cost</span> <span class='kw'>=</span> <span class='no'>tinyCost</span>, <span class='kw'>patch</span> <span class='kw'>=</span> <span class='fl'>10</span>)
-<span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/plot'>plot</a></span>(<span class='no'>tinyLatticeMPG</span>)</div><div class='img'><img src='MPG-4.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+<span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/plot'>plot</a></span>(<span class='no'>tinyLatticeMPG</span>)</div><div class='img'><img src='MPG-6.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

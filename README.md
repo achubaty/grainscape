@@ -4,10 +4,10 @@
 [![Appveyor Build status](https://ci.appveyor.com/api/projects/status/2fxqhgk6miv2fytd/branch/master?svg=true)](https://ci.appveyor.com/project/achubaty/spades/branch/master)
 [![Coverage Status](https://coveralls.io/repos/github/achubaty/grainscape/badge.svg?branch=master)](https://coveralls.io/github/achubaty/grainscape?branch=master)
 
-## Grains of connectivity and minimum planar graph modelling of landscape connectivity
+## Efficient Modelling of Landscape Connectivity, Habitat, and Protected Area Networks
 
 Given a landscape resistance surface, creates grains of connectivity and minimum planar graph models that can be used to calculate effective distances for landscape connectivity at multiple scales.
-This is a cross-platform reimplementation and update of the `grainscape` package (https://r-forge.r-project.org/projects/grainscape/).
+This is a cross-platform reimplementation and update of the `grainscape` package (http://grainscape.r-forge.r-project.org).
 
 ### Installation
 
