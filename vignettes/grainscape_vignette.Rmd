@@ -31,7 +31,7 @@ opts_chunk$set(echo = TRUE)
 
 opts_chunk$set(fig.height = 3)
 opts_chunk$set(fig.width = 3)
-opts_chunk$set(fig.path = "images/figure_")
+opts_chunk$set(fig.path = "images/")
 opts_chunk$set(fig.pos = "!H")
 opts_chunk$set(fig.show = "hold")
 
