@@ -5,7 +5,10 @@ author:
 - Alex M. Chubaty^[Canadian Forest Service, Natural Resources Canada, Victoria, BC, Canada]
 output:
   pdf_document:
-    toc: no
+    toc: yes
+    toc_depth: 3
+header-includes:
+- \usepackage{float}
 bibliography: bibliography.bib
 fontsize: 11pt
 vignette: >
@@ -18,18 +21,34 @@ vignette: >
 
 ```{r setup, include=FALSE}
 library(knitr)
+library(igraph)
+library(grainscape)
+library(raster)
+library(ggplot2)
 
 opts_chunk$set(cache = TRUE)
 opts_chunk$set(echo = TRUE)
+
 opts_chunk$set(fig.height = 3)
 opts_chunk$set(fig.width = 3)
-opts_chunk$set(fig.pos = "H")
-opts_chunk$set(fig.show = "asis")
+opts_chunk$set(fig.path = "images/figure_")
+opts_chunk$set(fig.pos = "!H")
+opts_chunk$set(fig.show = "hold")
 
 options(knitr.kable.NA = "")
 ```
 
-## Introduction
+\newpage
+
+# Visual table of contents
+
+![Spatial network modelling with `grainscape`. Numerals refer to figures.](images/partA.png){ width=95% }
+
+![Scaling of spatial networks with `grainscape`. Numerals refer to figures.](images/partB.png){ width=95% }
+
+\newpage
+
+# Introduction
 
 The `grainscape` package enables a range of analyses within R that have applications across the disciplines of ecology, conservation biology and geography.
 For example, networks extracted by `grainscape` can be used to model habitat connectivity or evaluate protected area network resilience.
@@ -56,55 +75,9 @@ The `grainscape` package provides functions to extract the minimum planar graph 
 This reference begins by introducing these two model types, and concludes by demonstrating a variety of `grainscape` models, visualizations, and analyses using a consistent visual style. Code and commentary are included throughout.
 All analyses are reproducible with data distributed with this package.
 
-## Table of contents
+\newpage
 
-## Modelling with `grainscape`
-
-1. Model 1:  The minimum planar graph (MPG)
-
-    Step 1: Preparing the resistance surface
-
-    Step 2: Extracting the MPG
-
-    Step 3: Quick visualization fo the MPG
-
-    Step 4: Reporting on the MPG
-
-    Step 5: Thresholding the MPG
-
-    Step 6: Visualizaing a thresholded graph
-
-    Step 7: Next steps
-    
-2. Model 2:  Patch grains of connectivity (GOC)
-
-    Step 1: Begin with an MPG
-
-    Step 2: Exploring the Voronoi tessellations
-
-    Step 3: Building the GOC models
-
-    Step 4: Visualizing a GOC model
-
-\pagebreak
-
-## Table of contents (continued)
-
-## Spatial networks with 1D and 2D nodes
-
-![Spatial network modelling with `grainscape`. Numerals refer to figures.](images/partA.png)
-
-\pagebreak
-
-## Table of contents (continued)
-
-## Scaling spatial networks
-
-![Scaling of spatial networks with `grainscape`. Numerals refer to figures.](images/partB.png)
-
-\pagebreak
-
-## Modelling with `grainscape`
+# Modelling with `grainscape`
 
 In this section we demonstrate how to prepare rasters for modelling with `grainscape`.
 Data provided with the package are used as examples.
@@ -123,14 +96,12 @@ The following are key packages required to complete analyses with `grainscape`.
 The `igraph` package provides network analytical functions, while `raster` provides the the data structure and raster analytical functions upon which `grainscape` depends to manage data.
 Finally model and analytical products are compatible with visualizing using the popular `ggplot2` idiom.
 
-```{r, results = 'hide'}
+```{r, initial_stuff, include=FALSE}
 library(igraph)
 library(grainscape)
 library(raster)
 library(ggplot2)
-```
 
-```{r, include=FALSE}
 set.seed(674)
 
 theme_visualRef <- theme_grainscape() +
@@ -155,6 +126,8 @@ For example, assessing community structure within a landscape patch network (*i.
 Equally, the MPG is a poor choice for prioritizing the influence of a patch for connectivity, the objective in a number of landscape graph studies [*e.g.*, @Pascual-Hortal:2006le].
 Please see @Galpern:2011bc for further discussion of these limitations and of the MPG.
 
+\newpage
+
 ### Step 1: Preparing the resistance surface
 
 The MPG has typically been constructed using shortest path links between the perimeters of two dimensional node patches.
@@ -169,7 +142,7 @@ We begin by loading a landscape raster distributed with the package.
 Note that any raster format readable using the `raster` package can be used here.
 The `.asc` format rasters distributed with the package are *ESRI ArcASCII* format.
 
-```{r, results='hide'}
+```{r, results="hide"}
 patchy <- raster(system.file("extdata/patchy.asc", package = "grainscape"))
 ```
 
@@ -182,7 +155,7 @@ The parameterization of resistance surfaces for landscape connectivity modelling
 The matrix `isBecomes` describes the transformation from feature class to resistance surface.
 The result is shown in \autoref{fig:patchycost}.
 
-```{r, fig.cap='\\label{fig:patchycost}Input raster resistance surface to create the minimum planar graph (MPG). Features with value of 1 (red) will be the patches in the network. A river (light blue) has the highest resistance in this example.'}
+```{r, figure_03, fig.cap='\\label{fig:patchycost}Input raster resistance surface to create the minimum planar graph (MPG). Features with value of 1 (red) will be the patches in the network. A river (light blue) has the highest resistance in this example.'}
 ## Create an is-becomes matrix for reclassification
 isBecomes <- cbind(c(1, 2, 3, 4, 5), c(1, 10, 8, 3, 6))
 patchyCost <- reclassify(patchy, rcl = isBecomes)
@@ -197,6 +170,8 @@ ggplot() +
   theme(legend.position = "right")
 ```
 
+\newpage
+
 ### Step 2: Extracting the MPG
 
 With a resistance surface in hand the next step is to create the MPG.
@@ -207,38 +182,51 @@ However, in many applications focal patches will be a subset of these areas, or 
 These can be accommodated by passing a patch raster to the `patch=` parameter, created using any method.
 Equally patches below a certain size could be filtered by passing the patch raster to `patchfilter()` first.
 
-```{r}
+```{r, model_01_step_02}
 patchyMPG <- MPG(patchyCost, patch = (patchyCost == 1))
 ```
+
+\newpage
 
 ### Step 3: Quick visualization of the MPG
 
 A quick way to visualize the MPG is provided by the `plot` method in `grainscape`.
 This appears in \autoref{fig:mpgplot}.
 
-```{r, fig.cap='\\label{fig:mpgplot}A quick visualization of the minimum planar graph (MPG). Grey areas are patches (nodes) in the graph, and green lines are links showing the shortest paths between the perimeters of the patches on the resistance surface. In depth discussion of how the MPG is generated can be found elsewhere [@Fall:2007eo].'}
+```{r, figure_04, fig.cap='\\label{fig:mpgplot}A quick visualization of the minimum planar graph (MPG). Grey areas are patches (nodes) in the graph, and green lines are links showing the shortest paths between the perimeters of the patches on the resistance surface. In depth discussion of how the MPG is generated can be found elsewhere [@Fall:2007eo].'}
 plot(patchyMPG, quick = "mpgPlot", theme = FALSE)
 ```
+
+\newpage
 
 ### Step 4: Reporting on the MPG
 
 Following extraction, the MPG is available as an `igraph` object (see `patchyMPG@mpg`) and can be analyzed using any of the functions in this package.
 A quick way to report on the structure of the graph in tabular format is provided by the function `graphdf()`:
 
-```{r}
-## Extract tabular information using the graphdf() function
+```{r, table_01}
+## Extract tabular node information using the graphdf() function
 nodeTable <- graphdf(patchyMPG)[[1]]$v
+
+## Render table using the kable function,
+## retaining the first three rows
+kable(nodeTable[1:3, ], digits = 0, row.names = FALSE)
+```
+
+```{r, table_02}
+## Extract tabular link information using the graphdf() function
 linkTable <- graphdf(patchyMPG)[[1]]$e
 
-## Render tables using the kable function
-## retaining the first three rows of each
-kable(nodeTable[1:3, ], digits = 0, row.names = FALSE)
+## Render table using the kable function,
+## retaining the first three rows
 kable(linkTable[1:3, ], digits = 0, row.names = FALSE)
 ```
 
 The output in shows the structure of the nodes (vertices) and their attributes under the list element `$v` as well as the structure of the graph in the form of an link list (*i.e.*, pairs of nodes `e1` and `e2` that are connected) and associated link (edge) attributes under the list element `$e`.
 Note that only the first three lines of each has been reproduced here.
 Please see the manual for the interpretation of the attributes.
+
+\newpage
 
 ### Step 5: Thresholding the MPG
 
@@ -247,19 +235,21 @@ This has sometimes been called a scalar analysis [@Brooks:2003].
 
 The function `threshold()` provides a way to conduct a scalar analysis at multiple scales.
 Here we ask for 5 thresholds, and the function finds five approximately evenly-spaced threshold values in link length.
-The resulting table is shown in \autoref{fig:components}.
 
-```{r, fig.cap='\\label{fig:components}The number of components (`nComponents`) in the minimum planar graph at five automatically-selected link thresholds (`maxLink`)'}
+```{r, table_03}
 scalarAnalysis <- threshold(patchyMPG, nThresh = 5)
 
 ## Use kable to render this as a table
-kable(scalarAnalysis$summary)
+kable(scalarAnalysis$summary,
+      caption = paste("The number of components ('nComponents') in the",
+                      "minimum planar graph at five automatically-selected",
+                      "link thresholds ('maxLink)."))
 ```
 
 The `$summary` of this analysis can be plotted to explore scales of aggregation in the landscape.
 \autoref{fig:scalesaggregation} shows a scalar analysis of this landscape with 100 thresholds, where the response variables is the number of components or subgraphs created by the thresholding.
 
-```{r, fig.cap='\\label{fig:scalesaggregation}A scalar analysis at 100 thresholds of the MPG in \\autoref{fig:mpgplot}. When the landscape is a single component at higher link thresholds all patches are completely connected. As an example, an organism able to disperse 250 resistance units would experience this landscape as six connected regions.'}
+```{r, figure_05, fig.cap='\\label{fig:scalesaggregation}A scalar analysis at 100 thresholds of the MPG in \\autoref{fig:mpgplot}. When the landscape is a single component at higher link thresholds all patches are completely connected. As an example, an organism able to disperse 250 resistance units would experience this landscape as six connected regions.'}
 scalarAnalysis <- threshold(patchyMPG, nThresh = 100)
 ggplot(scalarAnalysis$summary, aes(x = maxLink, y = nComponents)) +
   geom_line(colour = "forestgreen") +
@@ -272,22 +262,28 @@ ggplot(scalarAnalysis$summary, aes(x = maxLink, y = nComponents)) +
 
 Other independent variables describing the components (*e.g.*, area of patches) could, of course, be calculated by processing the thresholded graphs `scalarAnalysis$th` and their attributes using the `igraph` function `components()`.
 
+\newpage
+
 ### Step 6: Visualizing a thresholded graph
 
 Consider an organism able to disperse a maximum of 250 resistance units.
 According to \autoref{fig:scalesaggregation} this organism would experience this landscape as 6 connected regions.
 This is visualized in \autoref{fig:thresholdedgraph}.
 
-```{r, fig.cap="\\label{fig:thresholdedgraph}The thresholded MPG depicted with a link length of 250 resistance units. An organism that can disperse a maximum of 250 resistance units would experience this landscape as 6 connected regions in the depicted spatial configuration. Note that the plotting has been customized to emphasize which patches are connected. This was done by plotting links with less than the threshold length from the centroids of patches"}
+```{r, figure_06, fig.cap="\\label{fig:thresholdedgraph}The thresholded MPG depicted with a link length of 250 resistance units. An organism that can disperse a maximum of 250 resistance units would experience this landscape as 6 connected regions in the depicted spatial configuration. Note that the plotting has been customized to emphasize which patches are connected. This was done by plotting links with less than the threshold length from the centroids of patches"}
 ggplot() +
   geom_raster(data = ggGS(patchyMPG, "patchId"), 
               aes(x = x, y = y, fill = value > 0)) +
   scale_fill_manual(values = "grey") +
   geom_segment(data  = ggGS(patchyMPG, "links"),
-               aes(x = x1, y = y1, xend = x2, yend = y2,  colour = lcpPerimWeight >= 250)) +
+               aes(x = x1, y = y1, xend = x2, yend = y2,
+                   colour = lcpPerimWeight >= 250)) +
   scale_colour_manual(values = c("forestgreen", NA)) +
-  geom_point(data = ggGS(patchyMPG, "nodes"), aes(x = x, y = y), colour = "darkgreen")
+  geom_point(data = ggGS(patchyMPG, "nodes"), aes(x = x, y = y),
+             colour = "darkgreen")
 ```
+
+\newpage
 
 ### Step 7: Next steps
 
@@ -299,7 +295,7 @@ These are are also contained as attributes in the `igraph` object `patchyMPG@mpg
 Using these three data objects together gives flexibility to visualize any graph analysis.
 Additional example visualizations and analyses are contained later in this document.
 
-\pagebreak
+\newpage
 
 ## Model 2: Patch grains of connectivity
 
@@ -308,12 +304,12 @@ Please refer to these papers for much more detail on this method.
 In summary, grains of connectivity describes a tessellation of functionally-connected regions of the map.
 In this example we present these in the context of modelling landscape connectivity for highly-mobile terrestrial organisms that are not obligate patch occupants.
 
-### Step 1:  Begin with an MPG
+### Step 1:  Begin with a MPG
 
 Here, we repeat the steps as before for the same `patchy` resistance surface explored in the MPG examples.
 Any of the variations imaginable for the MPG modelling can provide a valid basis to build a GOC.
 
-```{r}
+```{r, model_02_step_01}
 ## Load the patchy raster distributed with grainscape
 patchy <- raster(system.file("extdata/patchy.asc", package = "grainscape"))
 
@@ -324,6 +320,8 @@ patchyCost <- reclassify(patchy, rcl = isBecomes)
 ## Create the MPG model using cells = 1 as patches
 patchyMPG <- MPG(patchyCost, patch = (patchyCost == 1))
 ```
+
+\newpage
 
 ### Step 2:  Exploring the Voronoi tessellation
 
@@ -336,13 +334,15 @@ The tessellation is found in `grainscape` using a marching algorithm implemented
 The Voronoi tessellation is extracted as part of finding the `MPG()`.
 A plot with the Voronoi tessellation and the patches superimposed is shown in \autoref{fig:voronoitessellation}.
 
-```{r, fig.cap='\\label{fig:voronoitessellation}A Voronoi tessellation. This is the complement of the MPG. The patches (darkest blue) are used as generators, and regions of proximity (polygons of different colours) are found in cost or resistance units. The method was first described by @Fall:2007eo.'}
+```{r, figure_07, fig.cap='\\label{fig:voronoitessellation}A Voronoi tessellation. This is the complement of the MPG. The patches (darkest blue) are used as generators, and regions of proximity (polygons of different colours) are found in cost or resistance units. The method was first described by @Fall:2007eo.'}
 patchPlusVoronoi <- patchyMPG@voronoi
 patchPlusVoronoi[patchyMPG@patchId] <- 0
 
 ggplot() + 
   geom_raster(data = ggGS(patchPlusVoronoi), aes(x = x , y = y, fill = value)) 
 ```
+
+\newpage
 
 ### Step 3: Building GOC models
 
@@ -354,42 +354,39 @@ An additional step is that the links connecting a pair of polygons are the mean 
 The function `GOC()` builds GOC models at multiple thresholds.
 As with `threshold()` we can specify the number of thresholds, or grains of connectivity models, we want to create using the `nThresh` parameter.
 
-```{r, results='hide'}
+```{r, results="hide"}
 patchyGOC <- GOC(patchyMPG, nThresh = 10)
 ```
+
+\newpage
 
 ### Step 4: Visualizing a GOC model
 
 To get a quick sense of the connected regions described by a GOC model at a given threshold (or scale of movement) we can use the function `grain()`.
 This example uses the functions plotting mechanism to plot the 6th threshold in the `patchyGOC` object.
-
 \autoref{fig:gocthresh} shows the resulting plot.
 
-```{r, fig.cap='\\label{fig:gocthresh}A visualization of a GOC model. In this case it is the 6th scale or threshold extracted. Voronoi polygons imply regions that are functionally-connected at the given movement threshold.'}
+```{r, figure_08, fig.cap='\\label{fig:gocthresh}A visualization of a GOC model. In this case it is the 6th scale or threshold extracted. Voronoi polygons imply regions that are functionally-connected at the given movement threshold.'}
 plot(grain(patchyGOC, whichThresh = 6), quick = "grainPlot", theme = FALSE)
 ```
 
 The remainder of this document serves as a reference to modelling, visualization and analysis using the `grainscape` package.
 Please refer to the visual table of contents.
 
-\pagebreak
+\newpage
 
-## Spatial networks with 1D and 2D nodes
+# Spatial networks with 1D and 2D nodes
 
-### *MODELLING*
+## Modelling
 
-**Planar network with one-dimensional nodes on a Euclidean surface**
+### Planar network with one-dimensional nodes on a Euclidean surface
 
 One-dimensional nodes (*i.e.*, points) can represent map locations of an ecological or spatial process of interest.
 While the Euclidean distance between these points is easily calculated in R using the `dist()` function, we may be interested in the path distance to just the immediate neighbours of each point.
 A *planar* network extracted on a Euclidean resistance surface can be used to identify which nodes are neighbours and find their pairwise distances [@Fall:2007eo; @Galpern:2011bc].
 In `grainscape` a Euclidean resistance surface is simply a resistance surface where all values are `= 1`)
     
-![A planar network with one-dimensional point nodes extracted using `grainscape`.
-Nodes are represented as points and labelled with their `patchId`.
-Links are line segments among nodes.](images/figure9.png)
-
-```{r}
+```{r, figure_09, fig.cap="A planar network with one-dimensional point nodes extracted using `grainscape`. Nodes are represented as points and labelled with their `patchId`. Links are line segments among nodes."}
 ## Make a new resistance raster of 400 by 400 cells
 ## with a coordinate system that corresponds to cells
 res <- raster(xmn = 0, xmx = 100, ymn = 0, ymx = 100, resolution = 1)
@@ -415,17 +412,18 @@ mpg <- MPG(res, patchPts)
 
 ## Plot the result using the quick 'network' visualization
 ## setting and add labels (dodging them by 3 to the upper-right)
-figure9 <- plot(mpg, quick = "network", theme = FALSE) + 
+figure09 <- plot(mpg, quick = "network", theme = FALSE) + 
   geom_text(data = ggGS(mpg, "nodes"), 
             aes(x = x + 3, y = y + 3, label = patchId)) +
   ggtitle("Planar 1D; Euclidean surface")
+figure09
 ```
 
 The distance between nodes can be extracted from the objects.
 Note how the distances are integers, because they do not represent the Euclidean distance, but rather the accumulated path distance among nodes.
 On this particular raster one cell equals one unit of distance, therefore distances are the count of cells separating nodes.
 
-```{r}
+```{r, table_04}
 ## Here we show the first five rows of the link attribute table
 ## extracted from the mpg object. This shows selected columns,
 ## using the formatting function kable()
@@ -435,23 +433,15 @@ names(neighbours) <- c("Node 1", "Node 2", "Path distance (Euclidean)")
 kable(neighbours, row.names = FALSE)
 ```
 
-\pagebreak
+\newpage
 
-## Spatial networks with 1D and 2D nodes
-
-### *MODELLING*
-
-***Planar network with one-dimensional nodes on a non-Euclidean resistance surface***
+### Planar network with one-dimensional nodes on a non-Euclidean resistance surface
 
 Similarly, when the distance among points, or nodes, is best explained by some cost or resistance, neighbour distance can be modelled in an identical manner, leveraging the planarity of the network.
 The only difference in the code from the previous 1D Euclidean example is the use of the resistance surface rather than a raster consisting only of the value `1`.
 We will borrow objects made in  previous steps to keep the code concise.
 
-![A planar network with one-dimensional nodes extracted on a resistance surface.
-Nodes are represented by grey-coloured cells and labelled with their `patchId`.
-Links are green paths between nodes, shown in a spatially-explicit representation.](images/figure10.png)
-
-```{r}
+```{r, figure_10, fig.cap="A planar network with one-dimensional nodes extracted on a resistance surface. Nodes are represented by grey-coloured cells and labelled with their `patchId`. Links are green paths between nodes, shown in a spatially-explicit representation."}
 ## Add some cost values to the resistance
 ## surface we used in the last step
 ## Here we use random integers >= 2
@@ -466,8 +456,10 @@ mpg <- MPG(res2, patchPts)
 ## setting and add labels (dodging them by 3 to the upper-right)
 ## This demonstrates the non-linear paths.
 figure10 <- plot(mpg, quick = "mpgPlot", theme = FALSE) + 
-  geom_text(data = ggGS(mpg, "nodes"),  aes(x = x + 3, y = y + 3, label = patchId)) +
+  geom_text(data = ggGS(mpg, "nodes"),
+            aes(x = x + 3, y = y + 3, label = patchId)) +
   ggtitle("Planar 1D; Resistance surface")
+figure10
 ```
 
 The distances between nodes are still integers, and they also represent a path distance.
@@ -475,7 +467,7 @@ Now, this is rather the shortest accumulated path distance through the resistanc
 Once again, their metric is an integer because resistance values were also integers.
 The table below demonstrates that the non-Euclidean path distance is longer among the same pairs of nodes, and they are not perfectly correlated, as we expect.
 
-```{r}
+```{r, table_05}
 ## Here we show the first five rows of the link attribute table
 ## extracted from the mpg object. This shows selected columns, using
 ## the formatting function kable()
@@ -486,13 +478,9 @@ names(comparison)[4] <- c("Path distance (Resistance)")
 kable(comparison, row.names = FALSE)
 ```
 
-\pagebreak
+\newpage
 
-## Spatial networks with 1D and 2D nodes
-
-### *MODELLING*
-
-**Planar network with two-dimensional nodes on a non-Euclidean resistance surface (minimum planar graph)**
+### Planar network with two-dimensional nodes on a non-Euclidean resistance surface (minimum planar graph)
 
 This is the minimum planar graph (MPG) [@Fall:2007eo], and the  inspiration for the `grainscape` package.
 Please see the first part of this document for a more thorough presentation of the MPG.
@@ -508,11 +496,7 @@ Its nodes are two-dimensional patches and its links are the shortest paths throu
 
 The following example uses a more realistic resistance surface based on a simulated land cover raster.
 
-![A minimum planar graph (MPG) of a simulated resistance surface.
-Focal patches are grey regions and green lines indicate spatially-explicit links among patches.
-Several patches are labelled with their numerical `patchId`.](images/figure11.png)
-
-```{r}
+```{r, figure_11, fig.cap="A minimum planar graph (MPG) of a simulated resistance surface. Focal patches are grey regions and green lines indicate spatially-explicit links among patches. Several patches are labelled with their numerical `patchId`."}
 ## Load a land cover raster distributed with grainscape
 frag <- raster(system.file("extdata/fragmented.asc", package = "grainscape"))
 
@@ -532,14 +516,16 @@ fragMPG <- MPG(fragRes, patch = patches)
 figure11 <- plot(fragMPG, quick = "mpgPlot", theme = FALSE) + 
   geom_text(data = ggGS(fragMPG, "nodes"),
             aes(x = x, y = y,
-                label = ifelse(patchId %in% c(7, 23, 52, 106, 158, 221), patchId, "")),
+                label = ifelse(patchId %in% c(7, 23, 52, 106, 158, 221),
+                               patchId, "")),
             size = 2) +
   ggtitle("Planar 2D; Resistance surface")
+figure11
 ```
 
 The distances from the perimeters of the nodes along the paths of the links (green in figure) are available in the output object in the same manner as before.
 
-```{r}
+```{r, table_06}
 ## Here we show only patch 7 and its neighbours that are labelled on
 ## the network using the formatting function kable().
 fragNeighbours <- graphdf(fragMPG)[[1]]$e[ , c(1, 2, 4)]
@@ -548,13 +534,11 @@ names(fragNeighbours) <- c("Node 1", "Node 2", "Path distance (Resistance)")
 kable(fragNeighbours, row.names = FALSE)
 ```
 
-\pagebreak
+\newpage
 
-## Spatial networks with 1D and 2D nodes
+## Visualization
 
-### *VISUALIZATION*
-
-**Centroid representation of nodes**
+### Centroid representation of nodes
 
 Where nodes represent two-dimensional regions (*e.g*, patches, protected areas) it can be  convenient to visualize nodes as points plotted at the centroid location of the region [@Urban:2001ec; @Galpern:2011bc].
 While the links themselves may be *measured* from patch perimeters, or quantities related to the nodes *summarized* across patch areas, visualization can be improved by omitting complexities such as these.
@@ -562,9 +546,7 @@ Cases where centroid node representation may be justified include:  (1) mapping 
 
 This example uses the resistance surface and minimum planar graph from a previous example (`fragMPG`).
 
-![A minimum planar graph (MPG) shown with centroid node representation and linear link representation among these nodes.](images/figure12.png)
-
-```{r, results='hide'}
+```{r, figure_12, fig.cap="A minimum planar graph (MPG) shown with centroid node representation and linear link representation among these nodes.", results="hide"}
 ## Plot the minimum planar graph using centroid nodes
 ## A single line of code will do this as follows:
 ## plot(fragMPG, quick="network")
@@ -580,15 +562,12 @@ figure12 <- ggplot() +
              aes(x = x, y = y, colour = "darkgreen", size = 0.5)) +
   scale_colour_identity() + scale_size_identity() +
   ggtitle("Centroid representation of nodes")
+figure12
 ```
 
-\pagebreak
+\newpage
 
-## Spatial networks with 1D and 2D nodes
-
-### *VISUALIZATION*
-
-**Perimeter representation of links**
+### Perimeter representation of links
 
 Where the spatially-explicit nature of the connections among these nodes is important, perimeter representation of links and two-dimensional visualization of the nodes may be a useful  technique.
 
@@ -598,23 +577,17 @@ It also signals that the linking of nodes was done from the perimeter rather tha
 
 This example extends the previous one, where centroid representation of links was used.
 
-![A minimum planar graph (MPG) with links represented from the perimeter of the patches (*i.e.*, at the start and end points of spatially-explicit links).
-This rendering can simplify visualization](images/figure13.png)
-
-```{r}
+```{r, figure_13, fig.cap="A minimum planar graph (MPG) with links represented from the perimeter of the patches (*i.e.*, at the start and end points of spatially-explicit links). This rendering can simplify visualization."}
 ## Plot the minimum planar graph using perimeter links
 ## and two dimensional nodes
 figure13 <- plot(fragMPG, quick = "mpgPerimPlot", theme = FALSE) +
   ggtitle("Perimeter representation of links")
+figure13
 ```
 
-\pagebreak
+\newpage
 
-## Spatial networks with 1D and 2D nodes
-
-### *VISUALIZATION*
-
-**Spatially-explicit representation of links**
+### Spatially-explicit representation of links
 
 Spatially-explicit representation of the links implies both that the end points of links are on the perimeter of the region represented by the node, and that the predicted shortest paths among those node perimeters have coordinates.
 This approach conveys all available spatial information in the minimum planar graph.
@@ -626,22 +599,17 @@ However, using this visualization does efficiently communicate how the minimum p
 
 This example uses this same data as the previous one to permit comparison among visualizations.
 
-![A minimum planar graph (MPG) with the shortest links among patch perimeters rendered as spatially-explicit paths. This rendering can help demonstrate the modelling procedure, but risks overinterpretation of the actual paths involved (see text).](images/figure14.png)
-
-```{r}
+```{r, figure_14, fig.cap="A minimum planar graph (MPG) with the shortest links among patch perimeters rendered as spatially-explicit paths. This rendering can help demonstrate the modelling procedure, but risks overinterpretation of the actual paths involved (see text)."}
 ## Plot the minimum planar graph using spatially-explicit links
 ## and two dimensional nodes.
 figure14 <- plot(fragMPG, quick = "mpgPlot", theme = FALSE) +
   ggtitle("Spatially-explicit representation of links")
+figure14
 ```
 
-\pagebreak
+\newpage
 
-## Spatial networks with 1D and 2D nodes
-
-### *VISUALIZATION*
-
-**Characteristics of nodes (weights)**
+### Characteristics of nodes (weights)
 
 Variables that are associated with a focal ecological process at a node can be represented on a network visualization.
 These variables are sometimes known as node "weights".
@@ -651,25 +619,21 @@ Any metric that is associated with the node can be plotted at that node by varyi
 
 In this example, the area of the patch represented by the node is used to scale the size of the symbol plotted at the centroid of the node.
 
-![A minimum planar graph (MPG) with centroid node representation and links between centroids, where the plotted size of the node symbol has been scaled with the area of the patch it represents](images/figure15.png)
-
-```{r}
+```{r, figure_15, fig.cap="A minimum planar graph (MPG) with centroid node representation and links between centroids, where the plotted size of the node symbol has been scaled with the area of the patch it represents."}
 figure15 <- ggplot() +
   geom_segment(data = ggGS(fragMPG, "links"),
-               aes(x = x1, y = y1, xend = x2, yend = y2), colour = "forestgreen") +
+               aes(x = x1, y = y1, xend = x2, yend = y2),
+               colour = "forestgreen") +
   geom_point(data = ggGS(fragMPG, "nodes"),
              aes(x = x, y = y, size = patchArea), colour = "darkgreen") +
   scale_size_area(max_size = 10, breaks = c(1000, 3000)) +
   ggtitle("Characteristics of nodes (weights)")
+figure15
 ```
 
-\pagebreak
+\newpage
 
-## Spatial networks with 1D and 2D nodes
-
-### *VISUALIZATION*
-
-**Characteristics of links (weights)**
+### Characteristics of links (weights)
 
 Variables associated with links, called link weights, often contain information on the modelled connectivity among nodes.
 Measures of interest in ecology can include the expected flow of organisms, or a variable correlated with this flow such as geographic distance or the distance of the shortest path across a resistance surface.
@@ -679,10 +643,7 @@ The link weight is found as a proportion of the Euclidean distance between those
 So, proportions higher than 1 imply a resistance to movement greater than expected by distance alone.
 On the scale used thinner lines describe a greater expectation of connectivity for an ecological process that is influenced by resistance (proportion closer to 1).
 
-![A minimum planar graph with centroid node and link representation where the width of the links has been scaled in proportion to the reduction in connectivity due to resistance.
-Wider links correspond to reduced connectivity.](images/figure16.png)
-
-```{r}
+```{r, figure_16, fig.cap="A minimum planar graph with centroid node and link representation where the width of the links has been scaled in proportion to the reduction in connectivity due to resistance. Wider links correspond to reduced connectivity."}
 figure16 <- ggplot() +
   geom_segment(data = ggGS(fragMPG, "links"), 
     aes(x = x1, y = y1, xend = x2, yend = y2, 
@@ -690,17 +651,14 @@ figure16 <- ggplot() +
     colour = "forestgreen", alpha = 0.5) +
   scale_size(range = c(0, 3), breaks = seq(1, 6, by = 0.5)) +
   geom_point(data = ggGS(fragMPG, "nodes"),
-    aes(x = x, y = y), size = 3, colour = "darkgreen") +
+             aes(x = x, y = y), size = 3, colour = "darkgreen") +
   ggtitle("Characteristics of links (weights)")
+figure16
 ```
 
-\pagebreak
+\newpage
 
-## Spatial networks with 1D and 2D nodes
-
-### *VISUALIZATION*
-
-**Link thresholding by plotting**
+### Link thresholding by plotting
 
 Removing links with weights that are greater than a threshold value is referred to as *link thresholding* and can be used to identify components, or connected sets of nodes [@Urban:2001ec; @Galpern:2011bc].
 It is the most basic approach to scaling a network, and the technique upon which *grains of connectivity* is based (see later examples).
@@ -718,10 +676,7 @@ It does an adequate job of highlighting which groups of nodes are connected as a
 However, we can do better.
 See the next example.
 
-![A link threshold representation of a minimum planar graph (MPG), where links connect the centroids of adjacent patches in the same component (cluster).
-Nodes that form their own component are shown as circles without links](images/figure17.png)
-
-```{r}
+```{r, figure_17, fig.cap="A link threshold representation of a minimum planar graph (MPG), where links connect the centroids of adjacent patches in the same component (cluster). Nodes that form their own component are shown as circles without links."}
 figure17 <- ggplot() +
   geom_raster(data = ggGS(fragMPG, "patchId"),
               aes(x = x, y = y, fill = value > 0)) +
@@ -733,16 +688,13 @@ figure17 <- ggplot() +
   geom_point(data = ggGS(fragMPG, "nodes"),
              aes(x = x, y = y), colour = "darkgreen") +
   ggtitle("Link thresholding by plotting")
+figure17
 ```
 
-\pagebreak
+\newpage
 
 
-## Spatial networks with 1D and 2D nodes
-
-### *VISUALIZATION*
-
-**Link thresholding to show components**
+### Link thresholding to show components
 
 As noted in the last example, highlighting which nodes are connected into components (or clusters) after the network has been subjected to link thresholding can improve the visualization of connected regions of the map.
 
@@ -752,10 +704,7 @@ We can then use this information to label the nodes by their component membershi
 To improve the visualization, the nodes are also plotted as large circles and the labels in a reverse colour.
 This could also be done (perhaps more effectively) using a colour or shape scale for node symbols that have been carefully selected to accentuate patterns of interest in the figure.
 
-![A link threshold representation of a minimum planar graph (MPG), where links connect the centroids of adjacent patches in the same component (cluster).
-Nodes that are part of a component are labelled with their component membership](images/figure18.png)
-
-```{r}
+```{r, figure_18, fig.cap="A link threshold representation of a minimum planar graph (MPG), where links connect the centroids of adjacent patches in the same component (cluster). Nodes that are part of a component are labelled with their component membership."}
 ## Use the grainscape::threshold() function to create a new network
 ## by thresholding links
 fragTh <- threshold(fragMPG, doThresh = 20)
@@ -766,7 +715,8 @@ fragThC <- components(fragTh$th[[1]])
 
 ## Extract the node table and append the
 ## component membership information 
-fragThNodes <- data.frame(vertex_attr(fragTh$th[[1]]), component = fragThC$membership)
+fragThNodes <- data.frame(vertex_attr(fragTh$th[[1]]),
+                          component = fragThC$membership)
 
 ## We don't want to show nodes that are in components with
 ## only one node, so remove them
@@ -782,22 +732,22 @@ figure18 <- ggplot() +
               aes(x = x, y = y, fill = value > 0)) +
   scale_fill_manual(values = "grey") +
   geom_segment(data  = ggGS(fragMPG, "links"),
-               aes(x = x1, y = y1, xend = x2, yend = y2, colour = lcpPerimWeight > 20)) +
+               aes(x = x1, y = y1, xend = x2, yend = y2,
+                   colour = lcpPerimWeight > 20)) +
   scale_colour_manual(values = c("forestgreen", NA)) +
   geom_point(data = fragThNodes,
              aes(x = x, y = y), shape = 19, size = 4, colour = "darkgreen" ) +
   geom_text(data = fragThNodes, aes(x = x, y = y, label = component),
             colour = "white", size = 2) +
   ggtitle("Link thresholding to show components")
+figure18
 ```
 
-\pagebreak
+\newpage
 
-## Spatial networks with 1D and 2D nodes
+## Analysis
 
-### *ANALYSIS*
-
-**Network metrics to assess node importance**
+### Network metrics to assess node importance
 
 There are numerous network metrics available that describe properties of nodes and network topology.
 The `igraph` package used by `grainscape` implements a  selection of these metrics.
@@ -812,10 +762,7 @@ Please see @Galpern:2011bc for more information on this limitation.
 Here we demonstrate how to calculate degree using the `igraph` package and visualize the result of this simple network analysis.
 We calculate degree on a link thresholded network, implying that there is a maximum level of link resistance above which we do not consider that link as making a contribution to a node's connectivity.
 
-![A link threshold representation of a minimum planar graph (MPG), where nodes, plotted at patch centroids, are scaled in proportion to the degree of the node (*i.e.*, the number of links adjacent on the node).
-Larger circles indicate nodes with a higher degree in the MPG.](images/figure19.png)
-
-```{r}
+```{r, figure_19, fig.cap="A link threshold representation of a minimum planar graph (MPG), where nodes, plotted at patch centroids, are scaled in proportion to the degree of the node (*i.e.*, the number of links adjacent on the node). Larger circles indicate nodes with a higher degree in the MPG."}
 ## Assess degree on the nodes of a thresholded network
 ## made in the previous example (threshold = 20)
 fragThDegree <- degree(fragTh$th[[1]])
@@ -831,23 +778,22 @@ fragThNodes$x <- fragThNodes$centroidX
 fragThNodes$y <- fragThNodes$centroidY
 
 figure19 <- ggplot() +
-  geom_raster(data = ggGS(fragMPG, "patchId"), aes(x = x, y = y, fill = value > 0)) +
+  geom_raster(data = ggGS(fragMPG, "patchId"),
+              aes(x = x, y = y, fill = value > 0)) +
   scale_fill_manual(values = "grey") +
   geom_segment(data  = ggGS(fragMPG, "links"),
-               aes(x = x1, y = y1, xend = x2, yend = y2, colour = lcpPerimWeight > 20)) +
+               aes(x = x1, y = y1, xend = x2, yend = y2,
+                   colour = lcpPerimWeight > 20)) +
   scale_colour_manual(values = c("forestgreen", NA)) +
   geom_point(data = fragThNodes,
              aes(x = x, y = y, size = degree), colour = "darkgreen" ) +
   ggtitle("Node importance metrics (degree)")
+figure19
 ```
 
-\pagebreak
+\newpage
 
-## Spatial networks with 1D and 2D nodes
-
-### *ANALYSIS*
-
-**Shortest-path distance between nodes**
+### Shortest-path distance between nodes
 
 Finding the shortest path through the network from a source to a desination node and the length of that path is a useful prediction of the network model and has many applications [@Zeller:2012le; @Galpern:2012me; @Adriaensen2003] .
 It gives an expected distance through the network, taking into account the modelled connectivity among nodes.
@@ -858,9 +804,7 @@ The plot uses links between patch centroids and recolouring of the patch raster 
 If we were to use a link thresholded network, here, (which we will not for simplicity), the entire network would not be completely connected, so certain patches may not have a shortest path between them.
 Finding shortest paths on thresholded networks may still be a useful technique, and the absence of a shortest path an important finding.
 
-![The shortest path through a minimum planar graph (MPG) given a start and end `patchId`. Links and nodes that form part of this "corridor" are highlighted.](images/figure20.png)
-
-```{r}
+```{r, figure_20, fig.cap="The shortest path through a minimum planar graph (MPG) given a start and end `patchId`. Links and nodes that form part of this \"corridor\" are highlighted."}
 ## Declare the start and end patchIds
 ## These were identified by plotting the patchIds (see earlier examples)
 startEnd <- c(1546, 94)
@@ -900,11 +844,12 @@ figure20 <- ggplot() +
   ggtitle("Shortest-path distance between nodes") +
   annotate("text", 260, 340, 
            label = paste0(shPathD, " resistance units"), size = 2.5)
+figure20
 ```
 
 Pairwise distances between a set of nodes can be found using the `igraph::distances()` function as follows.
 
-```{r}
+```{r, table_07}
 ## Create a pairwise table of shortest path distances among nodes using
 ## the resistance surface based links
 allShPathD <- distances(fragMPG$mpg,  weights = E(fragMPG$mpg)$lcpPerimWeight)
@@ -917,13 +862,13 @@ dimnames(tableD)[[1]] <- paste("patchId", dimnames(tableD)[[1]], sep = " ")
 kable(tableD)
 ```
 
-\pagebreak
+\newpage
 
-## Scaling spatial networks
+# Scaling spatial networks
 
-### *MODELLING*
+## Modeling
 
-**Scaling resistance surfaces (lattice grains of connectivity)**
+### Scaling resistance surfaces (lattice grains of connectivity)
 
 Resistance surfaces produced from remotely-sensed land cover or elevation data may be too fine-scaled for the process being modelled.
 By having a scale that is mismatched with the one of interest, the signal or pattern may be obscured [@Cushman2010a].
@@ -942,10 +887,8 @@ We use `grainscape` grains of connectivity analysis functions to coalesce Vorono
 We could examine the resulting lattice grains of connectivity at any of these five scales.
 We choose the third to illustrate an intermediate level of scaling.
 
-![A scaled lattice grains of connectivity (GOC) model showing the outline of Voronoi polygons in grey, and the network connections among polygons as links plotted from adjacent polygon centroids.](images/figure21.png)
 
-
-```{r, results='hide'}
+```{r, figure_21, fig.cap="A scaled lattice grains of connectivity (GOC) model showing the outline of Voronoi polygons in grey, and the network connections among polygons as links plotted from adjacent polygon centroids.", results="hide"}
 ## Extract a minimum planar graph and complementary
 ## Voronoi polygons from the fragmented resistance surface
 ## Note the use of an integer for the 'patch' parameter, which
@@ -960,15 +903,12 @@ fragLatticeGOC <- GOC(fragLatticeMPG, nThresh = 5)
 figure21 <- plot(grain(fragLatticeGOC, whichThresh = 3),
                  quick = "grainPlot", theme = FALSE) +
   ggtitle("Lattice grains of connectivity")
+figure21
 ```
 
-\pagebreak
+\newpage
 
-## Scaling spatial networks
-
-### *MODELLING*
-
-**Scaling networks with two-dimensional nodes (patch grains of connectivity)**
+### Scaling networks with two-dimensional nodes (patch grains of connectivity)
 
 Patch grains of connectivity extends the idea of the point nodes in the lattice model to two-dimensional node regions [@Galpern:2012me].
 It leverages the minimum planar graph demonstrated in previous examples and its complement the Voronoi tessellation of the resistance surface.
@@ -985,10 +925,7 @@ In a later example we show how grains of connectivity can be used to identify po
 
 This patch grains of connectivity model uses the familiar resistance surface and the same patches (`=1`) used in many earlier examples.
 
-![A scaled patch grains of connectivity (GOC) model showing the outline of Voronoi polygons in grey, and the network connections among polygons as links plotted from adjacent polygon centroids.](images/figure22.png)
-
-
-```{r, results= 'hide'}
+```{r, figure_22, fig.cap="A scaled patch grains of connectivity (GOC) model showing the outline of Voronoi polygons in grey, and the network connections among polygons as links plotted from adjacent polygon centroids.", results= "hide"}
 ## Use the MPG extracted in previous examples to find a
 ## patch grains of connectivity model, where patches
 ## are cells on the resistance surface equal to 1
@@ -999,15 +936,14 @@ fragPatchGOC <- GOC(fragMPG, nThresh = 5)
 figure22 <- plot(grain(fragPatchGOC, whichThresh = 4),
                  quick = "grainPlot", theme = FALSE) +
   ggtitle("Patch grains of connectivity")
+figure22
 ```
 
-\pagebreak
+\newpage
 
-## Scaling spatial networks
+## Visulaization
 
-### *VISUALIZATION*
-
-**Characteristics of grains of connectivity**
+### Characteristics of grains of connectivity
 
 The Voronoi polygons that are complementary to a given scale or threshold of a spatial network describe a geographic area.
 As polygons are coalesced and the network is scaled, `grainscape` collects summary statistics on several variables in the newly aggregated areal units.
@@ -1020,9 +956,7 @@ The following example maps the amount of core area of patches at an intermediate
 Core area is defined as the area of all patches in the polygon excluding the edges of those patches, which consists of a one-cell wide margin.
 In this resistance surface node core area appears to be correlated generally with the size of the Voronoi polygon (*i.e.*, larger node circles appear in larger polygons)
 
-![A scaled patch grains of connectivity (GOC) model showing the outline of Voronoi polygons in grey, and the network connections among polygons. Node symbols have been scaled in proportion to the core area of patches (*i.e.*, area excluding edge) contained within the Voronoi polygon](images/figure23.png)
-
-```{r, results = 'hide'}
+```{r, figure_23, fig.cap="A scaled patch grains of connectivity (GOC) model showing the outline of Voronoi polygons in grey, and the network connections among polygons. Node symbols have been scaled in proportion to the core area of patches (*i.e.*, area excluding edge) contained within the Voronoi polygon.", results = "hide"}
 ## Put the fourth grain of the GOC model into its own object
 fragPatchGrain4 <- grain(fragPatchGOC, whichThresh = 4)
 
@@ -1035,15 +969,14 @@ figure23 <- ggplot() +
   geom_point(data = ggGS(fragPatchGrain4, "nodes"),
              aes(x = x, y = y, size = totalCoreArea), colour = "darkgreen") +
   ggtitle("Voronoi polygon metrics (core area)") 
+figure23
 ```
 
-\pagebreak
+\newpage
 
-## Scaling spatial networks
+## Analysis
 
-### *ANALYSIS*
-
-**Corridor analyses at multiple scales**
+### Corridor analyses at multiple scales
 
 Finding the shortest path through a grain of connectivity is conceptually identical to finding the shortest path between nodes in the minimum planar graph.
 The key difference is that use of a grain permits the scaling of the network.
@@ -1056,11 +989,7 @@ In this example, we use the `grainscape` function `corridor()` to identify and p
 Because grains of connectivity are continuously distributed across the map we do not need to provide a focal node or patch identifier.
 Rather, we pass coordinates to the function.
 
-![A corridor through a scaled patch grains of connectivity (GOC) model.
-The black nodes and links demonstrate the corridor between the polygons containing the start and end points (plotted in red as `X`).
-Green nodes and links show the remainder of the grains of connectivity network](images/figure24.png)
-
-```{r}
+```{r, figure_24, fig.cap="A corridor through a scaled patch grains of connectivity (GOC) model. The black nodes and links demonstrate the corridor between the polygons containing the start and end points (plotted in red as `X`). Green nodes and links show the remainder of the grains of connectivity network."}
 ## Set coordinates for the start and end of the corridor
 startEnd <- rbind(c(5, 180), c(395, 312))
 
@@ -1081,13 +1010,12 @@ figure24 <- plot(fragCorridor3, theme = FALSE) +
                           round(fragCorridor3@corridorLength, 0),
                           " resistance units"), size = 2) +
   ggtitle("Corridor analysis; grain of connectivity")
+figure24
 ```
 
-\pagebreak
+\newpage
 
-## Scaling spatial networks
-
-### *MODELLING*
+## Modeling
 
 **Distances between polygons at multiple scales**
 
@@ -1098,65 +1026,64 @@ In this example, the grain depicted in the previous corridor analysis is used to
 Distances at all of the grains that are available in the `GOC` object are produced.
 However, the table that appears below shows distances for only this grain.
 
-![A scaled patch grains of connectivity (GOC) model showing the outline of Voronoi polygons in grey, and the network connections among polygons as links plotted from adjacent polygon centroids.
-The locations of eight focal points used to calculate a pairwise distance matrix are plotted in red](images/figure25.png)
-
-```{r}
+```{r, figure_25, fig.cap="A scaled patch grains of connectivity (GOC) model showing the outline of Voronoi polygons in grey, and the network connections among polygons as links plotted from adjacent polygon centroids. The locations of eight focal points used to calculate a pairwise distance matrix are plotted in red."}
 ## Create eight random points on the map
 pts <- cbind(sample(1:ncol(fragRes))[1:8], sample(1:nrow(fragRes))[1:8])
 
+## Plot these points and the grains of connectivity network
+figure25 <- plot(grain(fragPatchGOC, 4), quick = "grainPlot", theme = FALSE) +
+  annotate("text", x = pts[, 1], y = pts[, 2], label = 1:8, colour = "red") +
+  ggtitle("Eight points for pairwise distances")
+figure25
+```
+
+```{r, table_08}
 ## Find the pairwise distances between them at all grains
 ## available in the GOC object created earlier
 ptsD <- grainscape::distance(fragPatchGOC, pts)
 
-## Plot these points and the grains of connectivity network
-figure25 <- plot(grain(fragPatchGOC, 4), quick = "grainPlot", theme = FALSE) +
-  annotate("text", x = pts[,1], y = pts[,2], label = 1:8, colour = "red") +
-  ggtitle("Eight points for pairwise distances")
-  
 ## Extract distances for the grain of interest (4)
 ptsD2 <- ptsD$th[[4]]$grainD
 
 ## Prepare this distance matrix for printing
 ptsD2[upper.tri(ptsD2)] <- NA
 ptsD2 <- round(ptsD2, 1)
-dimnames(ptsD2)[[1]] <- paste0("Point ", 1:8, " (Polygon ", dimnames(ptsD2)[[2]], ")")
+dimnames(ptsD2)[[1]] <- paste0("Point ", 1:8, " (Polygon ",
+                               dimnames(ptsD2)[[2]], ")")
 dimnames(ptsD2)[[2]] <- 1:8
 
 kable(ptsD2)
 ```
 
-\pagebreak
+\newpage
 
-## References
+# References
 
-```{r, include=FALSE}
-## save all vignette figures
-doFig <- ls()[grepl("figure", ls())]
-done <- lapply(doFig, function(fig) {
-  ggsave(paste0("images/", fig, ".png"), plot = get(fig), width = 3, height = 3)
-})
+<!-- below here is misc -->
 
+```{r, part_A, dependson="figure_20", include=FALSE}
 ## build visual table of contents using vignette figures
 partA <- cowplot::plot_grid(
-   figure9 + theme(plot.title = element_text(size = 8)),
-   figure10 + theme(plot.title = element_text(size = 8)),
-   figure11 + theme(plot.title = element_text(size = 8)),
-   figure12 + theme(plot.title = element_text(size = 8)),
-   figure13 + theme(plot.title = element_text(size = 8)),
-   figure14 + theme(plot.title = element_text(size = 8)),
-   figure15 + theme(plot.title = element_text(size = 8)),
-   figure16 + theme(plot.title = element_text(size = 8)),
-   figure17 + theme(plot.title = element_text(size = 8)),
-   figure18 + theme(plot.title = element_text(size = 8)),
-   figure19 + theme(plot.title = element_text(size = 8)),
-   figure20 + theme(plot.title = element_text(size = 8)),
+  figure09 + theme(plot.title = element_text(size = 8)),
+  figure10 + theme(plot.title = element_text(size = 8)),
+  figure11 + theme(plot.title = element_text(size = 8)),
+  figure12 + theme(plot.title = element_text(size = 8)),
+  figure13 + theme(plot.title = element_text(size = 8)),
+  figure14 + theme(plot.title = element_text(size = 8)),
+  figure15 + theme(plot.title = element_text(size = 8)),
+  figure16 + theme(plot.title = element_text(size = 8)),
+  figure17 + theme(plot.title = element_text(size = 8)),
+  figure18 + theme(plot.title = element_text(size = 8)),
+  figure19 + theme(plot.title = element_text(size = 8)),
+  figure20 + theme(plot.title = element_text(size = 8)),
   nrow = 4, ncol = 3, labels = paste0("(", 9:20, ")"), label_size = 8,
   vjust = 1.75, hjust = -0.05) +
   theme(panel.background = element_blank())
 
-ggsave("images/partA.png", plot = partA, width = 8, height = 8, dpi = 600)
+ggsave("images/partA.png", plot = partA, width = 8, height = 8, dpi = 600) 
+```
 
+```{r, part_B, dependson="figure_25", include=FALSE}
 partB <- cowplot::plot_grid(
   figure21 + theme(plot.title = element_text(size = 8)),
   figure22 + theme(plot.title = element_text(size = 8)),
@@ -1167,5 +1094,5 @@ partB <- cowplot::plot_grid(
   vjust = 1.75, hjust = -0.05) +
   theme(panel.background = element_blank())
 
-ggsave("images/partB.png", plot = partB, width = 8, height = 8, dpi = 600)
+ggsave("images/partB.png", plot = partB, width = 8, height = 8, dpi = 600) 
 ```
