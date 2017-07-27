@@ -1,5 +1,4 @@
-#' Grains of connectivity and minimum planar graph modelling of landscape
-#' connectivity using resistance surfaces
+#' Efficient Modelling of Landscape Connectivity, Habitat, and Protected Area Networks
 #'
 #' @description
 #'
