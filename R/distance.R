@@ -63,7 +63,7 @@
 #' tinyDist <- grainscape::distance(tinyPatchGOC, loc)
 #'
 setGeneric("distance", function(x, y, ...) {
-    raster::distance(x, y, ...)
+  raster::distance(x, y, ...)
 })
 
 #' @export
@@ -86,14 +86,17 @@ setMethod(
 
       if (is_igraph(threshGraph)) {
         E(threshGraph)$weight <- edge_attr(threshGraph, weight)
-        vertices <- sapply(whichGrain[, iThresh], function(z) which(V(threshGraph)$polygonId == z))
-        results$th[[iThresh]]$grainD <- distances(threshGraph, v = vertices)[, vertices]
+        vertices <- sapply(whichGrain[, iThresh], function(z) {
+          if (is.na(z)) NA_integer_ else which(V(threshGraph)$polygonId == z)
+        })
+        results$th[[iThresh]]$grainD <- distances(threshGraph,
+                                                  v = na.omit(vertices))[, na.omit(vertices)]
       } else {
         results$th[[iThresh]] <- NA
       }
     }
     return(results)
-})
+  })
 
 #' @importFrom sp SpatialPoints
 #' @export
@@ -107,7 +110,7 @@ setMethod(
     }
 
     distance(x, SpatialPoints(y), weight, ...)
-})
+  })
 
 #' @export
 #' @rdname distance
@@ -116,4 +119,4 @@ setMethod(
   signature = c(x = "goc", y = "numeric"),
   definition = function(x, y, weight = "meanWeight", ...) {
     distance(x, t(as.matrix(y)), weight, ...)
-})
+  })

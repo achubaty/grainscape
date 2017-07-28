@@ -24,4 +24,3 @@
 .habConnRcpp <- function(cost, patches, ncol, nrow) {
     .Call(`_grainscape_habConnRcpp`, cost, patches, ncol, nrow)
 }
-

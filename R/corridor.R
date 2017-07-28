@@ -76,7 +76,7 @@
 #'             "resistance units"), side = 1)
 #'
 setGeneric("corridor", function(x, ...) {
-    standardGeneric("corridor")
+  standardGeneric("corridor")
 })
 
 #' @export
@@ -120,10 +120,10 @@ setMethod(
     edges <- cbind(edgeNum = 1:nrow(edges),
                    v1 = sapply(edges[, 1], function(z) {
                      which(V(x@th[[whichThresh]]$goc)$name == z)
-                    }),
+                   }),
                    v2 = sapply(edges[, 2], function(z) {
                      which(V(x@th[[whichThresh]]$goc)$name == z)
-                    }))
+                   }))
     edgesGOC <- apply(edges, 1, function(i) {
       cbind(c(V(x@th[[whichThresh]]$goc)$centroidX[i["v1"]],
               V(x@th[[whichThresh]]$goc)$centroidX[i["v2"]]),
@@ -145,15 +145,21 @@ setMethod(
 
     ## Shortest path
     startEndPolygons <- point(x, coords)$pointPolygon[, whichThresh]
-    startEndPath <- shortest_paths(
+
+    pths <- shortest_paths(
       x@th[[whichThresh]]$goc,
-      which(V(x@th[[whichThresh]]$goc)$polygonId == startEndPolygons[1]),
-      which(V(x@th[[whichThresh]]$goc)$polygonId == startEndPolygons[2]),
-      weights = V(x@th[[whichThresh]]$goc)$meanWeight
-    ) %>%
-      `[[`(1) %>%
-      `[[`(1) %>%
-      as.numeric()
+      which(V(x@th[[whichThresh]]$goc)$polygonId == na.omit(startEndPolygons[1])),
+      which(V(x@th[[whichThresh]]$goc)$polygonId == na.omit(startEndPolygons[2])),
+      weights = V(x@th[[whichThresh]]$goc)$meanWeight)
+
+    startEndPath <- if (length(pths$vpath) > 0) {
+      pths %>%
+        `[[`(1) %>%
+        `[[`(1) %>%
+        as.numeric()
+    } else {
+      stop("corridor: all 'coords' correspond to cells of value 'NA'.")
+    }
 
     shortestPathEdges <- cbind(V(x@th[[whichThresh]]$goc)$centroidX[startEndPath],
                                V(x@th[[whichThresh]]$goc)$centroidY[startEndPath]) %>%
@@ -165,11 +171,12 @@ setMethod(
     shortestPathVertices <- SpatialPoints(cbind(
       V(x@th[[whichThresh]]$goc)$centroidX[startEndPath],
       V(x@th[[whichThresh]]$goc)$centroidY[startEndPath]))
+
     pathDist <- distances(
       x@th[[whichThresh]]$goc,
-      v = V(x@th[[whichThresh]]$goc)[startEndPath[1]],
+      v = V(x@th[[whichThresh]]$goc)[na.omit(startEndPath[1])],
       weights = edge_attr(x@th[[whichThresh]]$goc, weight)
-    )[startEndPath[length(startEndPath)]]
+    )[na.omit(startEndPath[length(startEndPath)])]
 
     voronoiBound <- boundaries(grain(x, whichThresh = whichThresh)@voronoi, classes = TRUE)
 
@@ -182,4 +189,4 @@ setMethod(
                   corridorLength = pathDist)
 
     return(result)
-})
+  })
