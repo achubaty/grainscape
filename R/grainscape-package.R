@@ -101,8 +101,8 @@
 #' }
 #'
 #' @docType data
+#' @format raster
 #' @keywords maps
 #' @name grainscape-maps
 #' @rdname grainscape-maps
-#' @format raster
 NULL

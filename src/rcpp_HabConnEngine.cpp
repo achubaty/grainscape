@@ -24,7 +24,6 @@ using namespace Rcpp;
 //' @param ncol              Number of columns in the raster cost/patch map.
 //'
 //' @author Sam Doctolero
-//' @docType methods
 //' @keywords internal
 //' @rdname habConnRcpp
 // [[Rcpp::export(name = ".habConnRcpp")]]

@@ -166,7 +166,6 @@
 #' }
 #'
 #' @author Paul Galpern and Alex Chubaty
-#' @docType methods
 #' @export
 #' @importFrom raster boundaries projection projection<- writeRaster
 #' @importFrom rgdal writeOGR

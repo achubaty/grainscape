@@ -1,5 +1,5 @@
 ---
-title: "Calculating the Minimum Planar Graph and genereating Voronoi tesselations"
+title: "Calculating the Minimum Planar Graph and generating Voronoi tesselations"
 author: "Sam Doctolero and Alex M Chubaty"
 date: '`r Sys.Date()`'
 output:
@@ -33,7 +33,7 @@ opts_chunk$set(warning = FALSE)
 
 [@Fall:2007eo]
 
-# Overview of the MPG algorthim implemented in `grainscpae`
+# Overview of the MPG algorthim implemented in `grainscape`
 
 The Minimimum Planar Graph (MPG) algorithm is used to find the Voronoi boundaries and approximate least cost paths between patches.
 The Voronoi boundaries are created using a spreading or marching algorithm.
@@ -60,7 +60,7 @@ A link or path between patches is then created at the first Voronoi boundary bet
 - `ActiveCell`: inherits the properties of a `Cell` and has its own properties such as `distance`, `originCell`, `parentCell`, `resistance`, and `time` (or iterations). This type of cell is used to keep track of which cells are currently being evaluated. 
 - `LinkCell`: inherits the properties of a `Cell` and has its own properties such as `cost`, `distance`, `fromCell`, and `originCell`. This type of cell is used to create `LinkMap`.
 
-![](images/cells_diagram.jpg)
+![](figure_cells_diagram.jpg)
 
 - `ActiveCellHolder`: a type of container that stores a vector of `ActiveCell`s in an order.
 - `ActiveCellQueue`: contains an `ActiveCellHolder`. Its main purpose is to properly store the `ActiveCellHolder` in a vector in an order, increasing Euclidian distance.
@@ -69,7 +69,7 @@ A link or path between patches is then created at the first Voronoi boundary bet
 - `OutputData`: similar to `InputData` but it acts as a container for all the data that are calculated by the engine and gives that data to the user. 
 - `Patch`: a patch or a cluster are the habitats that are found in the resistance map, given a value for habitat. 
 
-![](images/data_struct_diagram.jpg)
+![](figure_data_struct_diagram.jpg)
 
 -----
 
@@ -80,7 +80,7 @@ A link or path between patches is then created at the first Voronoi boundary bet
 - `flCol`: a vector of floating point values. 
 - `flMap`: a vector of `flCol`, which in turn creates a `Map` that contains floating point values in each element or cell.
 
-![](images/typedef_diagram.png)
+![](figure_typedef_diagram.png)
 
 -----
 
@@ -89,7 +89,7 @@ A link or path between patches is then created at the first Voronoi boundary bet
 The main calculator of the program.
 It creates the minimum planar graph (MPG) using the MPG algorithm, finds least cost links or paths, and finds patches or clusters.
 
-![](images/engine_class_diagram.jpg)
+![](figure_engine_class_diagram.jpg)
 
 ### Fields/Properties
 
@@ -171,7 +171,7 @@ The MPG algorithm has the following steps:
 4. The cells that have been recently spread in to become new Active Cells.
 5. Repeat.
 
-![](images/HabConnFlowchart.png)  
+![](figure_HabConnFlowchart.jpg)  
 
 The linking algorithm is embedded within the spreading functions of the MPG algorithm. When an Active Cell spreads a link map creates a connection between the parent Active Cell to the new (child) Active Cell. Linking is assisted by the ActiveCellQueue to find the least cost/resistive paths. 
 

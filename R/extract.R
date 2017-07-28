@@ -6,7 +6,6 @@
 #' @param value    Any R object.
 #'
 #' @export
-#' @docType methods
 #' @include classes.R
 #' @name $
 #' @aliases $,goc-method

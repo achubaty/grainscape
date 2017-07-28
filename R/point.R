@@ -53,7 +53,6 @@
 #' Biological Conservation 130:70-83.
 #'
 #' @author Paul Galpern and Alex Chubaty
-#' @docType methods
 #' @export
 #' @importFrom raster cellFromXY
 #' @include classes.R

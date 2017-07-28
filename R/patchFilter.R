@@ -36,12 +36,12 @@
 #'           are greater than the specified area.
 #'
 #' @author Paul Galpern and Alex Chubaty
-#' @docType methods
 #' @export
 #' @importFrom raster clump freq res
 #' @include classes.R
 #' @rdname patchFilter
 #' @seealso \code{\link{MPG}}
+#'
 #' @examples
 #' ## Load raster landscape
 #' tiny <- raster::raster(system.file("extdata/tiny.asc", package = "grainscape"))

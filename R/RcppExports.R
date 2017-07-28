@@ -18,7 +18,6 @@
 #' @param ncol              Number of columns in the raster cost/patch map.
 #'
 #' @author Sam Doctolero
-#' @docType methods
 #' @keywords internal
 #' @rdname habConnRcpp
 .habConnRcpp <- function(cost, patches, ncol, nrow) {

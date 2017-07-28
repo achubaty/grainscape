@@ -36,7 +36,6 @@
 #' at multiple spatial scales in landscape genetics. Molecular Ecology 21:3996-4009.
 #'
 #' @author Paul Galpern and Alex Chubaty
-#' @docType methods
 #' @export
 #' @include classes.R
 #' @rdname distance

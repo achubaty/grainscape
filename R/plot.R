@@ -89,7 +89,6 @@ if (getRversion() >= "3.1.0") {
 #' It is the only option available with \code{corridor} objects and the default.
 #'
 #' @author Alex Chubaty and Paul Galpern
-#' @docType methods
 #' @export
 #' @importFrom ggplot2 ggplot aes geom_point geom_raster geom_segment
 #' @importFrom ggplot2 scale_colour_identity scale_fill_identity scale_fill_manual
