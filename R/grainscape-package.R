@@ -33,6 +33,11 @@
 #'
 #' A detailed tutorial is available as a vignette.
 #'
+#' @import igraph
+#' @import methods
+#' @importFrom Rcpp evalCpp
+#' @useDynLib grainscape, .registration = TRUE
+#'
 #' @references
 #'
 #' Bivand, R.S. and C. Rundel. (2016). rgeos: Interface to Geometry Engine - Open Source (GEOS).
@@ -100,15 +105,4 @@
 #' @name grainscape-maps
 #' @rdname grainscape-maps
 #' @format raster
-NULL
-
-################################################################################
-# package imports
-# See \url{http://r-pkgs.had.co.nz/namespace.html#imports}
-
-#' @import igraph
-#' @import methods
-#' @importFrom Rcpp evalCpp
-#' @useDynLib grainscape, .registration = TRUE
-#'
 NULL
