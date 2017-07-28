@@ -5,15 +5,13 @@ test_that("spelling errors", {
   skip_on_os("windows")
   skip_if_not_installed("hunspell")
 
-  ## ensure that stats terms are included in the word list
   pkg <- "grainscape"
-  pkgDir <- system.file(package = pkg)
+  pkgDir <- file.path("~/GitHub", pkg)
 
-  if (interactive() && requireNamespace("devtools")) {
-    devtools::dev_mode(TRUE)
-  }
   .wordsFile <- system.file("dict/words.rds", package = pkg)
   .words <- readRDS(.wordsFile)
+
+  ## ensure that stats terms are included in the word list
   .en_stats <- hunspell::en_stats # nolint
   .complete <- all(.en_stats %in% .words)
   expect_true(.complete)
