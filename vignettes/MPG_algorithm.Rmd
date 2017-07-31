@@ -80,7 +80,7 @@ A link or path between patches is then created at the first Voronoi boundary bet
 - `flCol`: a vector of floating point values. 
 - `flMap`: a vector of `flCol`, which in turn creates a `Map` that contains floating point values in each element or cell.
 
-![](figure_typedef_diagram.png)
+![](figure_typedef_diagram.jpg)
 
 -----
 
