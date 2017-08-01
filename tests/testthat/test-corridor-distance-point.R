@@ -48,7 +48,7 @@ test_that("distance handles NA values", {
   coordAllNA <- rbind(c(2, 2), c(98, 98))
 
   ## Fails
-  expect_warning(distanceNoneNA <- distance(goc, coordNoneNA))
+  expect_warning(distanceNoneNA <- distance(goc, coordNoneNA), NA)
   expect_warning(distanceSomeNA <- distance(goc, coordSomeNA))
   expect_warning(distanceAllNA <- distance(goc, coordAllNA))
 })
