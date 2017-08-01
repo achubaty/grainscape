@@ -27,7 +27,7 @@ test_that("corridor handles NA values", {
   coordSomeNA <- rbind(c(2, 2), c(90, 90))
   coordAllNA <- rbind(c(2, 2), c(98, 98))
 
-  corridorNoneNA <- corridor(goc, whichThresh = 2, coordNoneNA) ## OK
+  expect_warning(corridorNoneNA <- corridor(goc, whichThresh = 2, coordNoneNA), NA) ## OK
   expect_warning(corridorSomeNA <- corridor(goc, whichThresh = 2, coordSomeNA))
   expect_error(corridorAllNA <- corridor(goc, whichThresh = 2, coordAllNA))
 })
@@ -48,7 +48,7 @@ test_that("distance handles NA values", {
   coordAllNA <- rbind(c(2, 2), c(98, 98))
 
   ## Fails
-  distanceNoneNA <- distance(goc, coordNoneNA)
+  expect_warning(distanceNoneNA <- distance(goc, coordNoneNA))
   expect_warning(distanceSomeNA <- distance(goc, coordSomeNA))
   expect_warning(distanceAllNA <- distance(goc, coordAllNA))
 })
