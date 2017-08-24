@@ -6,6 +6,6 @@
 ^appveyor\.yml$
 CONTRIBUTING\.md
 cran-comments\.md
-LICENSE
+^LICENSE$
 ^docs$
 ^vignettes/.*_cache$
