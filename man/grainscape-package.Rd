@@ -4,8 +4,7 @@
 \name{grainscape-package}
 \alias{grainscape}
 \alias{grainscape-package}
-\title{Grains of connectivity and minimum planar graph modelling of landscape
-connectivity using resistance surfaces}
+\title{Efficient Modelling of Landscape Connectivity, Habitat, and Protected Area Networks}
 \description{
 Given a landscape resistance surface, creates grains of connectivity and minimum
 planar graph models that can be used to calculate effective distances for

@@ -53,7 +53,6 @@
 #' Biological Conservation 130:70-83.
 #'
 #' @author Paul Galpern and Alex Chubaty
-#' @docType methods
 #' @export
 #' @importFrom raster cellFromXY
 #' @include classes.R
@@ -135,16 +134,18 @@ setMethod(
 
         ## Faster method which references the cells from the stored voronoi raster
         ## and uses the graph vertex record to determine the polygonId
-
         grainPoints[, iThresh] <- as.numeric(sapply(x@voronoi[cellPoints], function(z) {
-          patchIdLookup[patchIdLookup[, 2] == z, 1]
+          patchIdLookup[patchIdLookup[, 2] == na.omit(z), 1]
         }))
 
         totalPatchAreaPoints[, iThresh] <- as.numeric(sapply(grainPoints[, iThresh], function(z) {
-          patchAreaLookup[patchAreaLookup[, 1] == z, 2]
+          if (is.na(z)) warning("values of 'coords' correspond to cells with value 'NA'.")
+          patchAreaLookup[patchAreaLookup[, 1] == na.omit(z), 2]
         }))
+
         totalCoreAreaPoints[, iThresh] <- as.numeric(sapply(grainPoints[, iThresh], function(z) {
-          patchAreaLookup[patchAreaLookup[, 1] == z, 4]
+          ## warning provided above
+          patchAreaLookup[patchAreaLookup[, 1] == na.omit(z), 4]
         }))
       }
     }
@@ -153,7 +154,7 @@ setMethod(
     results$pointPolygon <- grainPoints
     results$pointTotalPatchArea <- totalPatchAreaPoints
     results$pointTotalCoreArea <- totalCoreAreaPoints
-    results$pointECS <- apply(totalPatchAreaPoints, 2, mean)
-    results$pointECSCore <- apply(totalCoreAreaPoints, 2, mean)
+    results$pointECS <- apply(totalPatchAreaPoints, 2, mean, na.rm = TRUE)
+    results$pointECSCore <- apply(totalCoreAreaPoints, 2, mean, na.rm = TRUE)
     return(results)
 })

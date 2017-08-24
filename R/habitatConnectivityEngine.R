@@ -13,7 +13,6 @@ if (getRversion() >= "3.1.0") {
 #' @return An object of class \code{\linkS4class{hce}}.
 #'
 #' @author Alex Chubaty
-#' @docType methods
 #' @importFrom raster extent getValues ncol nrow raster unique
 #' @include classes.R
 #' @keywords internal

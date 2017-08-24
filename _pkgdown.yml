@@ -1,0 +1,6 @@
+url: https://achubaty.github.io/grainscape
+
+template:
+  params:
+    bootswatch: flatly
+

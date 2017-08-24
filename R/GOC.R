@@ -68,7 +68,6 @@
 #'
 #'
 #' @author Paul Galpern
-#' @docType methods
 #' @export
 #' @importFrom raster freq rasterToPolygons reclassify zonal
 #' @importFrom sp coordinates

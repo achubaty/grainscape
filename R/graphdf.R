@@ -24,7 +24,6 @@
 #' each containing \code{v} and \code{e} elements.
 #'
 #' @author Paul Galpern and Alex Chubaty
-#' @docType methods
 #' @export
 #' @importFrom utils type.convert
 #' @include classes.R

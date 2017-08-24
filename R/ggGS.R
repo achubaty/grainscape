@@ -68,7 +68,6 @@
 #'
 #'
 #' @author Paul Galpern and Alex Chubaty
-#' @docType methods
 #' @export
 #' @importFrom sp SpatialPixelsDataFrame
 #' @importFrom raster boundaries

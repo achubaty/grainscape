@@ -11,8 +11,8 @@
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 
-<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
@@ -71,7 +71,7 @@
       <a href="../articles/grainscape_vignette.html">Modelling, visualization and analysis with the `grainscape` package</a>
     </li>
     <li>
-      <a href="../articles/MPG_algorithm.html">Calculating the Minimum Planar Graph and genereating Voronoi tesselations</a>
+      <a href="../articles/MPG_algorithm.html">Calculating the Minimum Planar Graph and generating Voronoi tesselations</a>
     </li>
   </ul>
 </li>
@@ -134,7 +134,7 @@ developed in C++.</p>
     <pre class="examples"><div class='input'><span class='fu'>library</span>(<span class='no'>raster</span>)
 
 <span class='no'>cost</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/raster'>raster</a></span>(<span class='fu'>system.file</span>(<span class='st'>"extdata/fragmented.asc"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"grainscape"</span>))
-<span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/plot'>plot</a></span>(<span class='no'>cost</span>)</div><div class='img'><img src='habConnEngine-10.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+<span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/plot'>plot</a></span>(<span class='no'>cost</span>)</div><div class='img'><img src='habConnEngine-1.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
 <span class='co'># cells in raster `cost` with value of 1 are habitat (patch) cells</span>
 <span class='no'>links</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>grainscape</span><span class='kw ns'>:::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/grainscape/topics/habConnEngine'>.habConnEngine</a></span>(<span class='no'>cost</span>, <span class='kw'>patches</span> <span class='kw'>=</span> (<span class='no'>cost</span> <span class='kw'>==</span> <span class='fl'>1</span>))
 
@@ -289,7 +289,7 @@ developed in C++.</p>
 #&gt; 124   -124     296       71         382   129     71       372          24
 #&gt; 125   -125     889      258         257  1083    258       247          25
 #&gt;  [ reached getOption("max.print") -- omitted 202 rows ]
-#&gt; </div><div class='input'><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/plot'>plot</a></span>(<span class='no'>links</span>@<span class='kw'>voronoi</span>)    <span class='co'># plot the voronoi tesselation</span></div><div class='img'><img src='habConnEngine-11.png' alt='' width='700' height='432.632880098887' /></div><div class='input'><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/plot'>plot</a></span>(<span class='no'>links</span>@<span class='kw'>patchLinks</span>) <span class='co'># plot the patches and links</span></div><div class='img'><img src='habConnEngine-12.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+#&gt; </div><div class='input'><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/plot'>plot</a></span>(<span class='no'>links</span>@<span class='kw'>voronoi</span>)    <span class='co'># plot the voronoi tesselation</span></div><div class='img'><img src='habConnEngine-2.png' alt='' width='700' height='432.632880098887' /></div><div class='input'><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/plot'>plot</a></span>(<span class='no'>links</span>@<span class='kw'>patchLinks</span>) <span class='co'># plot the patches and links</span></div><div class='img'><img src='habConnEngine-3.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

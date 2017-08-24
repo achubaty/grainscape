@@ -1,5 +1,4 @@
-#' Grains of connectivity and minimum planar graph modelling of landscape
-#' connectivity using resistance surfaces
+#' Efficient Modelling of Landscape Connectivity, Habitat, and Protected Area Networks
 #'
 #' @description
 #'
@@ -33,6 +32,11 @@
 #' See \code{browseVignettes('grainscape')}.
 #'
 #' A detailed tutorial is available as a vignette.
+#'
+#' @import igraph
+#' @import methods
+#' @importFrom Rcpp evalCpp
+#' @useDynLib grainscape, .registration = TRUE
 #'
 #' @references
 #'
@@ -97,19 +101,8 @@
 #' }
 #'
 #' @docType data
+#' @format raster
 #' @keywords maps
 #' @name grainscape-maps
 #' @rdname grainscape-maps
-#' @format raster
-NULL
-
-################################################################################
-# package imports
-# See \url{http://r-pkgs.had.co.nz/namespace.html#imports}
-
-#' @import igraph
-#' @import methods
-#' @importFrom Rcpp evalCpp
-#' @useDynLib grainscape, .registration = TRUE
-#'
 NULL

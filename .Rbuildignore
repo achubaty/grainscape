@@ -2,11 +2,10 @@
 ^\.lintr$
 ^\.Rproj\.user$
 ^\.travis\.yml$
+^_pkgdown\.yml$
 ^appveyor\.yml$
 CONTRIBUTING\.md
 cran-comments\.md
-LICENSE
+^LICENSE$
 ^docs$
-^_pkgdown\.yml$
 ^vignettes/.*_cache$
-

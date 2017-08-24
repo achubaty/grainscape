@@ -10,7 +10,6 @@
 #' @return A theme suitable for use with \code{\link{ggplot}}
 #'
 #' @author Paul Galpern and Alex Chubaty
-#' @docType methods
 #' @export
 #' @importFrom ggplot2 %+replace% element_blank theme theme_bw unit
 #' @rdname theme_grainscape

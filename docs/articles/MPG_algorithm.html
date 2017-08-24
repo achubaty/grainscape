@@ -5,8 +5,8 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Calculating the Minimum Planar Graph and genereating Voronoi tesselations • grainscape</title>
-<!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<title>Calculating the Minimum Planar Graph and generating Voronoi tesselations • grainscape</title>
+<!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script><!-- Font Awesome icons --><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 <!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script><script src="../pkgdown.js"></script><!-- mathjax --><script src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!--[if lt IE 9]>
@@ -48,7 +48,7 @@
       <a href="../articles/grainscape_vignette.html">Modelling, visualization and analysis with the `grainscape` package</a>
     </li>
     <li>
-      <a href="../articles/MPG_algorithm.html">Calculating the Minimum Planar Graph and genereating Voronoi tesselations</a>
+      <a href="../articles/MPG_algorithm.html">Calculating the Minimum Planar Graph and generating Voronoi tesselations</a>
     </li>
   </ul>
 </li>
@@ -75,10 +75,10 @@
       </header><div class="row">
   <div class="col-md-9">
     <div class="page-header toc-ignore">
-      <h1>Calculating the Minimum Planar Graph and genereating Voronoi tesselations</h1>
+      <h1>Calculating the Minimum Planar Graph and generating Voronoi tesselations</h1>
                         <h4 class="author">Sam Doctolero and Alex M Chubaty</h4>
             
-            <h4 class="date">2017-07-27</h4>
+            <h4 class="date">2017-08-24</h4>
           </div>
 
     
@@ -90,9 +90,9 @@
 <a href="#introduction-to-spatial-graphs" class="anchor"></a>Introduction to spatial graphs</h1>
 <p><span class="citation">(Fall et al. 2007)</span></p>
 </div>
-<div id="overview-of-the-mpg-algorthim-implemented-in-grainscpae" class="section level1">
+<div id="overview-of-the-mpg-algorthim-implemented-in-grainscape" class="section level1">
 <h1 class="hasAnchor">
-<a href="#overview-of-the-mpg-algorthim-implemented-in-grainscpae" class="anchor"></a>Overview of the MPG algorthim implemented in <code>grainscpae</code>
+<a href="#overview-of-the-mpg-algorthim-implemented-in-grainscape" class="anchor"></a>Overview of the MPG algorthim implemented in <code>grainscape</code>
 </h1>
 <p>The Minimimum Planar Graph (MPG) algorithm is used to find the Voronoi boundaries and approximate least cost paths between patches. The Voronoi boundaries are created using a spreading or marching algorithm. Each perimeter cell in the patches spread out to adjacent cells, that have not been visited yet or are not part of any patch, and are given a patch ID to mark the Voronoi territory. A Voronoi boundary is found when a cell is visited twice by two different Voronoi territories or IDs. Using a marching algorithm to find the Voronoi boundaries makes it possible to implement a linking algorithm that can run in parallel with the marching algorithm. As a cell is spread into, let’s call it a child cell, it then creates a link or connection between the child cell and the cell that it spread from, which we call a parent cell. Finding the least cost path this way is only possible with the use of storing the child cells, which will eventually become parent cells, in a queueing table that sorts the cells in a certain order. The child cells are sorted by increasing eucledian distance between the child cell and their origin cell, the perimeter cell that the connection originally spawned from. A link or path between patches is then created at the first Voronoi boundary between two patches.</p>
 <div id="terminologies" class="section level2">
@@ -122,7 +122,7 @@
 <code>LinkCell</code>: inherits the properties of a <code>Cell</code> and has its own properties such as <code>cost</code>, <code>distance</code>, <code>fromCell</code>, and <code>originCell</code>. This type of cell is used to create <code>LinkMap</code>.</li>
 </ul>
 <div class="figure">
-<img src="images/cells_diagram.jpg">
+<img src="figure_cells_diagram.jpg">
 </div>
 <ul>
 <li>
@@ -139,7 +139,7 @@
 <code>Patch</code>: a patch or a cluster are the habitats that are found in the resistance map, given a value for habitat.</li>
 </ul>
 <div class="figure">
-<img src="images/data_struct_diagram.jpg">
+<img src="figure_data_struct_diagram.jpg">
 </div>
 <hr>
 </div>
@@ -157,7 +157,7 @@
 <code>flMap</code>: a vector of <code>flCol</code>, which in turn creates a <code>Map</code> that contains floating point values in each element or cell.</li>
 </ul>
 <div class="figure">
-<img src="images/typedef_diagram.png">
+<img src="figure_typedef_diagram.jpg">
 </div>
 <hr>
 </div>
@@ -166,7 +166,7 @@
 <a href="#the-engine-class" class="anchor"></a>The <code>Engine</code> Class</h2>
 <p>The main calculator of the program. It creates the minimum planar graph (MPG) using the MPG algorithm, finds least cost links or paths, and finds patches or clusters.</p>
 <div class="figure">
-<img src="images/engine_class_diagram.jpg">
+<img src="figure_engine_class_diagram.jpg">
 </div>
 <div id="fieldsproperties" class="section level3">
 <h3 class="hasAnchor">
@@ -462,7 +462,7 @@
 <li>Repeat.</li>
 </ol>
 <div class="figure">
-<img src="images/HabConnFlowchart.png">
+<img src="figure_HabConnFlowchart.jpg">
 </div>
 <p>The linking algorithm is embedded within the spreading functions of the MPG algorithm. When an Active Cell spreads a link map creates a connection between the parent Active Cell to the new (child) Active Cell. Linking is assisted by the ActiveCellQueue to find the least cost/resistive paths.</p>
 <hr>
@@ -533,7 +533,7 @@
       <ul class="nav nav-pills nav-stacked">
 <li><a href="#introduction-to-spatial-graphs">Introduction to spatial graphs</a></li>
       <li>
-<a href="#overview-of-the-mpg-algorthim-implemented-in-grainscpae">Overview of the MPG algorthim implemented in <code>grainscpae</code></a><ul class="nav nav-pills nav-stacked">
+<a href="#overview-of-the-mpg-algorthim-implemented-in-grainscape">Overview of the MPG algorthim implemented in <code>grainscape</code></a><ul class="nav nav-pills nav-stacked">
 <li><a href="#terminologies">Terminologies</a></li>
       <li><a href="#data-structures">Data Structures</a></li>
       <li><a href="#type-definitions">Type Definitions</a></li>
