@@ -18,13 +18,35 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
+
+<!-- sticky kit -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-  
-  
+
+
+
+<meta property="og:title" content="Plot quick visualizations of <code>grainscape</code> objects — plot,corridor,ANY-method" />
+
+<meta property="og:description" content="Plot quick visualizations of mpg, grain, and corridor
+objects.
+This function is intended to get a quick look at the state of a grainscape
+object by rendering what are likely to be the most universally useful
+visualizations of the spatial data within these objects.
+Much more control is available using ggGS with ggplot
+enabling the layering of different different analytical products, and the
+visualization of node and link attributes.
+For high-resolution visualization and the greatest level of control use
+export to export spatial objects for cartographic representation
+in a geographic information system (GIS)." />
+<meta name="twitter:card" content="summary" />
+
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -47,12 +69,16 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">grainscape</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">grainscape</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.3.0.9000</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="..//index.html">
+  <a href="../index.html">
     <span class="fa fa-home fa-lg"></span>
      
   </a>
@@ -68,15 +94,15 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/grainscape_vignette.html">Modelling, visualization and analysis with the `grainscape` package</a>
+      <a href="../articles/MPG_algorithm.html">Calculating the Minimum Planar Graph and generating Voronoi tesselations</a>
     </li>
     <li>
-      <a href="../articles/MPG_algorithm.html">Calculating the Minimum Planar Graph and generating Voronoi tesselations</a>
+      <a href="../articles/grainscape_vignette.html">Modelling, visualization and analysis with the `grainscape` package</a>
     </li>
   </ul>
 </li>
 <li>
-  <a href="../news/index.html">News</a>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
       
@@ -88,6 +114,7 @@
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -95,12 +122,15 @@
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Plot quick visualizations of <code>grainscape</code> objects</h1>
+    <small class="dont-index">Source: <a href='https://github.com/achubaty/grainscape/blob/master/R/plot.R'><code>R/plot.R</code></a></small>
+    <div class="hidden name"><code>plot.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>Plot quick visualizations of <code>mpg</code>, <code>grain</code>, and <code>corridor</code>
 objects.</p>
@@ -114,20 +144,21 @@ visualization of node and link attributes.</p>
 <code><a href='export.html'>export</a></code> to export spatial objects for cartographic representation
 in a geographic information system (GIS).</p>
     
+    </div>
 
     <pre class="usage"><span class='co'># S4 method for corridor,ANY</span>
 <span class='fu'>plot</span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='kw'>quick</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>print</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='kw'>theme</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)
 
 <span class='co'># S4 method for grain,ANY</span>
-<span class='fu'>plot</span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='kw'>quick</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>print</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>theme</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='no'>...</span>)
+<span class='fu'>plot</span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='kw'>quick</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>print</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>theme</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)
 
 <span class='co'># S4 method for mpg,ANY</span>
-<span class='fu'>plot</span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='kw'>quick</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>print</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>theme</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='no'>...</span>)</pre>
+<span class='fu'>plot</span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='kw'>quick</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>print</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>theme</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)</pre>
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
@@ -165,37 +196,37 @@ Default is <code>TRUE</code>.</p></td>
                geoms adn adjustments can be applied.  Has the side effect of
                rendering the plot, unless <code>print = FALSE</code>.</p>
     
-    <h2 class="hasAnchor" id="types-of-visualization-available-with-the-code-quick-code-parameter"><a class="anchor" href="#types-of-visualization-available-with-the-code-quick-code-parameter"></a>Types of visualization available with the &lt;code&gt;quick&lt;/code&gt; parameter</h2>
+    <h2 class="hasAnchor" id="types-of-visualization-available-with-the-quick-parameter"><a class="anchor" href="#types-of-visualization-available-with-the-quick-parameter"></a>Types of visualization available with the <code>quick</code> parameter</h2>
 
     
     <p><code>"mpgPerimPlot"</code> gives a a vector rendering of the minimum planar
 graph with vector links connecting the perimeters of the patches.  This
 doesn't accurately represent the sinuosity of paths of the links between patches
 but offers a good approximation that renders better at large extents.
-Default for <code>mpg</code> objects. Not available for other objects.
-    <code>"mpgPlot"</code> gives a raster-only rendering of the minimum planar graph
+Default for <code>mpg</code> objects. Not available for other objects.</p>
+<p><code>"mpgPlot"</code> gives a raster-only rendering of the minimum planar graph
 where <code>patchId</code> are positive integers, and <code>linkId</code> are negative
 integers showing the shortest paths between patches  Only available for
-<code>mpg</code> objects.
-    <code>"network"</code> gives a vector rendering of the minimum planar graph or
+<code>mpg</code> objects.</p>
+<p><code>"network"</code> gives a vector rendering of the minimum planar graph or
 the grains of connectivity network with nodes and links plotted at the
 patch or polygon centroid locations. Available for <code>mpg</code> and <code>grain</code>
-objects. Default for <code>grain</code> objects.
-    <code>"grainPlot"</code> gives a raster and vector rendering of the grains of
+objects. Default for <code>grain</code> objects.</p>
+<p><code>"grainPlot"</code> gives a raster and vector rendering of the grains of
 connectivity network with nodes and links plotted at polygon centroid locations,
 superimposed over the boundaries of the Voronoi polygons.  Can be time
 consuming on large rasters due to the Voronoi boundary extraction.
-Only available for <code>grain</code> objects.
-    <code>"corridorPlot"</code> renders the output of a <code><a href='corridor.html'>corridor</a></code> analysis.
+Only available for <code>grain</code> objects.</p>
+<p><code>"corridorPlot"</code> renders the output of a <code><a href='corridor.html'>corridor</a></code> analysis.
 It is the only option available with <code>corridor</code> objects and the default.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><code><a href='ggGS.html'>ggGS</a></code>,
+    <div class='dont-index'><p><code><a href='ggGS.html'>ggGS</a></code>,
          <code><a href='export.html'>export</a></code>,
          <code><a href='corridor-class.html'>corridor</a></code>,
          <code><a href='grain-class.html'>grain</a></code>,
-         <code><a href='mpg-class.html'>mpg</a></code></p>
+         <code><a href='mpg-class.html'>mpg</a></code></p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -243,7 +274,7 @@ It is the only option available with <code>corridor</code> objects and the defau
       
       <li><a href="#value">Value</a></li>
 
-      <li><a href="#types-of-visualization-available-with-the-code-quick-code-parameter">Types of visualization available with the &lt;code&gt;quick&lt;/code&gt; parameter</a></li>
+      <li><a href="#types-of-visualization-available-with-the-quick-parameter">Types of visualization available with the <code>quick</code> parameter</a></li>
 
       <li><a href="#see-also">See also</a></li>
       
@@ -263,11 +294,14 @@ Alex Chubaty and Paul Galpern
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>
    </div>
 
+  
+
   </body>
 </html>
+

@@ -18,13 +18,34 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
+
+<!-- sticky kit -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-  
-  
+
+
+
+<meta property="og:title" content="Export spatial data from MPG and GOC models — export" />
+
+<meta property="og:description" content="This function automates the export of raster and vector spatial data from
+mpg and grain objects.  By default it places them in a new directory,
+unless an existing one is specified with overwrite=TRUE.
+It can also be used to process mpg and grain objects to
+produce R spatial objects that are convenient for plotting or analysis within R.
+Use R=TRUE in which case all parameters related to file export
+are ignored.  (Default R=FALSE)
+The raster package writeRaster is used for rasters,
+and writeOGR in the rgdal package is used to
+export ESRI compatible shape files." />
+<meta name="twitter:card" content="summary" />
+
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -47,12 +68,16 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">grainscape</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">grainscape</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.3.0.9000</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="..//index.html">
+  <a href="../index.html">
     <span class="fa fa-home fa-lg"></span>
      
   </a>
@@ -68,15 +93,15 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/grainscape_vignette.html">Modelling, visualization and analysis with the `grainscape` package</a>
+      <a href="../articles/MPG_algorithm.html">Calculating the Minimum Planar Graph and generating Voronoi tesselations</a>
     </li>
     <li>
-      <a href="../articles/MPG_algorithm.html">Calculating the Minimum Planar Graph and generating Voronoi tesselations</a>
+      <a href="../articles/grainscape_vignette.html">Modelling, visualization and analysis with the `grainscape` package</a>
     </li>
   </ul>
 </li>
 <li>
-  <a href="../news/index.html">News</a>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
       
@@ -88,6 +113,7 @@
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -95,12 +121,15 @@
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Export spatial data from MPG and GOC models</h1>
+    <small class="dont-index">Source: <a href='https://github.com/achubaty/grainscape/blob/master/R/export.R'><code>R/export.R</code></a></small>
+    <div class="hidden name"><code>export.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>This function automates the export of raster and vector spatial data from
 <code>mpg</code> and <code>grain</code> objects.  By default it places them in a new directory,
@@ -113,6 +142,7 @@ are ignored.  (Default <code>R=FALSE</code>)</p>
 and <code>writeOGR</code> in the <code>rgdal</code> package is used to
 export ESRI compatible shape files.</p>
     
+    </div>
 
     <pre class="usage"><span class='fu'>export</span>(<span class='no'>x</span>, <span class='kw'>dirname</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>path</span> <span class='kw'>=</span> <span class='st'>"."</span>, <span class='kw'>rasterFormat</span> <span class='kw'>=</span> <span class='st'>"GTiff"</span>,
   <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>R</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>vorBound</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)
@@ -132,7 +162,7 @@ export ESRI compatible shape files.</p>
   <span class='kw'>rasterFormat</span> <span class='kw'>=</span> <span class='st'>"GTiff"</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>R</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>vorBound</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)</pre>
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
@@ -191,11 +221,9 @@ Defaults to <code>FALSE</code>.</p></td>
 in the object.</p>
 <p>Please note that for vector data export the attribute name is limited
 to 8 characters in shape files.  See the tables below for the abbreviations
-used and their meaning.
-
-<strong>Exported from <code>mpg</code> objects:</strong>
-
-<code>nodes</code>, <code>linksCentroid</code>, <code>linksPerim</code> are shape files giving
+used and their meaning.</p>
+<p><strong>Exported from <code>mpg</code> objects:</strong></p>
+<p><code>nodes</code>, <code>linksCentroid</code>, <code>linksPerim</code> are shape files giving
 the locations of the patch centroids, links among centroids, and links
 among perimeters of patches respectively.  <code>patchId, voronoi</code> are
 rasters giving the patch identifier of the patch, or of the patch that
@@ -204,192 +232,69 @@ the weight in cost surface units of the shortest paths between perimeters,
 and the identifiers of those links respectively.  <code>vorBound</code> gives
 the boundaries of the Voronoi polygons (if specified).</p>
 <p>Description of node (vertex) and link (edge) weights in <code>mpg</code> objects
-and their corresponding attribute names in the shape files created.</p><table><tr><td>
-  <strong>type</strong> </td>
-<td> <strong>MPG name</strong> </td>
-<td> <strong>SHP name</strong> </td>
-<td> <strong>Description</strong></td>
-</tr><tr><td>
-  node </td>
-<td> patchId </td>
-<td> patchId </td>
-<td> Patch id from patchId raster </td>
-</tr><tr><td>
-  node </td>
-<td> patchArea </td>
-<td> patchA </td>
-<td> Area of patch </td>
-</tr><tr><td>
-  node </td>
-<td> patchEdgeArea </td>
-<td> patchEA </td>
-<td> Edge area of patch </td>
-</tr><tr><td>
-  node </td>
-<td> coreArea </td>
-<td> coreA </td>
-<td> Area excluding edge of patch </td>
-</tr><tr><td>
-  node </td>
-<td> centroidX </td>
-<td> ctrX </td>
-<td> Centroid of the patch (X)</td>
-</tr><tr><td>
-  node </td>
-<td> centroidY </td>
-<td> ctrY </td>
-<td> Centroid of the patch (Y)</td>
-</tr><tr><td>
-  link </td>
-<td> e1 </td>
-<td> e1 </td>
-<td> Id of first patch at end of link</td>
-</tr><tr><td>
-  link </td>
-<td> e2 </td>
-<td> e2 </td>
-<td> Id of second patch at end of link</td>
-</tr><tr><td>
-  link </td>
-<td> linkId </td>
-<td> linkId </td>
-<td> Link id from lcpLinkId raster</td>
-</tr><tr><td>
-  link </td>
-<td> lcPerimWeight </td>
-<td> lcpPerWt </td>
-<td> Cost length of link from patch perimeters</td>
-</tr><tr><td>
-  link </td>
-<td> startPerimX </td>
-<td> strtPerX </td>
-<td> Coordinate of link endpoint on first patch (X)</td>
-</tr><tr><td>
-  link </td>
-<td> startPerimY </td>
-<td> strtPerY </td>
-<td> Coordinate of link endpoint on first patch (Y)</td>
-</tr><tr><td>
-  link </td>
-<td> endPerimX </td>
-<td> endPerX </td>
-<td> Coordinate of link endpoint on second patch (X)</td>
-</tr><tr><td>
-  link </td>
-<td> endPerimY </td>
-<td> endPerY </td>
-<td> Coordinate of link endpoint on second patch (Y)</td>
-</tr></table><p><strong>Exported from <code>grain</code> objects:</strong>
+and their corresponding attribute names in the shape files created.</p>
+<table class='table'>
+<tr><td><strong>type</strong></td><td><strong>MPG name</strong></td><td><strong>SHP name</strong></td><td><strong>Description</strong></td></tr>
+<tr><td>node</td><td>patchId</td><td>patchId</td><td>Patch id from patchId raster</td></tr>
+<tr><td>node</td><td>patchArea</td><td>patchA</td><td>Area of patch</td></tr>
+<tr><td>node</td><td>patchEdgeArea</td><td>patchEA</td><td>Edge area of patch</td></tr>
+<tr><td>node</td><td>coreArea</td><td>coreA</td><td>Area excluding edge of patch</td></tr>
+<tr><td>node</td><td>centroidX</td><td>ctrX</td><td>Centroid of the patch (X)</td></tr>
+<tr><td>node</td><td>centroidY</td><td>ctrY</td><td>Centroid of the patch (Y)</td></tr>
+<tr><td>link</td><td>e1</td><td>e1</td><td>Id of first patch at end of link</td></tr>
+<tr><td>link</td><td>e2</td><td>e2</td><td>Id of second patch at end of link</td></tr>
+<tr><td>link</td><td>linkId</td><td>linkId</td><td>Link id from lcpLinkId raster</td></tr>
+<tr><td>link</td><td>lcPerimWeight</td><td>lcpPerWt</td><td>Cost length of link from patch perimeters</td></tr>
+<tr><td>link</td><td>startPerimX</td><td>strtPerX</td><td>Coordinate of link endpoint on first patch (X)</td></tr>
+<tr><td>link</td><td>startPerimY</td><td>strtPerY</td><td>Coordinate of link endpoint on first patch (Y)</td></tr>
+<tr><td>link</td><td>endPerimX</td><td>endPerX</td><td>Coordinate of link endpoint on second patch (X)</td></tr>
+<tr><td>link</td><td>endPerimY</td><td>endPerY</td><td>Coordinate of link endpoint on second patch (Y)</td></tr>
+<tr><td></td><td><strong>type</strong></td><td><strong>MPG name</strong></td><td><strong>SHP name</strong></td></tr>
+</table>
 
-<code>nodes, linksCentroid</code> are shape files giving the locations of the
+
+<p><strong>Exported from <code>grain</code> objects:</strong></p>
+<p><code>nodes, linksCentroid</code> are shape files giving the locations of the
 Voronoi polygon centroids and links among them respectively. <code>voronoi</code>
 are rasters gives the polygon identifier of each cluster of patches.
 <code>vorBound</code> gives the boundaries of the Voronoi polygons (if specified).</p>
 <p>Description of node (vertex) and link (edge) weights in <code>grain</code>
-objects  and their corresponding attribute names in the shape files created.</p><table><tr><td>
-  <strong>Type</strong> </td>
-<td> <strong>GOC name</strong> </td>
-<td> <strong>SHP name</strong> </td>
-<td> <strong>Description</strong></td>
-</tr><tr><td>
-  node </td>
-<td> polygonId </td>
-<td> polyId </td>
-<td> Polygon id from grain voronoi raster </td>
-</tr><tr><td>
-  node </td>
-<td> polygonArea </td>
-<td> polyA </td>
-<td> Area of polygon from grain voronoi raster </td>
-</tr><tr><td>
-  node </td>
-<td> totalPatchArea </td>
-<td> patchA </td>
-<td> Total area of all patches in polygon</td>
-</tr><tr><td>
-  node </td>
-<td> totalPatchEdgeArea </td>
-<td> patchEA </td>
-<td> Total area of all patch edges in polygon</td>
-</tr><tr><td>
-  node </td>
-<td> totalCoreArea </td>
-<td> coreA </td>
-<td> Total area of patches in poylgon excluding edges</td>
-</tr><tr><td>
-  node </td>
-<td> centroidX </td>
-<td> ctrX </td>
-<td> Centroid of the polygon (X)</td>
-</tr><tr><td>
-  node </td>
-<td> centroidY </td>
-<td> ctrY </td>
-<td> Centroid of the polygon (Y)</td>
-</tr><tr><td>
-  link </td>
-<td> e1 </td>
-<td> e1 </td>
-<td> Id of first patch at end of link</td>
-</tr><tr><td>
-  link </td>
-<td> e2 </td>
-<td> e2 </td>
-<td> Id of second patch at end of link</td>
-</tr><tr><td>
-  link </td>
-<td> maxWeight </td>
-<td> maxWt </td>
-<td> The maximum weight of all links connecting
-                                      patches between polygons</td>
-</tr><tr><td>
-  link </td>
-<td> linkIdMaxWeight </td>
-<td> maxWt </td>
-<td> The link id of that maximum weight
-                                            link (lcpLinkId)</td>
-</tr><tr><td>
-  link </td>
-<td> minWeight </td>
-<td> min </td>
-<td> The minimum weight of all links connecting
-                                    patches between polygons</td>
-</tr><tr><td>
-  link </td>
-<td> linkIdMinWeight </td>
-<td> minWt </td>
-<td> The link id of that minimum weight
-                                       link (lcpLinkId)</td>
-</tr><tr><td>
-  link </td>
-<td> medianWeight </td>
-<td> medWt </td>
-<td> The median weight of all links connecting
-                                         patches between polygons</td>
-</tr><tr><td>
-  link </td>
-<td> meanWeight </td>
-<td> meanWT </td>
-<td> The minimum weight of all links connecting
-                                        patches between polygons</td>
-</tr><tr><td>
-  link </td>
-<td> numlinksWeight </td>
-<td> numEWt </td>
-<td> The number of links connecting patches
-                                            between polygons</td>
-</tr><tr><td>
-  link </td>
-<td> eucCentroidWeight </td>
-<td> eucCtrWt </td>
-<td> The Euclidean distance between
-                                                 centroids of polygons</td>
-</tr></table>
+objects  and their corresponding attribute names in the shape files created.</p>
+<table class='table'>
+<tr><td><strong>Type</strong></td><td><strong>GOC name</strong></td><td><strong>SHP name</strong></td><td><strong>Description</strong></td></tr>
+<tr><td>node</td><td>polygonId</td><td>polyId</td><td>Polygon id from grain voronoi raster</td></tr>
+<tr><td>node</td><td>polygonArea</td><td>polyA</td><td>Area of polygon from grain voronoi raster</td></tr>
+<tr><td>node</td><td>totalPatchArea</td><td>patchA</td><td>Total area of all patches in polygon</td></tr>
+<tr><td>node</td><td>totalPatchEdgeArea</td><td>patchEA</td><td>Total area of all patch edges in polygon</td></tr>
+<tr><td>node</td><td>totalCoreArea</td><td>coreA</td><td>Total area of patches in poylgon excluding edges</td></tr>
+<tr><td>node</td><td>centroidX</td><td>ctrX</td><td>Centroid of the polygon (X)</td></tr>
+<tr><td>node</td><td>centroidY</td><td>ctrY</td><td>Centroid of the polygon (Y)</td></tr>
+<tr><td>link</td><td>e1</td><td>e1</td><td>Id of first patch at end of link</td></tr>
+<tr><td>link</td><td>e2</td><td>e2</td><td>Id of second patch at end of link</td></tr>
+<tr><td>link</td><td>maxWeight</td><td>maxWt</td><td>The maximum weight of all links connecting
+                                      patches between polygons</td></tr>
+<tr><td>link</td><td>linkIdMaxWeight</td><td>maxWt</td><td>The link id of that maximum weight
+                                            link (lcpLinkId)</td></tr>
+<tr><td>link</td><td>minWeight</td><td>min</td><td>The minimum weight of all links connecting
+                                    patches between polygons</td></tr>
+<tr><td>link</td><td>linkIdMinWeight</td><td>minWt</td><td>The link id of that minimum weight
+                                       link (lcpLinkId)</td></tr>
+<tr><td>link</td><td>medianWeight</td><td>medWt</td><td>The median weight of all links connecting
+                                         patches between polygons</td></tr>
+<tr><td>link</td><td>meanWeight</td><td>meanWT</td><td>The minimum weight of all links connecting
+                                        patches between polygons</td></tr>
+<tr><td>link</td><td>numlinksWeight</td><td>numEWt</td><td>The number of links connecting patches
+                                            between polygons</td></tr>
+<tr><td>link</td><td>eucCentroidWeight</td><td>eucCtrWt</td><td>The Euclidean distance between
+                                                 centroids of polygons</td></tr>
+<tr><td></td><td><strong>Type</strong></td><td><strong>GOC name</strong></td><td><strong>SHP name</strong></td></tr>
+</table>
+
 
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><code><a href='MPG.html'>MPG</a></code>, <code><a href='GOC.html'>GOC</a></code>, <code><a href='grain.html'>grain</a></code></p>
+    <div class='dont-index'><p><code><a href='MPG.html'>MPG</a></code>, <code><a href='GOC.html'>GOC</a></code>, <code><a href='grain.html'>grain</a></code></p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -407,7 +312,7 @@ objects  and their corresponding attribute names in the shape files created.</p>
 
 <span class='co'>## Export raster and vectors of a grain to a specified directory</span>
 <span class='no'>tmpdir</span> <span class='kw'>&lt;-</span> <span class='fu'>tempdir</span>()
-<span class='fu'>export</span>(<span class='fu'><a href='grain.html'>grain</a></span>(<span class='no'>tinyPatchGOC</span>, <span class='fl'>2</span>), <span class='kw'>dirname</span> <span class='kw'>=</span> <span class='st'>"tiny_goc_thresh2"</span>, <span class='kw'>path</span> <span class='kw'>=</span> <span class='no'>tmpdir</span>)</div><div class='output co'>#&gt; <span class='message'>Exported to:/tmp/RtmpKmVK64/tiny_goc_thresh2</span></div><div class='input'><span class='fu'>unlink</span>(<span class='fu'>file.path</span>(<span class='no'>tmpdir</span>, <span class='st'>"tiny_goc_thresh2"</span>), <span class='kw'>recursive</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='fu'>export</span>(<span class='fu'><a href='grain.html'>grain</a></span>(<span class='no'>tinyPatchGOC</span>, <span class='fl'>2</span>), <span class='kw'>dirname</span> <span class='kw'>=</span> <span class='st'>"tiny_goc_thresh2"</span>, <span class='kw'>path</span> <span class='kw'>=</span> <span class='no'>tmpdir</span>)</div><div class='output co'>#&gt; <span class='message'>Exported to:/tmp/RtmpHBrZDK/tiny_goc_thresh2</span></div><div class='input'><span class='fu'>unlink</span>(<span class='fu'>file.path</span>(<span class='no'>tmpdir</span>, <span class='st'>"tiny_goc_thresh2"</span>), <span class='kw'>recursive</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 
 <span class='co'>## Export rasters and vectors of the MPG and place in an R object</span>
 <span class='no'>sp_tinyPatchMPG</span> <span class='kw'>&lt;-</span> <span class='fu'>export</span>(<span class='no'>tinyPatchMPG</span>, <span class='kw'>R</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div></pre>
@@ -437,11 +342,14 @@ Paul Galpern and Alex Chubaty
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>
    </div>
 
+  
+
   </body>
 </html>
+

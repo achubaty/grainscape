@@ -8,14 +8,17 @@
 <title>Modelling, visualization and analysis with the <code>grainscape</code> package • grainscape</title>
 <!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script><!-- Font Awesome icons --><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
-<!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script><script src="../pkgdown.js"></script><!-- mathjax --><script src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!--[if lt IE 9]>
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<script src="../pkgdown.js"></script><meta property="og:title" content="Modelling, visualization and analysis with the &lt;code&gt;grainscape&lt;/code&gt; package">
+<meta property="og:description" content="">
+<meta name="twitter:card" content="summary">
+<!-- mathjax --><script src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 </head>
 <body>
-    <div class="container template-vignette">
+    <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
@@ -24,12 +27,16 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">grainscape</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">grainscape</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.3.0.9000</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="..//index.html">
+  <a href="../index.html">
     <span class="fa fa-home fa-lg"></span>
      
   </a>
@@ -45,15 +52,15 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/grainscape_vignette.html">Modelling, visualization and analysis with the `grainscape` package</a>
+      <a href="../articles/MPG_algorithm.html">Calculating the Minimum Planar Graph and generating Voronoi tesselations</a>
     </li>
     <li>
-      <a href="../articles/MPG_algorithm.html">Calculating the Minimum Planar Graph and generating Voronoi tesselations</a>
+      <a href="../articles/grainscape_vignette.html">Modelling, visualization and analysis with the `grainscape` package</a>
     </li>
   </ul>
 </li>
 <li>
-  <a href="../news/index.html">News</a>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
@@ -73,7 +80,7 @@
 
       
       </header><div class="row">
-  <div class="col-md-9">
+  <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1>Modelling, visualization and analysis with the <code>grainscape</code> package</h1>
                         <h4 class="author">Paul Galpern<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a>
@@ -81,11 +88,14 @@
                         <h4 class="author">Alex M. Chubaty<a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a>
 </h4>
             
-          </div>
+      
+      <small class="dont-index">Source: <a href="https://github.com/achubaty/grainscape/blob/master/vignettes/grainscape_vignette.Rmd"><code>vignettes/grainscape_vignette.Rmd</code></a></small>
+      <div class="hidden name"><code>grainscape_vignette.Rmd</code></div>
+
+    </div>
 
     
     
-<div class="contents">
 
 <div id="visual-table-of-contents" class="section level1">
 <h1 class="hasAnchor">
@@ -326,7 +336,7 @@ linkTable &lt;-<span class="st"> </span><span class="kw"><a href="../reference/g
 A scalar analysis at 100 thresholds of the MPG in . When the landscape is a single component at higher link thresholds all patches are completely connected. As an example, an organism able to disperse 250 resistance units would experience this landscape as six connected regions.
 </p>
 </div>
-<p>Other independent variables describing the components (<em>e.g.</em>, area of patches) could, of course, be calculated by processing the thresholded graphs <code>scalarAnalysis$th</code> and their attributes using the <code>igraph</code> function <code>components()</code>.</p>
+<p>Other independent variables describing the components (<em>e.g.</em>, area of patches) could, of course, be calculated by processing the thresholded graphs <code><a href="../reference/extract.html">scalarAnalysis$th</a></code> and their attributes using the <code>igraph</code> function <code>components()</code>.</p>
 
 </div>
 <div id="step-6-visualizing-a-thresholded-graph" class="section level3">
@@ -801,7 +811,7 @@ A link threshold representation of a minimum planar graph (MPG), where links con
 <h3 class="hasAnchor">
 <a href="#link-thresholding-to-show-components" class="anchor"></a>Link thresholding to show components</h3>
 <p>As noted in the last example, highlighting which nodes are connected into components (or clusters) after the network has been subjected to link thresholding can improve the visualization of connected regions of the map.</p>
-<p>Here, <code><a href="http://www.rdocumentation.org/packages/grainscape/topics/threshold">grainscape::threshold()</a></code> is used to remove links longer than a certain length from the <code>igraph</code> model of the spatial network. The <code><a href="http://www.rdocumentation.org/packages/igraph/topics/components">igraph::components()</a></code> function is then called to label nodes by their membership in a particular component (or cluster). We can then use this information to label the nodes by their component membership. To improve the visualization, the nodes are also plotted as large circles and the labels in a reverse colour. This could also be done (perhaps more effectively) using a colour or shape scale for node symbols that have been carefully selected to accentuate patterns of interest in the figure.</p>
+<p>Here, <code><a href="../reference/threshold.html">grainscape::threshold()</a></code> is used to remove links longer than a certain length from the <code>igraph</code> model of the spatial network. The <code><a href="http://www.rdocumentation.org/packages/igraph/topics/components">igraph::components()</a></code> function is then called to label nodes by their membership in a particular component (or cluster). We can then use this information to label the nodes by their component membership. To improve the visualization, the nodes are also plotted as large circles and the labels in a reverse colour. This could also be done (perhaps more effectively) using a colour or shape scale for node symbols that have been carefully selected to accentuate patterns of interest in the figure.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Use the grainscape::threshold() function to create a new network
 ## by thresholding links
 fragTh &lt;-<span class="st"> </span><span class="kw"><a href="../reference/threshold.html">threshold</a></span>(fragMPG, <span class="dt">doThresh =</span> <span class="dv">20</span>)
@@ -1208,7 +1218,7 @@ A scaled patch grains of connectivity (GOC) model showing the outline of Voronoi
 </div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Find the pairwise distances between them at all grains
 ## available in the GOC object created earlier
-ptsD &lt;-<span class="st"> </span>grainscape<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/grainscape/topics/distance">distance</a></span>(fragPatchGOC, pts)
+ptsD &lt;-<span class="st"> </span>grainscape<span class="op">::</span><span class="kw"><a href="https://achubaty.github.io/grainscape/reference/distance.html">distance</a></span>(fragPatchGOC, pts)
 
 ## Extract distances for the grain of interest (4)
 ptsD2 &lt;-<span class="st"> </span>ptsD<span class="op">$</span>th[[<span class="dv">4</span>]]<span class="op">$</span>grainD
@@ -1353,7 +1363,7 @@ ptsD2 &lt;-<span class="st"> </span><span class="kw">round</span>(ptsD2, <span c
 <p>Galpern, Paul, Micheline Manseau, and Andrew Fall. 2011. “Patch-based graphs of landscape connectivity: A guide to construction, analysis and application for conservation.” <em>Biological Conservation</em> 144 (1). Elsevier Ltd: 44–55. doi:<a href="https://doi.org/10.1016/j.biocon.2010.09.002">10.1016/j.biocon.2010.09.002</a>.</p>
 </div>
 <div id="ref-Galpern:2012me">
-<p>Galpern, Paul, Micheline Manseau, and Paul J Wilson. 2012. “Grains of connectivity: analysis at multiple spatial scales in landscape genetics.” <em>Molecular Ecology</em> 21: 3996–4009.</p>
+<p>Galpern, Paul, Micheline Manseau, and Paul J Wilson. 2012. “Grains of connectivity: analysis at multiple spatial scales in landscape genetics.” <em>Molecular Ecology</em> 21 (16): 3996–4009. doi:<a href="https://doi.org/10.1111/j.1365-294X.2012.05677.x">10.1111/j.1365-294X.2012.05677.x</a>.</p>
 </div>
 <div id="ref-Pascual-Hortal:2006le">
 <p>Pascual-Hortal, Lucía, and Santiago Saura. 2006. “Comparison and development of new graph-based landscape connectivity indices: Towards the priorization of habitat patches and corridors for conservation.” <em>Landscape Ecology</em> 21 (7): 959–67. doi:<a href="https://doi.org/10.1007/s10980-006-0013-z">10.1007/s10980-006-0013-z</a>.</p>
@@ -1372,7 +1382,6 @@ ptsD2 &lt;-<span class="st"> </span><span class="kw">round</span>(ptsD2, <span c
 <li id="fn1"><p>Faculty of Environmental Design, University of Calgary, AB, Canada<a href="#fnref1">↩</a></p></li>
 <li id="fn2"><p>Canadian Forest Service, Natural Resources Canada, Victoria, BC, Canada<a href="#fnref2">↩</a></p></li>
 </ol>
-</div>
 </div>
   </div>
 
@@ -1417,11 +1426,13 @@ ptsD2 &lt;-<span class="st"> </span><span class="kw">round</span>(ptsD2, <span c
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>
 </div>
+
+  
 
   </body>
 </html>

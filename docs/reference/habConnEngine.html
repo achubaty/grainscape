@@ -18,13 +18,26 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
+
+<!-- sticky kit -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-  
-  
+
+
+
+<meta property="og:title" content="Habitat connectivity engine — .habConnEngine" />
+
+<meta property="og:description" content="Internal function. Servesa s a wrapper around the habitat connectivity engine
+developed in C++." />
+<meta name="twitter:card" content="summary" />
+
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -47,12 +60,16 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">grainscape</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">grainscape</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.3.0.9000</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="..//index.html">
+  <a href="../index.html">
     <span class="fa fa-home fa-lg"></span>
      
   </a>
@@ -68,15 +85,15 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/grainscape_vignette.html">Modelling, visualization and analysis with the `grainscape` package</a>
+      <a href="../articles/MPG_algorithm.html">Calculating the Minimum Planar Graph and generating Voronoi tesselations</a>
     </li>
     <li>
-      <a href="../articles/MPG_algorithm.html">Calculating the Minimum Planar Graph and generating Voronoi tesselations</a>
+      <a href="../articles/grainscape_vignette.html">Modelling, visualization and analysis with the `grainscape` package</a>
     </li>
   </ul>
 </li>
 <li>
-  <a href="../news/index.html">News</a>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
       
@@ -88,6 +105,7 @@
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -95,20 +113,24 @@
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Habitat connectivity engine</h1>
+    <small class="dont-index">Source: <a href='https://github.com/achubaty/grainscape/blob/master/R/habitatConnectivityEngine.R'><code>R/habitatConnectivityEngine.R</code></a></small>
+    <div class="hidden name"><code>habConnEngine.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>Internal function. Servesa s a wrapper around the habitat connectivity engine
 developed in C++.</p>
     
+    </div>
 
     <pre class="usage"><span class='fu'>.habConnEngine</span>(<span class='no'>cost</span>, <span class='no'>patches</span>)</pre>
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
@@ -127,16 +149,16 @@ developed in C++.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><code>link{habConnRcpp}</code></p>
+    <div class='dont-index'><p><code>link{habConnRcpp}</code></p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'>library</span>(<span class='no'>raster</span>)
 
 <span class='no'>cost</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/raster'>raster</a></span>(<span class='fu'>system.file</span>(<span class='st'>"extdata/fragmented.asc"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"grainscape"</span>))
-<span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/plot'>plot</a></span>(<span class='no'>cost</span>)</div><div class='img'><img src='habConnEngine-1.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+<span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/plot'>plot</a></span>(<span class='no'>cost</span>)</div><div class='img'><img src='habConnEngine-1.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># cells in raster `cost` with value of 1 are habitat (patch) cells</span>
-<span class='no'>links</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>grainscape</span><span class='kw ns'>:::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/grainscape/topics/habConnEngine'>.habConnEngine</a></span>(<span class='no'>cost</span>, <span class='kw'>patches</span> <span class='kw'>=</span> (<span class='no'>cost</span> <span class='kw'>==</span> <span class='fl'>1</span>))
+<span class='no'>links</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>grainscape</span><span class='kw ns'>:::</span><span class='fu'><a href='https://achubaty.github.io/grainscape/reference/habConnEngine.html'>.habConnEngine</a></span>(<span class='no'>cost</span>, <span class='kw'>patches</span> <span class='kw'>=</span> (<span class='no'>cost</span> <span class='kw'>==</span> <span class='fl'>1</span>))
 
 <span class='no'>links</span>                  <span class='co'># examine the object</span></div><div class='output co'>#&gt; An object of class "hce"
 #&gt; Slot "voronoi":
@@ -288,8 +310,209 @@ developed in C++.</p>
 #&gt; 123   -123     654      192         133   634    191       126          24
 #&gt; 124   -124     296       71         382   129     71       372          24
 #&gt; 125   -125     889      258         257  1083    258       247          25
-#&gt;  [ reached getOption("max.print") -- omitted 202 rows ]
-#&gt; </div><div class='input'><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/plot'>plot</a></span>(<span class='no'>links</span>@<span class='kw'>voronoi</span>)    <span class='co'># plot the voronoi tesselation</span></div><div class='img'><img src='habConnEngine-2.png' alt='' width='700' height='432.632880098887' /></div><div class='input'><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/plot'>plot</a></span>(<span class='no'>links</span>@<span class='kw'>patchLinks</span>) <span class='co'># plot the patches and links</span></div><div class='img'><img src='habConnEngine-3.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+#&gt; 126   -126      13       14         274   115     24       274          24
+#&gt; 127   -127    1341      352         322  1534    359       325          24
+#&gt; 128   -128      90       20         217    98     21       225          28
+#&gt; 129   -129     592      149          64   484    141        63          26
+#&gt; 130   -130      27        7         369    19      8       360          27
+#&gt; 131   -131    1488      372         380  1611    375       372          24
+#&gt; 132   -132    1288      308         247   889    306       256          26
+#&gt; 133   -133    1181      300         334  1227    304       341          24
+#&gt; 134   -134     810      205         310   769    197       313          26
+#&gt; 135   -135     757      199         284   810    206       288          25
+#&gt; 136   -136     656      162         242   455    153       240          25
+#&gt; 137   -137      12        5         230    10      7       220          26
+#&gt; 138   -138     889      273         294  1102    273       304          26
+#&gt; 139   -139     129       71         370   355     81       368          26
+#&gt; 140   -140      27       15         384    94     18       392          25
+#&gt; 141   -141    1001      240         326   867    230       325          26
+#&gt; 142   -142     506      123         257   455    121       247          26
+#&gt; 143   -143     709      194         340   797    200       341          30
+#&gt; 144   -144    1001      240         326   857    237       334          27
+#&gt; 145   -145     857      230         337   867    230       325          27
+#&gt; 146   -146     580      180          29   772    192        29          27
+#&gt; 147   -147    1102      279         305  1213    290       305          27
+#&gt; 148   -148     444      106         171   312    100       166          31
+#&gt; 149   -149     847      215           9   772    215        21          28
+#&gt; 150   -150     637      167         335   709    179       335          28
+#&gt; 151   -151      91       14         285    13     10       280          33
+#&gt; 152   -152     909      292         374  1241    297       368          33
+#&gt; 153   -153      98       18         230    12     13       236          30
+#&gt; 154   -154     152       70         167   312     74       158          30
+#&gt; 155   -155    1393      340         170  1491    349       174          29
+#&gt; 156   -156     841      225          82   946    236        84          28
+#&gt; 157   -157    1287      305         220  1177    294       220          33
+#&gt; 158   -158     656      162         247   506    162       259          31
+#&gt; 159   -159     382      107         302   494    118       299          30
+#&gt; 160   -160     797      205         349   779    204       362          30
+#&gt; 161   -161     556      147         188   444    134       188          29
+#&gt; 162   -162      98       39         221   143     39       207          30
+#&gt; 163   -163    1146      290          88  1155    290        78          34
+#&gt; 164   -164     438      110          20   452    110         8          33
+#&gt; 165   -165     965      243         245   889    243       257          33
+#&gt; 166   -166    1155      369          43  1639    381        43          31
+#&gt; 167   -167     637      162         332   612    162       323          38
+#&gt; 168   -168     857      215         358   779    204       362          34
+#&gt; 169   -169     781      206          86   841    213        77          34
+#&gt; 170   -170     707      189          76   781    198        82          34
+#&gt; 171   -171      10        9         220    98     19       225          33
+#&gt; 172   -172     924      233         133   903    234       146          33
+#&gt; 173   -173     804      201         215   556    187       215          35
+#&gt; 174   -174    1422      338         293  1213    325       292          32
+#&gt; 175   -175     592      169          71   634    170        86          35
+#&gt; 176   -176     221       62         146   161     47       146          33
+#&gt; 177   -177     952      250         143   903    239       148          35
+#&gt; 178   -178      19       33         305   115     42       298          36
+#&gt; 179   -179    1213      296         317  1122    281       318          35
+#&gt; 180   -180    1668      389         317  1534    376       320          36
+#&gt; 181   -181     745      188         360   709    188       344          36
+#&gt; 182   -182    1607      376           7  1546    367        11          39
+#&gt; 183   -183      98       24         237    13     17       246          36
+#&gt; 184   -184    1491      349         185  1246    335       185          39
+#&gt; 185   -185     136       41         176   143     41       192          36
+#&gt; 186   -186     484      122          56   387    113        49          37
+#&gt; 187   -187      90       25         212   143     35       208          40
+#&gt; 188   -188     580      148          15   480    145        27          39
+#&gt; 189   -189    1146      280         111   952    272       120          36
+#&gt; 190   -190    1381      327         225  1287    313       222          38
+#&gt; 191   -191     804      228         202   903    232       188          38
+#&gt; 192   -192     309       78         350   129     63       351          37
+#&gt; 193   -193      52       12           8     7     11        24          36
+#&gt; 194   -194     455      125         217   444    125       200          39
+#&gt; 195   -195     115       50         266   261     66       265          36
+#&gt; 196   -196    1607      374           3  1155    362         3          45
+#&gt; 197   -197      55       12         147    67     15       162          39
+#&gt; 198   -198    1001      249         319  1102    261       313          40
+#&gt; 199   -199     152       66         164   221     66       148          42
+#&gt; 200   -200    1607      400          16  1639    400        32          44
+#&gt; 201   -201     506      154         292   612    155       308          46
+#&gt; 202   -202    1442      371         353  1611    375       368          43
+#&gt; 203   -203     898      231         256   965    237       242          42
+#&gt; 204   -204      67       28         181   143     35       194          42
+#&gt; 205   -205     296       94         386   309    100       372          42
+#&gt; 206   -206     776      204         273   889    221       271          40
+#&gt; 207   -207     494      137         307   612    154       309          43
+#&gt; 208   -208    1610      385         352  1611    381       368          42
+#&gt; 209   -209    1442      361         356  1488    360       375          42
+#&gt; 210   -210     480      139          34   484    137        52          43
+#&gt; 211   -211     221       61          93   106     43        92          43
+#&gt; 212   -212     709      181         343   705    182       362          43
+#&gt; 213   -213     106       21          88     7     15        77          49
+#&gt; 214   -214      10        4         185    67     18       181          46
+#&gt; 215   -215    1440      345          95  1344    348        79          45
+#&gt; 216   -216      19       54         318   309     72       319          45
+#&gt; 217   -217     797      201         346   745    195       361          46
+#&gt; 218   -218     769      193         319   709    193       336          51
+#&gt; 219   -219     909      286         370  1227    296       359          45
+#&gt; 220   -220    1288      309         228  1177    291       226          49
+#&gt; 221   -221    1600      377         144  1491    377       165          46
+#&gt; 222   -222    1032      247         197   804    238       208          47
+#&gt; 223   -223     612      169         313   769    191       313          46
+#&gt; 224   -224     220       96          16   452    110         8          47
+#&gt; 225   -225    1016      250         331  1122    270       332          48
+#&gt; 226   -226     152       37         159    67     24       166          52
+#&gt; 227   -227    1610      380         340  1534    376       323          52
+#&gt; 228   -228     158       52          40   221     64        50          52
+#&gt; 229   -229     158       38          36     7     19        36          56
+#&gt; 230   -230     797      209         339   867    219       327          50
+#&gt; 231   -231     809      221         144   924    231       132          52
+#&gt; 232   -232     580      173          32   592    170        52          48
+#&gt; 233   -233      27       18         377   129     30       366          50
+#&gt; 234   -234     909      265         351  1122    270       332          50
+#&gt; 235   -235     580      192           7   847    213         6          50
+#&gt; 236   -236    1610      387         339  1668    390       318          50
+#&gt; 237   -237    1122      271         325  1001    248       325          53
+#&gt; 238   -238     889      250         298  1001    249       319          53
+#&gt; 239   -239    1422      335         283   889    319       274          53
+#&gt; 240   -240     205       87         234   455    110       231          54
+#&gt; 241   -241     494      122         307   309    122       328          62
+#&gt; 242   -242      55       16         143   161     38       146          58
+#&gt; 243   -243    1338      350         139  1600    373       140          57
+#&gt; 244   -244     143       34         195    10     10       196          56
+#&gt; 245   -245     628      171         121   654    171       146          56
+#&gt; 246   -246     309      197         393   852    220       391          55
+#&gt; 247   -247     797      208         338   810    208       312          57
+#&gt; 248   -248    1072      264          83  1146    280        94          57
+#&gt; 249   -249     438      119          34   484    123        55          58
+#&gt; 250   -250     903      223         169   556    197       170          59
+#&gt; 251   -251     841      212          75   707    195        69          66
+#&gt; 252   -252     744      185         303   612    164       307          62
+#&gt; 253   -253     556      198         174   845    219       180          60
+#&gt; 254   -254    1298      314         323  1227    306       341          60
+#&gt; 255   -255     161       40         143   147     42       117          60
+#&gt; 256   -256     612      167         319   709    179       335          62
+#&gt; 257   -257    1155      282          70  1072    260        76          62
+#&gt; 258   -258    1381      388         169  1600    383       145          63
+#&gt; 259   -259     797      204         338   769    196       316          62
+#&gt; 260   -260    1246      315         195  1287    312       220          62
+#&gt; 261   -261    1076      257          49  1072    257        73          69
+#&gt; 262   -262     776      204         273   898    223       262          63
+#&gt; 263   -263    1338      322         117  1146    308       104          66
+#&gt; 264   -264     810      225         310  1001    244       320          63
+#&gt; 265   -265    1146      276         100   946    249        98          62
+#&gt; 266   -266     965      259         231  1177    284       227          65
+#&gt; 267   -267     634      194         122   809    206       134          73
+#&gt; 268   -268     556      197         170   809    215       158          64
+#&gt; 269   -269    1640      389          68  1639    399        54          65
+#&gt; 270   -270    1177      291         226   889    295       252          64
+#&gt; 271   -271    1341      334         339  1227    311       347          66
+#&gt; 272   -272     931      238          51   841    228        72          68
+#&gt; 273   -273    1177      284         227  1083    266       241          67
+#&gt; 274   -274    1311      310         390  1241    300       368          67
+#&gt; 275   -275      55       10         132    23     10       102          69
+#&gt; 276   -276      67       19         162   161     38       149          68
+#&gt; 277   -277    1342      320         380  1241    300       368          70
+#&gt; 278   -278     931      240          51   946    242        80          67
+#&gt; 279   -279     130       43         389    27     18       381          70
+#&gt; 280   -280    1422      366         291  1534    370       319          71
+#&gt; 281   -281    1391      328         370  1241    300       367          79
+#&gt; 282   -282     931      240          51  1072    254        72          72
+#&gt; 283   -283    1391      335         361  1227    304       358          75
+#&gt; 284   -284    1440      340         101  1146    307       102          73
+#&gt; 285   -285     804      221         228   898    227       257          72
+#&gt; 286   -286     480      148          33   592    159        57          76
+#&gt; 287   -287    1246      299         191  1177    291       215          78
+#&gt; 288   -288     382      105         289   506    131       281          74
+#&gt; 289   -289    1393      351         155  1600    375       144          77
+#&gt; 290   -290    1146      302          92  1344    323        77          76
+#&gt; 291   -291      98       41         232   115     43       264          80
+#&gt; 292   -292     634      161          87   484    140        75          80
+#&gt; 293   -293     634      197         106   946    231       106          79
+#&gt; 294   -294     772      203          43   707    194        68          80
+#&gt; 295   -295     903      287         154  1146    291       123          79
+#&gt; 296   -296     946      232         102   781    207        90          79
+#&gt; 297   -297     628      158         112   221    124       109          78
+#&gt; 298   -298     221      126          98   634    159        94          80
+#&gt; 299   -299     772      209          41   841    212        75          81
+#&gt; 300   -300     580      178          34   707    186        64          81
+#&gt; 301   -301     382       89         295   115     55       291          81
+#&gt; 302   -302      98       41         232   261     61       251          85
+#&gt; 303   -303     143       68         183   312     93       169          83
+#&gt; 304   -304     612      155         322   309    124       330          88
+#&gt; 305   -305     158       44          20    52     15         7          86
+#&gt; 306   -306     147       38         112    23     10       102          91
+#&gt; 307   -307    1381      394         267  1668    395       308          87
+#&gt; 308   -308     903      287         179  1177    290       216          92
+#&gt; 309   -309    1381      330         238   889    308       258          86
+#&gt; 310   -310       7       16          69   221     57        67          92
+#&gt; 311   -311     143       73         196   444    111       190          94
+#&gt; 312   -312    1032      267         196  1177    285       220          98
+#&gt; 313   -313     147       41         116    55     15       135          93
+#&gt; 314   -314     309       74         317   115     55       291          93
+#&gt; 315   -315     952      233         114   634    194       113          99
+#&gt; 316   -316     952      233         114   809    213       136          99
+#&gt; 317   -317     382       90         293   261     77       259          98
+#&gt; 318   -318     506      120         263   261     78       258         100
+#&gt; 319   -319    1422      366         291  1668    395       308         103
+#&gt; 320   -320    1338      322         141   903    287       154         107
+#&gt; 321   -321     776      197         267   656    175       247         114
+#&gt; 322   -322     312      113         147   654    162       149         108
+#&gt; 323   -323     455      121         247   261     78       258         113
+#&gt; 324   -324     654      161         158   444    116       166         119
+#&gt; 325   -325     804      209         222   656    175       247         134
+#&gt; 326   -326     455      115         222   143     74       199         140
+#&gt; 327   -327     654      162         149   221    122       115         150
+#&gt; </div><div class='input'><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/plot'>plot</a></span>(<span class='no'>links</span>@<span class='kw'>voronoi</span>)    <span class='co'># plot the voronoi tesselation</span></div><div class='img'><img src='habConnEngine-2.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/plot'>plot</a></span>(<span class='no'>links</span>@<span class='kw'>patchLinks</span>) <span class='co'># plot the patches and links</span></div><div class='img'><img src='habConnEngine-3.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -317,11 +540,14 @@ Alex Chubaty
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>
    </div>
 
+  
+
   </body>
 </html>
+
