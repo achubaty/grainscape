@@ -10,11 +10,11 @@
 \S4method{plot}{corridor,ANY}(x, y, quick = NULL, print = TRUE,
   theme = TRUE, ...)
 
-\S4method{plot}{grain,ANY}(x, y, quick = NULL, print = TRUE, theme = TRUE,
-  ...)
+\S4method{plot}{grain,ANY}(x, y, quick = NULL, print = TRUE,
+  theme = TRUE, ...)
 
-\S4method{plot}{mpg,ANY}(x, y, quick = NULL, print = TRUE, theme = TRUE,
-  ...)
+\S4method{plot}{mpg,ANY}(x, y, quick = NULL, print = TRUE,
+  theme = TRUE, ...)
 }
 \arguments{
 \item{x}{A \code{grainscape} object (\code{corridor}, \code{grain}, or \code{mpg}).}

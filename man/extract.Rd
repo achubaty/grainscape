@@ -6,9 +6,7 @@
 \alias{$,goc-method}
 \alias{$<-}
 \alias{$<-,goc-method}
-\alias{$}
 \alias{$,mpg-method}
-\alias{$<-}
 \alias{$<-,mpg-method}
 \title{Extract or Replace Parts of an Object}
 \usage{

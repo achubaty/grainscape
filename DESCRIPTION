@@ -10,7 +10,7 @@ URL:
     https://achubaty.github.io/grainscape,
     https://github.com/achubaty/grainscape
 Version: 0.3.0.9000
-Date: 2017-08-24
+Date: 2018-09-03
 Authors@R: c(
     person("Paul", "Galpern", email = "pgalpern@gmail.com", role = c("aut", "cph")),
     person("Sam", "Doctolero", email = "sam.doctolero@gmail.com", role = "aut"),
@@ -61,4 +61,5 @@ Collate:
     'theme_grainscape.R'
     'threshold.R'
     'zzz.R'
-RoxygenNote: 6.0.1
+Encoding: UTF-8
+RoxygenNote: 6.1.0
