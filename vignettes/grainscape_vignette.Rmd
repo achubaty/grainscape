@@ -299,7 +299,7 @@ Additional example visualizations and analyses are contained later in this docum
 
 ## Model 2: Patch grains of connectivity
 
-Grains of connectivity (hereafter GOC) was initially developed in three papers [@Galpern:2012me; @Galpern:2013ec; Galpern:2013a].
+Grains of connectivity (hereafter GOC) was initially developed in three papers [@Galpern:2012me; @Galpern:2013ec; @Galpern:2013a].
 Please refer to these papers for much more detail on this method.
 In summary, grains of connectivity describes a tessellation of functionally-connected regions of the map.
 In this example we present these in the context of modelling landscape connectivity for highly-mobile terrestrial organisms that are not obligate patch occupants.
