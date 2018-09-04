@@ -32,6 +32,7 @@ LinkingTo: Rcpp
 Suggests:
     cowplot,
     ggthemes,
+    hunspell,
     knitr,
     parallel,
     rgeos,
