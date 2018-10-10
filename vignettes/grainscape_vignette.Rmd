@@ -942,7 +942,7 @@ figure22
 
 \newpage
 
-## Visulaization
+## Visualization
 
 ### Characteristics of grains of connectivity
 
