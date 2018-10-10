@@ -18,7 +18,7 @@ test_that("spelling errors", {
 
   ## if needed, add any new stats words to the word list
   if (interactive() && !.complete) {
-    ignore <- sort(unique(c(.en_stats, .words, pkg)))
+    ignore <- sort(unique(c(.en_stats, .words, pkg, "Voronoi", "voronoi")))
     saveRDS(ignore, .wordsFile)
   }
 
