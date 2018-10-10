@@ -33,7 +33,7 @@ Default is \code{TRUE}.}
 \item{...}{Additional arguments (not used).}
 }
 \value{
-Invisably, a \code{ggplot2} object to which additional \code{ggplot}
+Invisibly, a \code{ggplot2} object to which additional \code{ggplot}
                geoms adn adjustments can be applied.  Has the side effect of
                rendering the plot, unless \code{print = FALSE}.
 }

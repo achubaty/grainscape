@@ -57,7 +57,7 @@ if (getRversion() >= "3.1.0") {
 #'
 #' @param ...     Additional arguments (not used).
 
-#' @return        Invisably, a \code{ggplot2} object to which additional \code{ggplot}
+#' @return        Invisibly, a \code{ggplot2} object to which additional \code{ggplot}
 #'                geoms adn adjustments can be applied.  Has the side effect of
 #'                rendering the plot, unless \code{print = FALSE}.
 #'
