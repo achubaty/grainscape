@@ -4,7 +4,9 @@ cran: https://cran.rstudio.com/
 matrix:
   include:
   - os: linux
-    dist: trusty
+    dist: xenial
+    services:
+      - xvfb
     r: oldrel
     addons:
       apt:
@@ -15,13 +17,12 @@ matrix:
         - libgdal1-dev
         - libgeos-dev
         - libproj-dev
-    before_install:
-    - export DISPLAY=:99.0
-    - sh -e /etc/init.d/xvfb start
     before_script:
     - Rscript -e 'install.packages("dplyr", dependencies = TRUE)'
   - os: linux
-    dist: trusty
+    dist: xenial
+    services:
+      - xvfb
     r: release
     addons:
       apt:
@@ -32,9 +33,6 @@ matrix:
         - libgdal1-dev
         - libgeos-dev
         - libproj-dev
-    before_install:
-    - export DISPLAY=:99.0
-    - sh -e /etc/init.d/xvfb start
     r_binary_packages:
     - covr
     r_github_packages:
@@ -45,7 +43,9 @@ matrix:
     - Rscript -e 'covr::coveralls(type = "all", quiet = FALSE)'
     - Rscript -e 'lintr::lint_package()'
   - os: linux
-    dist: trusty
+    dist: xenial
+    services:
+      - xvfb
     r: devel
     addons:
       apt:
@@ -56,9 +56,6 @@ matrix:
         - libgdal1-dev
         - libgeos-dev
         - libproj-dev
-    before_install:
-    - export DISPLAY=:99.0
-    - sh -e /etc/init.d/xvfb start
     before_script:
     - Rscript -e 'install.packages("dplyr", dependencies = TRUE)'
   - os: osx
