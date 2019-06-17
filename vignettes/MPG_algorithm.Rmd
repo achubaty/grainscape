@@ -184,6 +184,7 @@ Static functions are functions that can be used without declaring an object of t
 `emax`            | Float               | Vector of Floats  | Finds the maximum value from the vector of floating point values
 `emin`            | Float               | Vector of Floats  | Finds the minimum value from the vector of floating point values
 `calcDistance`    | Float               | Cell, Cell        | Finds the Euclidean distance between two Cells
+
 -----
 
 ### How to Use the Engine
