@@ -171,7 +171,7 @@ setMethod(
 #' @slot linksSP          A \code{SpatialLinesDataFrame} representation of links
 #'                        in the grains of connectivity graph.
 #'
-#' @slot nodesSP          A \code{SpatialPoints} epresentation of the nodes in
+#' @slot nodesSP          A \code{SpatialPoints} representation of the nodes in
 #'                        the grains of connectivity graph
 #'
 #' @slot shortestLinksSP  A \code{SpatialLines} representation of the links in

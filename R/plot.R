@@ -47,24 +47,24 @@ if (getRversion() >= "3.1.0") {
 #' @param y       Ignored.
 #'
 #' @param quick   If \code{NULL} (the default) it will plot the most useful quick
-#'                visualization for the supplied object type.  See below for a
+#'                visualization for the supplied object type. See below for a
 #'                description of the available quick plots, and the defaults.
 #'
 #' @param print   Render the \code{ggplot} on the default graphics device.
 #'                Default is \code{TRUE}.
 #'
-#' @param theme   Apply grainscape theme and scale aesthetics.  Default is \code{TRUE}.
+#' @param theme   Apply grainscape theme and scale aesthetics. Default is \code{TRUE}.
 #'
 #' @param ...     Additional arguments (not used).
 
-#' @return        Invisably, a \code{ggplot2} object to which additional \code{ggplot}
-#'                geoms adn adjustments can be applied.  Has the side effect of
+#' @return        Invisibly, a \code{ggplot2} object to which additional \code{ggplot}
+#'                geoms and adjustments can be applied. Has the side effect of
 #'                rendering the plot, unless \code{print = FALSE}.
 #'
 #' @section Types of visualization available with the \code{quick} parameter:
 #'
 #' \code{"mpgPerimPlot"} gives a a vector rendering of the minimum planar
-#' graph with vector links connecting the perimeters of the patches.  This
+#' graph with vector links connecting the perimeters of the patches. This
 #' doesn't accurately represent the sinuosity of paths of the links between patches
 #' but offers a good approximation that renders better at large extents.
 #' Default for \code{mpg} objects. Not available for other objects.
@@ -81,8 +81,8 @@ if (getRversion() >= "3.1.0") {
 #'
 #' \code{"grainPlot"} gives a raster and vector rendering of the grains of
 #' connectivity network with nodes and links plotted at polygon centroid locations,
-#' superimposed over the boundaries of the Voronoi polygons.  Can be time
-#' consuming on large rasters due to the Voronoi boundary extraction.
+#' superimposed over the boundaries of the Voronoi polygons.
+#' Can be time consuming on large rasters due to the Voronoi boundary extraction.
 #' Only available for \code{grain} objects.
 #'
 #' \code{"corridorPlot"} renders the output of a \code{\link{corridor}} analysis.
@@ -137,7 +137,7 @@ if (getRversion() >= "3.1.0") {
 #'        xlab("Easting") + ylab("Northing")
 #' g
 #' ## To change aesthetics it is best to build the plot from scratch
-#' ## using grainscape::ggGS().  See examples therein.
+#' ## using grainscape::ggGS(). See examples therein.
 #' }
 setMethod(
   "plot",

@@ -27,7 +27,7 @@ ggGS(x, type = NULL, ...)
 
 \item{type}{If a \code{mpg} or \code{grain} object is supplied, this
 gives the name of the slot to prepare for plotting. Options
-are discussed below.  Not required if a \code{RasterLayer}
+are discussed below. Not required if a \code{RasterLayer}
 is supplied.}
 
 \item{...}{Additional arguments (not used).}
@@ -82,7 +82,7 @@ This is an informal \code{fortify}-type method that prepares either
 
  For \code{grain} objects \code{type}  options are \code{"nodes"} or\code{"links"}
  to prepare the nodes and links of the grains of connectivity network  for
- plotting.  Also \code{"voronoi"} will prepare the grains of connectivity
+ plotting. Also \code{"voronoi"} will prepare the grains of connectivity
  Voronoi polygons raster for plotting.
 
  For either \code{mpg} or \code{grain} objects \code{type = "vorBound"}

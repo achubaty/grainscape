@@ -1,8 +1,8 @@
 ---
 title: "Modelling, visualization and analysis with the `grainscape` package"
 author: 
-- Paul Galpern^[Faculty of Environmental Design, University of Calgary, AB, Canada]
-- Alex M. Chubaty^[Canadian Forest Service, Natural Resources Canada, Victoria, BC, Canada]
+- Paul Galpern^[Faculty of Biological Sciences, University of Calgary, AB, Canada]
+- Alex M. Chubaty
 output:
   pdf_document:
     toc: yes
@@ -11,6 +11,7 @@ header-includes:
 - \usepackage{float}
 bibliography: bibliography.bib
 fontsize: 11pt
+geometry: margin=1in
 vignette: >
   %\VignetteIndexEntry{grainscape modelling}
   %\VignetteKeyword{habitat connectivity, minimum planar graph, spatial graph, grains of connectivity, Voronoi tessellation, patch, resistance surface}
@@ -41,9 +42,9 @@ options(knitr.kable.NA = "")
 
 # Visual table of contents
 
-![Spatial network modelling with `grainscape`. Numerals refer to figures.](figure_partA.png){ width=95% }
+![Spatial network modelling with `grainscape`. Numerals refer to figures.](figure_partA.png){ width=90% }
 
-![Scaling of spatial networks with `grainscape`. Numerals refer to figures.](figure_partB.png){ width=95% }
+![Scaling of spatial networks with `grainscape`. Numerals refer to figures.](figure_partB.png){ width=90% }
 
 \newpage
 
@@ -71,7 +72,8 @@ For example, grains of connectivity provides continuous coverage of the entire l
 It also permits the examination of connectivity at multiple scales, which can accommodate uncertainty in how species may perceive landscape features [@Galpern:2013a; @Galpern:2013ec].
 
 The `grainscape` package provides functions to extract the minimum planar graph and create two types of grains of connectivity: patch and lattice forms.
-This reference begins by introducing these two model types, and concludes by demonstrating a variety of `grainscape` models, visualizations, and analyses using a consistent visual style. Code and commentary are included throughout.
+This reference begins by introducing these two model types, and concludes by demonstrating a variety of `grainscape` models, visualizations, and analyses using a consistent visual style.
+Code and commentary are included throughout.
 All analyses are reproducible with data distributed with this package.
 
 \newpage
@@ -246,7 +248,7 @@ kable(scalarAnalysis$summary,
 ```
 
 The `$summary` of this analysis can be plotted to explore scales of aggregation in the landscape.
-\autoref{fig:scalesaggregation} shows a scalar analysis of this landscape with 100 thresholds, where the response variables is the number of components or subgraphs created by the thresholding.
+\autoref{fig:scalesaggregation} shows a scalar analysis of this landscape with 100 thresholds, where the response variables is the number of components or sub-graphs created by the thresholding.
 
 ```{r, figure_05, fig.cap='\\label{fig:scalesaggregation}A scalar analysis at 100 thresholds of the MPG in \\autoref{fig:mpgplot}. When the landscape is a single component at higher link thresholds all patches are completely connected. As an example, an organism able to disperse 250 resistance units would experience this landscape as six connected regions.'}
 scalarAnalysis <- threshold(patchyMPG, nThresh = 100)
@@ -298,7 +300,7 @@ Additional example visualizations and analyses are contained later in this docum
 
 ## Model 2: Patch grains of connectivity
 
-Grains of connectivity (hereafter GOC) was initially developed in three papers [@Galpern:2012me; @Galpern:2013ec; Galpern:2013a].
+Grains of connectivity (hereafter GOC) was initially developed in three papers [@Galpern:2012me; @Galpern:2013ec; @Galpern:2013a].
 Please refer to these papers for much more detail on this method.
 In summary, grains of connectivity describes a tessellation of functionally-connected regions of the map.
 In this example we present these in the context of modelling landscape connectivity for highly-mobile terrestrial organisms that are not obligate patch occupants.
@@ -488,7 +490,7 @@ It was an approach that built a graph (or a network) of patches and, critically,
 This incorporated multiple landscape elements that might be visible on a map, such as the shape, size and configuration of two-dimensional node patches as well as continuous geographic variation in the spaces between the nodes (*i.e.*, the matrix).
 In a minimum planar graph (MPG) the matrix presents resistance to connectivity and influences the paths and therefore the lengths of the links.
 The shape, size and configuration of patches with respect to their neighbours that influences where on the patch perimeters these links begin and end.
-The value of using patch perimeters rather than centroids is that it potentially improves the estimation fo the shortest paths among patches.
+The value of using patch perimeters rather than centroids is that it potentially improves the estimation of the shortest paths among patches.
 
 An MPG can be understood as a planar network (*i.e.*, no links "cross" nodes), that provides an efficient representation of connections among neighbouring nodes.
 Its nodes are two-dimensional patches and its links are the shortest paths through a resistance surface.
@@ -794,7 +796,7 @@ figure19
 
 ### Shortest-path distance between nodes
 
-Finding the shortest path through the network from a source to a desination node and the length of that path is a useful prediction of the network model and has many applications [@Zeller:2012le; @Galpern:2012me; @Adriaensen2003] .
+Finding the shortest path through the network from a source to a destination node and the length of that path is a useful prediction of the network model and has many applications [@Zeller:2012le; @Galpern:2012me; @Adriaensen2003] .
 It gives an expected distance through the network, taking into account the modelled connectivity among nodes.
 
 This example illustrates how to use `igraph` functions to find the shortest path through the network, calculate its length in the metric of the resistance surface, and visualize the path.
@@ -940,7 +942,7 @@ figure22
 
 \newpage
 
-## Visulaization
+## Visualization
 
 ### Characteristics of grains of connectivity
 

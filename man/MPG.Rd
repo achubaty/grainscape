@@ -50,14 +50,14 @@ It is also the first step in grains of connectivity (GOC) modelling.
 Researchers should consider whether the use of a patch-based MPG or a lattice
 MPG model is appropriate based on the patch-dependency of the organism under study.
 Patch-based models make most sense when animals are restricted to, or dependent on,
-a resource patch.  Lattice models can be used as a generalized and functional
+a resource patch. Lattice models can be used as a generalized and functional
 approach to scaling resistance surfaces.
 
 Rasters should be projected and not in geographic coordinates (i.e. \code{projection(cost)}
 should not contain \code{"+proj=longlat"}) or the function will issue a warning.
 In unprojected cases consider using \code{\link{projectRaster}} to change to an appropriate
 coordinate system for the location and extent of interest that balances both distance and areal
-accuracy.  See \url{http://www.spatialreference.org} for location-specific suggestions.
+accuracy. See \url{http://www.spatialreference.org} for location-specific suggestions.
 Use of geographic coordinates will result in inaccurate areal and distance measurements,
 rendering the models themselves inaccurate.
 }

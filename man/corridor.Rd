@@ -8,7 +8,8 @@
 \usage{
 corridor(x, ...)
 
-\S4method{corridor}{goc}(x, whichThresh, coords, weight = "meanWeight", ...)
+\S4method{corridor}{goc}(x, whichThresh, coords, weight = "meanWeight",
+  ...)
 }
 \arguments{
 \item{x}{A \code{goc} object created by \code{\link{GOC}}.}

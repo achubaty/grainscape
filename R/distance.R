@@ -16,7 +16,7 @@
 #' @return  A list object giving a distance matrix for each threshold in the \code{GOC} object.
 #' Distance matrices give the pairwise grains of connectivity network distances
 #' between sampling locations.
-#' Matrix indices correspond to rows in the coords matrix (\code{y}).
+#' Matrix indices correspond to rows in the coordinates matrix (\code{y}).
 #'
 #' @references
 #' Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien. (2007) Spatial graphs:

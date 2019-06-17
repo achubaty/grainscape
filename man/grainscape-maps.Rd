@@ -18,13 +18,13 @@ Typical analyses begin by reclassifying these to reflect resistance to movement.
   patches are large and easy to identify polygonal regions for heuristic purposes.
   This unrealistic map can be used to illustrate the method and understand how it works.
   The map also serves a similar heuristic purpose in a review of graph-based
-  connectivity methods (Galpern et al., 2011).  (400 x 400 raster cells.)}
+  connectivity methods (Galpern \emph{et al.}, 2011). (400 x 400 raster cells.)}
 
   \item{\code{fragmented.asc}}{A simulated land cover map with five land cover
   classes using an algorithm that produces fragmentation. (400 x 400 raster cells.)}
 
   \item{\code{tiny.asc}}{Similar to \code{fragmented.asc} but smaller in extent
-  for lightning-fast computation and experimental use.  (100 x 100 raster cells.)}
+  for lightning-fast computation and experimental use. (100 x 100 raster cells.)}
 }
 }
 \keyword{maps}

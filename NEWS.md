@@ -13,6 +13,7 @@ version 0.3.0.9000
 * improved plotting using `ggplot2` by default (#22, #47)
 * new functions `export()` (#39) and `patchFilter()` (#40)
 * remove `rgeos` dependency and deprecate use of `sp` argument to many functions (#38)
+* fix typos (#58, @jsta)
 * numerous bug fixes
 
 version 0.3.0

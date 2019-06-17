@@ -8,6 +8,7 @@ output:
     toc_depth: 3
 bibliography: bibliography.bib
 fontsize: 11pt
+geometry: margin=1in
 vignette: >
   %\VignetteIndexEntry{grainscape MPG algorithm}
   %\VignetteEncoding{UTF-8}
@@ -31,21 +32,46 @@ opts_chunk$set(warning = FALSE)
 
 # Introduction to spatial graphs
 
-[@Fall:2007eo]
+Spatial graphs are described in @Fall:2007eo.
+They are an application of graph theory to spatially explicit networks.
 
-# Overview of the MPG algorthim implemented in `grainscape`
+## Minimum planar graph
 
-The Minimimum Planar Graph (MPG) algorithm is used to find the Voronoi boundaries and approximate least cost paths between patches.
+The minimum planar graph (MPG) is ...
+
+Good approximation of the complete graph, but with only a small subset of links, which makes it useful for computation.
+
+# The MPG algorithm implemented in `grainscape`
+
+## Overview
+
+The Minimum Planar Graph (MPG) algorithm is used to find the Voronoi boundaries and approximate least cost paths between patches.
 The Voronoi boundaries are created using a spreading or marching algorithm.
 Each perimeter cell in the patches spread out to adjacent cells, that have not been visited yet or are not part of any patch, and are given a patch ID to mark the Voronoi territory.
 A Voronoi boundary is found when a cell is visited twice by two different Voronoi territories or IDs.
 Using a marching algorithm to find the Voronoi boundaries makes it possible to implement a linking algorithm that can run in parallel with the marching algorithm.
 As a cell is spread into, let's call it a child cell, it then creates a link or connection between the child cell and the cell that it spread from, which we call a parent cell.
-Finding the least cost path this way is only possible with the use of storing the child cells, which will eventually become parent cells, in a queueing table that sorts the cells in a certain order.
-The child cells are sorted by increasing eucledian distance between the child cell and their origin cell, the perimeter cell that the connection originally spawned from.
+Finding the least cost path this way is only possible with the use of storing the child cells, which will eventually become parent cells, in a queuing table that sorts the cells in a certain order.
+The child cells are sorted by increasing Euclidean distance between the child cell and their origin cell, the perimeter cell that the connection originally spawned from.
 A link or path between patches is then created at the first Voronoi boundary between two patches. 
 
-## Terminologies
+### General MPG Algorithm
+
+The MPG algorithm has the following steps:  
+
+1. Create Active Cells.
+2. Check if the Active Cells are ready to spread.
+3. Spread to all 4 adjacent cells for all the Active Cells that ready to spread.
+4. The cells that have been recently spread in to become new Active Cells.
+5. Repeat.
+
+![](figure_HabConnFlowchart.jpg)  
+
+The linking algorithm is embedded within the spreading functions of the MPG algorithm. When an Active Cell spreads a link map creates a connection between the parent Active Cell to the new (child) Active Cell. Linking is assisted by the ActiveCellQueue to find the least cost/resistance paths. 
+
+## Technical details
+
+### Terminologies
 
 - *Cell:* A box or element in a map.
 - *Active Cell:* A type of cell that is currently being evaluated. It refers to the child cell mentioned above. 
@@ -54,7 +80,7 @@ A link or path between patches is then created at the first Voronoi boundary bet
 
 -----
 
-## Data Structures
+### Data Structures
 
 - `Cell`: stores its own position (row and column) and an ID.
 - `ActiveCell`: inherits the properties of a `Cell` and has its own properties such as `distance`, `originCell`, `parentCell`, `resistance`, and `time` (or iterations). This type of cell is used to keep track of which cells are currently being evaluated. 
@@ -63,7 +89,7 @@ A link or path between patches is then created at the first Voronoi boundary bet
 ![](figure_cells_diagram.jpg)
 
 - `ActiveCellHolder`: a type of container that stores a vector of `ActiveCell`s in an order.
-- `ActiveCellQueue`: contains an `ActiveCellHolder`. Its main purpose is to properly store the `ActiveCellHolder` in a vector in an order, increasing Euclidian distance.
+- `ActiveCellQueue`: contains an `ActiveCellHolder`. Its main purpose is to properly store the `ActiveCellHolder` in a vector in an order, increasing Euclidean distance.
 - `InputData`: contains all the data that is needed for the engine to operate. The user of the engine has to create an instance of it and initialize all the properties before giving the address of the object to the engine's constructor.
 - `Link`: stores all the links (directly and indirectly) between the patches. Links are given a negative ID to distinguish them from patch IDs. 
 - `OutputData`: similar to `InputData` but it acts as a container for all the data that are calculated by the engine and gives that data to the user. 
@@ -73,7 +99,7 @@ A link or path between patches is then created at the first Voronoi boundary bet
 
 -----
 
-## Type Definitions
+### Type Definitions
 
 - `lcCol`: a vector of `LinkCells`.
 - `LinkMap`: a vector of `lcCols`, which in turn creates a `Map`. This type stores the connections between cells.
@@ -84,14 +110,14 @@ A link or path between patches is then created at the first Voronoi boundary bet
 
 -----
 
-## The `Engine` Class
+### The `Engine` Class
 
 The main calculator of the program.
 It creates the minimum planar graph (MPG) using the MPG algorithm, finds least cost links or paths, and finds patches or clusters.
 
 ![](figure_engine_class_diagram.jpg)
 
-### Fields/Properties
+#### Fields/Properties
 
 **Property**                     | **Data Type**             | **Description**
 ---------------------------------|---------------------------|----------------------------------
@@ -105,11 +131,11 @@ It creates the minimum planar graph (MPG) using the MPG algorithm, finds least c
 `iLinkMap`                       | LinkMap               | A map that keeps track of all the connections between cells due to the spreading and queuing functions.
 `voronoi_map`                    | flMap                 | A map that contains floating point values, it stores the Voronoi boundaries/polygons.
 `cost_map`                       | flMap                 | A map that contains the resistance or cost in each cell/element.
-`error_message`                  | Char Pointer          | Stores the erorr messages that occur in the engine. It acts as a way to diagnose problems in the engine.
+`error_message`                  | Char Pointer          | Stores the error messages that occur in the engine. It acts as a way to diagnose problems in the engine.
 
-### Methods/Functions
+#### Methods/Functions
 
-#### Public Functions
+##### Public Functions
 
 These are the functions that are visible to the user.  
 
@@ -120,7 +146,7 @@ These are the functions that are visible to the user.
 `initialize`        | Boolean                       | Nothing                       | Prepares the engine for calculation.
 `start`             | Void                          | Nothing                       | It runs the MPG algorithm.
 
-#### Linking Functions
+##### Linking Functions
 
 These functions create the links between cells and finds the least cost (direct or indirect) paths between patches.  
 
@@ -131,7 +157,7 @@ These functions create the links between cells and finds the least cost (direct 
 `parseMap`            | Cell                | LinkCell, Link | Given a starting Cell it follows the connections until it reaches a patch. The last cell in the connection is returned.
 `lookForIndirectPath` | Void                | Vector of Links, Link   | Tries to find an indirect link and updates the second argument.
 
-#### Patch Finding Functions
+##### Patch Finding Functions
 
 The functions are responsible for finding the patches or clusters in a resistance map, given a value for a habitat.  
 
@@ -139,45 +165,28 @@ The functions are responsible for finding the patches or clusters in a resistanc
 --------------------|---------------------|-----------------------------|---------------------------
 `findPatches`       | Void                | Nothing                     | Finds all the patches in the patch vector and assign patch IDs.
 `getIndexFromList`  | Int                 | Float, Vector of Patches    | Finds the index in the vector of patches that the given ID correspond to.
-`combinePatches`    | Int                 | Int, Int, Vector of Patches | Given two indeces and the list of patches. Extract the two patches from the list and combine those two into one patch. Insert the new patch into the list and return the index value of the new patch. 
+`combinePatches`    | Int                 | Int, Int, Vector of Patches | Given two indices and the list of patches. Extract the two patches from the list and combine those two into one patch. Insert the new patch into the list and return the index value of the new patch. 
 
-#### Common Functions
+##### Common Functions
 
-Common functions are almost used in almost all of the functions in the engine.   
+Common functions are used in almost all of the functions in the engine.   
 
 **Function**    | **Return Type**     | **Input Arguments**           | **Description**  
 ----------------|---------------------|-------------------------------|---------------------------
 `outOfBounds`   | Bool                | Int, Int, Int, Int            | Checks to see if the given row and column is still within the resistance map's dimensions.
 `cellIsEqual`   | Bool                | Cell, Cell                    | Compares the two cells' row and column if they match.
 
-#### Static Functions
-Static functions are functions that can be used without delcaring an object of the class.   
+##### Static Functions
+Static functions are functions that can be used without declaring an object of the class.   
 
 **Function**      | **Return Type**     | **Input Arguments**               | **Description**
 ------------------|---------------------|-----------------------------------|-----------------------
 `emax`            | Float               | Vector of Floats  | Finds the maximum value from the vector of floating point values
 `emin`            | Float               | Vector of Floats  | Finds the minimum value from the vector of floating point values
-`calcDistance`    | Float               | Cell, Cell        | Finds the eucledian distance between two Cells
-
+`calcDistance`    | Float               | Cell, Cell        | Finds the Euclidean distance between two Cells
 -----
 
-## General MPG Algorithm
-
-The MPG algorithm has the following steps:  
-
-1. Create Active Cells.
-2. Check if the Active Cells are ready to spread.
-3. Spread to all 4 adjacent cells for all the Active Cells that ready to spread.
-4. The cells that have been recently spread in to become new Active Cells.
-5. Repeat.
-
-![](figure_HabConnFlowchart.jpg)  
-
-The linking algorithm is embedded within the spreading functions of the MPG algorithm. When an Active Cell spreads a link map creates a connection between the parent Active Cell to the new (child) Active Cell. Linking is assisted by the ActiveCellQueue to find the least cost/resistive paths. 
-
------
-
-## How to Use the Engine
+### How to Use the Engine
 
 1. Create `InputData` and `OutputData` objects.
 2. Initialize the `InputData` object's fields. Keep in mind that the vectors in the InputData and Output data structures are all of type `float`.
@@ -185,12 +194,13 @@ The linking algorithm is embedded within the spreading functions of the MPG algo
 4. Create an `Engine` object and give the address of the `InputData` and `OutputData` objects, the `Char` array  and the size of the array as arguments.
 5. Call the initialization function from the `Engine` object.
 6. If the initialization is successful, call the start function from the `Engine` object. If the initialization is not successful, the array of char will contain the reason for the initialization failure.
-7. Once the engine is doen calculating, extract all the fields needed in the `OutputData` object.
+7. Once the engine is done calculating, extract all the fields needed in the `OutputData` object.
 
 A snippet C++ code is shown below as an example:
 
-```
-vector<float> EngineInterface(vector<float> resistance, vector<float> patches ,int nrow, int ncol)
+```{cpp}
+vector<float> EngineInterface(vector<float> resistance, vector<float> patches,
+                              int nrow, int ncol)
 {
 	//InputData and OutputData objects
 	InputData inObj;
@@ -205,10 +215,12 @@ vector<float> EngineInterface(vector<float> resistance, vector<float> patches ,i
 	//Array of chars with a size of MAX_CHAR_SIZE
 	char error[MAX_CHAR_SIZE];
 
-	//Engine object while passing in the InputData and OutputData objects' address and the array of chars
+	//Engine object while passing in the InputData and OutputData objects'
+	// address and the array of chars
 	Engine engineObj(&inObj, &outObj, error, MAX_CHAR_SIZE);
 
-	//Initialize the engineObj, if it fails output the reason why and exit the function
+	//Initialize the engineObj;
+	//If it fails output the reason why and exit the function
 	if (engineObj.initialize() == false)
 	{
 		cout << error << endl;

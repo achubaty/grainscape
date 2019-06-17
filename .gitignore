@@ -1,12 +1,6 @@
-# c++ files
-src/*.dll
-src/*.o
-src/*.so
-
-# R files
-.Rproj.user
-.Rhistory
 .RData
+.Rhistory
+.Rproj.user
 .Ruserdata
 vignettes/*_cache
 vignettes/figure_*.pdf

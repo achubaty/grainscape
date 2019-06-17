@@ -4,7 +4,7 @@ if (getRversion() >= "3.1.0") {
 
 #' Habitat connectivity engine
 #'
-#' Internal function. Servesa s a wrapper around the habitat connectivity engine
+#' Internal function. Serves as a wrapper around the habitat connectivity engine
 #' developed in C++.
 #'
 #' @param cost      Numeric raster cost (resistance) map.

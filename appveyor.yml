@@ -29,9 +29,15 @@ environment:
   - R_VERSION: release
 
   - R_VERSION: oldrel
+    RTOOLS_VERSION: 35
+
+  - R_VERSION: 3.4.4
+    RTOOLS_VERSION: 34
+
+  - R_VERSION: 3.3.3
     RTOOLS_VERSION: 33
 
-  - R_VERSION: 3.2.2
+  - R_VERSION: 3.2.5
     RTOOLS_VERSION: 32
 
 branches:
@@ -39,14 +45,11 @@ branches:
     - master
     - development
 
-  except:
-    - gh-pages
-
 clone_depth: 5
 
 build_script:
   - travis-tool.sh install_deps
-  - Rscript -e  "install.packages(c('Rcpp', 'dplyr'), type = 'source', repos = 'https://cran.rstudio.com')"
+  - Rscript -e  "install.packages(c('dplyr', 'igraph', 'Rcpp'), type = 'source', repos = 'https://cran.rstudio.com')"
 
 test_script:
   - travis-tool.sh run_tests

@@ -1,7 +1,7 @@
 # grainscape
 
 [![Build Status](https://travis-ci.org/achubaty/grainscape.svg?branch=master)](https://travis-ci.org/achubaty/grainscape)
-[![Appveyor Build status](https://ci.appveyor.com/api/projects/status/2fxqhgk6miv2fytd/branch/master?svg=true)](https://ci.appveyor.com/project/achubaty/spades/branch/master)
+[![Appveyor Build status](https://ci.appveyor.com/api/projects/status/2fxqhgk6miv2fytd/branch/master?svg=true)](https://ci.appveyor.com/project/achubaty/grainscape/branch/master)
 [![Coverage Status](https://coveralls.io/repos/github/achubaty/grainscape/badge.svg?branch=master)](https://coveralls.io/github/achubaty/grainscape?branch=master)
 
 ## Efficient Modelling of Landscape Connectivity, Habitat, and Protected Area Networks

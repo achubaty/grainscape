@@ -18,13 +18,30 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
+
+<!-- sticky kit -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-  
-  
+
+
+
+<meta property="og:title" content="Produce a minimum planar graph (MPG) at multiple scales — threshold" />
+
+<meta property="og:description" content="Perform a scalar analysis of a minimum planar graph (MPG) by building the
+graph at a series of link thresholds.
+As the threshold value increases more nodes in the graph become connected,
+forming increasingly fewer components, until the graph becomes connected (e.g., Brooks, 2003).
+N.B. Grains of connectivity (GOC) done by GOC is also a scalar
+analysis using Voronoi tessellations rather than patches (see Galpern et al., 2012)." />
+<meta name="twitter:card" content="summary" />
+
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -47,12 +64,16 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">grainscape</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">grainscape</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.3.0.9000</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="..//index.html">
+  <a href="../index.html">
     <span class="fa fa-home fa-lg"></span>
      
   </a>
@@ -68,15 +89,15 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/grainscape_vignette.html">Modelling, visualization and analysis with the `grainscape` package</a>
+      <a href="../articles/MPG_algorithm.html">Calculating the Minimum Planar Graph and generating Voronoi tesselations</a>
     </li>
     <li>
-      <a href="../articles/MPG_algorithm.html">Calculating the Minimum Planar Graph and generating Voronoi tesselations</a>
+      <a href="../articles/grainscape_vignette.html">Modelling, visualization and analysis with the `grainscape` package</a>
     </li>
   </ul>
 </li>
 <li>
-  <a href="../news/index.html">News</a>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
       
@@ -88,6 +109,7 @@
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -95,12 +117,15 @@
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Produce a minimum planar graph (MPG) at multiple scales</h1>
+    <small class="dont-index">Source: <a href='https://github.com/achubaty/grainscape/blob/master/R/threshold.R'><code>R/threshold.R</code></a></small>
+    <div class="hidden name"><code>threshold.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>Perform a scalar analysis of a minimum planar graph (MPG) by building the
 graph at a series of link thresholds.
@@ -109,6 +134,7 @@ forming increasingly fewer components, until the graph becomes connected (e.g., 
 N.B. Grains of connectivity (GOC) done by <code><a href='GOC.html'>GOC</a></code> is also a scalar
 analysis using Voronoi tessellations rather than patches (see Galpern et al., 2012).</p>
     
+    </div>
 
     <pre class="usage"><span class='fu'>threshold</span>(<span class='no'>x</span>, <span class='no'>...</span>)
 
@@ -116,7 +142,7 @@ analysis using Voronoi tessellations rather than patches (see Galpern et al., 20
 <span class='fu'>threshold</span>(<span class='no'>x</span>, <span class='kw'>weight</span> <span class='kw'>=</span> <span class='st'>"lcpPerimWeight"</span>, <span class='kw'>nThresh</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>doThresh</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)</pre>
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
@@ -158,7 +184,8 @@ Provide either <code>nThresh</code> or <code>doThresh</code> not both.</p></td>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A list object with the following elements:</p><dl class='dl-horizontal'>
+    <p>A list object with the following elements:</p>
+<dl class='dl-horizontal'>
   <dt><code>summary</code></dt><dd><p>summarizes the thresholded graphs generated and their properties;</p></dd>
   <dt><code>th</code></dt><dd><p>a list of length <code>nThresh</code> or <code>length(doThresh)</code>
   giving the thresholded graph (class <code>igraph</code>) at each threshold.</p></dd>
@@ -186,7 +213,7 @@ at multiple spatial scales in landscape genetics. Molecular Ecology 21:3996-4009
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><code><a href='MPG.html'>MPG</a></code></p>
+    <div class='dont-index'><p><code><a href='MPG.html'>MPG</a></code></p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -203,12 +230,12 @@ at multiple spatial scales in landscape genetics. Molecular Ecology 21:3996-4009
 <span class='no'>tinyThresh</span> <span class='kw'>&lt;-</span> <span class='fu'>threshold</span>(<span class='no'>tinyPatchMPG</span>, <span class='kw'>nThresh</span> <span class='kw'>=</span> <span class='fl'>10</span>)
 
 <span class='co'>## Examine the properties of one of these threshold graphs</span>
-<span class='fu'>print</span>(<span class='no'>tinyThresh</span>$<span class='no'>th</span><span class='kw'>[[</span><span class='fl'>7</span>]], <span class='kw'>vertex</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>edge</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; IGRAPH 4a62701 UN-- 43 89 -- 
+<span class='fu'>print</span>(<span class='no'>tinyThresh</span>$<span class='no'>th</span><span class='kw'>[[</span><span class='fl'>7</span>]], <span class='kw'>vertex</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>edge</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; IGRAPH 5d4b8ea UN-- 43 89 -- 
 #&gt; + attr: name (v/c), patchId (v/n), patchArea (v/n), patchEdgeArea
 #&gt; | (v/n), coreArea (v/n), centroidX (v/n), centroidY (v/n), linkId
 #&gt; | (e/n), lcpPerimWeight (e/n), startPerimX (e/n), startPerimY (e/n),
 #&gt; | endPerimX (e/n), endPerimY (e/n)
-#&gt; + edges from 4a62701 (vertex names):
+#&gt; + edges from 5d4b8ea (vertex names):
 #&gt;  [1] 62 --74  30 --41  30 --40  7  --22  5  --7   80 --86  73 --78  29 --31 
 #&gt;  [9] 19 --29  67 --85  41 --48  40 --41  37 --41  8  --28  9  --12  12 --14 
 #&gt; [17] 30 --48  8  --9   48 --54  95 --103 62 --64  5  --22  32 --37  74 --84 
@@ -246,11 +273,14 @@ Paul Galpern and Alex Chubaty
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>
    </div>
 
+  
+
   </body>
 </html>
+

@@ -22,7 +22,7 @@ distance from the perimeters of patches as the link weight.
 \code{"eucPerimWeight"} use the Euclidean distance from the
 perimeters of patches as the link weight.}
 
-\item{nThresh}{Optional.  An integer giving the number of thresholds (or scales)
+\item{nThresh}{Optional. An integer giving the number of thresholds (or scales)
 at which to create GOC models.
 Thresholds are selected to produce a maximum number of unique
 grains (i.e., models).
@@ -33,7 +33,7 @@ This is a simple way to get a representative subset of all
 possible GOC models.
 Provide either \code{nThresh} or \code{doThresh} not both.}
 
-\item{doThresh}{Optional.  A vector giving the link thresholds at which to create GOC models.
+\item{doThresh}{Optional. A vector giving the link thresholds at which to create GOC models.
 Use \code{link{threshold}} to identify thresholds of interest.
 Provide either \code{nThresh} or \code{doThresh} not both.}
 }
@@ -52,7 +52,7 @@ graph at a series of link thresholds.
 As the threshold value increases more nodes in the graph become connected,
 forming increasingly fewer components, until the graph becomes connected (e.g., Brooks, 2003).
 N.B. Grains of connectivity (GOC) done by \code{\link{GOC}} is also a scalar
-analysis using Voronoi tessellations rather than patches (see Galpern et al., 2012).
+analysis using Voronoi tessellations rather than patches (see Galpern \emph{et al.}, 2012).
 }
 \note{
 See \code{\link{MPG}} for warning related to areal measurements.

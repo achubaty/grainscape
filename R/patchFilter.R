@@ -24,11 +24,11 @@
 #' @param area          The minimum area that constitutes a patch (where area is
 #'                      calculated in the coordinate reference system of the
 #'                      raster by multiplying the count of cells in patch by the x
-#'                      and y resolution of a raster cell).  Default \code{NULL}.
+#'                      and y resolution of a raster cell). Default \code{NULL}.
 #'                      Only one of \code{cells} or \code{area} may be specified.
 #'
 #' @param ...           Additional arguments passed to the \code{\link{clump}}
-#'                      function in the \code{raster} package.  For example
+#'                      function in the \code{raster} package. For example
 #'                      \code{directions = 4} may be used to be more conservative
 #'                      about which cells constitute a patch.
 #'

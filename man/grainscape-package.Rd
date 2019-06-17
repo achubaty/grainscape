@@ -22,7 +22,7 @@ Effective distances describing connectivity between geographic locations can
 be determined at multiple scales.
 Analyses of this sort can contribute to corridor identification, landscape genetics,
 as well as other connectivity assessments.
-Minimum planar graph (MPG; Fall et al., 2007) models of resource patches on
+Minimum planar graph (MPG; Fall \emph{et al.}, 2007) models of resource patches on
 landscapes can also be generated using the software.
 
 MPG calculations and generalization of the Voronoi tessellation used in GOC models
@@ -71,13 +71,14 @@ R News 5 (2), \url{http://cran.r-project.org/doc/Rnews/}.
 \seealso{
 Useful links:
 \itemize{
+  \item \url{https://achubaty.github.io/grainscape}
   \item \url{https://github.com/achubaty/grainscape}
   \item Report bugs at \url{https://github.com/achubaty/grainscape/issues}
 }
 
 }
 \author{
-\strong{Maintainer}: Alex M Chubaty \email{alexander.chubaty@canada.ca}
+\strong{Maintainer}: Alex M Chubaty \email{alex.chubaty@gmail.com}
 
 Authors:
 \itemize{

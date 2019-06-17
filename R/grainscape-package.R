@@ -19,7 +19,7 @@
 #' be determined at multiple scales.
 #' Analyses of this sort can contribute to corridor identification, landscape genetics,
 #' as well as other connectivity assessments.
-#' Minimum planar graph (MPG; Fall et al., 2007) models of resource patches on
+#' Minimum planar graph (MPG; Fall \emph{et al.}, 2007) models of resource patches on
 #' landscapes can also be generated using the software.
 #'
 #' MPG calculations and generalization of the Voronoi tessellation used in GOC models
@@ -91,13 +91,13 @@
 #'   patches are large and easy to identify polygonal regions for heuristic purposes.
 #'   This unrealistic map can be used to illustrate the method and understand how it works.
 #'   The map also serves a similar heuristic purpose in a review of graph-based
-#'   connectivity methods (Galpern et al., 2011).  (400 x 400 raster cells.)}
+#'   connectivity methods (Galpern \emph{et al.}, 2011). (400 x 400 raster cells.)}
 #'
 #'   \item{\code{fragmented.asc}}{A simulated land cover map with five land cover
 #'   classes using an algorithm that produces fragmentation. (400 x 400 raster cells.)}
 #'
 #'   \item{\code{tiny.asc}}{Similar to \code{fragmented.asc} but smaller in extent
-#'   for lightning-fast computation and experimental use.  (100 x 100 raster cells.)}
+#'   for lightning-fast computation and experimental use. (100 x 100 raster cells.)}
 #' }
 #'
 #' @docType data

@@ -22,3 +22,5 @@ PackageBuildArgs: --compact-vignettes="gs+qpdf" --md5
 PackageBuildBinaryArgs: --byte-compile
 PackageCheckArgs: --as-cran
 PackageRoxygenize: rd,collate,namespace
+
+QuitChildProcessesOnExit: Yes
