@@ -5,12 +5,12 @@ Description: Given a landscape resistance surface, creates grains of connectivit
     and minimum planar graph models that can be used to calculate effective
     distances for landscape connectivity at multiple scales. This is a
     cross-platform reimplementation of the 'grainscape' package
-    (http://grainscape.r-forge.r-project.org/).
+    (<http://grainscape.r-forge.r-project.org/>).
 URL:
     https://achubaty.github.io/grainscape,
     https://github.com/achubaty/grainscape
 Version: 0.3.0.9000
-Date: 2018-10-10
+Date: 2019-06-17
 Authors@R: c(
     person("Paul", "Galpern", email = "pgalpern@gmail.com", role = c("aut", "cph")),
     person("Sam", "Doctolero", email = "sam.doctolero@gmail.com", role = "aut"),
@@ -63,4 +63,4 @@ Collate:
     'threshold.R'
     'zzz.R'
 Encoding: UTF-8
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1
