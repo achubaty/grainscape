@@ -9,6 +9,7 @@ output:
     toc_depth: 3
 header-includes:
 - \usepackage{float}
+- \floatplacement{figure}{ht}
 bibliography: bibliography.bib
 fontsize: 11pt
 geometry: margin=1in
@@ -32,7 +33,6 @@ opts_chunk$set(echo = TRUE)
 
 opts_chunk$set(fig.height = 3)
 opts_chunk$set(fig.width = 3)
-opts_chunk$set(fig.pos = "!H")
 opts_chunk$set(fig.show = "hold")
 
 options(knitr.kable.NA = "")
@@ -43,6 +43,8 @@ options(knitr.kable.NA = "")
 # Visual table of contents
 
 ![Spatial network modelling with `grainscape`. Numerals refer to figures.](figure_partA.png){ width=90% }
+
+\newpage
 
 ![Scaling of spatial networks with `grainscape`. Numerals refer to figures.](figure_partB.png){ width=90% }
 
