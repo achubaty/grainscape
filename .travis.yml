@@ -65,12 +65,15 @@ matrix:
     before_script:
     - Rscript -e 'install.packages("dplyr", dependencies = TRUE)'
   - os: osx
-    osx_image: xcode9.2
+    osx_image: xcode9.4
     latex: false
-    r_build_args: '--no-build-vignettes'
-    r_check_args: '--as-cran --ignore-vignettes --no-examples'
+    before_install:
+    - brew update
+    - brew install aspell --with-lang-en
     before_script:
     - Rscript -e 'install.packages(c("Rcpp", "dplyr"), type = "source")'
+    r_build_args: '--no-build-vignettes'
+    r_check_args: '--as-cran --ignore-vignettes --no-examples'
 r_build_args: '--compact-vignettes="gs+qpdf"'
 r_check_args: '--as-cran'
 warnings_are_errors: true
