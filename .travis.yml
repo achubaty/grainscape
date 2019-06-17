@@ -69,7 +69,7 @@ matrix:
     latex: false
     before_install:
     - brew update
-    - brew install aspell --with-lang-en
+    - brew install aspell #--with-lang-en
     before_script:
     - Rscript -e 'install.packages(c("Rcpp", "dplyr"), type = "source")'
     r_build_args: '--no-build-vignettes'
