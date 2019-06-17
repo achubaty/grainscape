@@ -31,7 +31,7 @@ Please see Details for explanation.}
 A list object giving a distance matrix for each threshold in the \code{GOC} object.
 Distance matrices give the pairwise grains of connectivity network distances
 between sampling locations.
-Matrix indices correspond to rows in the coords matrix (\code{y}).
+Matrix indices correspond to rows in the coordinates matrix (\code{y}).
 }
 \description{
 Find the shortest network distance between pairs of points using the GOC graph.

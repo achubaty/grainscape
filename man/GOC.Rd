@@ -17,16 +17,16 @@ For lattice GOC \code{MPG} must be run with patch set as an integer value.}
 
 \item{...}{Additional arguments (not used).}
 
-\item{nThresh}{Optional.  An integer giving the number of thresholds (or scales)
-at which to create GOC models.  Thresholds are selected to produce
+\item{nThresh}{Optional. An integer giving the number of thresholds (or scales)
+at which to create GOC models. Thresholds are selected to produce
 a maximum number of unique grains (i.e., models).
 \code{nThresh} thresholds are also approximately evenly spread
 between 0 and the threshold at which all patches or focal points
-on the landscape are connected.  This is a simple way to get
+on the landscape are connected. This is a simple way to get
 a representative subset of all possible GOC models.
 Provide either \code{nThresh} or \code{doThresh} not both.}
 
-\item{doThresh}{Optional.  A vector giving the link thresholds at which to create GOC models.
+\item{doThresh}{Optional. A vector giving the link thresholds at which to create GOC models.
 Use \code{link{threshold}} to identify thresholds of interest.
 Provide either \code{nThresh} or \code{doThresh} not both.}
 
@@ -49,7 +49,7 @@ Patch-based or lattice GOC modelling can be done with this function.
 \details{
 Grain or scalar analysis of connectivity may be appropriate for a variety of purposes, not
 limited to visualization and improving connectivity estimates for highly-mobile organisms.
-See Galpern et al. (2012), Galpern & Manseau (2013a, 2013b) for applications
+See Galpern \emph{et al.} (2012), Galpern & Manseau (2013a, 2013b) for applications
 and review of these capabilities.
 }
 \note{

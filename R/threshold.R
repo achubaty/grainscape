@@ -6,7 +6,7 @@
 #' As the threshold value increases more nodes in the graph become connected,
 #' forming increasingly fewer components, until the graph becomes connected (e.g., Brooks, 2003).
 #' N.B. Grains of connectivity (GOC) done by \code{\link{GOC}} is also a scalar
-#' analysis using Voronoi tessellations rather than patches (see Galpern et al., 2012).
+#' analysis using Voronoi tessellations rather than patches (see Galpern \emph{et al.}, 2012).
 #'
 #' @param x       A \code{mpg} object produced by \code{\link{MPG}}.
 #'
@@ -16,7 +16,7 @@
 #'                \code{"eucPerimWeight"} use the Euclidean distance from the
 #'                perimeters of patches as the link weight.
 #'
-#' @param nThresh  Optional.  An integer giving the number of thresholds (or scales)
+#' @param nThresh  Optional. An integer giving the number of thresholds (or scales)
 #'                 at which to create GOC models.
 #'                 Thresholds are selected to produce a maximum number of unique
 #'                 grains (i.e., models).
@@ -27,7 +27,7 @@
 #'                 possible GOC models.
 #'                 Provide either \code{nThresh} or \code{doThresh} not both.
 #'
-#' @param doThresh  Optional.  A vector giving the link thresholds at which to create GOC models.
+#' @param doThresh  Optional. A vector giving the link thresholds at which to create GOC models.
 #'                  Use \code{link{threshold}} to identify thresholds of interest.
 #'                  Provide either \code{nThresh} or \code{doThresh} not both.
 #'

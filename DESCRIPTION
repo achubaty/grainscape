@@ -37,6 +37,7 @@ Suggests:
     parallel,
     rgeos,
     rmarkdown,
+    spelling,
     testthat
 VignetteBuilder: knitr, rmarkdown
 BugReports: https://github.com/achubaty/grainscape/issues
@@ -63,4 +64,5 @@ Collate:
     'threshold.R'
     'zzz.R'
 Encoding: UTF-8
+Language: en-CA
 RoxygenNote: 6.1.1

@@ -33,7 +33,7 @@ A list with elements:
   \item{\code{pointTotalCoreArea}}{the same for core area of patches;}
 
   \item{\code{pointECS}}{gives the patch area (in cell counts) averaged for
-  all points of interest (defined by O'Brien et al. 2006);}
+  all points of interest (defined by O'Brien \emph{et al.}, 2006);}
 
   \item{\code{pointECSCore}}{is the same for the core area of patches.}
 }
