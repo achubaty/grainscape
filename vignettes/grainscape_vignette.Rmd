@@ -1,8 +1,8 @@
 ---
 title: "Modelling, visualization and analysis with the `grainscape` package"
 author: 
-- Paul Galpern^[Faculty of Environmental Design, University of Calgary, AB, Canada]
-- Alex M. Chubaty^[Canadian Forest Service, Natural Resources Canada, Victoria, BC, Canada]
+- Paul Galpern^[Faculty of Biological Sciences, University of Calgary, AB, Canada]
+- Alex M. Chubaty
 output:
   pdf_document:
     toc: yes

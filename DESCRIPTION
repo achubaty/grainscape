@@ -14,7 +14,7 @@ Date: 2019-06-17
 Authors@R: c(
     person("Paul", "Galpern", email = "pgalpern@gmail.com", role = c("aut", "cph")),
     person("Sam", "Doctolero", email = "sam.doctolero@gmail.com", role = "aut"),
-    person("Alex M", "Chubaty", email = "alexander.chubaty@canada.ca", role = c("aut", "cre"))
+    person("Alex M", "Chubaty", email = "alex.chubaty@gmail.com", role = c("aut", "cre"))
     )
 License: GPL (>= 2)
 Imports:

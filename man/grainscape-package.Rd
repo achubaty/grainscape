@@ -78,7 +78,7 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Alex M Chubaty \email{alexander.chubaty@canada.ca}
+\strong{Maintainer}: Alex M Chubaty \email{alex.chubaty@gmail.com}
 
 Authors:
 \itemize{
