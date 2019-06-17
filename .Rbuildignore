@@ -4,6 +4,7 @@
 ^\.travis\.yml$
 ^_pkgdown\.yml$
 ^appveyor\.yml$
+^appveyor_cache\.txt$
 CONTRIBUTING\.md
 cran-comments\.md
 ^LICENSE$
