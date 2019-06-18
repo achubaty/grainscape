@@ -66,10 +66,12 @@ matrix:
     - Rscript -e 'install.packages("dplyr", dependencies = TRUE)'
   - os: osx
     osx_image: xcode9.4
+    addons:
+      homebrew:
+        packages:
+        - aspell
+        update: true
     latex: false
-    before_install:
-    - brew update
-    - brew install aspell #--with-lang-en
     before_script:
     - Rscript -e 'install.packages(c("Rcpp", "dplyr"), type = "source")'
     r_build_args: '--no-build-vignettes'
