@@ -1,7 +1,7 @@
 ---
 title: "Modelling, visualization and analysis with the `grainscape` package"
 author: 
-- Paul Galpern^[Faculty of Biological Sciences, University of Calgary, AB, Canada]
+- Paul Galpern^[Department of Biological Sciences, University of Calgary, AB, Canada]
 - Alex M. Chubaty
 output:
   pdf_document:
@@ -701,7 +701,7 @@ figure17
 
 As noted in the last example, highlighting which nodes are connected into components (or clusters) after the network has been subjected to link thresholding can improve the visualization of connected regions of the map.
 
-Here, `grainscape::threshold()` is used to remove links longer than a certain length from the `igraph` model of the spatial network.
+Here, `grainscape::threshold()` is used to remove links longer than a certain length from the `igraph` model of the landscape network.
 The `igraph::components()` function is then called to label nodes by their membership in a particular component (or cluster).
 We can then use this information to label the nodes by their component membership.
 To improve the visualization, the nodes are also plotted as large circles and the labels in a reverse colour.
@@ -948,7 +948,7 @@ figure22
 
 ### Characteristics of grains of connectivity
 
-The Voronoi polygons that are complementary to a given scale or threshold of a spatial network describe a geographic area.
+The Voronoi polygons that are complementary to a given scale or threshold of a landscape network describe a geographic area.
 As polygons are coalesced and the network is scaled, `grainscape` collects summary statistics on several variables in the newly aggregated areal units.
 These include the total area and core area of two-dimensional nodes that fall within the boundary of the polygon, the median link weight within the cluster, and several others.
 
