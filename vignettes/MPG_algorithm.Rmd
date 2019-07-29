@@ -62,7 +62,7 @@ The following is intended to provide an overview of the C++ engine provided by t
 
 - *Cell:* A box or element in a map.
 - *Active Cell:* A type of cell that is currently being evaluated. It refers to the child cell mentioned above. 
-- *Time:* An index of the interation.
+- *Time:* An index of the iteration.
 - *Object:* An instance of a certain data type, class, or data structure (*i.e.*, `Cell c`, `c` then is an object of type `Cell`).
 
 -----
