@@ -42,11 +42,11 @@ options(knitr.kable.NA = "")
 
 # Visual table of contents
 
-![Spatial network modelling with `grainscape`. Numerals refer to figures.](figure_partA.png){ width=90% }
+![Landscape network modelling with `grainscape`. Numerals refer to figures.](figure_partA.png){ width=90% }
 
 \newpage
 
-![Scaling of spatial networks with `grainscape`. Numerals refer to figures.](figure_partB.png){ width=90% }
+![Scaling of landscape networks with `grainscape`. Numerals refer to figures.](figure_partB.png){ width=90% }
 
 \newpage
 
@@ -378,7 +378,7 @@ Please refer to the visual table of contents.
 
 \newpage
 
-# Spatial networks with 1D and 2D nodes
+# Landscape networks with 1D and 2D nodes
 
 ## Modelling
 
@@ -867,7 +867,7 @@ kable(tableD)
 
 \newpage
 
-# Scaling spatial networks
+# Scaling landscape networks
 
 ## Modeling
 
