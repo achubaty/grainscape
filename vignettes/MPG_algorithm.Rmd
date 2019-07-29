@@ -1,5 +1,5 @@
 ---
-title: "Calculating the Minimum Planar Graph and generating Voronoi tesselations"
+title: "Calculating the minimum planar graph and generating Voronoi tessellations"
 author: "Sam Doctolero and Alex M Chubaty"
 date: '`r Sys.Date()`'
 output:
@@ -30,34 +30,19 @@ opts_chunk$set(warning = FALSE)
 
 \newpage
 
-# Introduction to spatial graphs
-
-Spatial graphs are described in @Fall:2007eo.
-They are an application of graph theory to spatially explicit networks.
-
-## Minimum planar graph
-
-The minimum planar graph (MPG) is ...
-
-Good approximation of the complete graph, but with only a small subset of links, which makes it useful for computation.
-
-# The MPG algorithm implemented in `grainscape`
-
 ## Overview
+The Minimum Planar Graph (MPG) is a spatial representation of a mathematical graph or network that is useful for modelling dense two-dimensional landscape networks. It can efficiently approximate pairwise connections between graph nodes, and this can assist in the visualization and analysis of how a set of patches is connected. The MPG also has the useful property that the proximity, size and shape of patches in the network combined with the pattern of resistance presented by the landscape collectively influence the paths among patches and the end-points of those links. In this sense the MPG can be said to be spatially-explicit, and therefore to be a property of the entire landscape under analysis (or alternatively a property of the digital resistance map used to represent the landscape). 
 
-The Minimum Planar Graph (MPG) algorithm is used to find the Voronoi boundaries and approximate least cost paths between patches.
-The Voronoi boundaries are created using a spreading or marching algorithm.
-Each perimeter cell in the patches spread out to adjacent cells, that have not been visited yet or are not part of any patch, and are given a patch ID to mark the Voronoi territory.
-A Voronoi boundary is found when a cell is visited twice by two different Voronoi territories or IDs.
+The Minimum Planar Graph (MPG) achieves this spatially-explicit property by finding Voronoi polygons that describe regions of proximity in resistance units around focal patches. The algorithm that is used to find the Voronoi boundaries and approximate the least cost-paths between patches and their end-points is described below.
+
+In `grainscape`, the boundaries of Voronoi polygons are found by using a spreading or marching algorithm. This is done beginning in each perimeter cell of a patch and spreading out to adjacent cells that are not part of any patch and have not been visited yet by the algorithm. These cells are then given a patch ID to mark the Voronoi territory. A Voronoi boundary is found when a cell is visited twice by two different Voronoi territories or IDs originating from different patches.
+
 Using a marching algorithm to find the Voronoi boundaries makes it possible to implement a linking algorithm that can run in parallel with the marching algorithm.
-As a cell is spread into, let's call it a child cell, it then creates a link or connection between the child cell and the cell that it spread from, which we call a parent cell.
-Finding the least cost path this way is only possible with the use of storing the child cells, which will eventually become parent cells, in a queuing table that sorts the cells in a certain order.
-The child cells are sorted by increasing Euclidean distance between the child cell and their origin cell, the perimeter cell that the connection originally spawned from.
-A link or path between patches is then created at the first Voronoi boundary between two patches. 
+As a cell is spread into (let's call it a child cell) it then creates a link or connection between the child cell and the cell that it spread from, which we call a parent cell.
 
-### General MPG Algorithm
+Finding the least-cost path in this way is only possible because the algorithm stores the child cells (which will eventually become parent cells) in a queuing table that sorts the cells in a certain order. The child cells are sorted by increasing Euclidean distance between the child cell and their origin cell, the perimeter cell that the connection originally spawned from. A link or path between patches is then created at the first Voronoi boundary between two patches. 
 
-The MPG algorithm has the following steps:  
+The MPG algorithm has the following general steps. These are represented in more detail in a flow chart in Figure 1.
 
 1. Create Active Cells.
 2. Check if the Active Cells are ready to spread.
@@ -67,15 +52,17 @@ The MPG algorithm has the following steps:
 
 ![](figure_HabConnFlowchart.jpg)  
 
-The linking algorithm is embedded within the spreading functions of the MPG algorithm. When an Active Cell spreads a link map creates a connection between the parent Active Cell to the new (child) Active Cell. Linking is assisted by the ActiveCellQueue to find the least cost/resistance paths. 
+The linking algorithm is embedded within the spreading functions of the MPG algorithm. When an Active Cell spreads a link map creates a connection between the parent Active Cell to the new (child) Active Cell. Linking is assisted by the queue when finding the least-cost paths. 
 
-## Technical details
+## Technical reference to the MPG engine written in C++
 
-### Terminologies
+The following is intended to provide an overview of the C++ engine provided by the package that implements the MPG algorithm. It may be useful for those who wish to implement MPG extraction in other programming languages. Reading and interpretation of this section is not required for the use of `grainscape` in R. An interface to this code has been abstracted to R functions using the `Rcpp` package.
+
+### Terminology
 
 - *Cell:* A box or element in a map.
 - *Active Cell:* A type of cell that is currently being evaluated. It refers to the child cell mentioned above. 
-- *Time:* This could mean iterations. Time is used due to Andrew Fall's use of the term in his forest fire analogy.
+- *Time:* An index of the interation.
 - *Object:* An instance of a certain data type, class, or data structure (*i.e.*, `Cell c`, `c` then is an object of type `Cell`).
 
 -----
@@ -240,5 +227,3 @@ Note that the current Engine has two lines of code that are meant for interfacin
 In order to make the Engine run with any programming or scripting language, remove those two lines.
 One of them is an `include` statement for `Rcpp`, at the very top of source code, and the other is inside the `start` function, the first line inside the `while` loop.
 Those two lines are convenient for R users when they want to interrupt or stop the MPG algorithm safely, without crashing their console and possibly losing their data.
-
-# References
