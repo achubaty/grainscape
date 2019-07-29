@@ -63,7 +63,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">grainscape</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.0</span>
       </span>
     </div>
 
@@ -86,7 +86,7 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/MPG_algorithm.html">Calculating the Minimum Planar Graph and generating Voronoi tesselations</a>
+      <a href="../articles/MPG_algorithm.html">Calculating the minimum planar graph and generating Voronoi tessellations</a>
     </li>
     <li>
       <a href="../articles/grainscape_vignette.html">Modelling, visualization and analysis with the `grainscape` package</a>
@@ -202,12 +202,12 @@ Filtering can help in both cases.</p>
 <span class='co'>## Compare to removal of patches greater than or equal to 40 cells in size!</span>
 <span class='no'>filteredPatch</span> <span class='kw'>&lt;-</span> <span class='fu'>patchFilter</span>(<span class='no'>tinyCost</span> <span class='kw'>==</span> <span class='fl'>10</span>, <span class='kw'>cells</span> <span class='kw'>=</span> <span class='fl'>40</span>)
 <span class='no'>tinyPatchMPG</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='MPG.html'>MPG</a></span>(<span class='kw'>cost</span> <span class='kw'>=</span> <span class='no'>tinyCost</span>, <span class='kw'>patch</span> <span class='kw'>=</span> <span class='no'>filteredPatch</span>)
-<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>tinyPatchMPG</span>)</div><div class='img'><img src='patchFilter-2.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>tinyPatchMPG</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Raster pixels are placed at uneven horizontal intervals and will be shifted. Consider using geom_tile() instead.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Raster pixels are placed at uneven vertical intervals and will be shifted. Consider using geom_tile() instead.</span></div><div class='img'><img src='patchFilter-2.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'>## Use a rook/castle 4-direction case rather than the queen 8-direction case</span>
 <span class='co'>## to identify neighbouring cells in a patch</span>
 <span class='no'>filteredPatch</span> <span class='kw'>&lt;-</span> <span class='fu'>patchFilter</span>(<span class='no'>tinyCost</span> <span class='kw'>==</span> <span class='fl'>10</span>, <span class='kw'>cells</span> <span class='kw'>=</span> <span class='fl'>40</span>, <span class='kw'>directions</span> <span class='kw'>=</span> <span class='fl'>4</span>)
 <span class='no'>tinyPatchMPG</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='MPG.html'>MPG</a></span>(<span class='kw'>cost</span> <span class='kw'>=</span> <span class='no'>tinyCost</span>, <span class='kw'>patch</span> <span class='kw'>=</span> <span class='no'>filteredPatch</span>)
-<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>tinyPatchMPG</span>)</div><div class='img'><img src='patchFilter-3.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>tinyPatchMPG</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Raster pixels are placed at uneven horizontal intervals and will be shifted. Consider using geom_tile() instead.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Raster pixels are placed at uneven vertical intervals and will be shifted. Consider using geom_tile() instead.</span></div><div class='img'><img src='patchFilter-3.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

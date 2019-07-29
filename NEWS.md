@@ -1,7 +1,7 @@
 Known issues: https://github.com/achubaty/grainscape/issues
 
-version 0.3.0.9000
-==================
+version 0.4.0
+=============
 * reimplement an algorithm to calculate the minimum planar graph using C++;
   no longer relies on SELES binary and is now cross-platform.
 * use updated `igraph` functions internally

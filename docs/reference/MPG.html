@@ -65,7 +65,7 @@ Both patch-based and lattice MPGs can be extracted." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">grainscape</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.0</span>
       </span>
     </div>
 
@@ -88,7 +88,7 @@ Both patch-based and lattice MPGs can be extracted." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/MPG_algorithm.html">Calculating the Minimum Planar Graph and generating Voronoi tesselations</a>
+      <a href="../articles/MPG_algorithm.html">Calculating the minimum planar graph and generating Voronoi tessellations</a>
     </li>
     <li>
       <a href="../articles/grainscape_vignette.html">Modelling, visualization and analysis with the `grainscape` package</a>
@@ -376,7 +376,7 @@ at multiple spatial scales in landscape genetics. Molecular Ecology 21:3996-4009
 <span class='co'>## Find the mean patch area (see igraph manual for use of V() and E())</span>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/mean'>mean</a></span>(<span class='kw pkg'>igraph</span><span class='kw ns'>::</span><span class='fu'><a href='https://www.rdocumentation.org/packages/igraph/topics/V'>V</a></span>(<span class='no'>tinyPatchMPG</span>@<span class='kw'>mpg</span>)$<span class='no'>patchArea</span>)</div><div class='output co'>#&gt; [1] 21.67442</div><div class='input'>
 <span class='co'>## Quick visualization of the MPG</span>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/raster/topics/plot'>plot</a></span>(<span class='no'>tinyPatchMPG</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"grey"</span>, <span class='st'>"black"</span>), <span class='kw'>legend</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='img'><img src='MPG-1.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='fu'><a href='https://www.rdocumentation.org/packages/raster/topics/plot'>plot</a></span>(<span class='no'>tinyPatchMPG</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"grey"</span>, <span class='st'>"black"</span>), <span class='kw'>legend</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Raster pixels are placed at uneven horizontal intervals and will be shifted. Consider using geom_tile() instead.</span></div><div class='img'><img src='MPG-1.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'>## Additional graph extraction scenarios</span>
 <span class='co'>## Produce a lattice MPG where focal points are spaced 10 cells apart</span>
 <span class='no'>tinyLatticeMPG</span> <span class='kw'>&lt;-</span> <span class='fu'>MPG</span>(<span class='kw'>cost</span> <span class='kw'>=</span> <span class='no'>tinyCost</span>, <span class='kw'>patch</span> <span class='kw'>=</span> <span class='fl'>10</span>)
