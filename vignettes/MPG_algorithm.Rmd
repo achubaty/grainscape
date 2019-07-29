@@ -50,7 +50,7 @@ The MPG algorithm has the following general steps. These are represented in more
 4. The cells that have been recently spread in to become new Active Cells.
 5. Repeat.
 
-![Overview of the MPG algorthim.](figure_HabConnFlowchart.jpg){ height=90% }
+![Overview of the MPG algorithm.](figure_HabConnFlowchart.jpg){ height=90% }
 
 The linking algorithm is embedded within the spreading functions of the MPG algorithm. When an Active Cell spreads a link map creates a connection between the parent Active Cell to the new (child) Active Cell. Linking is assisted by the queue when finding the least-cost paths. 
 
