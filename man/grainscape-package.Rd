@@ -66,7 +66,7 @@ Hijmans, R.J. and J. van Etten. (2016). raster: Geographic analysis and modeling
 with raster data. R package version 2.5-8, \url{https://CRAN.R-project.org/package=raster}.
 
 Pebesma, E.J. and R.S. Bivand. (2005). Classes and methods for spatial data in R.
-R News 5 (2), \url{http://cran.r-project.org/doc/Rnews/}.
+R News 5 (2), \url{https://cran.r-project.org/doc/Rnews/}.
 }
 \seealso{
 Useful links:
