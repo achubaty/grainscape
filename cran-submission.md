@@ -27,10 +27,11 @@
     devtools::show_news()
     ```
 
-6. rebuild docs
+6. rebuild docs and ensure vignettes are compressed
 
    ```r
    devtools::document()
+   tools::compactPDF("vignettes", qpdf = "/usr/bin/qpdf", gs_quality = "ebook")
    ```
 
 7. update cran-comments (incl. versions tested)

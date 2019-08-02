@@ -15,11 +15,13 @@ fontsize: 11pt
 geometry: margin=1in
 vignette: >
   %\VignetteIndexEntry{grainscape modelling}
-  %\VignetteKeyword{connectivity}
-  %\VignetteKeyword{graph}
-  %\VignetteKeyword{habitat}
-  %\VignetteKeyword{network}
-  %\VignetteKeyword{spatial}
+  %\VignetteKeyword{grains of connectivity}
+  %\VignetteKeyword{habitat connectivity}
+  %\VignetteKeyword{landscape network}
+  %\VignetteKeyword{minimum planar graph}
+  %\VignetteKeyword{resistance surface}
+  %\VignetteKeyword{spatial graph}
+  %\VignetteKeyword{Voronoi tessellation}
   %\VignetteDepends{cowplot, igraph, raster, ggplot2}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
