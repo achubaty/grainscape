@@ -15,11 +15,17 @@ fontsize: 11pt
 geometry: margin=1in
 vignette: >
   %\VignetteIndexEntry{grainscape modelling}
-  %\VignetteKeyword{habitat connectivity, minimum planar graph, spatial graph, grains of connectivity, Voronoi tessellation, patch, resistance surface}
+  %\VignetteKeyword{connectivity}
+  %\VignetteKeyword{graph}
+  %\VignetteKeyword{habitat}
+  %\VignetteKeyword{network}
+  %\VignetteKeyword{spatial}
   %\VignetteDepends{cowplot, igraph, raster, ggplot2}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 ---
+
+<!-- be sure to use `tools::compactPDF("vignettes", qpdf = "/usr/bin/qpdf", gs_quality = "ebook")` to compact this vignette -->
 
 ```{r setup, include=FALSE}
 library(knitr)
