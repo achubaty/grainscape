@@ -5,9 +5,10 @@
 ^_pkgdown\.yml$
 ^appveyor\.yml$
 ^appveyor_cache\.txt$
-CONTRIBUTING\.md
-cran-comments\.md
-cran-submission\.md
+^CONTRIBUTING\.md$
+^CRAN-RELEASE$
+^cran-comments\.md$
+^cran-submission\.md$
 ^LICENSE$
 ^docs$
 ^revdep$
