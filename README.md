@@ -1,5 +1,6 @@
 # grainscape
 
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/grainscape)](https://cran.r-project.org/package=grainscape)
 [![Build Status](https://travis-ci.org/achubaty/grainscape.svg?branch=master)](https://travis-ci.org/achubaty/grainscape)
 [![Appveyor Build status](https://ci.appveyor.com/api/projects/status/f8eddi541e19h2kv/branch/master?svg=true)](https://ci.appveyor.com/project/achubaty/grainscape/branch/master)
 [![Coverage Status](https://coveralls.io/repos/github/achubaty/grainscape/badge.svg?branch=master)](https://coveralls.io/github/achubaty/grainscape?branch=master)
