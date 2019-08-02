@@ -97,23 +97,34 @@
 <div id="installation" class="section level3">
 <h3 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h3>
+<div id="from-cran" class="section level4">
+<h4 class="hasAnchor">
+<a href="#from-cran" class="anchor"></a>From CRAN</h4>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/install.packages">install.packages</a></span>(<span class="st">"grainscape"</span>)</a></code></pre></div>
+</div>
+<div id="from-github" class="section level4">
+<h4 class="hasAnchor">
+<a href="#from-github" class="anchor"></a>From GitHub</h4>
 <ol>
 <li>
-<p><strong>Install development libraries:</strong> building packages from source requires the appropriate development libraries for your operating system.</p>
+<p><strong>Install development libraries:</strong> building packages from source requires the appropriate development libraries for your operating system. See <a href="https://support.rstudio.com/hc/en-us/articles/200486498-Package-Development-Prerequisites">here</a> for more details.</p>
 <ul>
-<li><p><em>Windows:</em> install <a href="http://cran.r-project.org/bin/windows/Rtools/">Rtools</a>.</p></li>
-<li><p><em>macOS:</em> install Xcode commandline tools from the terminal: <code>xcode-select install</code>.</p></li>
-<li><p><em>Debian/Ubuntu Linux:</em> ensure <code>r-base-dev</code> is installed.</p></li>
+<li>
+<em>Windows:</em> install <a href="https://cran.r-project.org/bin/windows/Rtools/">Rtools</a>.</li>
+<li>
+<em>macOS:</em> install Xcode commandline tools from the terminal: <code>xcode-select install</code>.</li>
+<li>
+<em>Debian/Ubuntu Linux:</em> ensure <code>r-base-dev</code> is installed.</li>
 </ul>
-<p>See <a href="https://support.rstudio.com/hc/en-us/articles/200486498-Package-Development-Prerequisites">here</a> for more details.</p>
 </li>
 <li>
 <p><strong>Install from GitHub:</strong></p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="co">#install.packages("devtools")</span></a>
-<a class="sourceLine" id="cb1-2" title="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(<span class="st">"devtools"</span>)</a>
-<a class="sourceLine" id="cb1-3" title="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/devtools/topics/reexports">install_github</a></span>(<span class="st">"achubaty/grainscape"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="co">#install.packages("devtools")</span></a>
+<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(<span class="st">"devtools"</span>)</a>
+<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/devtools/topics/reexports">install_github</a></span>(<span class="st">"achubaty/grainscape"</span>)</a></code></pre></div>
 </li>
 </ol>
+</div>
 </div>
 <div id="reporting-bugs" class="section level3">
 <h3 class="hasAnchor">
@@ -152,6 +163,7 @@
   <div class="dev-status">
 <h2>Dev status</h2>
 <ul class="list-unstyled">
+<li><a href="https://cran.r-project.org/package=grainscape"><img src="http://www.r-pkg.org/badges/version/grainscape" alt="CRAN_Status_Badge"></a></li>
 <li><a href="https://travis-ci.org/achubaty/grainscape"><img src="https://travis-ci.org/achubaty/grainscape.svg?branch=master" alt="Build Status"></a></li>
 <li><a href="https://ci.appveyor.com/project/achubaty/grainscape/branch/master"><img src="https://ci.appveyor.com/api/projects/status/f8eddi541e19h2kv/branch/master?svg=true" alt="Appveyor Build status"></a></li>
 <li><a href="https://coveralls.io/github/achubaty/grainscape?branch=master"><img src="https://coveralls.io/repos/github/achubaty/grainscape/badge.svg?branch=master" alt="Coverage Status"></a></li>

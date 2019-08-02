@@ -118,28 +118,51 @@
       <small>Source: <a href='https://github.com/achubaty/grainscape/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
-    <div id="version-040" class="section level1">
+    <div id="version-0-4-0" class="section level1">
 <h1 class="page-header">
-<a href="#version-040" class="anchor"></a>version 0.4.0</h1>
+<a href="#version-0-4-0" class="anchor"></a>version 0.4.0</h1>
+<div id="dependency-changes" class="section level2">
+<h2 class="hasAnchor">
+<a href="#dependency-changes" class="anchor"></a>Dependency changes</h2>
+<ul>
+<li>Requires R &gt;= 3.5</li>
+<li>remove <code>rgeos</code> dependency and deprecate use of <code>sp</code> argument to many functions (<a href='https://github.com/achubaty/grainscape/issues/38'>#38</a>)</li>
+</ul>
+</div>
+<div id="bugfixes" class="section level2">
+<h2 class="hasAnchor">
+<a href="#bugfixes" class="anchor"></a>Bugfixes</h2>
+<ul>
+<li>numerous bug fixes</li>
+</ul>
+</div>
+<div id="new-features-enhancements" class="section level2">
+<h2 class="hasAnchor">
+<a href="#new-features-enhancements" class="anchor"></a>New features &amp; enhancements</h2>
 <ul>
 <li>reimplement an algorithm to calculate the minimum planar graph using C++; no longer relies on SELES binary and is now cross-platform.</li>
 <li>use updated <code>igraph</code> functions internally</li>
 <li>updated vignette / tutorial (<a href='https://github.com/achubaty/grainscape/issues/5'>#5</a>)</li>
-<li>Renamed functions to remove <code>gs</code> and <code>gsGOC</code> prefixes. Old names have been deprecated. (<a href='https://github.com/achubaty/grainscape/issues/10'>#10</a>)</li>
-<li>removed <code><a href="../reference/grainscape-defunct.html">gsMPGstitch()</a></code> as it was unreliable</li>
+<li>renamed functions to remove <code>gs</code> and <code>gsGOC</code> prefixes; old names have been deprecated and will be removed in a future release (<a href='https://github.com/achubaty/grainscape/issues/10'>#10</a>)</li>
 <li>
 <code><a href="../reference/MPG.html">MPG()</a></code> can now handle large rasters</li>
 <li>use S4 classes and methods (<a href='https://github.com/achubaty/grainscape/issues/3'>#3</a>, <a href='https://github.com/achubaty/grainscape/issues/19'>#19</a>)</li>
 <li>improved plotting using <code>ggplot2</code> by default (<a href='https://github.com/achubaty/grainscape/issues/22'>#22</a>, <a href='https://github.com/achubaty/grainscape/issues/47'>#47</a>)</li>
 <li>new functions <code><a href="../reference/export.html">export()</a></code> (<a href='https://github.com/achubaty/grainscape/issues/39'>#39</a>) and <code><a href="../reference/patchFilter.html">patchFilter()</a></code> (<a href='https://github.com/achubaty/grainscape/issues/40'>#40</a>)</li>
-<li>remove <code>rgeos</code> dependency and deprecate use of <code>sp</code> argument to many functions (<a href='https://github.com/achubaty/grainscape/issues/38'>#38</a>)</li>
 <li>fix typos (<a href='https://github.com/achubaty/grainscape/issues/58'>#58</a>, <a href='https://github.com/jsta'>@jsta</a>)</li>
-<li>numerous bug fixes</li>
 </ul>
 </div>
-    <div id="version-030" class="section level1">
+<div id="removed-features" class="section level2">
+<h2 class="hasAnchor">
+<a href="#removed-features" class="anchor"></a>Removed features</h2>
+<ul>
+<li>removed <code><a href="../reference/grainscape-defunct.html">gsMPGstitch()</a></code> as it was unreliable</li>
+</ul>
+</div>
+</div>
+    <div id="version-0-3-0" class="section level1">
 <h1 class="page-header">
-<a href="#version-030" class="anchor"></a>version 0.3.0</h1>
+<a href="#version-0-3-0" class="anchor"></a>version 0.3.0</h1>
 <ul>
 <li>original version from R-forge (<a href="http://grainscape.r-forge.r-project.org/" class="uri">http://grainscape.r-forge.r-project.org/</a>)</li>
 <li>uses a SELES binary to calculate the minimum planar graph (Windows only)</li>
@@ -151,8 +174,8 @@
     <div id="tocnav">
       <h2>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
-        <li><a href="#version-040">0.4.0</a></li>
-        <li><a href="#version-030">0.3.0</a></li>
+        <li><a href="#version-0-4-0">0.4.0</a></li>
+        <li><a href="#version-0-3-0">0.3.0</a></li>
       </ul>
     </div>
   </div>
