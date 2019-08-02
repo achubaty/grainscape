@@ -87,9 +87,8 @@ Authors:
 }
 
 }
-\keyword{connectivity,}
+\keyword{connectivity}
 \keyword{graph}
-\keyword{graph,}
 \keyword{minimum}
 \keyword{planar}
 \keyword{spatial}

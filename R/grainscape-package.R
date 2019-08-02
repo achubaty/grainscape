@@ -72,7 +72,9 @@
 #' R News 5 (2), \url{https://cran.r-project.org/doc/Rnews/}.
 #'
 #' @name grainscape-package
-#' @keywords connectivity, minimum planar graph, spatial graph
+#' @keywords connectivity
+#' @keywords minimum planar graph
+#' @keywords spatial graph
 #'
 "_PACKAGE"
 
