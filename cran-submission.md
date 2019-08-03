@@ -11,6 +11,14 @@
     * <https://ci.appveyor.com/project/achubaty/grainscape/history>
     * <https://travis-ci.org/achubaty/grainscape/builds>
 
+2. check code formatting and cleanup as needed
+
+    ```r
+    #install_github("jimhester/lintr")
+    library(lintr)
+    lint_package()
+    ```
+
 3. ensure passing win-builder olrelease, release, and devel
 
     ```r
