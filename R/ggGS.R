@@ -77,61 +77,61 @@
 #' @seealso \code{\link{MPG}}, \code{\link{GOC}}
 #'
 #' @examples
-#' \dontrun{
-#' library(ggplot2)
+#' if (interactive()) {
+#'   library(ggplot2)
 #'
-#' ## Load raster landscape
-#' tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape"))
+#'   ## Load raster landscape
+#'   tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape"))
 #'
-#' ## Create a resistance surface from a raster using an is-becomes reclassification
-#' tinyCost <- reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
+#'   ## Create a resistance surface from a raster using an is-becomes reclassification
+#'   tinyCost <- reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
 #'
-#' ## Produce a patch-based MPG where patches are resistance features=1
-#' tinyPatchMPG <- MPG(cost = tinyCost, patch = tinyCost == 1)
+#'   ## Produce a patch-based MPG where patches are resistance features=1
+#'   tinyPatchMPG <- MPG(cost = tinyCost, patch = tinyCost == 1)
 #'
-#' ## Extract a representative subset of 5 grains of connectivity
-#' tinyPatchGOC <- GOC(tinyPatchMPG, nThresh = 5)
+#'   ## Extract a representative subset of 5 grains of connectivity
+#'   tinyPatchGOC <- GOC(tinyPatchMPG, nThresh = 5)
 #'
-#' ## Plot the patches in a minimum planar graph
-#' theme_set(theme_grainscape())
-#' ggplot() +
-#'   geom_raster(data = ggGS(tinyPatchMPG, "patchId"),
-#'               aes(x = x, y = y, fill = value))
+#'   ## Plot the patches in a minimum planar graph
+#'   theme_set(theme_grainscape())
+#'   ggplot() +
+#'     geom_raster(data = ggGS(tinyPatchMPG, "patchId"),
+#'                 aes(x = x, y = y, fill = value))
 #'
-#' ## Plot the grain polygons in a grain of connectivity
-#' ggplot() +
-#'   geom_raster(data = ggGS(grain(tinyPatchGOC, 3), "voronoi"),
-#'               aes(x = x, y = y, fill = value))
+#'   ## Plot the grain polygons in a grain of connectivity
+#'   ggplot() +
+#'     geom_raster(data = ggGS(grain(tinyPatchGOC, 3), "voronoi"),
+#'                 aes(x = x, y = y, fill = value))
 #'
-#' ## Plot the grain polygon boundaries
-#' ggplot() +
-#'   geom_raster(data = ggGS(grain(tinyPatchGOC, 3), "vorBound"),
-#'               aes(x = x, y = y, fill = value))
+#'   ## Plot the grain polygon boundaries
+#'   ggplot() +
+#'     geom_raster(data = ggGS(grain(tinyPatchGOC, 3), "vorBound"),
+#'                 aes(x = x, y = y, fill = value))
 #'
-#' ## Plot the patches and perimeter links of a minimum planar graph
-#' ggplot() +
-#'   geom_raster(data = ggGS(tinyPatchMPG, "patchId"),
-#'               aes(x = x, y = y, fill = value)) +
-#'   geom_segment(data = ggGS(tinyPatchMPG, "links"),
-#'                aes(x = x1p, y = y1p, xend = x2p, yend = y2p))
+#'   ## Plot the patches and perimeter links of a minimum planar graph
+#'   ggplot() +
+#'     geom_raster(data = ggGS(tinyPatchMPG, "patchId"),
+#'                 aes(x = x, y = y, fill = value)) +
+#'     geom_segment(data = ggGS(tinyPatchMPG, "links"),
+#'                  aes(x = x1p, y = y1p, xend = x2p, yend = y2p))
 #'
-#' ## Plot the patches and linear representations of the perimeter links
-#' ## of a minimum planar graph
-#' ggplot() +
-#'   geom_raster(data = ggGS(tinyPatchMPG, "patchId"),
-#'                aes(x = x, y = y, fill = value)) +
-#'   geom_segment(data = ggGS(tinyPatchMPG, "links"),
-#'                aes(x = x1p, y = y1p, xend = x2p, yend = y2p))
+#'   ## Plot the patches and linear representations of the perimeter links
+#'   ## of a minimum planar graph
+#'   ggplot() +
+#'     geom_raster(data = ggGS(tinyPatchMPG, "patchId"),
+#'                  aes(x = x, y = y, fill = value)) +
+#'     geom_segment(data = ggGS(tinyPatchMPG, "links"),
+#'                  aes(x = x1p, y = y1p, xend = x2p, yend = y2p))
 #'
-#' ## Plot the nodes and links of a grains of connectivity network
-#' ## superimposed over the grain polygons
-#' focalGrain <- grain(tinyPatchGOC, 3)
-#' ggplot() +
-#'   geom_raster(data = ggGS(focalGrain, "vorBound"),
-#'               aes(x = x, y = y, fill = value)) +
-#'   geom_point(data = ggGS(focalGrain, "nodes"), aes(x = x, y = y)) +
-#'   geom_segment(data = ggGS(focalGrain, "links"),
-#'                aes(x = x1, y = y1, xend = x2, yend = y2))
+#'   ## Plot the nodes and links of a grains of connectivity network
+#'   ## superimposed over the grain polygons
+#'   focalGrain <- grain(tinyPatchGOC, 3)
+#'   ggplot() +
+#'     geom_raster(data = ggGS(focalGrain, "vorBound"),
+#'                 aes(x = x, y = y, fill = value)) +
+#'     geom_point(data = ggGS(focalGrain, "nodes"), aes(x = x, y = y)) +
+#'     geom_segment(data = ggGS(focalGrain, "links"),
+#'                  aes(x = x1, y = y1, xend = x2, yend = y2))
 #' }
 #' @export
 #' @rdname ggGS
