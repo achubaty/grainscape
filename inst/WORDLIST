@@ -1,6 +1,7 @@
 1D
 2013a
 2013b
+294X
 2D
 achubaty
 ActiveCell
@@ -26,6 +27,7 @@ coords
 Csardi
 darkgreen
 doesn
+doi
 Ecography
 epath
 et
@@ -55,7 +57,6 @@ gocthresh
 grey70
 grey90
 Hijmans
-http
 https
 ifelse
 igraph
@@ -99,6 +100,7 @@ rgeos
 Rtools
 Rundel
 runif
+s10021
 S4
 scalable
 scalesaggregation
