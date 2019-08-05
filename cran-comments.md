@@ -3,7 +3,10 @@
 This is a new package submission providing tools for efficient modelling of landscape connectivity, habitat, and protected areas.
 We have included an extensive introductory vignette illustrating the use of the package (modelling, analysis, and visualizations) in `vignettes/grainscape_vignette.Rmd`.
 
-I have fixud the NOTE regarding keywords. Apologies for this oversight.
+I have fixed the NOTE regarding keywords. Apologies for this oversight.
+
+I have added citations with DOIs to the DESCRIPTION as requested.
+I have replaced `dontrun{}` in several plotting examples with `if (interactive()) {}` to ensure they don't run during automated tests.
 
 ## Test environments
 
