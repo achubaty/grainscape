@@ -132,39 +132,45 @@
 </ul>
 </li>
 <li>
+<p>check code formatting and cleanup as needed</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="co">#install_github("jimhester/lintr")</span></a>
+<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(lintr)</a>
+<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/lintr/topics/lint_package">lint_package</a></span>()</a></code></pre></div>
+</li>
+<li>
 <p>ensure passing win-builder olrelease, release, and devel</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">check_win_oldrelease</span>(<span class="dt">args =</span> <span class="st">"--compact-vignettes=both"</span>)</a>
-<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="kw">check_win_release</span>(<span class="dt">args =</span> <span class="st">"--compact-vignettes=both"</span>)</a>
-<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="kw">check_win_devel</span>(<span class="dt">args =</span> <span class="st">"--compact-vignettes=both"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw">check_win_oldrelease</span>(<span class="dt">args =</span> <span class="st">"--compact-vignettes=both"</span>)</a>
+<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="kw">check_win_release</span>(<span class="dt">args =</span> <span class="st">"--compact-vignettes=both"</span>)</a>
+<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="kw">check_win_devel</span>(<span class="dt">args =</span> <span class="st">"--compact-vignettes=both"</span>)</a></code></pre></div>
 </li>
 <li><p>bump version number in DESCRIPTION (use non-devel suffix – no <code>.9000</code>)</p></li>
 <li>
 <p>update <code>NEWS.md</code></p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">devtools<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/devtools/topics/show_news">show_news</a></span>()</a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">devtools<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/devtools/topics/show_news">show_news</a></span>()</a></code></pre></div>
 </li>
 <li>
 <p>rebuild docs and ensure vignettes are compressed</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">devtools<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/devtools/topics/document">document</a></span>()</a>
-<a class="sourceLine" id="cb4-2" data-line-number="2">tools<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/tools/topics/compactPDF">compactPDF</a></span>(<span class="st">"vignettes"</span>, <span class="dt">qpdf =</span> <span class="st">"/usr/bin/qpdf"</span>, <span class="dt">gs_quality =</span> <span class="st">"ebook"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">devtools<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/devtools/topics/document">document</a></span>()</a>
+<a class="sourceLine" id="cb5-2" data-line-number="2">tools<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/tools/topics/compactPDF">compactPDF</a></span>(<span class="st">"vignettes"</span>, <span class="dt">qpdf =</span> <span class="st">"/usr/bin/qpdf"</span>, <span class="dt">gs_quality =</span> <span class="st">"ebook"</span>)</a></code></pre></div>
 </li>
 <li><p>update cran-comments (incl. versions tested)</p></li>
 <li>
 <p>run spell checks</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">spelling<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/spelling/topics/spell_check_package">spell_check_package</a></span>()</a>
-<a class="sourceLine" id="cb5-2" data-line-number="2">spelling<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/spelling/topics/wordlist">update_wordlist</a></span>()</a>
-<a class="sourceLine" id="cb5-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb5-4" data-line-number="4"><span class="co">## see also tests/spelling.R</span></a></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">spelling<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/spelling/topics/spell_check_package">spell_check_package</a></span>()</a>
+<a class="sourceLine" id="cb6-2" data-line-number="2">spelling<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/spelling/topics/wordlist">update_wordlist</a></span>()</a>
+<a class="sourceLine" id="cb6-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb6-4" data-line-number="4"><span class="co">## see also tests/spelling.R</span></a></code></pre></div>
 </li>
 <li><p>run revdep checks (see <code>revdep/check.R</code>)</p></li>
 <li><p>merge <code>development</code> branch into <code>master</code></p></li>
 <li><p>remove <code>Remotes</code> from <code>DESCRIPTION</code></p></li>
 <li>
 <p>rebuild package website (<code>master</code> branch)</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">pkgdown<span class="op">::</span><span class="kw"><a href="https://pkgdown.r-lib.org/reference/build_site.html">build_site</a></span>()</a></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">pkgdown<span class="op">::</span><span class="kw"><a href="https://pkgdown.r-lib.org/reference/build_site.html">build_site</a></span>()</a></code></pre></div>
 </li>
 <li>
 <p>submit to CRAN</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">devtools<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/devtools/topics/release">release</a></span>(<span class="dt">args =</span> <span class="st">"--compact-vignettes=both"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">devtools<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/devtools/topics/release">release</a></span>(<span class="dt">args =</span> <span class="st">"--compact-vignettes=both"</span>)</a></code></pre></div>
 </li>
 </ol>
 </div>

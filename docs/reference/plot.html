@@ -232,42 +232,42 @@ It is the only option available with <code>corridor</code> objects and the defau
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><span class='co'># NOT RUN {</span>
-<span class='co'>## Load raster landscape</span>
-<span class='no'>tiny</span> <span class='kw'>&lt;-</span> <span class='fu'>raster</span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.file'>system.file</a></span>(<span class='st'>"extdata/tiny.asc"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"grainscape"</span>))
+    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/interactive'>interactive</a></span>()) {
+  <span class='co'>## Load raster landscape</span>
+  <span class='no'>tiny</span> <span class='kw'>&lt;-</span> <span class='fu'>raster</span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.file'>system.file</a></span>(<span class='st'>"extdata/tiny.asc"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"grainscape"</span>))
 
-<span class='co'>## Create a resistance surface from a raster using an is-becomes reclassification</span>
-<span class='no'>tinyCost</span> <span class='kw'>&lt;-</span> <span class='fu'>reclassify</span>(<span class='no'>tiny</span>, <span class='kw'>rcl</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/cbind'>cbind</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>2</span>, <span class='fl'>3</span>, <span class='fl'>4</span>), <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>5</span>, <span class='fl'>10</span>, <span class='fl'>12</span>)))
+  <span class='co'>## Create a resistance surface from a raster using an is-becomes reclassification</span>
+  <span class='no'>tinyCost</span> <span class='kw'>&lt;-</span> <span class='fu'>reclassify</span>(<span class='no'>tiny</span>, <span class='kw'>rcl</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/cbind'>cbind</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>2</span>, <span class='fl'>3</span>, <span class='fl'>4</span>), <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>5</span>, <span class='fl'>10</span>, <span class='fl'>12</span>)))
 
-<span class='co'>## Produce a patch-based MPG where patches are resistance features=1</span>
-<span class='no'>tinyPatchMPG</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='MPG.html'>MPG</a></span>(<span class='kw'>cost</span> <span class='kw'>=</span> <span class='no'>tinyCost</span>, <span class='kw'>patch</span> <span class='kw'>=</span> (<span class='no'>tinyCost</span> <span class='kw'>==</span> <span class='fl'>1</span>))
+  <span class='co'>## Produce a patch-based MPG where patches are resistance features=1</span>
+  <span class='no'>tinyPatchMPG</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='MPG.html'>MPG</a></span>(<span class='kw'>cost</span> <span class='kw'>=</span> <span class='no'>tinyCost</span>, <span class='kw'>patch</span> <span class='kw'>=</span> (<span class='no'>tinyCost</span> <span class='kw'>==</span> <span class='fl'>1</span>))
 
-<span class='co'>## Produce a grains of connectivity model</span>
-<span class='no'>tinyPatchGOC</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='GOC.html'>GOC</a></span>(<span class='no'>tinyPatchMPG</span>, <span class='kw'>nThresh</span> <span class='kw'>=</span> <span class='fl'>5</span>)
+  <span class='co'>## Produce a grains of connectivity model</span>
+  <span class='no'>tinyPatchGOC</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='GOC.html'>GOC</a></span>(<span class='no'>tinyPatchMPG</span>, <span class='kw'>nThresh</span> <span class='kw'>=</span> <span class='fl'>5</span>)
 
-<span class='co'>## MPG and showing simplified links among the perimeters of patches</span>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>tinyPatchMPG</span>)
+  <span class='co'>## MPG and showing simplified links among the perimeters of patches</span>
+  <span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>tinyPatchMPG</span>)
 
-<span class='co'>## MPG showing links among the nodes of connected patches</span>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>tinyPatchMPG</span>, <span class='kw'>quick</span> <span class='kw'>=</span> <span class='st'>"network"</span>)
+  <span class='co'>## MPG showing links among the nodes of connected patches</span>
+  <span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>tinyPatchMPG</span>, <span class='kw'>quick</span> <span class='kw'>=</span> <span class='st'>"network"</span>)
 
-<span class='co'>## MPG showing the shortest paths between patches actually used to</span>
-<span class='co'>## to calculate link weight values</span>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>tinyPatchMPG</span>, <span class='kw'>quick</span> <span class='kw'>=</span> <span class='st'>"mpgPlot"</span>)
+  <span class='co'>## MPG showing the shortest paths between patches actually used to</span>
+  <span class='co'>## to calculate link weight values</span>
+  <span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>tinyPatchMPG</span>, <span class='kw'>quick</span> <span class='kw'>=</span> <span class='st'>"mpgPlot"</span>)
 
-<span class='co'>## A grain of connectivity network plot with Voronoi boundaries</span>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='fu'><a href='grain.html'>grain</a></span>(<span class='no'>tinyPatchGOC</span>, <span class='fl'>3</span>), <span class='kw'>quick</span> <span class='kw'>=</span> <span class='st'>"grainPlot"</span>)
+  <span class='co'>## A grain of connectivity network plot with Voronoi boundaries</span>
+  <span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='fu'><a href='grain.html'>grain</a></span>(<span class='no'>tinyPatchGOC</span>, <span class='fl'>3</span>), <span class='kw'>quick</span> <span class='kw'>=</span> <span class='st'>"grainPlot"</span>)
 
-<span class='co'>## Capture plot output for further processing with ggplot</span>
-<span class='no'>g</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>tinyPatchMPG</span>, <span class='kw'>print</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>theme</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
-<span class='no'>g</span> <span class='kw'>&lt;-</span> <span class='no'>g</span> + <span class='fu'>theme_minimal</span>() + <span class='fu'>ggtitle</span>(<span class='st'>"Minimum planar graph"</span>) +
-       <span class='fu'>theme</span>(<span class='kw'>plot.title</span> <span class='kw'>=</span> <span class='fu'>element_text</span>(<span class='kw'>size</span><span class='kw'>=</span><span class='fl'>20</span>, <span class='kw'>hjust</span> <span class='kw'>=</span> <span class='fl'>0.5</span>)) +
-       <span class='fu'>theme</span>(<span class='kw'>legend.position</span> <span class='kw'>=</span> <span class='st'>"none"</span>) +
-       <span class='fu'>xlab</span>(<span class='st'>"Easting"</span>) + <span class='fu'>ylab</span>(<span class='st'>"Northing"</span>)
-<span class='no'>g</span>
-<span class='co'>## To change aesthetics it is best to build the plot from scratch</span>
-<span class='co'>## using grainscape::ggGS(). See examples therein.</span>
-<span class='co'># }</span></pre>
+  <span class='co'>## Capture plot output for further processing with ggplot</span>
+  <span class='no'>g</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>tinyPatchMPG</span>, <span class='kw'>print</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>theme</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+  <span class='no'>g</span> <span class='kw'>&lt;-</span> <span class='no'>g</span> + <span class='fu'>theme_minimal</span>() + <span class='fu'>ggtitle</span>(<span class='st'>"Minimum planar graph"</span>) +
+         <span class='fu'>theme</span>(<span class='kw'>plot.title</span> <span class='kw'>=</span> <span class='fu'>element_text</span>(<span class='kw'>size</span><span class='kw'>=</span><span class='fl'>20</span>, <span class='kw'>hjust</span> <span class='kw'>=</span> <span class='fl'>0.5</span>)) +
+         <span class='fu'>theme</span>(<span class='kw'>legend.position</span> <span class='kw'>=</span> <span class='st'>"none"</span>) +
+         <span class='fu'>xlab</span>(<span class='st'>"Easting"</span>) + <span class='fu'>ylab</span>(<span class='st'>"Northing"</span>)
+  <span class='no'>g</span>
+  <span class='co'>## To change aesthetics it is best to build the plot from scratch</span>
+  <span class='co'>## using grainscape::ggGS(). See examples therein.</span>
+}</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

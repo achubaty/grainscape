@@ -222,62 +222,62 @@ is supplied.</p></td>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><span class='co'># NOT RUN {</span>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>ggplot2</span>)
+    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/interactive'>interactive</a></span>()) {
+  <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>ggplot2</span>)
 
-<span class='co'>## Load raster landscape</span>
-<span class='no'>tiny</span> <span class='kw'>&lt;-</span> <span class='fu'>raster</span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.file'>system.file</a></span>(<span class='st'>"extdata/tiny.asc"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"grainscape"</span>))
+  <span class='co'>## Load raster landscape</span>
+  <span class='no'>tiny</span> <span class='kw'>&lt;-</span> <span class='fu'>raster</span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.file'>system.file</a></span>(<span class='st'>"extdata/tiny.asc"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"grainscape"</span>))
 
-<span class='co'>## Create a resistance surface from a raster using an is-becomes reclassification</span>
-<span class='no'>tinyCost</span> <span class='kw'>&lt;-</span> <span class='fu'>reclassify</span>(<span class='no'>tiny</span>, <span class='kw'>rcl</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/cbind'>cbind</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>2</span>, <span class='fl'>3</span>, <span class='fl'>4</span>), <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>5</span>, <span class='fl'>10</span>, <span class='fl'>12</span>)))
+  <span class='co'>## Create a resistance surface from a raster using an is-becomes reclassification</span>
+  <span class='no'>tinyCost</span> <span class='kw'>&lt;-</span> <span class='fu'>reclassify</span>(<span class='no'>tiny</span>, <span class='kw'>rcl</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/cbind'>cbind</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>2</span>, <span class='fl'>3</span>, <span class='fl'>4</span>), <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>5</span>, <span class='fl'>10</span>, <span class='fl'>12</span>)))
 
-<span class='co'>## Produce a patch-based MPG where patches are resistance features=1</span>
-<span class='no'>tinyPatchMPG</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='MPG.html'>MPG</a></span>(<span class='kw'>cost</span> <span class='kw'>=</span> <span class='no'>tinyCost</span>, <span class='kw'>patch</span> <span class='kw'>=</span> <span class='no'>tinyCost</span> <span class='kw'>==</span> <span class='fl'>1</span>)
+  <span class='co'>## Produce a patch-based MPG where patches are resistance features=1</span>
+  <span class='no'>tinyPatchMPG</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='MPG.html'>MPG</a></span>(<span class='kw'>cost</span> <span class='kw'>=</span> <span class='no'>tinyCost</span>, <span class='kw'>patch</span> <span class='kw'>=</span> <span class='no'>tinyCost</span> <span class='kw'>==</span> <span class='fl'>1</span>)
 
-<span class='co'>## Extract a representative subset of 5 grains of connectivity</span>
-<span class='no'>tinyPatchGOC</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='GOC.html'>GOC</a></span>(<span class='no'>tinyPatchMPG</span>, <span class='kw'>nThresh</span> <span class='kw'>=</span> <span class='fl'>5</span>)
+  <span class='co'>## Extract a representative subset of 5 grains of connectivity</span>
+  <span class='no'>tinyPatchGOC</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='GOC.html'>GOC</a></span>(<span class='no'>tinyPatchMPG</span>, <span class='kw'>nThresh</span> <span class='kw'>=</span> <span class='fl'>5</span>)
 
-<span class='co'>## Plot the patches in a minimum planar graph</span>
-<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/theme_get.html'>theme_set</a></span>(<span class='fu'><a href='theme_grainscape.html'>theme_grainscape</a></span>())
-<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>() +
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_tile.html'>geom_raster</a></span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='fu'>ggGS</span>(<span class='no'>tinyPatchMPG</span>, <span class='st'>"patchId"</span>),
-              <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>x</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>y</span>, <span class='kw'>fill</span> <span class='kw'>=</span> <span class='no'>value</span>))
+  <span class='co'>## Plot the patches in a minimum planar graph</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/theme_get.html'>theme_set</a></span>(<span class='fu'><a href='theme_grainscape.html'>theme_grainscape</a></span>())
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>() +
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_tile.html'>geom_raster</a></span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='fu'>ggGS</span>(<span class='no'>tinyPatchMPG</span>, <span class='st'>"patchId"</span>),
+                <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>x</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>y</span>, <span class='kw'>fill</span> <span class='kw'>=</span> <span class='no'>value</span>))
 
-<span class='co'>## Plot the grain polygons in a grain of connectivity</span>
-<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>() +
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_tile.html'>geom_raster</a></span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='fu'>ggGS</span>(<span class='fu'><a href='grain.html'>grain</a></span>(<span class='no'>tinyPatchGOC</span>, <span class='fl'>3</span>), <span class='st'>"voronoi"</span>),
-              <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>x</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>y</span>, <span class='kw'>fill</span> <span class='kw'>=</span> <span class='no'>value</span>))
+  <span class='co'>## Plot the grain polygons in a grain of connectivity</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>() +
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_tile.html'>geom_raster</a></span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='fu'>ggGS</span>(<span class='fu'><a href='grain.html'>grain</a></span>(<span class='no'>tinyPatchGOC</span>, <span class='fl'>3</span>), <span class='st'>"voronoi"</span>),
+                <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>x</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>y</span>, <span class='kw'>fill</span> <span class='kw'>=</span> <span class='no'>value</span>))
 
-<span class='co'>## Plot the grain polygon boundaries</span>
-<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>() +
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_tile.html'>geom_raster</a></span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='fu'>ggGS</span>(<span class='fu'><a href='grain.html'>grain</a></span>(<span class='no'>tinyPatchGOC</span>, <span class='fl'>3</span>), <span class='st'>"vorBound"</span>),
-              <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>x</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>y</span>, <span class='kw'>fill</span> <span class='kw'>=</span> <span class='no'>value</span>))
+  <span class='co'>## Plot the grain polygon boundaries</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>() +
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_tile.html'>geom_raster</a></span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='fu'>ggGS</span>(<span class='fu'><a href='grain.html'>grain</a></span>(<span class='no'>tinyPatchGOC</span>, <span class='fl'>3</span>), <span class='st'>"vorBound"</span>),
+                <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>x</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>y</span>, <span class='kw'>fill</span> <span class='kw'>=</span> <span class='no'>value</span>))
 
-<span class='co'>## Plot the patches and perimeter links of a minimum planar graph</span>
-<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>() +
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_tile.html'>geom_raster</a></span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='fu'>ggGS</span>(<span class='no'>tinyPatchMPG</span>, <span class='st'>"patchId"</span>),
-              <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>x</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>y</span>, <span class='kw'>fill</span> <span class='kw'>=</span> <span class='no'>value</span>)) +
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_segment.html'>geom_segment</a></span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='fu'>ggGS</span>(<span class='no'>tinyPatchMPG</span>, <span class='st'>"links"</span>),
-               <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>x1p</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>y1p</span>, <span class='kw'>xend</span> <span class='kw'>=</span> <span class='no'>x2p</span>, <span class='kw'>yend</span> <span class='kw'>=</span> <span class='no'>y2p</span>))
+  <span class='co'>## Plot the patches and perimeter links of a minimum planar graph</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>() +
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_tile.html'>geom_raster</a></span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='fu'>ggGS</span>(<span class='no'>tinyPatchMPG</span>, <span class='st'>"patchId"</span>),
+                <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>x</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>y</span>, <span class='kw'>fill</span> <span class='kw'>=</span> <span class='no'>value</span>)) +
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_segment.html'>geom_segment</a></span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='fu'>ggGS</span>(<span class='no'>tinyPatchMPG</span>, <span class='st'>"links"</span>),
+                 <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>x1p</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>y1p</span>, <span class='kw'>xend</span> <span class='kw'>=</span> <span class='no'>x2p</span>, <span class='kw'>yend</span> <span class='kw'>=</span> <span class='no'>y2p</span>))
 
-<span class='co'>## Plot the patches and linear representations of the perimeter links</span>
-<span class='co'>## of a minimum planar graph</span>
-<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>() +
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_tile.html'>geom_raster</a></span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='fu'>ggGS</span>(<span class='no'>tinyPatchMPG</span>, <span class='st'>"patchId"</span>),
-               <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>x</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>y</span>, <span class='kw'>fill</span> <span class='kw'>=</span> <span class='no'>value</span>)) +
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_segment.html'>geom_segment</a></span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='fu'>ggGS</span>(<span class='no'>tinyPatchMPG</span>, <span class='st'>"links"</span>),
-               <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>x1p</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>y1p</span>, <span class='kw'>xend</span> <span class='kw'>=</span> <span class='no'>x2p</span>, <span class='kw'>yend</span> <span class='kw'>=</span> <span class='no'>y2p</span>))
+  <span class='co'>## Plot the patches and linear representations of the perimeter links</span>
+  <span class='co'>## of a minimum planar graph</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>() +
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_tile.html'>geom_raster</a></span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='fu'>ggGS</span>(<span class='no'>tinyPatchMPG</span>, <span class='st'>"patchId"</span>),
+                 <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>x</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>y</span>, <span class='kw'>fill</span> <span class='kw'>=</span> <span class='no'>value</span>)) +
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_segment.html'>geom_segment</a></span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='fu'>ggGS</span>(<span class='no'>tinyPatchMPG</span>, <span class='st'>"links"</span>),
+                 <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>x1p</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>y1p</span>, <span class='kw'>xend</span> <span class='kw'>=</span> <span class='no'>x2p</span>, <span class='kw'>yend</span> <span class='kw'>=</span> <span class='no'>y2p</span>))
 
-<span class='co'>## Plot the nodes and links of a grains of connectivity network</span>
-<span class='co'>## superimposed over the grain polygons</span>
-<span class='no'>focalGrain</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='grain.html'>grain</a></span>(<span class='no'>tinyPatchGOC</span>, <span class='fl'>3</span>)
-<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>() +
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_tile.html'>geom_raster</a></span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='fu'>ggGS</span>(<span class='no'>focalGrain</span>, <span class='st'>"vorBound"</span>),
-              <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>x</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>y</span>, <span class='kw'>fill</span> <span class='kw'>=</span> <span class='no'>value</span>)) +
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='fu'>ggGS</span>(<span class='no'>focalGrain</span>, <span class='st'>"nodes"</span>), <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>x</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>y</span>)) +
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_segment.html'>geom_segment</a></span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='fu'>ggGS</span>(<span class='no'>focalGrain</span>, <span class='st'>"links"</span>),
-               <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>x1</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>y1</span>, <span class='kw'>xend</span> <span class='kw'>=</span> <span class='no'>x2</span>, <span class='kw'>yend</span> <span class='kw'>=</span> <span class='no'>y2</span>))
-<span class='co'># }</span></pre>
+  <span class='co'>## Plot the nodes and links of a grains of connectivity network</span>
+  <span class='co'>## superimposed over the grain polygons</span>
+  <span class='no'>focalGrain</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='grain.html'>grain</a></span>(<span class='no'>tinyPatchGOC</span>, <span class='fl'>3</span>)
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>() +
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_tile.html'>geom_raster</a></span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='fu'>ggGS</span>(<span class='no'>focalGrain</span>, <span class='st'>"vorBound"</span>),
+                <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>x</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>y</span>, <span class='kw'>fill</span> <span class='kw'>=</span> <span class='no'>value</span>)) +
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='fu'>ggGS</span>(<span class='no'>focalGrain</span>, <span class='st'>"nodes"</span>), <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>x</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>y</span>)) +
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_segment.html'>geom_segment</a></span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='fu'>ggGS</span>(<span class='no'>focalGrain</span>, <span class='st'>"links"</span>),
+                 <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>x1</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>y1</span>, <span class='kw'>xend</span> <span class='kw'>=</span> <span class='no'>x2</span>, <span class='kw'>yend</span> <span class='kw'>=</span> <span class='no'>y2</span>))
+}</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
