@@ -187,9 +187,9 @@ MPG model is appropriate based on the patch-dependency of the organism under stu
 Patch-based models make most sense when animals are restricted to, or dependent on,
 a resource patch. Lattice models can be used as a generalized and functional
 approach to scaling resistance surfaces.</p>
-<p>Rasters should be projected and not in geographic coordinates (i.e. <code><a href='https://www.rdocumentation.org/packages/raster/topics/projection'>projection(cost)</a></code>
+<p>Rasters should be projected and not in geographic coordinates (i.e. <code>projection(cost)</code>
 should not contain <code>"+proj=longlat"</code>) or the function will issue a warning.
-In unprojected cases consider using <code><a href='https://www.rdocumentation.org/packages/raster/topics/projectRaster'>projectRaster</a></code> to change to an appropriate
+In unprojected cases consider using <code>projectRaster</code> to change to an appropriate
 coordinate system for the location and extent of interest that balances both distance and areal
 accuracy. See <a href='http://www.spatialreference.org'>http://www.spatialreference.org</a> for location-specific suggestions.
 Use of geographic coordinates will result in inaccurate areal and distance measurements,
@@ -215,18 +215,14 @@ at multiple spatial scales in landscape genetics. Molecular Ecology 21:3996-4009
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>raster</span>)</div><div class='output co'>#&gt; <span class='message'>Loading required package: sp</span></div><div class='output co'>#&gt; <span class='message'></span>
-#&gt; <span class='message'>Attaching package: ‘raster’</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from ‘package:grainscape’:</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>    distance</span></div><div class='input'>
-<span class='co'>## Load raster landscape</span>
-<span class='no'>tiny</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/raster/topics/raster'>raster</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.file'>system.file</a></span>(<span class='st'>"extdata/tiny.asc"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"grainscape"</span>))
+    <pre class="examples"><div class='input'><span class='co'>## Load raster landscape</span>
+<span class='no'>tiny</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='https://www.rdocumentation.org/packages/raster/topics/raster'>raster</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.file'>system.file</a></span>(<span class='st'>"extdata/tiny.asc"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"grainscape"</span>))
 
-<span class='co'>## Create a resistance surface from a raster using an is-becomes reclassifyification</span>
-<span class='no'>tinyCost</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/raster/topics/reclassify'>reclassify</a></span>(<span class='no'>tiny</span>, <span class='kw'>rcl</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/cbind'>cbind</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>2</span>, <span class='fl'>3</span>, <span class='fl'>4</span>), <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>5</span>, <span class='fl'>10</span>, <span class='fl'>12</span>)))
+<span class='co'>## Create a resistance surface from a raster using an is-becomes reclassification</span>
+<span class='no'>tinyCost</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='https://www.rdocumentation.org/packages/raster/topics/reclassify'>reclassify</a></span>(<span class='no'>tiny</span>, <span class='kw'>rcl</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/cbind'>cbind</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>2</span>, <span class='fl'>3</span>, <span class='fl'>4</span>), <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>5</span>, <span class='fl'>10</span>, <span class='fl'>12</span>)))
 
 <span class='co'>## Produce a patch-based MPG where patches are resistance features=1</span>
-<span class='no'>tinyPatchMPG</span> <span class='kw'>&lt;-</span> <span class='fu'>MPG</span>(<span class='kw'>cost</span> <span class='kw'>=</span> <span class='no'>tinyCost</span>, <span class='kw'>patch</span> <span class='kw'>=</span> (<span class='no'>tinyCost</span> <span class='kw'>==</span> <span class='fl'>1</span>))
+<span class='no'>tinyPatchMPG</span> <span class='kw'>&lt;-</span> <span class='fu'>MPG</span>(<span class='kw'>cost</span> <span class='kw'>=</span> <span class='no'>tinyCost</span>, <span class='kw'>patch</span> <span class='kw'>=</span> <span class='no'>tinyCost</span> <span class='kw'>==</span> <span class='fl'>1</span>)
 
 <span class='co'>## Explore the graph structure and node/link attributes</span>
 <span class='fu'><a href='graphdf.html'>graphdf</a></span>(<span class='no'>tinyPatchMPG</span>)</div><div class='output co'>#&gt; [[1]]
@@ -376,12 +372,14 @@ at multiple spatial scales in landscape genetics. Molecular Ecology 21:3996-4009
 <span class='co'>## Find the mean patch area (see igraph manual for use of V() and E())</span>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/mean'>mean</a></span>(<span class='kw pkg'>igraph</span><span class='kw ns'>::</span><span class='fu'><a href='https://www.rdocumentation.org/packages/igraph/topics/V'>V</a></span>(<span class='no'>tinyPatchMPG</span>@<span class='kw'>mpg</span>)$<span class='no'>patchArea</span>)</div><div class='output co'>#&gt; [1] 21.67442</div><div class='input'>
 <span class='co'>## Quick visualization of the MPG</span>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/raster/topics/plot'>plot</a></span>(<span class='no'>tinyPatchMPG</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"grey"</span>, <span class='st'>"black"</span>), <span class='kw'>legend</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Raster pixels are placed at uneven horizontal intervals and will be shifted. Consider using geom_tile() instead.</span></div><div class='img'><img src='MPG-1.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='kw'>if</span> (<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/interactive'>interactive</a></span>())
+  <span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>tinyPatchMPG</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"grey"</span>, <span class='st'>"black"</span>), <span class='kw'>legend</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+
 <span class='co'>## Additional graph extraction scenarios</span>
 <span class='co'>## Produce a lattice MPG where focal points are spaced 10 cells apart</span>
 <span class='no'>tinyLatticeMPG</span> <span class='kw'>&lt;-</span> <span class='fu'>MPG</span>(<span class='kw'>cost</span> <span class='kw'>=</span> <span class='no'>tinyCost</span>, <span class='kw'>patch</span> <span class='kw'>=</span> <span class='fl'>10</span>)
-<span class='fu'><a href='https://www.rdocumentation.org/packages/raster/topics/plot'>plot</a></span>(<span class='no'>tinyLatticeMPG</span>)</div><div class='img'><img src='MPG-2.png' alt='' width='700' height='433' /></div><div class='input'>
-</div></pre>
+<span class='kw'>if</span> (<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/interactive'>interactive</a></span>())
+  <span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>tinyLatticeMPG</span>)</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

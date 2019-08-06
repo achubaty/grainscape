@@ -155,14 +155,15 @@ developed in C++.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>raster</span>)
-
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>raster</span>)</div><div class='output co'>#&gt; <span class='message'>Loading required package: sp</span></div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'>Attaching package: ‘raster’</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from ‘package:grainscape’:</span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>    distance</span></div><div class='input'>
 <span class='no'>cost</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/raster/topics/raster'>raster</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.file'>system.file</a></span>(<span class='st'>"extdata/fragmented.asc"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"grainscape"</span>))
-<span class='fu'><a href='https://www.rdocumentation.org/packages/raster/topics/plot'>plot</a></span>(<span class='no'>cost</span>)</div><div class='img'><img src='habConnEngine-1.png' alt='' width='700' height='433' /></div><div class='input'>
+
 <span class='co'># cells in raster `cost` with value of 1 are habitat (patch) cells</span>
 <span class='no'>links</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>grainscape</span><span class='kw ns'>:::</span><span class='fu'><a href='https://achubaty.github.io/grainscape/reference/habConnEngine.html'>.habConnEngine</a></span>(<span class='no'>cost</span>, <span class='kw'>patches</span> <span class='kw'>=</span> (<span class='no'>cost</span> <span class='kw'>==</span> <span class='fl'>1</span>))
-
-<span class='no'>links</span>                  <span class='co'># examine the object</span></div><div class='output co'>#&gt; An object of class "hce"
+<span class='no'>links</span> <span class='co'>## examine the object</span></div><div class='output co'>#&gt; An object of class "hce"
 #&gt; Slot "voronoi":
 #&gt; class      : RasterLayer 
 #&gt; dimensions : 400, 400, 160000  (nrow, ncol, ncell)
@@ -514,8 +515,12 @@ developed in C++.</p>
 #&gt; 325   -325     804      209         222   656    175       247         134
 #&gt; 326   -326     455      115         222   143     74       199         140
 #&gt; 327   -327     654      162         149   221    122       115         150
-#&gt; </div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/raster/topics/plot'>plot</a></span>(<span class='no'>links</span>@<span class='kw'>voronoi</span>)    <span class='co'># plot the voronoi tesselation</span></div><div class='img'><img src='habConnEngine-2.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/raster/topics/plot'>plot</a></span>(<span class='no'>links</span>@<span class='kw'>patchLinks</span>) <span class='co'># plot the patches and links</span></div><div class='img'><img src='habConnEngine-3.png' alt='' width='700' height='433' /></div><div class='input'>
-</div></pre>
+#&gt; </div><div class='input'>
+<span class='kw'>if</span> (<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/interactive'>interactive</a></span>()) {
+  <span class='fu'><a href='https://www.rdocumentation.org/packages/raster/topics/plot'>plot</a></span>(<span class='no'>cost</span>)             <span class='co'>## plot the cost-surface raster</span>
+  <span class='fu'><a href='https://www.rdocumentation.org/packages/raster/topics/plot'>plot</a></span>(<span class='no'>links</span>@<span class='kw'>voronoi</span>)    <span class='co'>## plot the voronoi tesselation</span>
+  <span class='fu'><a href='https://www.rdocumentation.org/packages/raster/topics/plot'>plot</a></span>(<span class='no'>links</span>@<span class='kw'>patchLinks</span>) <span class='co'>## plot the patches and links</span>
+}</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

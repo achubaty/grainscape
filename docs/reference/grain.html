@@ -189,29 +189,29 @@ at multiple spatial scales in landscape genetics. Molecular Ecology 21:3996-4009
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>raster</span>)
-
-<span class='co'>## Load raster landscape</span>
-<span class='no'>tiny</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/raster/topics/raster'>raster</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.file'>system.file</a></span>(<span class='st'>"extdata/tiny.asc"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"grainscape"</span>))
+    <pre class="examples"><div class='input'><span class='co'>## Load raster landscape</span>
+<span class='no'>tiny</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='https://www.rdocumentation.org/packages/raster/topics/raster'>raster</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.file'>system.file</a></span>(<span class='st'>"extdata/tiny.asc"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"grainscape"</span>))
 
 <span class='co'>## Create a resistance surface from a raster using an is-becomes reclassification</span>
-<span class='no'>tinyCost</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/raster/topics/reclassify'>reclassify</a></span>(<span class='no'>tiny</span>, <span class='kw'>rcl</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/cbind'>cbind</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>2</span>, <span class='fl'>3</span>, <span class='fl'>4</span>), <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>5</span>, <span class='fl'>10</span>, <span class='fl'>12</span>)))
+<span class='no'>tinyCost</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='https://www.rdocumentation.org/packages/raster/topics/reclassify'>reclassify</a></span>(<span class='no'>tiny</span>, <span class='kw'>rcl</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/cbind'>cbind</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>2</span>, <span class='fl'>3</span>, <span class='fl'>4</span>), <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>5</span>, <span class='fl'>10</span>, <span class='fl'>12</span>)))
 
 <span class='co'>## Produce a patch-based MPG where patches are resistance features=1</span>
-<span class='no'>tinyPatchMPG</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='MPG.html'>MPG</a></span>(<span class='kw'>cost</span> <span class='kw'>=</span> <span class='no'>tinyCost</span>, <span class='kw'>patch</span> <span class='kw'>=</span> (<span class='no'>tinyCost</span> <span class='kw'>==</span> <span class='fl'>1</span>))
+<span class='no'>tinyPatchMPG</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='MPG.html'>MPG</a></span>(<span class='kw'>cost</span> <span class='kw'>=</span> <span class='no'>tinyCost</span>, <span class='kw'>patch</span> <span class='kw'>=</span> <span class='no'>tinyCost</span> <span class='kw'>==</span> <span class='fl'>1</span>)
 
 <span class='co'>## Extract a representative subset of 5 grains of connectivity</span>
 <span class='no'>tinyPatchGOC</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='GOC.html'>GOC</a></span>(<span class='no'>tinyPatchMPG</span>, <span class='kw'>nThresh</span> <span class='kw'>=</span> <span class='fl'>5</span>)
 
-<span class='co'>## Very quick visualization at the finest scale/grain/threshold,</span>
-<span class='co'>## producing plot on the default graphics device</span>
+<span class='co'>## Very quick visualization at the finest scale/grain/threshold</span>
 <span class='no'>tinyPatchGOCgrain</span> <span class='kw'>&lt;-</span> <span class='fu'>grain</span>(<span class='no'>tinyPatchGOC</span>, <span class='kw'>whichThresh</span> <span class='kw'>=</span> <span class='fl'>1</span>)
-<span class='fu'><a href='https://www.rdocumentation.org/packages/raster/topics/plot'>plot</a></span>(<span class='no'>tinyPatchGOCgrain</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/grDevices/topics/palettes'>topo.colors</a></span>(<span class='fl'>10</span>))</div><div class='img'><img src='grain-1.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='kw'>if</span> (<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/interactive'>interactive</a></span>())
+  <span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>tinyPatchGOCgrain</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/grDevices/topics/palettes'>topo.colors</a></span>(<span class='fl'>10</span>))
+
 <span class='co'>## Visualize the model at the finest scale/grain/threshold</span>
 <span class='co'>## Manual control of plotting</span>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/raster/topics/plot'>plot</a></span>(<span class='fu'>grain</span>(<span class='no'>tinyPatchGOC</span>, <span class='kw'>whichThresh</span> <span class='kw'>=</span> <span class='fl'>1</span>)@<span class='kw'>voronoi</span>,
-     <span class='kw'>col</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/sample'>sample</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/grDevices/topics/palettes'>rainbow</a></span>(<span class='fl'>100</span>)), <span class='kw'>legend</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>main</span> <span class='kw'>=</span> <span class='st'>"Threshold 1"</span>)</div><div class='img'><img src='grain-2.png' alt='' width='700' height='433' /></div><div class='input'>
-</div></pre>
+<span class='kw'>if</span> (<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/interactive'>interactive</a></span>()) {
+  <span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='fu'>grain</span>(<span class='no'>tinyPatchGOC</span>, <span class='kw'>whichThresh</span> <span class='kw'>=</span> <span class='fl'>1</span>)@<span class='kw'>voronoi</span>,
+       <span class='kw'>col</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/sample'>sample</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/grDevices/topics/palettes'>rainbow</a></span>(<span class='fl'>100</span>)), <span class='kw'>legend</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>main</span> <span class='kw'>=</span> <span class='st'>"Threshold 1"</span>)
+}</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
