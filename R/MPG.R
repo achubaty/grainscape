@@ -91,12 +91,12 @@
 #' mean(igraph::V(tinyPatchMPG@mpg)$patchArea)
 #'
 #' ## Quick visualization of the MPG
-#' plot(tinyPatchMPG, col = c("grey", "black"), legend = FALSE)
+#' if (interactive()) plot(tinyPatchMPG, col = c("grey", "black"), legend = FALSE)
 #'
 #' ## Additional graph extraction scenarios
 #' ## Produce a lattice MPG where focal points are spaced 10 cells apart
 #' tinyLatticeMPG <- MPG(cost = tinyCost, patch = 10)
-#' plot(tinyLatticeMPG)
+#' if (interactive()) plot(tinyLatticeMPG)
 #'
 setGeneric("MPG", function(cost, patch, ...) {
   standardGeneric("MPG")

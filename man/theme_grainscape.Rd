@@ -37,7 +37,6 @@ if (interactive()) {
     geom_raster(ggGSPrep(tinyPatchMPG, "patchId"), aes(x = x, y = y, fill = value)) +
     theme_grainscape()
 }
-
 }
 \seealso{
 \code{\link{ggGS}}, \code{\link{plot}}, \code{\link[ggthemes]{theme_map}}

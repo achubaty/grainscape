@@ -52,9 +52,6 @@
 #' ## Create a data.frame with the structure and attributes of any igraph object
 #' graphdf(tinyPatchGOC@th[[1]]$goc)
 #'
-#' @export
-#' @rdname graphdf
-#'
 setGeneric("graphdf", function(x, ...) {
   standardGeneric("graphdf")
 })
@@ -120,7 +117,7 @@ setMethod(
   definition = function(x, ...) {
     theseGraphs <- list(x@th)
     graphdf(theseGraphs)
-  })
+})
 
 #' @export
 #' @rdname graphdf

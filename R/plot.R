@@ -104,6 +104,8 @@ if (getRversion() >= "3.1.0") {
 #'
 #' @examples
 #' if (interactive()) {
+#'   library(ggplot2)
+#'
 #'   ## Load raster landscape
 #'   tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape"))
 #'
@@ -136,6 +138,7 @@ if (getRversion() >= "3.1.0") {
 #'          theme(legend.position = "none") +
 #'          xlab("Easting") + ylab("Northing")
 #'   g
+#'
 #'   ## To change aesthetics it is best to build the plot from scratch
 #'   ## using grainscape::ggGS(). See examples therein.
 #' }

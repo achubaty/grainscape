@@ -56,13 +56,14 @@ tinyPatchGOC <- GOC(tinyPatchMPG, nThresh = 5)
 ## Very quick visualization at the finest scale/grain/threshold,
 ## producing plot on the default graphics device
 tinyPatchGOCgrain <- grain(tinyPatchGOC, whichThresh = 1)
-plot(tinyPatchGOCgrain, col = topo.colors(10))
+if (interactive()) plot(tinyPatchGOCgrain, col = topo.colors(10))
 
 ## Visualize the model at the finest scale/grain/threshold
 ## Manual control of plotting
-plot(grain(tinyPatchGOC, whichThresh = 1)@voronoi,
-     col = sample(rainbow(100)), legend = FALSE, main = "Threshold 1")
-
+if (interactive()) {
+  plot(grain(tinyPatchGOC, whichThresh = 1)@voronoi,
+       col = sample(rainbow(100)), legend = FALSE, main = "Threshold 1")
+}
 }
 \references{
 Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien. (2007) Spatial graphs:

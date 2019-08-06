@@ -28,9 +28,9 @@ if (getRversion() >= "3.1.0") {
 #' # cells in raster `cost` with value of 1 are habitat (patch) cells
 #' links <- grainscape:::.habConnEngine(cost, patches = (cost == 1))
 #'
-#' links                  # examine the object
-#' plot(links@voronoi)    # plot the voronoi tesselation
-#' plot(links@patchLinks) # plot the patches and links
+#' links ## examine the object
+#' if (interactive()) plot(links@voronoi)    ## plot the voronoi tesselation
+#' if (interactive()) plot(links@patchLinks) ## plot the patches and links
 #'
 .habConnEngine <- function(cost, patches) {
   stopifnot(inherits(cost, "RasterLayer"),
