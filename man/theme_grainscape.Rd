@@ -19,25 +19,23 @@ A \code{\link{ggplot2}} theme designed for \code{grainscape} based on the
 \code{\link[ggthemes]{theme_map}} theme, with several modifications.
 }
 \examples{
+## Load raster landscape
+tiny <- raster::raster(system.file("extdata/tiny.asc", package = "grainscape"))
+
+## Create a resistance surface from a raster using an is-becomes reclassification
+tinyCost <- raster::reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
+
+## Produce a patch-based MPG where patches are resistance features=1
+tinyPatchMPG <- MPG(cost = tinyCost, patch = tinyCost == 1)
+
 if (interactive()) {
-  ## Load raster landscape
-  tiny <- raster::raster(system.file("extdata/tiny.asc", package = "grainscape"))
-
-  ## Create a resistance surface from a raster using an is-becomes reclassification
-  tinyCost <- raster::reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
-
-  ## Produce a patch-based MPG where patches are resistance features=1
-  tinyPatchMPG <- MPG(cost = tinyCost, patch = tinyCost == 1)
-
-  ## Extract a representative subset of 5 grains of connectivity
-  tinyPatchGOC <- GOC(tinyPatchMPG, nThresh = 5)
+  library(ggplot2)
 
   ## Plot the patches in a minimum planar graph
   ggplot() +
-    geom_raster(ggGSPrep(tinyPatchMPG, "patchId"), aes(x = x, y = y, fill = value)) +
+    geom_tile(ggGS(tinyPatchMPG, "patchId"), mapping = aes(x = x, y = y, fill = value)) +
     theme_grainscape()
 }
-
 }
 \seealso{
 \code{\link{ggGS}}, \code{\link{plot}}, \code{\link[ggthemes]{theme_map}}

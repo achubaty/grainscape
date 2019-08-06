@@ -68,21 +68,9 @@
 #' @rdname threshold
 #' @seealso \code{\link{MPG}}
 #'
-#' @examples
-#' # Load raster landscape
-#' tiny <- raster::raster(system.file("extdata/tiny.asc", package = "grainscape"))
-#'
-#' ## Create a resistance surface from a raster using an is-becomes reclassification
-#' tinyCost <- raster::reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
-#'
-#' ## Produce a patch-based MPG where patches are resistance features=1
-#' tinyPatchMPG <- MPG(cost = tinyCost, patch = tinyCost == 1)
-#'
-#' ## Threshold this graph at a representative subset of 10 thresholds
-#' tinyThresh <- threshold(tinyPatchMPG, nThresh = 10)
-#'
-#' ## Examine the properties of one of these threshold graphs
-#' print(tinyThresh$th[[7]], vertex = TRUE, edge = TRUE)
+#' @example inst/examples/example_preamble.R
+#' @example inst/examples/example_preamble_MPG.R
+#' @example inst/examples/example_threshold.R
 #'
 setGeneric("threshold", function(x, ...) {
   standardGeneric("threshold")

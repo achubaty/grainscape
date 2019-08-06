@@ -69,7 +69,6 @@ tinyPatchGOC_df <- graphdf(tinyPatchGOC)
 
 ## Create a data.frame with the structure and attributes of any igraph object
 graphdf(tinyPatchGOC@th[[1]]$goc)
-
 }
 \seealso{
 \code{\link{MPG}}, \code{\link{GOC}}

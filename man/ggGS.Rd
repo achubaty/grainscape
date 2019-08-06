@@ -90,40 +90,40 @@ This is an informal \code{fortify}-type method that prepares either
  This is potentially time consuming for large rasters.
 }
 \examples{
+## Load raster landscape
+tiny <- raster::raster(system.file("extdata/tiny.asc", package = "grainscape"))
+
+## Create a resistance surface from a raster using an is-becomes reclassification
+tinyCost <- raster::reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
+
+## Produce a patch-based MPG where patches are resistance features=1
+tinyPatchMPG <- MPG(cost = tinyCost, patch = tinyCost == 1)
+
+## Extract a representative subset of 5 grains of connectivity
+tinyPatchGOC <- GOC(tinyPatchMPG, nThresh = 5)
+
 if (interactive()) {
   library(ggplot2)
-
-  ## Load raster landscape
-  tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape"))
-
-  ## Create a resistance surface from a raster using an is-becomes reclassification
-  tinyCost <- reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
-
-  ## Produce a patch-based MPG where patches are resistance features=1
-  tinyPatchMPG <- MPG(cost = tinyCost, patch = tinyCost == 1)
-
-  ## Extract a representative subset of 5 grains of connectivity
-  tinyPatchGOC <- GOC(tinyPatchMPG, nThresh = 5)
 
   ## Plot the patches in a minimum planar graph
   theme_set(theme_grainscape())
   ggplot() +
-    geom_raster(data = ggGS(tinyPatchMPG, "patchId"),
+    geom_tile(data = ggGS(tinyPatchMPG, "patchId"),
                 aes(x = x, y = y, fill = value))
 
   ## Plot the grain polygons in a grain of connectivity
   ggplot() +
-    geom_raster(data = ggGS(grain(tinyPatchGOC, 3), "voronoi"),
+    geom_tile(data = ggGS(grain(tinyPatchGOC, 3), "voronoi"),
                 aes(x = x, y = y, fill = value))
 
   ## Plot the grain polygon boundaries
   ggplot() +
-    geom_raster(data = ggGS(grain(tinyPatchGOC, 3), "vorBound"),
+    geom_tile(data = ggGS(grain(tinyPatchGOC, 3), "vorBound"),
                 aes(x = x, y = y, fill = value))
 
   ## Plot the patches and perimeter links of a minimum planar graph
   ggplot() +
-    geom_raster(data = ggGS(tinyPatchMPG, "patchId"),
+    geom_tile(data = ggGS(tinyPatchMPG, "patchId"),
                 aes(x = x, y = y, fill = value)) +
     geom_segment(data = ggGS(tinyPatchMPG, "links"),
                  aes(x = x1p, y = y1p, xend = x2p, yend = y2p))
@@ -131,7 +131,7 @@ if (interactive()) {
   ## Plot the patches and linear representations of the perimeter links
   ## of a minimum planar graph
   ggplot() +
-    geom_raster(data = ggGS(tinyPatchMPG, "patchId"),
+    geom_tile(data = ggGS(tinyPatchMPG, "patchId"),
                  aes(x = x, y = y, fill = value)) +
     geom_segment(data = ggGS(tinyPatchMPG, "links"),
                  aes(x = x1p, y = y1p, xend = x2p, yend = y2p))
@@ -140,7 +140,7 @@ if (interactive()) {
   ## superimposed over the grain polygons
   focalGrain <- grain(tinyPatchGOC, 3)
   ggplot() +
-    geom_raster(data = ggGS(focalGrain, "vorBound"),
+    geom_tile(data = ggGS(focalGrain, "vorBound"),
                 aes(x = x, y = y, fill = value)) +
     geom_point(data = ggGS(focalGrain, "nodes"), aes(x = x, y = y)) +
     geom_segment(data = ggGS(focalGrain, "links"),

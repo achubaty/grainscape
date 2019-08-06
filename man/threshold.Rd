@@ -58,7 +58,7 @@ analysis using Voronoi tessellations rather than patches (see Galpern \emph{et a
 See \code{\link{MPG}} for warning related to areal measurements.
 }
 \examples{
-# Load raster landscape
+## Load raster landscape
 tiny <- raster::raster(system.file("extdata/tiny.asc", package = "grainscape"))
 
 ## Create a resistance surface from a raster using an is-becomes reclassification
@@ -72,7 +72,6 @@ tinyThresh <- threshold(tinyPatchMPG, nThresh = 10)
 
 ## Examine the properties of one of these threshold graphs
 print(tinyThresh$th[[7]], vertex = TRUE, edge = TRUE)
-
 }
 \references{
 Brooks, C.P. (2003) A scalar analysis of landscape connectivity. Oikos 102:433-439.
