@@ -72,31 +72,9 @@
 #' @rdname MPG
 #' @seealso \code{\link{GOC}, \link{threshold}}
 #'
-#' @examples
-#' library(raster)
-#'
-#' ## Load raster landscape
-#' tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape"))
-#'
-#' ## Create a resistance surface from a raster using an is-becomes reclassifyification
-#' tinyCost <- reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
-#'
-#' ## Produce a patch-based MPG where patches are resistance features=1
-#' tinyPatchMPG <- MPG(cost = tinyCost, patch = (tinyCost == 1))
-#'
-#' ## Explore the graph structure and node/link attributes
-#' graphdf(tinyPatchMPG)
-#'
-#' ## Find the mean patch area (see igraph manual for use of V() and E())
-#' mean(igraph::V(tinyPatchMPG@mpg)$patchArea)
-#'
-#' ## Quick visualization of the MPG
-#' if (interactive()) plot(tinyPatchMPG, col = c("grey", "black"), legend = FALSE)
-#'
-#' ## Additional graph extraction scenarios
-#' ## Produce a lattice MPG where focal points are spaced 10 cells apart
-#' tinyLatticeMPG <- MPG(cost = tinyCost, patch = 10)
-#' if (interactive()) plot(tinyLatticeMPG)
+#' @example inst/examples/example_preamble.R
+#' @example inst/examples/example_preamble_MPG.R
+#' @example inst/examples/example_MPG.R
 #'
 setGeneric("MPG", function(cost, patch, ...) {
   standardGeneric("MPG")

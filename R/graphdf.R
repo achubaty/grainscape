@@ -30,27 +30,10 @@
 #' @rdname graphdf
 #' @seealso \code{\link{MPG}}, \code{\link{GOC}}
 #'
-#' @examples
-#' ## Load raster landscape
-#' tiny <- raster::raster(system.file("extdata/tiny.asc", package = "grainscape"))
-#'
-#' ## Create a resistance surface from a raster using an is-becomes reclassification
-#' tinyCost <- raster::reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
-#'
-#' ## Produce a patch-based MPG where patches are resistance features=1
-#' tinyPatchMPG <- MPG(cost = tinyCost, patch = tinyCost == 1)
-#'
-#' ## Extract a representative subset of 5 grains of connectivity
-#' tinyPatchGOC <- GOC(tinyPatchMPG, nThresh = 5)
-#'
-#' ## Create a data.frame with the structure and attributes of a MPG object
-#' tinyPatchMPG_df <- graphdf(tinyPatchMPG)
-#'
-#' ## Create a data.frame with the structure and attributes of a GOC object
-#' tinyPatchGOC_df <- graphdf(tinyPatchGOC)
-#'
-#' ## Create a data.frame with the structure and attributes of any igraph object
-#' graphdf(tinyPatchGOC@th[[1]]$goc)
+#' @example inst/examples/example_preamble.R
+#' @example inst/examples/example_preamble_MPG.R
+#' @example inst/examples/example_preamble_GOC.R
+#' @example inst/examples/example_graphdf.R
 #'
 setGeneric("graphdf", function(x, ...) {
   standardGeneric("graphdf")

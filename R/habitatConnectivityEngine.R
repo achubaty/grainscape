@@ -23,15 +23,16 @@ if (getRversion() >= "3.1.0") {
 #' library(raster)
 #'
 #' cost <- raster(system.file("extdata/fragmented.asc", package = "grainscape"))
-#' plot(cost)
 #'
 #' # cells in raster `cost` with value of 1 are habitat (patch) cells
 #' links <- grainscape:::.habConnEngine(cost, patches = (cost == 1))
-#'
 #' links ## examine the object
-#' if (interactive()) plot(links@voronoi)    ## plot the voronoi tesselation
-#' if (interactive()) plot(links@patchLinks) ## plot the patches and links
 #'
+#' if (interactive()) {
+#'   plot(cost)             ## plot the cost-surface raster
+#'   plot(links@voronoi)    ## plot the voronoi tesselation
+#'   plot(links@patchLinks) ## plot the patches and links
+#' }
 .habConnEngine <- function(cost, patches) {
   stopifnot(inherits(cost, "RasterLayer"),
             inherits(patches, "RasterLayer"),

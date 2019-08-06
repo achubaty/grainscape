@@ -72,7 +72,6 @@ if (interactive()) plot(tinyPatchMPG)
 filteredPatch <- patchFilter(tinyCost == 10, cells = 40, directions = 4)
 tinyPatchMPG <- MPG(cost = tinyCost, patch = filteredPatch)
 if (interactive()) plot(tinyPatchMPG)
-
 }
 \seealso{
 \code{\link{MPG}}
