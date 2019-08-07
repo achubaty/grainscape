@@ -8,6 +8,7 @@ I have fixed the NOTE regarding keywords. Apologies for this oversight.
 I have added citations with DOIs to the DESCRIPTION as requested.
 I have replaced `dontrun{}` in several plotting examples with `if (interactive()) {}` to ensure they don't run during automated tests.
 I have reduced the execution time of some examples.
+I have reduced the title length and removed the example for a non-exported function.
 
 ## Test environments
 
