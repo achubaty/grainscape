@@ -1,6 +1,6 @@
 Package: grainscape
 Type: Package
-Title: Efficient Modelling of Landscape Connectivity, Habitat, and Protected Area Networks
+Title: Landscape Connectivity, Habitat, and Protected Area Networks
 Description: Given a landscape resistance surface, creates grains of connectivity
     (Galpern et al. (2012) <doi:10.1111/j.1365-294X.2012.05677.x>) and minimum planar graph
     (Fall et al. (2007) <doi:10.1007/s10021-007-9038-7>) models that can be used to calculate
