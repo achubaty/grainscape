@@ -1070,7 +1070,7 @@ kable(ptsD2)
 
 # References
 
-<!-- below here is misc -->
+<!-- this section builds the "table of contents" figures -->
 
 ```{r, part_A, dependson="figure_20", include=FALSE}
 ## build visual table of contents using vignette figures
@@ -1091,6 +1091,8 @@ partA <- cowplot::plot_grid(
   vjust = 1.75, hjust = -0.05) +
   theme(panel.background = element_blank())
 
+## currently writing to tempdir for CRAN checks;
+## be sure to save to vignettes directory when changing figures.
 ggsave(file.path(tempdir(), "figure_partA.png"), plot = partA,
        width = 8, height = 8, dpi = 600) 
 ```
@@ -1106,6 +1108,8 @@ partB <- cowplot::plot_grid(
   vjust = 1.75, hjust = -0.05) +
   theme(panel.background = element_blank())
 
+## currently writing to tempdir for CRAN checks;
+## be sure to save to vignettes directory when changing figures.
 ggsave(file.path(tempdir(), "figure_partB.png"), plot = partB,
-       width = 8, height = 8, dpi = 600) 
+       width = 8, height = 8, dpi = 600)
 ```
