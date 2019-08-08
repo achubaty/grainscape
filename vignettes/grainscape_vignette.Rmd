@@ -1091,7 +1091,8 @@ partA <- cowplot::plot_grid(
   vjust = 1.75, hjust = -0.05) +
   theme(panel.background = element_blank())
 
-ggsave("figure_partA.png", plot = partA, width = 8, height = 8, dpi = 600) 
+ggsave(file.path(tempdir(), "figure_partA.png"), plot = partA,
+       width = 8, height = 8, dpi = 600) 
 ```
 
 ```{r, part_B, dependson="figure_25", include=FALSE}
@@ -1105,5 +1106,6 @@ partB <- cowplot::plot_grid(
   vjust = 1.75, hjust = -0.05) +
   theme(panel.background = element_blank())
 
-ggsave("figure_partB.png", plot = partB, width = 8, height = 8, dpi = 600) 
+ggsave(file.path(tempdir(), "figure_partB.png"), plot = partB,
+       width = 8, height = 8, dpi = 600) 
 ```
