@@ -50,7 +50,7 @@ The MPG algorithm has the following general steps. These are represented in more
 4. The cells that have been recently spread in to become new Active Cells.
 5. Repeat.
 
-![Overview of the MPG algorithm.](figure_HabConnFlowchart.jpg){ height=90% }
+![Overview of the MPG algorithm.](figures/HabConnFlowchart.jpg){ height=90% }
 
 The linking algorithm is embedded within the spreading functions of the MPG algorithm. When an Active Cell spreads a link map creates a connection between the parent Active Cell to the new (child) Active Cell. Linking is assisted by the queue when finding the least-cost paths. 
 
@@ -73,7 +73,7 @@ The following is intended to provide an overview of the C++ engine provided by t
 - `ActiveCell`: inherits the properties of a `Cell` and has its own properties such as `distance`, `originCell`, `parentCell`, `resistance`, and `time` (or iterations). This type of cell is used to keep track of which cells are currently being evaluated. 
 - `LinkCell`: inherits the properties of a `Cell` and has its own properties such as `cost`, `distance`, `fromCell`, and `originCell`. This type of cell is used to create `LinkMap`.
 
-![Schematic representation of Cell type data structures.](figure_cells_diagram.jpg)
+![Schematic representation of Cell type data structures.](figures/cells_diagram.jpg)
 
 - `ActiveCellHolder`: a type of container that stores a vector of `ActiveCell`s in an order.
 - `ActiveCellQueue`: contains an `ActiveCellHolder`. Its main purpose is to properly store the `ActiveCellHolder` in a vector in an order, increasing Euclidean distance.
@@ -82,7 +82,7 @@ The following is intended to provide an overview of the C++ engine provided by t
 - `OutputData`: similar to `InputData` but it acts as a container for all the data that are calculated by the engine and gives that data to the user. 
 - `Patch`: a patch or a cluster are the habitats that are found in the resistance map, given a value for habitat. 
 
-![Schematic representation of additional data structures.](figure_data_struct_diagram.jpg)
+![Schematic representation of additional data structures.](figures/data_struct_diagram.jpg)
 
 -----
 
@@ -93,7 +93,7 @@ The following is intended to provide an overview of the C++ engine provided by t
 - `flCol`: a vector of floating point values. 
 - `flMap`: a vector of `flCol`, which in turn creates a `Map` that contains floating point values in each element or cell.
 
-![Schematic representation of type definitions.](figure_typedef_diagram.jpg)
+![Schematic representation of type definitions.](figures/typedef_diagram.jpg)
 
 -----
 
@@ -102,7 +102,7 @@ The following is intended to provide an overview of the C++ engine provided by t
 The main calculator of the program.
 It creates the minimum planar graph (MPG) using the MPG algorithm, finds least cost links or paths, and finds patches or clusters.
 
-![Schematic representation of the Engine Class](figure_engine_class_diagram.jpg)
+![Schematic representation of the Engine Class](figures/engine_class_diagram.jpg)
 
 #### Fields/Properties
 
@@ -174,6 +174,8 @@ Static functions are functions that can be used without declaring an object of t
 
 -----
 
+\newpage
+
 ### How to Use the Engine
 
 1. Create `InputData` and `OutputData` objects.
@@ -186,7 +188,7 @@ Static functions are functions that can be used without declaring an object of t
 
 A snippet C++ code is shown below as an example:
 
-```{cpp}
+```{cpp cpp-example}
 vector<float> EngineInterface(vector<float> resistance, vector<float> patches,
                               int nrow, int ncol)
 {

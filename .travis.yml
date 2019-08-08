@@ -77,7 +77,7 @@ matrix:
     - Rscript -e 'install.packages(c("Rcpp", "dplyr"), type = "source")'
     r_build_args: '--no-build-vignettes'
     r_check_args: '--as-cran --ignore-vignettes --no-examples'
-r_build_args: '--compact-vignettes="gs+qpdf"'
+r_build_args: '--compact-vignettes=both'
 r_check_args: '--as-cran'
 warnings_are_errors: true
 notifications:
