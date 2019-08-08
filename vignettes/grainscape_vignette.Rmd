@@ -1068,8 +1068,6 @@ kable(ptsD2)
 
 \newpage
 
-# References
-
 <!-- this section builds the "table of contents" figures -->
 
 ```{r part_A, dependson="figure_20", include=FALSE}
@@ -1113,3 +1111,7 @@ partB <- cowplot::plot_grid(
 ggsave(file.path(tempdir(), "figure_partB.png"), plot = partB,
        width = 8, height = 8, dpi = 600)
 ```
+
+# References
+
+<!-- bibliography generated automatically from citations in text -->
