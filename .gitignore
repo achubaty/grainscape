@@ -3,5 +3,5 @@
 .Rproj.user
 .Ruserdata
 vignettes/*_cache
-vignettes/figure_*.pdf
-vignettes/figure_*.png
+vignettes/*_files
+
