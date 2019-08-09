@@ -6,7 +6,7 @@ Description: Given a landscape resistance surface, creates grains of connectivit
     (Fall et al. (2007) <doi:10.1007/s10021-007-9038-7>) models that can be used to calculate
     effective distances for landscape connectivity at multiple scales.
 URL:
-    https://achubaty.github.io/grainscape,
+    https://alexchubaty.com/grainscape,
     https://github.com/achubaty/grainscape
 Version: 0.4.0.9000
 Date: 2019-08-08
