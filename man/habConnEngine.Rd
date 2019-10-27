@@ -18,20 +18,6 @@ An object of class \code{\linkS4class{hce}}.
 Internal function. Serves as a wrapper around the habitat connectivity engine
 developed in C++.
 }
-\examples{
-library(raster)
-
-cost <- raster(system.file("extdata/fragmented.asc", package = "grainscape"))
-plot(cost)
-
-# cells in raster `cost` with value of 1 are habitat (patch) cells
-links <- grainscape:::.habConnEngine(cost, patches = (cost == 1))
-
-links                  # examine the object
-plot(links@voronoi)    # plot the voronoi tesselation
-plot(links@patchLinks) # plot the patches and links
-
-}
 \seealso{
 \code{link{habConnRcpp}}
 }

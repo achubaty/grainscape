@@ -77,26 +77,10 @@
 #' @seealso \code{\link{MPG}}, \code{\link{grain}},
 #'          \code{\link{distance}}, \code{\link{point}}
 #'
-#' @examples
-#' ## Load raster landscape
-#' tiny <- raster::raster(system.file("extdata/tiny.asc", package = "grainscape"))
-#'
-#' ## Create a resistance surface from a raster using an is-becomes reclassication
-#' tinyCost <- raster::reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
-#'
-#' ## Produce a patch-based MPG where patches are resistance features=1
-#' tinyPatchMPG <- MPG(cost = tinyCost, patch = (tinyCost == 1))
-#'
-#' ## Extract a representative subset of 5 grains of connectivity
-#' tinyPatchGOC <- GOC(tinyPatchMPG, nThresh = 5)
-#'
-#' ## Examine the properties of the GOC graph of grain 3 of 5
-#' graphdf(grain(tinyPatchGOC, whichThresh = 3))
-#'
-#' ## Extract grains of connectivity
-#' ## representation of the finest grain and three others
-#' ## by giving thresholds in link weights (doThresh)
-#' tinyPatchGOC <- GOC(tinyPatchMPG, doThresh = c(0, 20, 40))
+#' @example inst/examples/example_preamble.R
+#' @example inst/examples/example_preamble_MPG.R
+#' @example inst/examples/example_preamble_GOC.R
+#' @example inst/examples/example_GOC.R
 #'
 setGeneric("GOC", function(x, ...) {
   standardGeneric("GOC")

@@ -83,18 +83,20 @@ It is the only option available with \code{corridor} objects and the default.
 }
 
 \examples{
+## Load raster landscape
+tiny <- raster::raster(system.file("extdata/tiny.asc", package = "grainscape"))
+
+## Create a resistance surface from a raster using an is-becomes reclassification
+tinyCost <- raster::reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
+
+## Produce a patch-based MPG where patches are resistance features=1
+tinyPatchMPG <- MPG(cost = tinyCost, patch = tinyCost == 1)
+
+## Extract a representative subset of 5 grains of connectivity
+tinyPatchGOC <- GOC(tinyPatchMPG, nThresh = 5)
+
 if (interactive()) {
-  ## Load raster landscape
-  tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape"))
-
-  ## Create a resistance surface from a raster using an is-becomes reclassification
-  tinyCost <- reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
-
-  ## Produce a patch-based MPG where patches are resistance features=1
-  tinyPatchMPG <- MPG(cost = tinyCost, patch = (tinyCost == 1))
-
-  ## Produce a grains of connectivity model
-  tinyPatchGOC <- GOC(tinyPatchMPG, nThresh = 5)
+  library(ggplot2)
 
   ## MPG and showing simplified links among the perimeters of patches
   plot(tinyPatchMPG)
@@ -112,10 +114,11 @@ if (interactive()) {
   ## Capture plot output for further processing with ggplot
   g <- plot(tinyPatchMPG, print = FALSE, theme = FALSE)
   g <- g + theme_minimal() + ggtitle("Minimum planar graph") +
-         theme(plot.title = element_text(size=20, hjust = 0.5)) +
+         theme(plot.title = element_text(size = 20, hjust = 0.5)) +
          theme(legend.position = "none") +
          xlab("Easting") + ylab("Northing")
   g
+
   ## To change aesthetics it is best to build the plot from scratch
   ## using grainscape::ggGS(). See examples therein.
 }
