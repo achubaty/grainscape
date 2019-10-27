@@ -33,9 +33,8 @@ if (interactive()) {
   tinyPatchGOC <- GOC(tinyPatchMPG, nThresh = 5)
 
   ## Plot the patches in a minimum planar graph
-  ggplot() +
-    geom_raster(ggGSPrep(tinyPatchMPG, "patchId"), aes(x = x, y = y, fill = value)) +
-    theme_grainscape()
+  ggplot2::theme_set(theme_grainscape())
+  plot(tinyPatchMPG, quick = "mpgPlot", theme = FALSE)
 }
 
 }
