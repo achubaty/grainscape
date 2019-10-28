@@ -1,5 +1,20 @@
 Known issues: https://github.com/achubaty/grainscape/issues
 
+version 0.4.0.9000
+=============
+
+## Dependency changes
+
+* none
+
+## Bugfixes
+
+* fixed error in `theme_grainscape()` example
+
+## New features & enhancements
+
+* added package hexsticker
+
 version 0.4.0
 =============
 

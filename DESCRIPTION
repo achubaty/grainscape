@@ -9,7 +9,7 @@ URL:
     https://alexchubaty.com/grainscape,
     https://github.com/achubaty/grainscape
 Version: 0.4.0.9000
-Date: 2019-08-08
+Date: 2019-10-28
 Authors@R: c(
     person("Paul", "Galpern", email = "pgalpern@gmail.com", role = c("aut", "cph")),
     person("Sam", "Doctolero", email = "sam.doctolero@gmail.com", role = "aut"),
