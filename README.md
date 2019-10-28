@@ -5,6 +5,8 @@
 [![Appveyor Build status](https://ci.appveyor.com/api/projects/status/f8eddi541e19h2kv/branch/master?svg=true)](https://ci.appveyor.com/project/achubaty/grainscape/branch/master)
 [![Coverage Status](https://coveralls.io/repos/github/achubaty/grainscape/badge.svg?branch=master)](https://coveralls.io/github/achubaty/grainscape?branch=master)
 
+<img align="right" width="80" pad="20" src="https://github.com/achubaty/grainscape/raw/development/stickers/hexsticker.png">
+
 ## Efficient Modelling of Landscape Connectivity, Habitat, and Protected Area Networks
 
 Given a landscape resistance surface, creates grains of connectivity and minimum planar graph models that can be used to calculate effective distances for landscape connectivity at multiple scales.
