@@ -15,7 +15,7 @@ opts_chunk$set(fig.show = "hold")
 options(knitr.kable.NA = "")
 
 ## ----part_A, dependson="figure_20", include=FALSE------------------------
-## build visual table of contents using vignette figures
+## build 1st visual table of contents using vignette figures
 partA <- cowplot::plot_grid(
   figure09 + theme(plot.title = element_text(size = 8)),
   figure10 + theme(plot.title = element_text(size = 8)),
@@ -39,6 +39,7 @@ ggsave(file.path(tempdir(), "figure_partA.png"), plot = partA,
        width = 8, height = 8, dpi = 600) 
 
 ## ----part_B, dependson="figure_25", include=FALSE------------------------
+## build 2nd visual table of contents using vignette figures
 partB <- cowplot::plot_grid(
   figure21 + theme(plot.title = element_text(size = 8)),
   figure22 + theme(plot.title = element_text(size = 8)),

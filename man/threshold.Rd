@@ -34,7 +34,7 @@ possible GOC models.
 Provide either \code{nThresh} or \code{doThresh} not both.}
 
 \item{doThresh}{Optional. A vector giving the link thresholds at which to create GOC models.
-Use \code{link{threshold}} to identify thresholds of interest.
+Use \code{\link{threshold}} to identify thresholds of interest.
 Provide either \code{nThresh} or \code{doThresh} not both.}
 }
 \value{
