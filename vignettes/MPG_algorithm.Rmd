@@ -187,7 +187,7 @@ Those two lines are convenient for R users when they want to interrupt or stop t
 
 \newpage
 
-```{c cpp-example, eval = FALSE}
+```{Rcpp cpp-example, eval = FALSE}
 vector<float> EngineInterface(vector<float> resistance, vector<float> patches,
                               int nrow, int ncol)
 {
