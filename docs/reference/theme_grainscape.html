@@ -8,21 +8,25 @@
 
 <title>A <code>ggplot2</code> theme for <code>grainscape</code> — theme_grainscape • grainscape</title>
 
+
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
 
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
 
-<!-- sticky kit -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
+<!-- headroom.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -30,11 +34,12 @@
 
 
 
-<meta property="og:title" content="A <code>ggplot2</code> theme for <code>grainscape</code> — theme_grainscape" />
 
+<meta property="og:title" content="A <code>ggplot2</code> theme for <code>grainscape</code> — theme_grainscape" />
 <meta property="og:description" content="A ggplot2 theme designed for grainscape based on the
 theme_map theme, with several modifications." />
 <meta name="twitter:card" content="summary" />
+
 
 
 
@@ -58,6 +63,7 @@ theme_map theme, with several modifications." />
   gtag('config', 'UA-34446208-1');
 </script>
 
+
   </head>
 
   <body>
@@ -74,7 +80,7 @@ theme_map theme, with several modifications." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">grainscape</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.1</span>
       </span>
     </div>
 
@@ -82,7 +88,7 @@ theme_map theme, with several modifications." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -108,11 +114,10 @@ theme_map theme, with several modifications." />
   <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/achubaty/grainscape">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -123,6 +128,7 @@ theme_map theme, with several modifications." />
 </div><!--/.navbar -->
 
       
+
       </header>
 
 <div class="row">
@@ -134,14 +140,12 @@ theme_map theme, with several modifications." />
     </div>
 
     <div class="ref-description">
-    
     <p>A <code>ggplot2</code> theme designed for <code>grainscape</code> based on the
-<code><a href='https://www.rdocumentation.org/packages/ggthemes/topics/theme_map'>theme_map</a></code> theme, with several modifications.</p>
-    
+<code><a href='https://rdrr.io/pkg/ggthemes/man/theme_map.html'>theme_map</a></code> theme, with several modifications.</p>
     </div>
 
     <pre class="usage"><span class='fu'>theme_grainscape</span>(<span class='kw'>base_size</span> <span class='kw'>=</span> <span class='fl'>9</span>, <span class='kw'>base_family</span> <span class='kw'>=</span> <span class='st'>""</span>)</pre>
-    
+
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
@@ -154,44 +158,38 @@ theme_map theme, with several modifications." />
       <td><p>Base font family</p></td>
     </tr>
     </table>
-    
+
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>A theme suitable for use with <code><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></code></p>
-    
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='ggGS.html'>ggGS</a></code>, <code><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></code>, <code><a href='https://www.rdocumentation.org/packages/ggthemes/topics/theme_map'>theme_map</a></code></p></div>
-    
+    <div class='dont-index'><p><code><a href='ggGS.html'>ggGS</a></code>, <code><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></code>, <code><a href='https://rdrr.io/pkg/ggthemes/man/theme_map.html'>theme_map</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'>## Load raster landscape</span>
-<span class='no'>tiny</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='https://www.rdocumentation.org/packages/raster/topics/raster'>raster</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.file'>system.file</a></span>(<span class='st'>"extdata/tiny.asc"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"grainscape"</span>))
+<span class='no'>tiny</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/raster/man/raster.html'>raster</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"extdata/tiny.asc"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"grainscape"</span>))
 
 <span class='co'>## Create a resistance surface from a raster using an is-becomes reclassification</span>
-<span class='no'>tinyCost</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='https://www.rdocumentation.org/packages/raster/topics/reclassify'>reclassify</a></span>(<span class='no'>tiny</span>, <span class='kw'>rcl</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/cbind'>cbind</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>2</span>, <span class='fl'>3</span>, <span class='fl'>4</span>), <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>5</span>, <span class='fl'>10</span>, <span class='fl'>12</span>)))
+<span class='no'>tinyCost</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/raster/man/reclassify.html'>reclassify</a></span>(<span class='no'>tiny</span>, <span class='kw'>rcl</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>2</span>, <span class='fl'>3</span>, <span class='fl'>4</span>), <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>5</span>, <span class='fl'>10</span>, <span class='fl'>12</span>)))
 
 <span class='co'>## Produce a patch-based MPG where patches are resistance features=1</span>
 <span class='no'>tinyPatchMPG</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='MPG.html'>MPG</a></span>(<span class='kw'>cost</span> <span class='kw'>=</span> <span class='no'>tinyCost</span>, <span class='kw'>patch</span> <span class='kw'>=</span> <span class='no'>tinyCost</span> <span class='kw'>==</span> <span class='fl'>1</span>)
 
-<span class='kw'>if</span> (<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/interactive'>interactive</a></span>()) {
-  <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>ggplot2</span>)
+<span class='kw'>if</span> (<span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span>()) {
+  <span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>ggplot2</span>)
 
   <span class='co'>## Plot the patches in a minimum planar graph</span>
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>() +
-    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_tile.html'>geom_tile</a></span>(<span class='fu'><a href='ggGS.html'>ggGS</a></span>(<span class='no'>tinyPatchMPG</span>, <span class='st'>"patchId"</span>), <span class='kw'>mapping</span> <span class='kw'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>x</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>y</span>, <span class='kw'>fill</span> <span class='kw'>=</span> <span class='no'>value</span>)) +
-    <span class='fu'>theme_grainscape</span>()
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/theme_get.html'>theme_set</a></span>(<span class='fu'>theme_grainscape</span>())
+  <span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>tinyPatchMPG</span>, <span class='kw'>quick</span> <span class='kw'>=</span> <span class='st'>"mpgPlot"</span>)
 }</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
       <li><a href="#value">Value</a></li>
-
       <li><a href="#see-also">See also</a></li>
-      
       <li><a href="#examples">Examples</a></li>
     </ul>
 
@@ -200,19 +198,23 @@ theme_map theme, with several modifications." />
   </div>
 </div>
 
+
       <footer>
       <div class="copyright">
   <p>Developed by Paul Galpern, Sam Doctolero, Alex M Chubaty.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
+
       </footer>
    </div>
 
   
 
+
   </body>
 </html>
+
 
