@@ -1,6 +1,6 @@
 Known issues: https://github.com/achubaty/grainscape/issues
 
-version 0.4.1.9000
+version 0.4.2
 =============
 
 ## Dependency changes
@@ -9,7 +9,7 @@ version 0.4.1.9000
 
 ## Bugfixes
 
-* none
+* reduced package tarball size
 
 ## New features & enhancements
 
