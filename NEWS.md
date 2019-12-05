@@ -1,5 +1,20 @@
 Known issues: https://github.com/achubaty/grainscape/issues
 
+version 0.4.1.9000
+=============
+
+## Dependency changes
+
+* removed unused dependency `hunspell` from Suggests
+
+## Bugfixes
+
+* none
+
+## New features & enhancements
+
+* none
+
 version 0.4.1
 =============
 
