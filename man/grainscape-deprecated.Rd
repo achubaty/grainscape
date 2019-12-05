@@ -11,11 +11,16 @@
 \alias{gsMPG}
 \title{\code{grainscape}: Deprecated}
 \usage{
-gsGOC(mpg, nThresh = NULL, doThresh = NULL,
-  weight = "lcpPerimWeight", sp = FALSE, verbose = 3)
+gsGOC(
+  mpg,
+  nThresh = NULL,
+  doThresh = NULL,
+  weight = "lcpPerimWeight",
+  sp = FALSE,
+  verbose = 3
+)
 
-gsGOCCorridor(GOC, whichThresh, coords, doPlot = FALSE,
-  weight = "meanWeight")
+gsGOCCorridor(GOC, whichThresh, coords, doPlot = FALSE, weight = "meanWeight")
 
 gsGOCDistance(GOC, coords, weight = "meanWeight")
 

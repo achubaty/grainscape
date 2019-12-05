@@ -43,13 +43,14 @@ shPathD <- distances(patchyMPG$mpg,
 colours <- RColorBrewer::brewer.pal(8, "Dark2")
 f <- file.path("stickers", "patchyMPG.png")
 g <- ggplot() +
-        geom_raster(data = ggGS(patchyMPG, "patchId"),
+        geom_tile(data = ggGS(patchyMPG, "patchId"),
                     aes(x = x, y = y,
                         fill = ifelse(value %in% shPathN, colours[1], colours[3]))) +
         scale_fill_identity() +
         geom_segment(data  = shPathLinks, aes(x = x1, y = y1, xend = x2, yend = y2),
                      colour = colours[2], size = 2) +
-        geom_point(data = shPathNodes, aes(x = x, y = y), colour = colours[2])
+        geom_point(data = shPathNodes, aes(x = x, y = y), colour = colours[2]) +
+        theme_void()
 ggsave(f, g, width = 6, height = 6, bg = "transparent")
 
 sticker(f,

@@ -8,8 +8,8 @@ Description: Given a landscape resistance surface, creates grains of connectivit
 URL:
     https://alexchubaty.com/grainscape,
     https://github.com/achubaty/grainscape
-Version: 0.4.0.9000
-Date: 2019-10-28
+Version: 0.4.1
+Date: 2019-12-05
 Authors@R: c(
     person("Paul", "Galpern", email = "pgalpern@gmail.com", role = c("aut", "cph")),
     person("Sam", "Doctolero", email = "sam.doctolero@gmail.com", role = "aut"),
@@ -65,4 +65,4 @@ Collate:
     'zzz.R'
 Encoding: UTF-8
 Language: en-CA
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.2

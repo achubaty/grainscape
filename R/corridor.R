@@ -70,7 +70,7 @@ setMethod(
     }
 
     ## Check coords
-    if (class(coords) %in% c("SpatialPoints", "SpatialPointsDataFrame")) {
+    if (inherits(coords, c("SpatialPoints", "SpatialPointsDataFrame"))) {
       coords <- coordinates(coords)
     }
 

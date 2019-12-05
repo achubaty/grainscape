@@ -2,7 +2,7 @@
 title: "Modelling, visualization and analysis with the `grainscape` package"
 author: 
 - Paul Galpern^[Department of Biological Sciences, University of Calgary, AB, Canada]
-- Alex M. Chubaty
+- Alex M. Chubaty^[FOR-CAST Research & Analytics, Calgary, AB, Canada]
 output:
   pdf_document:
     toc: yes
@@ -22,9 +22,11 @@ vignette: >
   %\VignetteKeyword{resistance surface}
   %\VignetteKeyword{spatial graph}
   %\VignetteKeyword{Voronoi tessellation}
-  %\VignetteDepends{cowplot, igraph, raster, ggplot2}
+  %\VignetteDepends{cowplot, ggplot2, igraph, raster}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
 ---
 
 <!-- be sure to use `tools::compactPDF("vignettes", qpdf = "/usr/bin/qpdf", gs_quality = "ebook")` to compact this vignette -->

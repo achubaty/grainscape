@@ -1,6 +1,6 @@
 Known issues: https://github.com/achubaty/grainscape/issues
 
-version 0.4.0.9000
+version 0.4.1
 =============
 
 ## Dependency changes
@@ -9,6 +9,7 @@ version 0.4.0.9000
 
 ## Bugfixes
 
+* fix error on R-devel exposed by change to `matrix` class
 * fixed error in `theme_grainscape()` example
 
 ## New features & enhancements

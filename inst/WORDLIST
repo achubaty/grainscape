@@ -10,6 +10,7 @@ ActiveCells
 aes
 al
 Appveyor
+AppVeyor
 ArcASCII
 asc
 autoref
@@ -80,6 +81,7 @@ ncell
 Nepusz
 newpage
 Oikos
+ORCID
 OutputData
 paste0
 patchId
