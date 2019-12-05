@@ -10,6 +10,7 @@ ActiveCells
 aes
 al
 Appveyor
+AppVeyor
 ArcASCII
 asc
 autoref
@@ -56,6 +57,7 @@ GOC
 gocthresh
 grey70
 grey90
+hexsticker
 Hijmans
 https
 ifelse
@@ -79,6 +81,7 @@ ncell
 Nepusz
 newpage
 Oikos
+ORCID
 OutputData
 paste0
 patchId

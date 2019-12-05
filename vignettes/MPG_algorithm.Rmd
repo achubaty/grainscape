@@ -65,8 +65,6 @@ The following is intended to provide an overview of the C++ engine provided by t
 - *Time:* An index of the iteration.
 - *Object:* An instance of a certain data type, class, or data structure (*i.e.*, `Cell c`, `c` then is an object of type `Cell`).
 
------
-
 ### Data Structures
 
 - `Cell`: stores its own position (row and column) and an ID.
@@ -84,8 +82,6 @@ The following is intended to provide an overview of the C++ engine provided by t
 
 ![Schematic representation of additional data structures.](figures/data_struct_diagram.jpg)
 
------
-
 ### Type Definitions
 
 - `lcCol`: a vector of `LinkCells`.
@@ -94,8 +90,6 @@ The following is intended to provide an overview of the C++ engine provided by t
 - `flMap`: a vector of `flCol`, which in turn creates a `Map` that contains floating point values in each element or cell.
 
 ![Schematic representation of type definitions.](figures/typedef_diagram.jpg)
-
------
 
 ### The `Engine` Class
 
@@ -172,8 +166,6 @@ Static functions are functions that can be used without declaring an object of t
 `emin`            | Float               | Vector of Floats  | Finds the minimum value from the vector of floating point values
 `calcDistance`    | Float               | Cell, Cell        | Finds the Euclidean distance between two Cells
 
------
-
 \newpage
 
 ### How to Use the Engine
@@ -186,9 +178,16 @@ Static functions are functions that can be used without declaring an object of t
 6. If the initialization is successful, call the start function from the `Engine` object. If the initialization is not successful, the array of char will contain the reason for the initialization failure.
 7. Once the engine is done calculating, extract all the fields needed in the `OutputData` object.
 
-A snippet C++ code is shown below as an example:
+A snippet C++ code is shown on the next page as an example.
 
-```{cpp cpp-example}
+Note that the current `Engine` has two lines of code that are meant for interfacing with R.
+In order to make the `Engine` run with any programming or scripting language, remove those two lines.
+One of them is an `include` statement for `Rcpp`, at the very top of source code, and the other is inside the `start` function, the first line inside the `while` loop.
+Those two lines are convenient for R users when they want to interrupt or stop the MPG algorithm safely, without crashing their console and possibly losing their data.
+
+\newpage
+
+```{c cpp-example, eval = FALSE}
 vector<float> EngineInterface(vector<float> resistance, vector<float> patches,
                               int nrow, int ncol)
 {
@@ -224,8 +223,3 @@ vector<float> EngineInterface(vector<float> resistance, vector<float> patches,
 	return outObj.voronoi_map;
 }
 ```
-
-Note that the current Engine has two lines of code that are meant for interfacing with R.
-In order to make the Engine run with any programming or scripting language, remove those two lines.
-One of them is an `include` statement for `Rcpp`, at the very top of source code, and the other is inside the `start` function, the first line inside the `while` loop.
-Those two lines are convenient for R users when they want to interrupt or stop the MPG algorithm safely, without crashing their console and possibly losing their data.

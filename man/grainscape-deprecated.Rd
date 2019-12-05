@@ -11,11 +11,16 @@
 \alias{gsMPG}
 \title{\code{grainscape}: Deprecated}
 \usage{
-gsGOC(mpg, nThresh = NULL, doThresh = NULL,
-  weight = "lcpPerimWeight", sp = FALSE, verbose = 3)
+gsGOC(
+  mpg,
+  nThresh = NULL,
+  doThresh = NULL,
+  weight = "lcpPerimWeight",
+  sp = FALSE,
+  verbose = 3
+)
 
-gsGOCCorridor(GOC, whichThresh, coords, doPlot = FALSE,
-  weight = "meanWeight")
+gsGOCCorridor(GOC, whichThresh, coords, doPlot = FALSE, weight = "meanWeight")
 
 gsGOCDistance(GOC, coords, weight = "meanWeight")
 
@@ -42,7 +47,7 @@ a representative subset of all possible GOC models.
 Provide either \code{nThresh} or \code{doThresh} not both.}
 
 \item{doThresh}{Optional. A vector giving the link thresholds at which to create GOC models.
-Use \code{link{threshold}} to identify thresholds of interest.
+Use \code{\link{threshold}} to identify thresholds of interest.
 Provide either \code{nThresh} or \code{doThresh} not both.}
 
 \item{weight}{A string giving the link weight or attribute to use for threshold.

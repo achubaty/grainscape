@@ -9,7 +9,8 @@
 ^CRAN-RELEASE$
 ^cran-comments\.md$
 ^cran-submission\.md$
-^LICENSE$
 ^docs$
+^LICENSE$
 ^revdep$
+^stickers$
 ^vignettes/.*_cache$

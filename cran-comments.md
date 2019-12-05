@@ -1,51 +1,47 @@
 ## New submission
 
-This is a new package submission providing tools for efficient modelling of landscape connectivity, habitat, and protected areas.
-We have included an extensive introductory vignette illustrating the use of the package (modelling, analysis, and visualizations) in `vignettes/grainscape_vignette.Rmd`.
-
-I have fixed the NOTE regarding keywords. Apologies for this oversight.
-
-I have added citations with DOIs to the DESCRIPTION as requested.
-I have replaced `dontrun{}` in several plotting examples with `if (interactive()) {}` to ensure they don't run during automated tests.
-I have reduced the execution time of some examples.
-I have reduced the title length and removed the example for a non-exported function.
-I have fixed the examples in the vignette to write to `tempdir`.
+This is a manitenance release to fix problems exposed by recent changes to R-devel.
+See `NEWS.md` for a complete list of changes.
 
 ## Test environments
 
 ### Previous R versions
-* macOS Mojave       (travis-ci), R 3.5.3
-* Ubuntu 16.04       (travis-ci), R 3.5.3
-* Windows             (appveyor), R 3.5.3
-* Windows          (win-builder), R 3.5.3
+* Ubuntu 16.04              (travis-ci), R 3.5.3
+* Windows                    (appveyor), R 3.5.3
+* Windows                 (win-builder), R 3.5.3
 
 ### Current R versions
-* macOS Mojave       (travis-ci), R 3.6.1
-* macOS Mojave           (local), R 3.6.1
-* Ubuntu 16.04       (travis-ci), R 3.6.1
-* Ubuntu 18.04           (local), R 3.6.1
-* Windows             (appveyor), R 3.6.1
-* Windows          (win-builder), R 3.6.1
-* Windows 7              (local), R 3.6.1
+* macOS 10.13.3 High Sierra (travis-ci), R 3.6.1
+* macOS 10.15.1 Catalina        (local), R 3.6.1
+* Ubuntu 16.04              (travis-ci), R 3.6.1
+* Ubuntu 18.04                  (local), R 3.6.1
+* Windows                    (appveyor), R 3.6.1
+* Windows                 (win-builder), R 3.6.1
 
 ### Development R version
-* Ubuntu 16.04       (travis-ci), R 3.7.0 (2019-07-29 r76904)
-* Ubuntu 18.04           (local), R 3.7.0 (2019-08-02 r76911)
-* Windows             (appveyor), R 3.7.0 (2019-07-26 r76894)
-* Windows          (win-builder), R 3.7.0 (2019-07-05 r76784)
+* Ubuntu 16.04              (travis-ci), R 4.0.0 (2019-12-05 r77523)
+* Ubuntu 18.04                  (local), R 4.0.0 (2019-12-04 r77518)
+* Windows                    (appveyor), R 4.0.0 (2019-12-04 r77519)
+* Windows                 (win-builder), R 4.0.0 (2019-12-02 r77499)
 
 ## R CMD check results
 
-There are no ERRORs nor WARNINGs.
+There are no ERRORs. There is 1 WARNING caused by a problem in a dependency package.
 
-There is 1 NOTE:
+1. Vignette error caused by `rmarkdown` (see <https://github.com/rstudio/rmarkdown/issues/1716>):
 
-1. this is a new package submission
-
-    * checking CRAN incoming feasibility ... NOTE
-    Maintainer: 'Alex M Chubaty <alex.chubaty@gmail.com>'
+    * checking re-building of vignette outputs ... [135s] WARNING
+    Error in re-building vignettes:
+      ...
+    ! Misplaced \crcr.
+    \endtabular ->\crcr 
+                        \egroup \egroup $\egroup 
+    l.143 \maketitle
     
-    New submission
+    Error: processing vignette 'grainscape_vignette.Rmd' failed with diagnostics:
+    Failed to compile grainscape_vignette.tex. See https://yihui.name/tinytex/r/#debugging for debugging tips.
+    See grainscape_vignette.log for more info.
+    Execution halted
 
 ## Downstream dependencies
 

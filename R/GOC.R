@@ -18,7 +18,7 @@
 #'                  Provide either \code{nThresh} or \code{doThresh} not both.
 #'
 #' @param doThresh  Optional. A vector giving the link thresholds at which to create GOC models.
-#'                  Use \code{link{threshold}} to identify thresholds of interest.
+#'                  Use \code{\link{threshold}} to identify thresholds of interest.
 #'                  Provide either \code{nThresh} or \code{doThresh} not both.
 #'
 #' @param weight    A string giving the link weight or attribute to use for threshold.
@@ -94,7 +94,8 @@ setMethod(
   definition = function(x, nThresh = NULL, doThresh = NULL,
                         weight = "lcpPerimWeight", verbose = 0, ...) {
     dots <- list(...)
-    if (!is.null(dots$sp)) warning("Argument 'sp' is deprecated and will be ignored.")
+    if (!is.null(dots$sp))
+      warning("Argument 'sp' is deprecated and will be ignored.")
 
     baseGraph <- x@mpg
 
@@ -126,11 +127,9 @@ setMethod(
 
     summary.df <- data.frame(id = ids, maxLink = doThresh, stringsAsFactors = FALSE)
 
-
     allLinks <- ends(baseGraph, E(baseGraph))
 
     ## Report on orphaned patches in the MPG
-
     id <- sapply(V(baseGraph)$name, function(z) sum(allLinks == as.integer(z)))
     unlinkedPatches <- as.integer(V(baseGraph)$name[which(id == 0)])
     if (length(unlinkedPatches) > 0) {
