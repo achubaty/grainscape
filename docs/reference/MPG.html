@@ -81,7 +81,7 @@ Both patch-based and lattice MPGs can be extracted." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">grainscape</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.2</span>
       </span>
     </div>
 
@@ -382,13 +382,12 @@ at multiple spatial scales in landscape genetics. Molecular Ecology 21:3996-4009
 <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span>(<span class='kw pkg'>igraph</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/igraph/man/V.html'>V</a></span>(<span class='no'>tinyPatchMPG</span>@<span class='kw'>mpg</span>)$<span class='no'>patchArea</span>)</div><div class='output co'>#&gt; [1] 21.67442</div><div class='input'>
 <span class='co'>## Quick visualization of the MPG</span>
 <span class='kw'>if</span> (<span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span>())
-  <span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>tinyPatchMPG</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"grey"</span>, <span class='st'>"black"</span>), <span class='kw'>legend</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
-
+  <span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>tinyPatchMPG</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"grey"</span>, <span class='st'>"black"</span>), <span class='kw'>legend</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Raster pixels are placed at uneven horizontal intervals and will be shifted. Consider using geom_tile() instead.</span></div><div class='img'><img src='MPG-1.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'>## Additional graph extraction scenarios</span>
 <span class='co'>## Produce a lattice MPG where focal points are spaced 10 cells apart</span>
 <span class='no'>tinyLatticeMPG</span> <span class='kw'>&lt;-</span> <span class='fu'>MPG</span>(<span class='kw'>cost</span> <span class='kw'>=</span> <span class='no'>tinyCost</span>, <span class='kw'>patch</span> <span class='kw'>=</span> <span class='fl'>10</span>)
 <span class='kw'>if</span> (<span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span>())
-  <span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>tinyLatticeMPG</span>)</div></pre>
+  <span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>tinyLatticeMPG</span>)</div><div class='img'><img src='MPG-2.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

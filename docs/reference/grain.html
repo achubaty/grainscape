@@ -79,7 +79,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">grainscape</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.2</span>
       </span>
     </div>
 
@@ -216,14 +216,13 @@ at multiple spatial scales in landscape genetics. Molecular Ecology 21:3996-4009
 <span class='co'>## Very quick visualization at the finest scale/grain/threshold</span>
 <span class='no'>tinyPatchGOCgrain</span> <span class='kw'>&lt;-</span> <span class='fu'>grain</span>(<span class='no'>tinyPatchGOC</span>, <span class='kw'>whichThresh</span> <span class='kw'>=</span> <span class='fl'>1</span>)
 <span class='kw'>if</span> (<span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span>())
-  <span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>tinyPatchGOCgrain</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/grDevices/palettes.html'>topo.colors</a></span>(<span class='fl'>10</span>))
-
+  <span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>tinyPatchGOCgrain</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/grDevices/palettes.html'>topo.colors</a></span>(<span class='fl'>10</span>))</div><div class='img'><img src='grain-1.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'>## Visualize the model at the finest scale/grain/threshold</span>
 <span class='co'>## Manual control of plotting</span>
 <span class='kw'>if</span> (<span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span>()) {
   <span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='fu'>grain</span>(<span class='no'>tinyPatchGOC</span>, <span class='kw'>whichThresh</span> <span class='kw'>=</span> <span class='fl'>1</span>)@<span class='kw'>voronoi</span>,
        <span class='kw'>col</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span>(<span class='fu'><a href='https://rdrr.io/r/grDevices/palettes.html'>rainbow</a></span>(<span class='fl'>100</span>)), <span class='kw'>legend</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>main</span> <span class='kw'>=</span> <span class='st'>"Threshold 1"</span>)
-}</div></pre>
+}</div><div class='img'><img src='grain-2.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

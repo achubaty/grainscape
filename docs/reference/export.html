@@ -88,7 +88,7 @@ export ESRI compatible shape files." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">grainscape</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.2</span>
       </span>
     </div>
 
@@ -353,57 +353,7 @@ objects  and their corresponding attribute names in the shape files created.</p>
 
 <span class='co'>## Export raster and vectors of a grain to a specified directory</span>
 <span class='no'>tmpdir</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempdir</a></span>()
-<span class='fu'>export</span>(<span class='fu'><a href='grain.html'>grain</a></span>(<span class='no'>tinyPatchGOC</span>, <span class='fl'>2</span>), <span class='kw'>dirname</span> <span class='kw'>=</span> <span class='st'>"tiny_goc_thresh2"</span>, <span class='kw'>path</span> <span class='kw'>=</span> <span class='no'>tmpdir</span>)</div><div class='output co'>#&gt; Called from: export(grain(tinyPatchGOC, 2), dirname = "tiny_goc_thresh2", 
-#&gt;     path = tmpdir)
-#&gt; debug: linksDF &lt;- graphdf(x@th)[[1]]$e[, -10]
-#&gt; debug: names(linksDF) &lt;- c("e1", "e2", "maxWt", "lidMaxWt", "minWt", 
-#&gt;     "lidMinWt", "medWt", "meanWt", "numEWt", "eucCtrWt")
-#&gt; debug: nodesDF &lt;- graphdf(x@th)[[1]]$v[, -c(1, 9)]
-#&gt; debug: names(nodesDF) &lt;- c("polyId", "ctrX", "ctrY", "polyA", "patchA", 
-#&gt;     "patchEA", "coreA")
-#&gt; debug: firstCentr &lt;- nodesDF[match(linksDF$e1, nodesDF$polyId), c("ctrX", 
-#&gt;     "ctrY")]
-#&gt; debug: names(firstCentr) &lt;- c("strtCtrX", "strtCtrY")
-#&gt; debug: secondCentr &lt;- nodesDF[match(linksDF$e2, nodesDF$polyId), c("ctrX", 
-#&gt;     "ctrY")]
-#&gt; debug: names(secondCentr) &lt;- c("endCtrX", "endCtrY")
-#&gt; debug: linksCentr &lt;- cbind(linksDF, firstCentr, secondCentr)
-#&gt; debug: row.names(linksCentr) &lt;- 1:nrow(linksCentr)
-#&gt; debug: linksCentr$plinkId &lt;- 1:nrow(linksCentr)
-#&gt; debug: linksCentrSP &lt;- linksCentr[, c("strtCtrX", "strtCtrY", "endCtrX", 
-#&gt;     "endCtrY", "plinkId")] %&gt;% apply(., 1, function(x) {
-#&gt;     Lines(Line(matrix(x[1:4], 2, 2, byrow = TRUE)), ID = as.character(x[5]))
-#&gt; }) %&gt;% SpatialLines() %&gt;% SpatialLinesDataFrame(., data = linksCentr)
-#&gt; debug: projection(linksCentrSP) &lt;- CRS(projection(x@voronoi))
-#&gt; debug: if (vorBound) {
-#&gt;     message("Extracting voronoi boundaries...")
-#&gt;     vorB &lt;- boundaries(x@voronoi, class = TRUE, asNA = TRUE)
-#&gt; } else {
-#&gt;     vorB &lt;- "Not created. Use vorBound=TRUE."
-#&gt; }
-#&gt; debug: vorB &lt;- "Not created. Use vorBound=TRUE."
-#&gt; debug: nodesSP &lt;- nodesDF
-#&gt; debug: coordinates(nodesSP) &lt;- ~ctrX + ctrY
-#&gt; debug: proj4string(nodesSP) &lt;- CRS(projection(x@voronoi))
-#&gt; debug: if (!R) {
-#&gt;     .wShp(nodesSP, "nodes", dirpath, overwrite)
-#&gt;     .wShp(linksCentrSP, "linksCentroid", dirpath, overwrite)
-#&gt;     .wRas(x@voronoi, "voronoi", dirpath, rasterFormat, overwrite)
-#&gt;     if (vorBound) 
-#&gt;         .wRas(vorB, "vorBound", dirpath, rasterFormat, overwrite)
-#&gt;     message("Exported to:", normalizePath(dirpath))
-#&gt;     invisible(normalizePath(dirpath))
-#&gt; } else {
-#&gt;     returnSpatial &lt;- list(nodes = nodesSP, linksCentroid = linksCentrSP, 
-#&gt;         voronoi = x@voronoi, vorBound = vorB)
-#&gt;     return(returnSpatial)
-#&gt; }
-#&gt; debug: .wShp(nodesSP, "nodes", dirpath, overwrite)
-#&gt; debug: .wShp(linksCentrSP, "linksCentroid", dirpath, overwrite)
-#&gt; debug: .wRas(x@voronoi, "voronoi", dirpath, rasterFormat, overwrite)
-#&gt; debug: if (vorBound) .wRas(vorB, "vorBound", dirpath, rasterFormat, 
-#&gt;     overwrite)
-#&gt; debug: message("Exported to:", normalizePath(dirpath))</div><div class='output co'>#&gt; <span class='message'>Exported to:/tmp/Rtmpf6nUl5/tiny_goc_thresh2</span></div><div class='output co'>#&gt; debug: invisible(normalizePath(dirpath))</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/unlink.html'>unlink</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span>(<span class='no'>tmpdir</span>, <span class='st'>"tiny_goc_thresh2"</span>), <span class='kw'>recursive</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='fu'>export</span>(<span class='fu'><a href='grain.html'>grain</a></span>(<span class='no'>tinyPatchGOC</span>, <span class='fl'>2</span>), <span class='kw'>dirname</span> <span class='kw'>=</span> <span class='st'>"tiny_goc_thresh2"</span>, <span class='kw'>path</span> <span class='kw'>=</span> <span class='no'>tmpdir</span>)</div><div class='output co'>#&gt; <span class='message'>Exported to:/tmp/Rtmp3SauI2/tiny_goc_thresh2</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/unlink.html'>unlink</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span>(<span class='no'>tmpdir</span>, <span class='st'>"tiny_goc_thresh2"</span>), <span class='kw'>recursive</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 
 <span class='co'>## Export rasters and vectors of the MPG and place in an R object</span>
 <span class='no'>sp_tinyPatchMPG</span> <span class='kw'>&lt;-</span> <span class='fu'>export</span>(<span class='no'>tinyPatchMPG</span>, <span class='kw'>R</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div></pre>

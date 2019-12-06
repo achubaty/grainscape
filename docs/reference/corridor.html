@@ -81,7 +81,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">grainscape</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.2</span>
       </span>
     </div>
 
@@ -215,8 +215,7 @@ at multiple spatial scales in landscape genetics. Molecular Ecology 21:3996-4009
 <span class='no'>corridorStartEnd</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>rbind</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>10</span>, <span class='fl'>10</span>), <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>90</span>, <span class='fl'>90</span>))
 <span class='no'>tinyPatchCorridor</span> <span class='kw'>&lt;-</span> <span class='fu'>corridor</span>(<span class='no'>tinyPatchGOC</span>, <span class='kw'>whichThresh</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>coords</span> <span class='kw'>=</span> <span class='no'>corridorStartEnd</span>)
 <span class='kw'>if</span> (<span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span>())
-  <span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>tinyPatchCorridor</span>)
-
+  <span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>tinyPatchCorridor</span>)</div><div class='output co'>#&gt; <span class='message'>Extracting Voronoi boundaries...</span></div><div class='img'><img src='corridor-1.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'>## More control over a corridor visualization</span>
 <span class='kw'>if</span> (<span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span>()) {
   <span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>tinyPatchCorridor</span>@<span class='kw'>voronoi</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>"lightgrey"</span>, <span class='kw'>lwd</span> <span class='kw'>=</span> <span class='fl'>2</span>)
@@ -227,7 +226,7 @@ at multiple spatial scales in landscape genetics. Molecular Ecology 21:3996-4009
   <span class='fu'><a href='https://rdrr.io/r/graphics/mtext.html'>mtext</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span>(<span class='st'>"Corridor shortest path length:"</span>,
               <span class='fu'><a href='https://rdrr.io/r/base/Round.html'>round</a></span>(<span class='no'>tinyPatchCorridor</span>@<span class='kw'>corridorLength</span>, <span class='fl'>2</span>),
               <span class='st'>"resistance units"</span>), <span class='kw'>side</span> <span class='kw'>=</span> <span class='fl'>1</span>)
-}</div></pre>
+}</div><div class='img'><img src='corridor-2.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

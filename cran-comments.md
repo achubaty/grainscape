@@ -1,6 +1,6 @@
 ## New submission
 
-This is a maintenance release to reduce the sive of the package tarball, per CRAN's request.
+This is a maintenance release to reduce the size of the package tarball, per CRAN's request.
 See `NEWS.md` for a complete list of changes.
 
 ## Test environments
