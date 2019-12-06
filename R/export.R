@@ -285,7 +285,7 @@ setMethod(
     if (!R) {
       dirpath <- .createDir("grain", dirname, path, overwrite)
     }
-browser()
+
     ## Prepare links
     linksDF <- graphdf(x@th)[[1]]$e[, -10]
     names(linksDF) <- c("e1", "e2", "maxWt", "lidMaxWt", "minWt", "lidMinWt",

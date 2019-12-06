@@ -8,21 +8,25 @@
 
 <title>Export spatial data from MPG and GOC models — export • grainscape</title>
 
+
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
 
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
 
-<!-- sticky kit -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
+<!-- headroom.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -30,8 +34,8 @@
 
 
 
-<meta property="og:title" content="Export spatial data from MPG and GOC models — export" />
 
+<meta property="og:title" content="Export spatial data from MPG and GOC models — export" />
 <meta property="og:description" content="This function automates the export of raster and vector spatial data from mpg and
 grain objects. By default it places them in a new directory, unless an existing one is
 specified with overwrite = TRUE.
@@ -46,6 +50,7 @@ export ESRI compatible shape files." />
 
 
 
+
 <!-- mathjax -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script>
@@ -54,6 +59,17 @@ export ESRI compatible shape files." />
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
+
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-34446208-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-34446208-1');
+</script>
 
 
   </head>
@@ -72,7 +88,7 @@ export ESRI compatible shape files." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">grainscape</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.2</span>
       </span>
     </div>
 
@@ -80,7 +96,7 @@ export ESRI compatible shape files." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -106,11 +122,10 @@ export ESRI compatible shape files." />
   <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/achubaty/grainscape">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -121,6 +136,7 @@ export ESRI compatible shape files." />
 </div><!--/.navbar -->
 
       
+
       </header>
 
 <div class="row">
@@ -132,7 +148,6 @@ export ESRI compatible shape files." />
     </div>
 
     <div class="ref-description">
-    
     <p>This function automates the export of raster and vector spatial data from <code>mpg</code> and
 <code>grain</code> objects. By default it places them in a new directory, unless an existing one is
 specified with <code>overwrite = TRUE</code>.</p>
@@ -143,27 +158,55 @@ are ignored. (Default <code>R = FALSE</code>)</p>
 <p>The <code>raster</code> package <code>writeRaster</code> is used for rasters,
 and <code>writeOGR</code> in the <code>rgdal</code> package is used to
 export ESRI compatible shape files.</p>
-    
     </div>
 
-    <pre class="usage"><span class='fu'>export</span>(<span class='no'>x</span>, <span class='kw'>dirname</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>path</span> <span class='kw'>=</span> <span class='st'>"."</span>, <span class='kw'>rasterFormat</span> <span class='kw'>=</span> <span class='st'>"GTiff"</span>,
-  <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>R</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>vorBound</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)
+    <pre class="usage"><span class='fu'>export</span>(
+  <span class='no'>x</span>,
+  <span class='kw'>dirname</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>path</span> <span class='kw'>=</span> <span class='st'>"."</span>,
+  <span class='kw'>rasterFormat</span> <span class='kw'>=</span> <span class='st'>"GTiff"</span>,
+  <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>R</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>vorBound</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='no'>...</span>
+)
 
 <span class='co'># S4 method for mpg</span>
-<span class='fu'>export</span>(<span class='no'>x</span>, <span class='kw'>dirname</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>path</span> <span class='kw'>=</span> <span class='st'>"."</span>,
-  <span class='kw'>rasterFormat</span> <span class='kw'>=</span> <span class='st'>"GTiff"</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>R</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>vorBound</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)
+<span class='fu'>export</span>(
+  <span class='no'>x</span>,
+  <span class='kw'>dirname</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>path</span> <span class='kw'>=</span> <span class='st'>"."</span>,
+  <span class='kw'>rasterFormat</span> <span class='kw'>=</span> <span class='st'>"GTiff"</span>,
+  <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>R</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>vorBound</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='no'>...</span>
+)
 
 <span class='co'># S4 method for grain</span>
-<span class='fu'>export</span>(<span class='no'>x</span>, <span class='kw'>dirname</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>path</span> <span class='kw'>=</span> <span class='st'>"."</span>,
-  <span class='kw'>rasterFormat</span> <span class='kw'>=</span> <span class='st'>"GTiff"</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>R</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>vorBound</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)
+<span class='fu'>export</span>(
+  <span class='no'>x</span>,
+  <span class='kw'>dirname</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>path</span> <span class='kw'>=</span> <span class='st'>"."</span>,
+  <span class='kw'>rasterFormat</span> <span class='kw'>=</span> <span class='st'>"GTiff"</span>,
+  <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>R</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>vorBound</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='no'>...</span>
+)
 
 <span class='co'># S4 method for goc</span>
-<span class='fu'>export</span>(<span class='no'>x</span>, <span class='kw'>dirname</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>path</span> <span class='kw'>=</span> <span class='st'>"."</span>,
-  <span class='kw'>rasterFormat</span> <span class='kw'>=</span> <span class='st'>"GTiff"</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>R</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>vorBound</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)</pre>
-    
+<span class='fu'>export</span>(
+  <span class='no'>x</span>,
+  <span class='kw'>dirname</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>path</span> <span class='kw'>=</span> <span class='st'>"."</span>,
+  <span class='kw'>rasterFormat</span> <span class='kw'>=</span> <span class='st'>"GTiff"</span>,
+  <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>R</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>vorBound</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='no'>...</span>
+)</pre>
+
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
@@ -215,7 +258,7 @@ Defaults to <code>FALSE</code>.</p></td>
       <td><p>Additional arguments (not used).</p></td>
     </tr>
     </table>
-    
+
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>Invisibly returns the path to the folder created.</p>
@@ -236,42 +279,21 @@ the boundaries of the Voronoi polygons (if specified).</p>
 <p>Description of node (vertex) and link (edge) weights in <code>mpg</code> objects
 and their corresponding attribute names in the shape files created.</p>
 <table class='table'>
-<tr><td></td><td></td><td><strong>type</strong></td><td></td></tr>
-<tr><td></td><td><strong>MPG name</strong></td><td></td><td></td></tr>
-<tr><td><strong>SHP name</strong></td><td></td><td></td><td><strong>Description</strong></td></tr>
-<tr><td></td><td></td><td>node</td><td></td></tr>
-<tr><td><code>patchId</code></td><td></td><td></td><td><code>patchId</code></td></tr>
-<tr><td></td><td>Patch ID from</td><td><code>patchId</code></td><td>raster</td></tr>
-<tr><td></td><td>node</td><td></td><td><code>patchArea</code></td></tr>
-<tr><td></td><td></td><td><code>patchA</code></td><td></td></tr>
-<tr><td>Area of patch</td><td></td><td>node</td><td></td></tr>
-<tr><td><code>patchEdgeArea</code></td><td></td><td></td><td><code>patchEA</code></td></tr>
-<tr><td></td><td>Edge area of patch</td><td></td><td>node</td></tr>
-<tr><td></td><td><code>coreArea</code></td><td></td><td></td></tr>
-<tr><td><code>coreA</code></td><td></td><td>Area excluding edge of patch</td><td></td></tr>
-<tr><td>node</td><td></td><td><code>centroidX</code></td><td></td></tr>
-<tr><td></td><td><code>ctrX</code></td><td></td><td>Centroid of the patch (X)</td></tr>
-<tr><td></td><td>node</td><td></td><td><code>centroidY</code></td></tr>
-<tr><td></td><td></td><td><code>ctrY</code></td><td></td></tr>
-<tr><td>Centroid of the patch (Y)</td><td></td><td>link</td><td></td></tr>
-<tr><td><code>e1</code></td><td></td><td></td><td><code>e1</code></td></tr>
-<tr><td></td><td>Id of first patch at end of link</td><td></td><td>link</td></tr>
-<tr><td></td><td><code>e2</code></td><td></td><td></td></tr>
-<tr><td><code>e2</code></td><td></td><td>Id of second patch at end of link</td><td></td></tr>
-<tr><td>link</td><td></td><td><code>linkId</code></td><td></td></tr>
-<tr><td></td><td><code>linkId</code></td><td></td><td>Link ID from</td></tr>
-<tr><td><code>lcpLinkId</code></td><td>raster</td><td></td><td>link</td></tr>
-<tr><td></td><td><code>lcPerimWeight</code></td><td></td><td></td></tr>
-<tr><td><code>lcpPerWt</code></td><td></td><td>Cost length of link from patch perimeters</td><td></td></tr>
-<tr><td>link</td><td></td><td><code>startPerimX</code></td><td></td></tr>
-<tr><td></td><td><code>strtPerX</code></td><td></td><td>Coordinate of link endpoint on first patch (X)</td></tr>
-<tr><td></td><td>link</td><td></td><td><code>startPerimY</code></td></tr>
-<tr><td></td><td></td><td><code>strtPerY</code></td><td></td></tr>
-<tr><td>Coordinate of link endpoint on first patch (Y)</td><td></td><td>link</td><td></td></tr>
-<tr><td><code>endPerimX</code></td><td></td><td></td><td><code>endPerX</code></td></tr>
-<tr><td></td><td>Coordinate of link endpoint on second patch (X)</td><td></td><td>link</td></tr>
-<tr><td></td><td><code>endPerimY</code></td><td></td><td></td></tr>
-<tr><td><code>endPerY</code></td><td></td><td>Coordinate of link endpoint on second patch (Y)</td><td></td></tr>
+<tr><td><strong>type</strong></td><td><strong>MPG name</strong></td><td><strong>SHP name</strong></td><td><strong>Description</strong></td></tr>
+<tr><td>node</td><td><code>patchId</code></td><td><code>patchId</code></td><td>Patch ID from <code>patchId</code> raster</td></tr>
+<tr><td>node</td><td><code>patchArea</code></td><td><code>patchA</code></td><td>Area of patch</td></tr>
+<tr><td>node</td><td><code>patchEdgeArea</code></td><td><code>patchEA</code></td><td>Edge area of patch</td></tr>
+<tr><td>node</td><td><code>coreArea</code></td><td><code>coreA</code></td><td>Area excluding edge of patch</td></tr>
+<tr><td>node</td><td><code>centroidX</code></td><td><code>ctrX</code></td><td>Centroid of the patch (X)</td></tr>
+<tr><td>node</td><td><code>centroidY</code></td><td><code>ctrY</code></td><td>Centroid of the patch (Y)</td></tr>
+<tr><td>link</td><td><code>e1</code></td><td><code>e1</code></td><td>Id of first patch at end of link</td></tr>
+<tr><td>link</td><td><code>e2</code></td><td><code>e2</code></td><td>Id of second patch at end of link</td></tr>
+<tr><td>link</td><td><code>linkId</code></td><td><code>linkId</code></td><td>Link ID from <code>lcpLinkId</code> raster</td></tr>
+<tr><td>link</td><td><code>lcPerimWeight</code></td><td><code>lcpPerWt</code></td><td>Cost length of link from patch perimeters</td></tr>
+<tr><td>link</td><td><code>startPerimX</code></td><td><code>strtPerX</code></td><td>Coordinate of link endpoint on first patch (X)</td></tr>
+<tr><td>link</td><td><code>startPerimY</code></td><td><code>strtPerY</code></td><td>Coordinate of link endpoint on first patch (Y)</td></tr>
+<tr><td>link</td><td><code>endPerimX</code></td><td><code>endPerX</code></td><td>Coordinate of link endpoint on second patch (X)</td></tr>
+<tr><td>link</td><td><code>endPerimY</code></td><td><code>endPerY</code></td><td>Coordinate of link endpoint on second patch (Y)</td></tr>
 </table>
 
 
@@ -283,66 +305,45 @@ Voronoi polygon centroids and links among them respectively.
 <p>Description of node (vertex) and link (edge) weights in <code>grain</code>
 objects  and their corresponding attribute names in the shape files created.</p>
 <table class='table'>
-<tr><td></td><td></td><td><strong>Type</strong></td><td></td></tr>
-<tr><td></td><td><strong>GOC name</strong></td><td></td><td></td></tr>
-<tr><td><strong>SHP name</strong></td><td></td><td></td><td><strong>Description</strong></td></tr>
-<tr><td></td><td></td><td>node</td><td></td></tr>
-<tr><td><code>polygonId</code></td><td></td><td></td><td><code>polyId</code></td></tr>
-<tr><td></td><td>Polygon ID from grain voronoi raster</td><td></td><td>node</td></tr>
-<tr><td></td><td><code>polygonArea</code></td><td></td><td></td></tr>
-<tr><td><code>polyA</code></td><td></td><td>Area of polygon from grain voronoi raster</td><td></td></tr>
-<tr><td>node</td><td></td><td><code>totalPatchArea</code></td><td></td></tr>
-<tr><td></td><td><code>patchA</code></td><td></td><td>Total area of all patches in polygon</td></tr>
-<tr><td></td><td>node</td><td></td><td><code>totalPatchEdgeArea</code></td></tr>
-<tr><td></td><td></td><td><code>patchEA</code></td><td></td></tr>
-<tr><td>Total area of all patch edges in polygon</td><td></td><td>node</td><td></td></tr>
-<tr><td><code>totalCoreArea</code></td><td></td><td></td><td><code>coreA</code></td></tr>
-<tr><td></td><td>Total area of patches in polygon excluding edges</td><td></td><td>node</td></tr>
-<tr><td></td><td><code>centroidX</code></td><td></td><td></td></tr>
-<tr><td><code>ctrX</code></td><td></td><td>Centroid of the polygon (X)</td><td></td></tr>
-<tr><td>node</td><td></td><td><code>centroidY</code></td><td></td></tr>
-<tr><td></td><td><code>ctrY</code></td><td></td><td>Centroid of the polygon (Y)</td></tr>
-<tr><td></td><td>link</td><td></td><td><code>e1</code></td></tr>
-<tr><td></td><td></td><td><code>e1</code></td><td></td></tr>
-<tr><td>ID of first patch at end of link</td><td></td><td>link</td><td></td></tr>
-<tr><td><code>e2</code></td><td></td><td></td><td><code>e2</code></td></tr>
-<tr><td></td><td>ID of second patch at end of link</td><td></td><td>link</td></tr>
-<tr><td></td><td><code>maxWeight</code></td><td></td><td></td></tr>
-<tr><td><code>maxWt</code></td><td></td><td>The maximum weight of all links connecting</td><td>patches between polygons</td></tr>
-<tr><td></td><td>link</td><td></td><td><code>linkIdMaxWeight</code></td></tr>
-<tr><td></td><td></td><td><code>maxWt</code></td><td></td></tr>
-<tr><td>The link id of that maximum weight</td><td></td><td><code>link (lcpLinkId)</code></td><td></td></tr>
-<tr><td></td><td>link</td><td></td><td><code>minWeight</code></td></tr>
-<tr><td></td><td></td><td><code>min</code></td><td></td></tr>
-<tr><td>The minimum weight of all links connecting</td><td>patches between polygons</td><td></td><td>link</td></tr>
-<tr><td></td><td><code>linkIdMinWeight</code></td><td></td><td></td></tr>
-<tr><td><code>minWt</code></td><td></td><td>The link id of that minimum weight</td><td></td></tr>
-<tr><td><code>link (lcpLinkId)</code></td><td></td><td></td><td>link</td></tr>
-<tr><td></td><td><code>medianWeight</code></td><td></td><td></td></tr>
-<tr><td><code>medWt</code></td><td></td><td>The median weight of all links connecting</td><td>patches between polygons</td></tr>
-<tr><td></td><td>link</td><td></td><td><code>meanWeight</code></td></tr>
-<tr><td></td><td></td><td><code>meanWT</code></td><td></td></tr>
-<tr><td>The minimum weight of all links connecting</td><td>patches between polygons</td><td></td><td>link</td></tr>
-<tr><td></td><td><code>numlinksWeight</code></td><td></td><td></td></tr>
-<tr><td><code>numEWt</code></td><td></td><td>The number of links connecting patches</td><td>between polygons</td></tr>
-<tr><td></td><td>link</td><td></td><td><code>eucCentroidWeight</code></td></tr>
-<tr><td></td><td></td><td><code>eucCtrWt</code></td><td></td></tr>
-<tr><td>The Euclidean distance between</td><td>centroids of polygons</td><td></td><td></td></tr>
+<tr><td><strong>Type</strong></td><td><strong>GOC name</strong></td><td><strong>SHP name</strong></td><td><strong>Description</strong></td></tr>
+<tr><td>node</td><td><code>polygonId</code></td><td><code>polyId</code></td><td>Polygon ID from grain voronoi raster</td></tr>
+<tr><td>node</td><td><code>polygonArea</code></td><td><code>polyA</code></td><td>Area of polygon from grain voronoi raster</td></tr>
+<tr><td>node</td><td><code>totalPatchArea</code></td><td><code>patchA</code></td><td>Total area of all patches in polygon</td></tr>
+<tr><td>node</td><td><code>totalPatchEdgeArea</code></td><td><code>patchEA</code></td><td>Total area of all patch edges in polygon</td></tr>
+<tr><td>node</td><td><code>totalCoreArea</code></td><td><code>coreA</code></td><td>Total area of patches in polygon excluding edges</td></tr>
+<tr><td>node</td><td><code>centroidX</code></td><td><code>ctrX</code></td><td>Centroid of the polygon (X)</td></tr>
+<tr><td>node</td><td><code>centroidY</code></td><td><code>ctrY</code></td><td>Centroid of the polygon (Y)</td></tr>
+<tr><td>link</td><td><code>e1</code></td><td><code>e1</code></td><td>ID of first patch at end of link</td></tr>
+<tr><td>link</td><td><code>e2</code></td><td><code>e2</code></td><td>ID of second patch at end of link</td></tr>
+<tr><td>link</td><td><code>maxWeight</code></td><td><code>maxWt</code></td><td>The maximum weight of all links connecting
+                                                    patches between polygons</td></tr>
+<tr><td>link</td><td><code>linkIdMaxWeight</code></td><td><code>maxWt</code></td><td>The link id of that maximum weight
+                                                          <code>link (lcpLinkId)</code></td></tr>
+<tr><td>link</td><td><code>minWeight</code></td><td><code>min</code></td><td>The minimum weight of all links connecting
+                                                  patches between polygons</td></tr>
+<tr><td>link</td><td><code>linkIdMinWeight</code></td><td><code>minWt</code></td><td>The link id of that minimum weight
+                                                          <code>link (lcpLinkId)</code></td></tr>
+<tr><td>link</td><td><code>medianWeight</code></td><td><code>medWt</code></td><td>The median weight of all links connecting
+                                                       patches between polygons</td></tr>
+<tr><td>link</td><td><code>meanWeight</code></td><td><code>meanWT</code></td><td>The minimum weight of all links connecting
+                                                      patches between polygons</td></tr>
+<tr><td>link</td><td><code>numlinksWeight</code></td><td><code>numEWt</code></td><td>The number of links connecting patches
+                                                          between polygons</td></tr>
+<tr><td>link</td><td><code>eucCentroidWeight</code></td><td><code>eucCtrWt</code></td><td>The Euclidean distance between
+                                                               centroids of polygons</td></tr>
 </table>
 
 
-    
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><code><a href='MPG.html'>MPG</a></code>, <code><a href='GOC.html'>GOC</a></code>, <code><a href='grain.html'>grain</a></code></p></div>
-    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'>## Load raster landscape</span>
-<span class='no'>tiny</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='https://www.rdocumentation.org/packages/raster/topics/raster'>raster</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.file'>system.file</a></span>(<span class='st'>"extdata/tiny.asc"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"grainscape"</span>))
+<span class='no'>tiny</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/raster/man/raster.html'>raster</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"extdata/tiny.asc"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"grainscape"</span>))
 
 <span class='co'>## Create a resistance surface from a raster using an is-becomes reclassification</span>
-<span class='no'>tinyCost</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='https://www.rdocumentation.org/packages/raster/topics/reclassify'>reclassify</a></span>(<span class='no'>tiny</span>, <span class='kw'>rcl</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/cbind'>cbind</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>2</span>, <span class='fl'>3</span>, <span class='fl'>4</span>), <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>5</span>, <span class='fl'>10</span>, <span class='fl'>12</span>)))
+<span class='no'>tinyCost</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/raster/man/reclassify.html'>reclassify</a></span>(<span class='no'>tiny</span>, <span class='kw'>rcl</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>2</span>, <span class='fl'>3</span>, <span class='fl'>4</span>), <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>5</span>, <span class='fl'>10</span>, <span class='fl'>12</span>)))
 
 <span class='co'>## Produce a patch-based MPG where patches are resistance features=1</span>
 <span class='no'>tinyPatchMPG</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='MPG.html'>MPG</a></span>(<span class='kw'>cost</span> <span class='kw'>=</span> <span class='no'>tinyCost</span>, <span class='kw'>patch</span> <span class='kw'>=</span> <span class='no'>tinyCost</span> <span class='kw'>==</span> <span class='fl'>1</span>)
@@ -351,8 +352,8 @@ objects  and their corresponding attribute names in the shape files created.</p>
 <span class='no'>tinyPatchGOC</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='GOC.html'>GOC</a></span>(<span class='no'>tinyPatchMPG</span>, <span class='kw'>nThresh</span> <span class='kw'>=</span> <span class='fl'>5</span>)
 
 <span class='co'>## Export raster and vectors of a grain to a specified directory</span>
-<span class='no'>tmpdir</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/tempfile'>tempdir</a></span>()
-<span class='fu'>export</span>(<span class='fu'><a href='grain.html'>grain</a></span>(<span class='no'>tinyPatchGOC</span>, <span class='fl'>2</span>), <span class='kw'>dirname</span> <span class='kw'>=</span> <span class='st'>"tiny_goc_thresh2"</span>, <span class='kw'>path</span> <span class='kw'>=</span> <span class='no'>tmpdir</span>)</div><div class='output co'>#&gt; <span class='message'>Exported to:/private/var/folders/l2/hy6b0sl977bcd8695nt6j7s80000gn/T/RtmpCSGMRV/tiny_goc_thresh2</span></div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/unlink'>unlink</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/file.path'>file.path</a></span>(<span class='no'>tmpdir</span>, <span class='st'>"tiny_goc_thresh2"</span>), <span class='kw'>recursive</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='no'>tmpdir</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempdir</a></span>()
+<span class='fu'>export</span>(<span class='fu'><a href='grain.html'>grain</a></span>(<span class='no'>tinyPatchGOC</span>, <span class='fl'>2</span>), <span class='kw'>dirname</span> <span class='kw'>=</span> <span class='st'>"tiny_goc_thresh2"</span>, <span class='kw'>path</span> <span class='kw'>=</span> <span class='no'>tmpdir</span>)</div><div class='output co'>#&gt; <span class='message'>Exported to:/tmp/Rtmp3SauI2/tiny_goc_thresh2</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/unlink.html'>unlink</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span>(<span class='no'>tmpdir</span>, <span class='st'>"tiny_goc_thresh2"</span>), <span class='kw'>recursive</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 
 <span class='co'>## Export rasters and vectors of the MPG and place in an R object</span>
 <span class='no'>sp_tinyPatchMPG</span> <span class='kw'>&lt;-</span> <span class='fu'>export</span>(<span class='no'>tinyPatchMPG</span>, <span class='kw'>R</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div></pre>
@@ -361,11 +362,8 @@ objects  and their corresponding attribute names in the shape files created.</p>
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
       <li><a href="#value">Value</a></li>
-
       <li><a href="#see-also">See also</a></li>
-      
       <li><a href="#examples">Examples</a></li>
     </ul>
 
@@ -374,19 +372,23 @@ objects  and their corresponding attribute names in the shape files created.</p>
   </div>
 </div>
 
+
       <footer>
       <div class="copyright">
   <p>Developed by Paul Galpern, Sam Doctolero, Alex M Chubaty.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
+
       </footer>
    </div>
 
   
 
+
   </body>
 </html>
+
 
