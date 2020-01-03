@@ -1,0 +1,26 @@
+citHeader("To cite grainscape in publications use:")
+
+bibentry(
+  bibtype  = "Article",
+  title    = "The {R} toolbox {grainscape} for modelling and visualizing landscape connectivity using spatially-explicit networks",
+  author   = c(person("Alex M", "Chubaty"),
+               person("Paul", "Galpern"),
+               person("Sam C", "Doctolero")),
+  journal  = "Methods in Ecology and Evolution",
+  year     = "2020",
+  volume   = "11",
+  number   = "4",
+  pages    = "591--595",
+  doi      = "10.1111/2041-210X.13350"
+)
+
+bibentry(
+  bibtype  = "Manual",
+  title    = "{grainscape}: Landscape Connectivity, Habitat, and Protected Area Networks",
+  author   = c(person("Alex M", "Chubaty"),
+               person("Paul", "Galpern"),
+               person("Sam", "Doctolero")),
+  year = sub("-.*", "", meta$Date),
+  note = sprintf("R package version %s", meta$Version),
+  url = "https://CRAN.R-project.org/package=grainscape"
+)

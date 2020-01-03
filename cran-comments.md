@@ -1,6 +1,6 @@
 ## New submission
 
-This is a maintenance release to reduce the size of the package tarball, per CRAN's request.
+In this version we add a citation to our newly published paper for this package.
 See `NEWS.md` for a complete list of changes.
 
 ## Test environments

@@ -13,6 +13,8 @@
 Given a landscape resistance surface, creates grains of connectivity and minimum planar graph models that can be used to calculate effective distances for landscape connectivity at multiple scales.
 This is a cross-platform reimplementation and update of the `grainscape` package (http://grainscape.r-forge.r-project.org).
 
+To cite `grainscape` in publications, see `citation("grainscape")`.
+
 ### Installation
 
 #### From CRAN
@@ -27,7 +29,7 @@ install.packages("grainscape")
   See [here](https://support.rstudio.com/hc/en-us/articles/200486498-Package-Development-Prerequisites) for more details.
     
     - *Windows:* install [Rtools](https://cran.r-project.org/bin/windows/Rtools/).
-    - *macOS:* install Xcode commandline tools from the terminal: `xcode-select install`. 
+    - *macOS:* install Xcode commandline tools from the terminal: `xcode-select --install`. 
     - *Debian/Ubuntu Linux:* ensure `r-base-dev` is installed.
 
 2. **Install from GitHub:**

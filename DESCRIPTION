@@ -1,15 +1,17 @@
 Package: grainscape
 Type: Package
 Title: Landscape Connectivity, Habitat, and Protected Area Networks
-Description: Given a landscape resistance surface, creates grains of connectivity
-    (Galpern et al. (2012) <doi:10.1111/j.1365-294X.2012.05677.x>) and minimum planar graph
-    (Fall et al. (2007) <doi:10.1007/s10021-007-9038-7>) models that can be used to calculate
-    effective distances for landscape connectivity at multiple scales.
+Description: Given a landscape resistance surface, creates minimum planar graph
+    (Fall et al. (2007) <doi:10.1007/s10021-007-9038-7>) and grains of connectivity
+    (Galpern et al. (2012) <doi:10.1111/j.1365-294X.2012.05677.x>) models that can be
+    used to calculate effective distances for landscape connectivity at multiple scales.
+    Documentation is provided by several vignettes, and a paper
+    (Chubaty, Galpern & Doctolero (2020) <doi:10.1111/2041-210X.13350>).
 URL:
     https://alexchubaty.com/grainscape,
     https://github.com/achubaty/grainscape
-Version: 0.4.2
-Date: 2019-12-06
+Version: 0.4.3
+Date: 2020-04-02
 Authors@R: c(
     person("Paul", "Galpern", email = "pgalpern@gmail.com", role = c("aut", "cph")),
     person("Sam", "Doctolero", email = "sam.doctolero@gmail.com", role = "aut"),
@@ -64,4 +66,4 @@ Collate:
     'zzz.R'
 Encoding: UTF-8
 Language: en-CA
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.0
