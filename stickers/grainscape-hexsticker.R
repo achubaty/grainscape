@@ -4,6 +4,7 @@
 library(ggplot2)
 library(grainscape)
 library(hexSticker)
+library(igraph)
 library(raster)
 library(showtext)
 library(sysfonts)
@@ -57,6 +58,6 @@ sticker(f,
         package = "grainscape",
         h_color = colours[1], h_fill = "#ececec",
         p_color = colours[2], p_family = "roboto", p_size = 22, p_x = 1, p_y = 1.4,
-        s_x = 1.0, s_y = 0.75, s_width = 0.5, s_height = 0.5,
+        s_x = 1.0, s_y = 0.75, s_width = 0.4, s_height = 0.4,
         #url = "https://achubaty.github.io/grainscape", u_color = "#000000", u_size = 4,
         filename = "stickers/hexsticker.png", spotlight = FALSE)
