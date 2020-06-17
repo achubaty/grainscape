@@ -1,8 +1,7 @@
-sudo: required
 language: r
 cache: packages
 cran: https://cran.rstudio.com/
-matrix:
+jobs:
   include:
   - os: linux
     dist: xenial
@@ -14,8 +13,6 @@ matrix:
         sources:
         - sourceline: 'ppa:ubuntugis/ubuntugis-unstable'
         packages:
-        - aspell
-        - aspell-en
         - ghostscript
         - libgdal1-dev
         - libgeos-dev
@@ -32,13 +29,11 @@ matrix:
         sources:
         - sourceline: 'ppa:ubuntugis/ubuntugis-unstable'
         packages:
-        - aspell
-        - aspell-en
         - ghostscript
         - libgdal1-dev
         - libgeos-dev
         - libproj-dev
-    r_binary_packages:
+    r_packages:
     - covr
     r_github_packages:
     - jimhester/lintr
@@ -57,8 +52,6 @@ matrix:
         sources:
         - sourceline: 'ppa:ubuntugis/ubuntugis-unstable'
         packages:
-        - aspell
-        - aspell-en
         - ghostscript
         - libgdal1-dev
         - libgeos-dev
@@ -70,7 +63,7 @@ matrix:
     addons:
       homebrew:
         packages:
-        - aspell
+        - udunits
         update: true
     latex: false
     before_script:
