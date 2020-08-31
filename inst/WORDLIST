@@ -1,6 +1,7 @@
 1D
 2013a
 2013b
+210X
 294X
 2D
 achubaty
@@ -9,7 +10,6 @@ ActiveCellQueue
 ActiveCells
 aes
 al
-Appveyor
 AppVeyor
 ArcASCII
 asc
@@ -23,12 +23,14 @@ cellFromXY
 centroid
 Centroid
 centroids
+Codecov
 commandline
 coords
 Csardi
 darkgreen
 doesn
 doi
+DOI
 Ecography
 epath
 et
@@ -71,6 +73,7 @@ linkId
 LinkMap
 macOS
 Manseau
+MEE
 mgplot
 modeling
 Modeling

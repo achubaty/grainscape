@@ -6,10 +6,9 @@
     devtools::check(args = c('--as-cran'), build_args = c('--compact-vignettes=both'))
     ```
 
-2. ensure passing on travis, appveyor
+2. ensure passing on GitHub Actions
 
-    * <https://ci.appveyor.com/project/achubaty/grainscape/history>
-    * <https://travis-ci.org/achubaty/grainscape/builds>
+    * <https://github.com/achubaty/grainscape/actions>
 
 2. check code formatting and cleanup as needed
 
@@ -49,8 +48,6 @@
    ```r
    spelling::spell_check_package()
    spelling::update_wordlist()
-   
-   ## see also tests/spelling.R
    ```
 
 9. run revdep checks (see `revdep/check.R`)

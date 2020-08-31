@@ -4,7 +4,9 @@
 \name{grainscape-maps}
 \alias{grainscape-maps}
 \title{Test maps included with \code{grainscape}}
-\format{raster}
+\format{
+raster
+}
 \description{
 Intended for users to explore the functionality of the package using simple
 and artificial land cover maps.

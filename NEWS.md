@@ -1,5 +1,20 @@
 Known issues: https://github.com/achubaty/grainscape/issues
 
+version 0.4.3
+=============
+
+## Dependency changes
+
+* none
+
+## Bugfixes
+
+* none
+
+## New features & enhancements
+
+* added MEE paper citation and updated package `DESCRIPTION` & `README`.
+
 version 0.4.2
 =============
 

@@ -283,7 +283,7 @@ Consider an organism able to disperse a maximum of 250 resistance units.
 According to \autoref{fig:scalesaggregation} this organism would experience this landscape as 6 connected regions.
 This is visualized in \autoref{fig:thresholdedgraph}.
 
-```{r figure_06, fig.cap="\\label{fig:thresholdedgraph}The thresholded MPG depicted with a link length of 250 resistance units. An organism that can disperse a maximum of 250 resistance units would experience this landscape as 6 connected regions in the depicted spatial configuration. Note that the plotting has been customized to emphasize which patches are connected. This was done by plotting links with less than the threshold length from the centroids of patches"}
+```{r figure_06, fig.cap="\\label{fig:thresholdedgraph}The thresholded MPG depicted with a link length of 250 resistance units. An organism that can disperse a maximum of 250 resistance units would experience this landscape as 6 connected regions in the depicted spatial configuration. Note that the plotting has been customized to emphasize which patches are connected. This was done by plotting links with less than the threshold length from the centroids of patches", warning=FALSE}
 ggplot() +
   geom_raster(data = ggGS(patchyMPG, "patchId"), 
               aes(x = x, y = y, fill = value > 0)) +
@@ -399,7 +399,7 @@ While the Euclidean distance between these points is easily calculated in R usin
 A *planar* network extracted on a Euclidean resistance surface can be used to identify which nodes are neighbours and find their pairwise distances [@Fall:2007eo; @Galpern:2011bc].
 In `grainscape` a Euclidean resistance surface is simply a resistance surface where all values are `= 1`)
     
-```{r figure_09, fig.cap="A planar network with one-dimensional point nodes extracted using `grainscape`. Nodes are represented as points and labelled with their `patchId`. Links are line segments among nodes."}
+```{r figure_09, fig.cap="A planar network with one-dimensional point nodes extracted using `grainscape`. Nodes are represented as points and labelled with their `patchId`. Links are line segments among nodes.", warning=FALSE}
 ## Make a new resistance raster of 400 by 400 cells
 ## with a coordinate system that corresponds to cells
 res <- raster(xmn = 0, xmx = 100, ymn = 0, ymx = 100, resolution = 1)
