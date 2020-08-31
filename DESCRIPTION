@@ -13,7 +13,8 @@ URL:
 Version: 0.4.3
 Date: 2020-08-31
 Authors@R: c(
-    person("Paul", "Galpern", email = "pgalpern@gmail.com", role = c("aut", "cph")),
+    person("Paul", "Galpern", email = "pgalpern@gmail.com", role = c("aut", "cph"),
+           comment = c(ORCID = "0000-0003-0099-3981")),
     person("Sam", "Doctolero", email = "sam.doctolero@gmail.com", role = "aut"),
     person("Alex M", "Chubaty", email = "alex.chubaty@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-7146-8135"))

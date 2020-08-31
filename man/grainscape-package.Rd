@@ -82,7 +82,7 @@ Useful links:
 
 Authors:
 \itemize{
-  \item Paul Galpern \email{pgalpern@gmail.com} [copyright holder]
+  \item Paul Galpern \email{pgalpern@gmail.com} (\href{https://orcid.org/0000-0003-0099-3981}{ORCID}) [copyright holder]
   \item Sam Doctolero \email{sam.doctolero@gmail.com}
 }
 
