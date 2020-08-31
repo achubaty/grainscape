@@ -41,7 +41,7 @@ Bivand, R.S. and C. Rundel. (2016). rgeos: Interface to Geometry Engine - Open S
 R package version 0.3-19, \url{https://CRAN.R-project.org/package=rgeos}.
 
 Csardi, G. and T. Nepusz. (2006). The igraph software package for complex network research.
-InterJournal Complex Systems 1695. \url{http://igraph.org}.
+InterJournal Complex Systems 1695. \url{https://igraph.org}.
 
 Fall, A. and J. Fall. (2001). A domain-specific language for models of landscape dynamics.
 Ecological Modelling 141:1-18.
