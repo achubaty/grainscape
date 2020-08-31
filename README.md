@@ -47,9 +47,9 @@ Contact us via the package GitHub site: [https://github.com/achubaty/grainscape/
 
 ### Contributions
 
-This Git repository uses the [Git Flow](http://nvie.com/posts/a-successful-git-branching-model/) branching model (the [`git flow`](https://github.com/petervanderdoes/gitflow-avh) extension is useful for this).
+This Git repository uses the [Git Flow](https://nvie.com/posts/a-successful-git-branching-model/) branching model (the [`git flow`](https://github.com/petervanderdoes/gitflow-avh) extension is useful for this).
 The [`development`](https://github.com/achubaty/grainscape/tree/development) branch contains the latest contributions and other code that will appear in the next release, and the [`master`](https://github.com/achubaty/grainscape) branch contains the code of the latest release, which is exactly what is currently on [CRAN](https://cran.r-project.org/package=grainscape).
 
 To make a contribution to the package, just send a [pull request](https://help.github.com/articles/using-pull-requests/). 
 When you send your PR, make sure `development` is the destination branch on the [grainscape repository](https://github.com/achubaty/grainscape).
-Your PR should pass `R CMD check --as-cran`, which will also be checked by <a href="https://travis-ci.org/achubaty/grainscape">Travis CI</a> and <a href="https://ci.appveyor.com/project/achubaty/grainscape">AppVeyor CI</a> when the PR is submitted.
+Your PR should pass `R CMD check --as-cran`, which will also be checked by <a href="https://github.com/achubaty/grainscape/actions">GitHub Actions</a> when the PR is submitted.
