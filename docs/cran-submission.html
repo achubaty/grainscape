@@ -10,23 +10,27 @@
 
 
 <!-- jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
+
+<!-- bootstrap-toc -->
+<link rel="stylesheet" href="bootstrap-toc.css">
+<script src="bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
 
 <!-- headroom.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="pkgdown.css" rel="stylesheet">
@@ -63,7 +67,7 @@
 
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-title-body">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -77,7 +81,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">grainscape</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.3</span>
       </span>
     </div>
 
@@ -113,7 +117,7 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/achubaty/grainscape">
+  <a href="https://github.com/achubaty/grainscape/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -139,59 +143,62 @@
 <ol>
 <li>
 <p>ensure all tests passing locally on as many machines as possible (mac, linux, win)</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1">devtools<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/devtools/man/check.html">check</a></span>(<span class="dt">args =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'--as-cran'</span>), <span class="dt">build_args =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'--compact-vignettes=both'</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb1"><html><pre class="r"><span class="kw pkg">devtools</span><span class="kw ns">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/check.html">check</a></span>(<span class="kw">args</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'--as-cran'</span>), <span class="kw">build_args</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'--compact-vignettes=both'</span>))</pre></html></div>
 </li>
 <li>
-<p>ensure passing on travis, appveyor</p>
+<p>ensure passing on GitHub Actions</p>
 <ul>
-<li><a href="https://ci.appveyor.com/project/achubaty/grainscape/history" class="uri">https://ci.appveyor.com/project/achubaty/grainscape/history</a></li>
-<li><a href="https://travis-ci.org/achubaty/grainscape/builds" class="uri">https://travis-ci.org/achubaty/grainscape/builds</a></li>
+<li><a href="https://github.com/achubaty/grainscape/actions" class="uri">https://github.com/achubaty/grainscape/actions</a></li>
 </ul>
 </li>
 <li>
 <p>check code formatting and cleanup as needed</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="co">#install_github("jimhester/lintr")</span></a>
-<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(lintr)</a>
-<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="kw"><a href="https://rdrr.io/pkg/lintr/man/lint_package.html">lint_package</a></span>()</a></code></pre></div>
+<div class="sourceCode" id="cb2"><html><pre class="r"><span class="co">#install_github("jimhester/lintr")</span>
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">lintr</span>)
+<span class="fu"><a href="https://rdrr.io/pkg/lintr/man/lint_package.html">lint_package</a></span>()</pre></html></div>
 </li>
 <li>
 <p>ensure passing win-builder olrelease, release, and devel</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw">check_win_oldrelease</span>(<span class="dt">args =</span> <span class="st">"--compact-vignettes=both"</span>)</a>
-<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="kw">check_win_release</span>(<span class="dt">args =</span> <span class="st">"--compact-vignettes=both"</span>)</a>
-<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="kw">check_win_devel</span>(<span class="dt">args =</span> <span class="st">"--compact-vignettes=both"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb3"><html><pre class="r"><span class="fu">check_win_oldrelease</span>(<span class="kw">args</span> <span class="kw">=</span> <span class="st">"--compact-vignettes=both"</span>)
+<span class="fu">check_win_release</span>(<span class="kw">args</span> <span class="kw">=</span> <span class="st">"--compact-vignettes=both"</span>)
+<span class="fu">check_win_devel</span>(<span class="kw">args</span> <span class="kw">=</span> <span class="st">"--compact-vignettes=both"</span>)</pre></html></div>
 </li>
 <li><p>bump version number in DESCRIPTION (use non-devel suffix – no <code>.9000</code>)</p></li>
 <li>
 <p>update <code>NEWS.md</code></p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">devtools<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/devtools/man/show_news.html">show_news</a></span>()</a></code></pre></div>
+<div class="sourceCode" id="cb4"><html><pre class="r"><span class="kw pkg">devtools</span><span class="kw ns">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/show_news.html">show_news</a></span>()</pre></html></div>
 </li>
 <li>
 <p>rebuild docs and ensure vignettes are compressed</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">devtools<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/devtools/man/document.html">document</a></span>()</a>
-<a class="sourceLine" id="cb5-2" data-line-number="2">tools<span class="op">::</span><span class="kw"><a href="https://rdrr.io/r/tools/compactPDF.html">compactPDF</a></span>(<span class="st">"vignettes"</span>, <span class="dt">qpdf =</span> <span class="st">"/usr/bin/qpdf"</span>, <span class="dt">gs_quality =</span> <span class="st">"ebook"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb5"><html><pre class="r"><span class="kw pkg">devtools</span><span class="kw ns">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/document.html">document</a></span>()
+<span class="kw pkg">tools</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/r/tools/compactPDF.html">compactPDF</a></span>(<span class="st">"vignettes"</span>, <span class="kw">qpdf</span> <span class="kw">=</span> <span class="st">"/usr/bin/qpdf"</span>, <span class="kw">gs_quality</span> <span class="kw">=</span> <span class="st">"ebook"</span>)</pre></html></div>
 </li>
-<li><p>update cran-comments (incl. versions tested)</p></li>
+<li><p>update cran-comments (incl. versions tested)</p></li>
 <li>
 <p>run spell checks</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">spelling<span class="op">::</span><span class="kw"><a href="https://docs.ropensci.org/spelling/reference/spell_check_package.html">spell_check_package</a></span>()</a>
-<a class="sourceLine" id="cb6-2" data-line-number="2">spelling<span class="op">::</span><span class="kw"><a href="https://docs.ropensci.org/spelling/reference/wordlist.html">update_wordlist</a></span>()</a>
-<a class="sourceLine" id="cb6-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb6-4" data-line-number="4"><span class="co">## see also tests/spelling.R</span></a></code></pre></div>
+<div class="sourceCode" id="cb6"><html><pre class="r"><span class="kw pkg">spelling</span><span class="kw ns">::</span><span class="fu"><a href="https://docs.ropensci.org/spelling/reference/spell_check_package.html">spell_check_package</a></span>()
+<span class="kw pkg">spelling</span><span class="kw ns">::</span><span class="fu"><a href="https://docs.ropensci.org/spelling/reference/wordlist.html">update_wordlist</a></span>()</pre></html></div>
 </li>
 <li><p>run revdep checks (see <code>revdep/check.R</code>)</p></li>
 <li><p>merge <code>development</code> branch into <code>master</code></p></li>
 <li><p>remove <code>Remotes</code> from <code>DESCRIPTION</code></p></li>
 <li>
 <p>rebuild package website (<code>master</code> branch)</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">pkgdown<span class="op">::</span><span class="kw"><a href="https://pkgdown.r-lib.org/reference/build_site.html">build_site</a></span>()</a></code></pre></div>
+<div class="sourceCode" id="cb7"><html><pre class="r"><span class="kw pkg">pkgdown</span><span class="kw ns">::</span><span class="fu"><a href="https://pkgdown.r-lib.org/reference/build_site.html">build_site</a></span>()</pre></html></div>
 </li>
 <li>
 <p>submit to CRAN</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">devtools<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/devtools/man/release.html">release</a></span>(<span class="dt">args =</span> <span class="st">"--compact-vignettes=both"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb8"><html><pre class="r"><span class="kw pkg">devtools</span><span class="kw ns">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/release.html">release</a></span>(<span class="kw">args</span> <span class="kw">=</span> <span class="st">"--compact-vignettes=both"</span>)</pre></html></div>
 </li>
 </ol>
 </div>
 
+  </div>
+
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 
 </div>
@@ -204,7 +211,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>
