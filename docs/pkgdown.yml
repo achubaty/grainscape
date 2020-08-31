@@ -1,9 +1,10 @@
-pandoc: 2.3.1
-pkgdown: 1.4.1
+pandoc: 2.7.3
+pkgdown: 1.5.1
 pkgdown_sha: ~
 articles:
   MPG_algorithm: MPG_algorithm.html
   grainscape_vignette: grainscape_vignette.html
+last_built: 2020-08-31T19:47Z
 urls:
   reference: https://alexchubaty.com/grainscape/reference
   article: https://alexchubaty.com/grainscape/articles
