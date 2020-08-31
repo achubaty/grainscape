@@ -1,10 +1,11 @@
 # grainscape
 
+<!-- badges: start -->
+[![R build status](https://github.com/achubaty/grainscape/workflows/R-CMD-check/badge.svg)](https://github.com/achubaty/grainscape/actions)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/grainscape)](https://cran.r-project.org/package=grainscape)
 [![DOI](https://zenodo.org/badge/62731055.svg)](https://zenodo.org/badge/latestdoi/62731055)
-[![Build Status](https://travis-ci.org/achubaty/grainscape.svg?branch=master)](https://travis-ci.org/achubaty/grainscape)
-[![Appveyor Build status](https://ci.appveyor.com/api/projects/status/f8eddi541e19h2kv/branch/master?svg=true)](https://ci.appveyor.com/project/achubaty/grainscape/branch/master)
-[![Coverage Status](https://coveralls.io/repos/github/achubaty/grainscape/badge.svg?branch=master)](https://coveralls.io/github/achubaty/grainscape?branch=master)
+[![Codecov test coverage](https://codecov.io/gh/achubaty/grainscape/branch/master/graph/badge.svg)](https://codecov.io/gh/achubaty/grainscape?branch=master)
+<!-- badges: end -->
 
 <img align="right" width="80" pad="20" src="https://github.com/achubaty/grainscape/raw/master/stickers/hexsticker.png">
 

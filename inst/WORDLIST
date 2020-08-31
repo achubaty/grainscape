@@ -10,7 +10,6 @@ ActiveCellQueue
 ActiveCells
 aes
 al
-Appveyor
 AppVeyor
 ArcASCII
 asc
@@ -24,6 +23,7 @@ cellFromXY
 centroid
 Centroid
 centroids
+Codecov
 commandline
 coords
 Csardi

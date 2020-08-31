@@ -11,7 +11,7 @@ URL:
     https://alexchubaty.com/grainscape,
     https://github.com/achubaty/grainscape
 Version: 0.4.3
-Date: 2020-04-02
+Date: 2020-08-31
 Authors@R: c(
     person("Paul", "Galpern", email = "pgalpern@gmail.com", role = c("aut", "cph")),
     person("Sam", "Doctolero", email = "sam.doctolero@gmail.com", role = "aut"),
@@ -32,6 +32,7 @@ Imports:
     utils
 LinkingTo: Rcpp
 Suggests:
+    covr,
     cowplot,
     ggthemes,
     knitr,
@@ -66,4 +67,4 @@ Collate:
     'zzz.R'
 Encoding: UTF-8
 Language: en-CA
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1

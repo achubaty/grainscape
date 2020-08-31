@@ -1,10 +1,8 @@
 ^.*\.Rproj$
+^\.github$
 ^\.lintr$
 ^\.Rproj\.user$
-^\.travis\.yml$
 ^_pkgdown\.yml$
-^appveyor\.yml$
-^appveyor_cache\.txt$
 ^CONTRIBUTING\.md$
 ^CRAN-RELEASE$
 ^cran-comments\.md$
@@ -14,4 +12,4 @@
 ^revdep$
 ^stickers$
 ^vignettes/.*_cache$
-^\.github$
+^codecov\.yml$
