@@ -12,4 +12,5 @@
 ^revdep$
 ^stickers$
 ^vignettes/.*_cache$
+^vignettes/\.pdf$
 ^codecov\.yml$
