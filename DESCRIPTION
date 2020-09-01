@@ -10,7 +10,7 @@ Description: Given a landscape resistance surface, creates minimum planar graph
 URL:
     https://alexchubaty.com/grainscape,
     https://github.com/achubaty/grainscape
-Version: 0.4.3
+Version: 0.4.3.9000
 Date: 2020-08-31
 Authors@R: c(
     person("Paul", "Galpern", email = "pgalpern@gmail.com", role = c("aut", "cph"),
