@@ -2,7 +2,7 @@
 
 <!-- badges: start -->
 [![R build status](https://github.com/achubaty/grainscape/workflows/R-CMD-check/badge.svg)](https://github.com/achubaty/grainscape/actions)
-[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/grainscape)](https://cran.r-project.org/package=grainscape)
+[![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/grainscape)](https://cran.r-project.org/package=grainscape)
 [![DOI](https://zenodo.org/badge/62731055.svg)](https://zenodo.org/badge/latestdoi/62731055)
 [![Codecov test coverage](https://codecov.io/gh/achubaty/grainscape/branch/master/graph/badge.svg)](https://codecov.io/gh/achubaty/grainscape?branch=master)
 <!-- badges: end -->
