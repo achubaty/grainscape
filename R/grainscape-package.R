@@ -24,7 +24,7 @@
 #'
 #' MPG calculations and generalization of the Voronoi tessellation used in GOC models
 #' is based on the routines in SELES software (Fall and Fall, 2001).
-#' Routines also depend on the \code{sp} (Pebesma and Bivand, 2005),
+#' Routines also depend on the \pkg{sp} (Pebesma and Bivand, 2005),
 #' \pkg{raster} (Hijmans and van Etten, 2011), \pkg{igraph} (Csardi and Nepusz, 2006),
 #' and optionally \pkg{rgeos} packages (Bivand and Rundel, 2012).
 #'

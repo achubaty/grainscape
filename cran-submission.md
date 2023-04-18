@@ -52,17 +52,11 @@
 
 9. run revdep checks (see `revdep/check.R`)
 
-10. merge `development` branch into `master`
+10. merge `development` branch into `main`
 
 11. remove `Remotes` from `DESCRIPTION`
 
-12. rebuild package website (`master` branch)
-
-    ```r
-    pkgdown::build_site()
-    ```
-
-13. submit to CRAN 
+12. submit to CRAN 
 
     ```r
     devtools::release(args = "--compact-vignettes=both")

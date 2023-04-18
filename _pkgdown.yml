@@ -1,6 +1,16 @@
 destination: docs
 template:
-  params:
-    bootswatch: flatly
-    ganalytics: UA-34446208-1
+  bootstrap: 5
+  bootswatch: flatly
+  includes:
+    in_header: |
+       <!-- Global site tag (gtag.js) - Google Analytics -->
+       <script async src="https://www.googletagmanager.com/gtag/js?id=G-SBRW4YWBD0"></script>
+       <script>
+         window.dataLayer = window.dataLayer || [];
+         function gtag(){dataLayer.push(arguments);}
+         gtag('js', new Date());
+
+         gtag('config', 'G-SBRW4YWBD0');
+       </script>
 url: https://alexchubaty.com/grainscape

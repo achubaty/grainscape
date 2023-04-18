@@ -2,5 +2,6 @@
 .Rhistory
 .Rproj.user
 .Ruserdata
+docs
 vignettes/*_cache
 vignettes/*_files
