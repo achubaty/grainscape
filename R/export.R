@@ -31,11 +31,11 @@
 }
 
 #' @author Paul Galpern
-#' @importFrom rgdal writeOGR
+#' @importFrom sf st_as_sf st_write
 #' @keywords internal
 .wShp  <- function(sp, fname, dirpath, overwrite) {
-  writeOGR(sp, dsn = dirpath, layer = fname, driver = "ESRI Shapefile",
-           overwrite_layer = overwrite)
+  st_write(st_as_sf(sp), dsn = dirpath, layer = fname, driver = "ESRI Shapefile",
+           delete_layer = overwrite)
 }
 
 #' Export spatial data from MPG and GOC models
@@ -50,9 +50,8 @@
 #' Use `R = TRUE` in which case all parameters related to file export
 #' are ignored. (Default `R = FALSE`)
 #'
-#' The `raster` package [writeRaster()] is used for rasters,
-#' and [writeOGR()] in the `rgdal` package is used to
-#' export ESRI compatible shape files.
+#' The [raster::writeRaster()] is used for rasters,
+#' and [sf::st_write()] is used to export ESRI compatible shape files.
 #'
 #' @param x             A `mpg` or `grain` object
 #'
@@ -63,8 +62,8 @@
 #'                      Defaults to the working directory.
 #'
 #' @param rasterFormat  The format for exported rasters. See [writeFormats()] for
-#'                      options. Defaults to GeoTiff (`rasterFormat='GTiff'`). Use
-#'                      `rasterFormat='raster'` to save `.grd` files in
+#'                      options. Defaults to GeoTiff (`rasterFormat='GTiff'`).
+#'                      Use `rasterFormat='raster'` to save `.grd` files in
 #'                      native `raster` package format.
 #'
 #' @param overwrite     If directory already exists will overwrite existing files inside.
@@ -168,7 +167,7 @@
 #' @author Paul Galpern and Alex Chubaty
 #' @export
 #' @importFrom raster boundaries projection projection<- writeRaster
-#' @importFrom rgdal writeOGR
+#' @importFrom sf st_write
 #' @importFrom sp coordinates<- CRS Line Lines proj4string proj4string<-
 #' @importFrom sp SpatialLines SpatialLinesDataFrame
 #' @include classes.R

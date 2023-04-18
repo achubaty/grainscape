@@ -61,8 +61,8 @@ a directory with a name containing the date and time will be created.}
 Defaults to the working directory.}
 
 \item{rasterFormat}{The format for exported rasters. See \code{\link[=writeFormats]{writeFormats()}} for
-options. Defaults to GeoTiff (\code{rasterFormat='GTiff'}). Use
-\code{rasterFormat='raster'} to save \code{.grd} files in
+options. Defaults to GeoTiff (\code{rasterFormat='GTiff'}).
+Use \code{rasterFormat='raster'} to save \code{.grd} files in
 native \code{raster} package format.}
 
 \item{overwrite}{If directory already exists will overwrite existing files inside.
@@ -174,9 +174,8 @@ produce R spatial objects that are convenient for plotting or analysis within R.
 Use \code{R = TRUE} in which case all parameters related to file export
 are ignored. (Default \code{R = FALSE})
 
-The \code{raster} package \code{\link[=writeRaster]{writeRaster()}} is used for rasters,
-and \code{\link[=writeOGR]{writeOGR()}} in the \code{rgdal} package is used to
-export ESRI compatible shape files.
+The \code{\link[raster:writeRaster]{raster::writeRaster()}} is used for rasters,
+and \code{\link[sf:st_write]{sf::st_write()}} is used to export ESRI compatible shape files.
 }
 \examples{
 ## Load raster landscape

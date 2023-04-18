@@ -8,7 +8,7 @@
 #'
 #' @param mpg  A `mpg` object.
 #'
-#' @param sp   Logical. If `TRUE` the `rgeos` package is used to create
+#' @param sp   Logical. If `TRUE` the `sp` package is used to create
 #'            a vector of class [SpatialPolygonsDataFrame()] describing
 #'            the finest grain of connectivity.
 #'

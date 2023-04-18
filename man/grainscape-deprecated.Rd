@@ -56,7 +56,7 @@ path distance from the perimeters of patches as the link weight.
 \code{"eucPerimWeight"} use the Euclidean distance from the
 perimeters of patches as the link weight.}
 
-\item{sp}{Logical. If \code{TRUE} the \code{rgeos} package is used to create
+\item{sp}{Logical. If \code{TRUE} the \code{sp} package is used to create
 a vector of class \code{\link[=SpatialPolygonsDataFrame]{SpatialPolygonsDataFrame()}} describing
 the finest grain of connectivity.}
 

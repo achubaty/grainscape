@@ -25,8 +25,7 @@
 #' MPG calculations and generalization of the Voronoi tessellation used in GOC models
 #' is based on the routines in SELES software (Fall and Fall, 2001).
 #' Routines also depend on the \pkg{sp} (Pebesma and Bivand, 2005),
-#' \pkg{raster} (Hijmans and van Etten, 2011), \pkg{igraph} (Csardi and Nepusz, 2006),
-#' and optionally \pkg{rgeos} packages (Bivand and Rundel, 2012).
+#' \pkg{raster} (Hijmans and van Etten, 2011), and \pkg{igraph} (Csardi and Nepusz, 2006) packages.
 #'
 #' A paper describing the use of this package for landscape connectivity modelling is
 #' available at <https://doi.org/10.1111/2041-210X.13350>.
@@ -39,9 +38,6 @@
 #' @useDynLib grainscape, .registration = TRUE
 #'
 #' @references
-#'
-#' Bivand, R.S. and C. Rundel. (2016). rgeos: Interface to Geometry Engine - Open Source (GEOS).
-#' R package version 0.3-19, <https://CRAN.R-project.org/package=rgeos>.
 #'
 #' Csardi, G. and T. Nepusz. (2006). The igraph software package for complex network research.
 #' InterJournal Complex Systems 1695. <https://igraph.org>.
@@ -65,8 +61,8 @@
 #' Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis
 #' at multiple spatial scales in landscape genetics. Molecular Ecology 21:3996-4009.
 #'
-#' Hijmans, R.J. and J. van Etten. (2016). raster: Geographic analysis and modeling
-#' with raster data. R package version 2.5-8, <https://CRAN.R-project.org/package=raster>.
+#' Hijmans, R.J. (2023). raster: Geographic Data Analysis and Modeling.
+#' R package version 3.6-20, <https://CRAN.R-project.org/package=raster>.
 #'
 #' Pebesma, E.J. and R.S. Bivand. (2005). Classes and methods for spatial data in R.
 #' R News 5 (2), <https://cran.r-project.org/doc/Rnews/>.
