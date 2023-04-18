@@ -1,34 +1,34 @@
-#' Produce a \code{data.frame} containing the structure and associated attributes
+#' Produce a `data.frame` containing the structure and associated attributes
 #'
-#' Produce a \code{data.frame} containing the node (vertex) and link (edge)
+#' Produce a `data.frame` containing the node (vertex) and link (edge)
 #' structure as well as the associated attributes for these.
 #' This provides an easy way to create data tables describing graphs, particularly
-#' helpful for users unfamiliar with the structure of \code{igraph} objects.
+#' helpful for users unfamiliar with the structure of `igraph` objects.
 #'
-#' @param x    A \code{goc}, \code{mpg}, \code{igraph}, or \code{list} object.
+#' @param x    A `goc`, `mpg`, `igraph`, or `list` object.
 #'
 #' @param ...  Additional arguments (not used).
 #'
 #' @return A list object containing:
 #'
 #' \describe{
-#'   \item{\code{v}}{node (vertex) names and associated attributes;}
+#'   \item{`v`}{node (vertex) names and associated attributes;}
 #'
-#'   \item{\code{e}}{link (edge) lists and associated attributes.}
+#'   \item{`e`}{link (edge) lists and associated attributes.}
 #' }
 #'
-#' Please see \code{\link{MPG}} and \code{\link{GOC}} for details about the attributes.
+#' Please see [MPG()] and [GOC()] for details about the attributes.
 #'
-#' For \code{\link{GOC}} objects which typically contain multiple thresholds,
+#' For [GOC()] objects which typically contain multiple thresholds,
 #' an enumerated list of the same length as the number of thresholds is returned
-#' each containing \code{v} and \code{e} elements.
+#' each containing `v` and `e` elements.
 #'
 #' @author Paul Galpern and Alex Chubaty
 #' @export
 #' @importFrom utils type.convert
 #' @include classes.R
 #' @rdname graphdf
-#' @seealso \code{\link{MPG}}, \code{\link{GOC}}
+#' @seealso [MPG()], [GOC()]
 #'
 #' @example inst/examples/example_preamble.R
 #' @example inst/examples/example_preamble_MPG.R

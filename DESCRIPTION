@@ -53,11 +53,11 @@ Collate:
     'RcppExports.R'
     'grain.R'
     'corridor.R'
-    'deprecated.R'
     'distance.R'
     'export.R'
     'extract.R'
     'ggGS.R'
+    'grainscape-deprecated.R'
     'graphdf.R'
     'habitatConnectivityEngine.R'
     'patchFilter.R'
@@ -68,3 +68,5 @@ Collate:
     'zzz.R'
 Encoding: UTF-8
 Language: en-CA
+RoxygenNote: 7.2.3
+Roxygen: list(markdown = TRUE)

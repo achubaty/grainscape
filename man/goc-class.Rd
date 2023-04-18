@@ -19,13 +19,13 @@ their properties.}
 \item{\code{th}}{A list giving the GOC graph at each threshold.
 
 Each element of \code{th} contains a \code{goc} object giving the GOC graph
-as class \code{\link{igraph}}.
+as class \code{\link[=igraph]{igraph()}}.
 Vertex attributes describes qualities of each polygon including the coordinates
 of each polygon centroid, the area of these polygons, and the original patch
 IDs in the MPG that are included in each polygon.
 All areal measurements are given as raster cell counts.
 A variety of edge attributes are also given in the GOC graph.
-See \code{\link{distance}} for more information.}
+See \code{\link[=distance]{distance()}} for more information.}
 }}
 
 \author{

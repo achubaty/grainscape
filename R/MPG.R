@@ -5,7 +5,7 @@
 #' Both patch-based and lattice MPGs can be extracted.
 #'
 #' @details Use this function to create a minimum planar graph (MPG) that can be
-#' further analyzed using \code{\link{igraph}} routines.
+#' further analyzed using [igraph()] routines.
 #' It is also the first step in grains of connectivity (GOC) modelling.
 #'
 #' @note Researchers should consider whether the use of a patch-based MPG or a lattice
@@ -14,34 +14,34 @@
 #' a resource patch. Lattice models can be used as a generalized and functional
 #' approach to scaling resistance surfaces.
 #'
-#' Rasters should be projected and not in geographic coordinates (i.e. \code{projection(cost)}
-#' should not contain \code{"+proj=longlat"}) or the function will issue a warning.
-#' In unprojected cases consider using \code{\link{projectRaster}} to change to an appropriate
+#' Rasters should be projected and not in geographic coordinates (i.e. `projection(cost)`
+#' should not contain `"+proj=longlat"`) or the function will issue a warning.
+#' In unprojected cases consider using [projectRaster()] to change to an appropriate
 #' coordinate system for the location and extent of interest that balances both distance and areal
-#' accuracy. See \url{https://www.spatialreference.org/} for location-specific suggestions.
+#' accuracy. See <https://www.spatialreference.org/> for location-specific suggestions.
 #' Use of geographic coordinates will result in inaccurate areal and distance measurements,
 #' rendering the models themselves inaccurate.
 #'
-#' @param cost   A \code{RasterLayer} giving a landscape resistance surface,
+#' @param cost   A `RasterLayer` giving a landscape resistance surface,
 #'               where the values of each raster cell are proportional to the
 #'               resistance to movement, dispersal, or gene flow for an organism
 #'               in the landscape feature they represent.
-#'               Missing values \code{NA} are acceptable (but see below).
+#'               Missing values `NA` are acceptable (but see below).
 #'               Negative values are not.
 #'               To extract an MPG with Euclidean links (i.e., and not least-cost
-#'               path links) set \code{cost[] <- 1}.
+#'               path links) set `cost[] <- 1`.
 #'
-#' @param patch  A raster of class \code{RasterLayer} for a patch-based analysis
+#' @param patch  A raster of class `RasterLayer` for a patch-based analysis
 #'               OR an integer for a lattice analysis.
 #'               If a raster is given it must be of the same extent, origin and
-#'               projection as \code{cost} and be binary, without missing values,
+#'               projection as `cost` and be binary, without missing values,
 #'               where patches=1 and non-patches=0.
 #'               For lattice analyses, an integer gives the spacing in raster
 #'               cells between focal points in the lattice.
 #'
 #' @param ...  Additional arguments (not used).
 #'
-#' @return A \code{\link[=mpg-class]{mpg}} object.
+#' @return A [`mpg()`][mpg-class] object.
 #'
 #' @references
 #' Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien. (2007) Spatial graphs:
@@ -70,7 +70,7 @@
 #' @importFrom utils read.table
 #' @include classes.R
 #' @rdname MPG
-#' @seealso \code{\link{GOC}, \link{threshold}}
+#' @seealso `[GOC], [threshold]`
 #'
 #' @example inst/examples/example_preamble.R
 #' @example inst/examples/example_preamble_MPG.R

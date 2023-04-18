@@ -30,14 +30,14 @@ graphdf(x, ...)
 A list object containing:
 
 \describe{
-  \item{\code{v}}{node (vertex) names and associated attributes;}
+\item{\code{v}}{node (vertex) names and associated attributes;}
 
-  \item{\code{e}}{link (edge) lists and associated attributes.}
+\item{\code{e}}{link (edge) lists and associated attributes.}
 }
 
-Please see \code{\link{MPG}} and \code{\link{GOC}} for details about the attributes.
+Please see \code{\link[=MPG]{MPG()}} and \code{\link[=GOC]{GOC()}} for details about the attributes.
 
-For \code{\link{GOC}} objects which typically contain multiple thresholds,
+For \code{\link[=GOC]{GOC()}} objects which typically contain multiple thresholds,
 an enumerated list of the same length as the number of thresholds is returned
 each containing \code{v} and \code{e} elements.
 }
@@ -70,7 +70,7 @@ tinyPatchGOC_df <- graphdf(tinyPatchGOC)
 graphdf(tinyPatchGOC@th[[1]]$goc)
 }
 \seealso{
-\code{\link{MPG}}, \code{\link{GOC}}
+\code{\link[=MPG]{MPG()}}, \code{\link[=GOC]{GOC()}}
 }
 \author{
 Paul Galpern and Alex Chubaty

@@ -10,7 +10,7 @@ threshold(x, ...)
 \S4method{threshold}{mpg}(x, weight = "lcpPerimWeight", nThresh = NULL, doThresh = NULL, ...)
 }
 \arguments{
-\item{x}{A \code{mpg} object produced by \code{\link{MPG}}.}
+\item{x}{A \code{mpg} object produced by \code{\link[=MPG]{MPG()}}.}
 
 \item{...}{Additional arguments (not used).}
 
@@ -32,16 +32,16 @@ possible GOC models.
 Provide either \code{nThresh} or \code{doThresh} not both.}
 
 \item{doThresh}{Optional. A vector giving the link thresholds at which to create GOC models.
-Use \code{\link{threshold}} to identify thresholds of interest.
+Use \code{\link[=threshold]{threshold()}} to identify thresholds of interest.
 Provide either \code{nThresh} or \code{doThresh} not both.}
 }
 \value{
 A list object with the following elements:
 
 \describe{
-  \item{\code{summary}}{summarizes the thresholded graphs generated and their properties;}
-  \item{\code{th}}{a list of length \code{nThresh} or \code{length(doThresh)}
-  giving the thresholded graph (class \code{igraph}) at each threshold.}
+\item{\code{summary}}{summarizes the thresholded graphs generated and their properties;}
+\item{\code{th}}{a list of length \code{nThresh} or \code{length(doThresh)}
+giving the thresholded graph (class \code{igraph}) at each threshold.}
 }
 }
 \description{
@@ -49,11 +49,11 @@ Perform a scalar analysis of a minimum planar graph (MPG) by building the
 graph at a series of link thresholds.
 As the threshold value increases more nodes in the graph become connected,
 forming increasingly fewer components, until the graph becomes connected (e.g., Brooks, 2003).
-N.B. Grains of connectivity (GOC) done by \code{\link{GOC}} is also a scalar
+N.B. Grains of connectivity (GOC) done by \code{\link[=GOC]{GOC()}} is also a scalar
 analysis using Voronoi tessellations rather than patches (see Galpern \emph{et al.}, 2012).
 }
 \note{
-See \code{\link{MPG}} for warning related to areal measurements.
+See \code{\link[=MPG]{MPG()}} for warning related to areal measurements.
 }
 \examples{
 ## Load raster landscape
@@ -91,7 +91,7 @@ Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis
 at multiple spatial scales in landscape genetics. Molecular Ecology 21:3996-4009.
 }
 \seealso{
-\code{\link{MPG}}
+\code{\link[=MPG]{MPG()}}
 }
 \author{
 Paul Galpern and Alex Chubaty

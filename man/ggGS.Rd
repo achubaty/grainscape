@@ -32,61 +32,61 @@ is supplied.}
 \item{...}{Additional arguments (not used).}
 }
 \value{
-A \code{data.frame} suitable for plotting with \code{\link{ggplot}}.
+A \code{data.frame} suitable for plotting with \code{\link[=ggplot]{ggplot()}}.
 
 Where \code{type} is a raster the \code{data.frame} will have the following columns:
 
 \describe{
-  \item{\code{value}}{the value of the raster cell}
-  \item{\code{x}}{the x coordinate of the centre of the raster cell}
-  \item{\code{y}}{the y coordinate of the centre of the raster cell}
+\item{\code{value}}{the value of the raster cell}
+\item{\code{x}}{the x coordinate of the centre of the raster cell}
+\item{\code{y}}{the y coordinate of the centre of the raster cell}
 }
 
 Where \code{type = 'nodes'} the \code{data.frame} will have the following columns:
 
 \describe{
-  \item{\code{x}}{the x coordinate of the node}
-  \item{\code{y}}{the y coordinate of the node}
-  \item{\code{...}}{other attributes associated with the network nodes}
+\item{\code{x}}{the x coordinate of the node}
+\item{\code{y}}{the y coordinate of the node}
+\item{\code{...}}{other attributes associated with the network nodes}
 }
 
 Where \code{type = 'links'} the \code{data.frame} will have the following columns:
 
 \describe{
-  \item{\code{x1}}{the x coordinate of the first node}
-  \item{\code{y1}}{the y coordinate of the first node}
-  \item{\code{x2}}{the x coordinate of the second node}
-  \item{\code{y2}}{the y coordinate of the second node}
-  \item{\code{x1p}}{the x coordinate at the perimeter of the first node}
-  \item{\code{y1p}}{the y coordinate at the perimeter of the first node}
-  \item{\code{x2p}}{the x coordinate at the perimeter of the second node}
-  \item{\code{y2p}}{the y coordinate at the perimeter of the second node}
-  \item{\code{...}}{other attributes associated with the network links}
+\item{\code{x1}}{the x coordinate of the first node}
+\item{\code{y1}}{the y coordinate of the first node}
+\item{\code{x2}}{the x coordinate of the second node}
+\item{\code{y2}}{the y coordinate of the second node}
+\item{\code{x1p}}{the x coordinate at the perimeter of the first node}
+\item{\code{y1p}}{the y coordinate at the perimeter of the first node}
+\item{\code{x2p}}{the x coordinate at the perimeter of the second node}
+\item{\code{y2p}}{the y coordinate at the perimeter of the second node}
+\item{\code{...}}{other attributes associated with the network links}
 }
 }
 \description{
 This is an informal \code{fortify}-type method that prepares either
 \code{RasterLayer} or \code{igraph} objects contained as slots within
-\code{MPG} or \code{grain} objects for easy plotting with \code{\link{ggplot}}.
+\code{MPG} or \code{grain} objects for easy plotting with \code{\link[=ggplot]{ggplot()}}.
 }
 \note{
 \strong{Options for \code{type} parameter}
 
- If a \code{RasterLayer} is supplied \code{type} is optional.
+If a \code{RasterLayer} is supplied \code{type} is optional.
 
- For \code{mpg} \code{type} options are \code{"node"} or \code{"links"}.
- This prepares the nodes and links of the minimum planar graph network for
- plotting,  Also \code{"patchId"}, \code{"voronoi"}, \code{"lcpPerimWeight"},
- \code{"lcpLinkId"}, \code{"mpgPlot"} will prepare rasters for plotting.
+For \code{mpg} \code{type} options are \code{"node"} or \code{"links"}.
+This prepares the nodes and links of the minimum planar graph network for
+plotting,  Also \code{"patchId"}, \code{"voronoi"}, \code{"lcpPerimWeight"},
+\code{"lcpLinkId"}, \code{"mpgPlot"} will prepare rasters for plotting.
 
- For \code{grain} objects \code{type}  options are \code{"nodes"} or\code{"links"}
- to prepare the nodes and links of the grains of connectivity network  for
- plotting. Also \code{"voronoi"} will prepare the grains of connectivity
- Voronoi polygons raster for plotting.
+For \code{grain} objects \code{type}  options are \code{"nodes"} or\code{"links"}
+to prepare the nodes and links of the grains of connectivity network  for
+plotting. Also \code{"voronoi"} will prepare the grains of connectivity
+Voronoi polygons raster for plotting.
 
- For either \code{mpg} or \code{grain} objects \code{type = "vorBound"}
- will identify the boundaries of the Voronoi polygons for plotting.
- This is potentially time consuming for large rasters.
+For either \code{mpg} or \code{grain} objects \code{type = "vorBound"}
+will identify the boundaries of the Voronoi polygons for plotting.
+This is potentially time consuming for large rasters.
 }
 \examples{
 ## Load raster landscape
@@ -147,7 +147,7 @@ if (interactive()) {
 }
 }
 \seealso{
-\code{\link{MPG}}, \code{\link{GOC}}
+\code{\link[=MPG]{MPG()}}, \code{\link[=GOC]{GOC()}}
 }
 \author{
 Paul Galpern and Alex Chubaty

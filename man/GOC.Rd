@@ -17,7 +17,7 @@ GOC(x, ...)
 )
 }
 \arguments{
-\item{x}{A \code{mpg} object produced by \code{\link{MPG}}.
+\item{x}{A \code{mpg} object produced by \code{\link[=MPG]{MPG()}}.
 For lattice GOC \code{MPG} must be run with patch set as an integer value.}
 
 \item{...}{Additional arguments (not used).}
@@ -32,7 +32,7 @@ a representative subset of all possible GOC models.
 Provide either \code{nThresh} or \code{doThresh} not both.}
 
 \item{doThresh}{Optional. A vector giving the link thresholds at which to create GOC models.
-Use \code{\link{threshold}} to identify thresholds of interest.
+Use \code{\link[=threshold]{threshold()}} to identify thresholds of interest.
 Provide either \code{nThresh} or \code{doThresh} not both.}
 
 \item{weight}{A string giving the link weight or attribute to use for threshold.
@@ -44,7 +44,7 @@ perimeters of patches as the link weight.}
 \item{verbose}{Set \code{verbose=0} for no progress information to console.}
 }
 \value{
-A \code{\link[=goc-class]{goc}} object.
+A \code{\link[=goc-class]{goc()}} object.
 }
 \description{
 Produce a grains of connectivity (GOC) model at multiple scales (resistance thresholds)
@@ -65,7 +65,7 @@ a resource patch.
 Lattice models can be used as a generalized and functional approach to scaling
 resistance surfaces.
 
-See \code{\link{MPG}} for warning related to areal measurements.
+See \code{\link[=MPG]{MPG()}} for warning related to areal measurements.
 }
 \examples{
 ## Load raster landscape
@@ -106,8 +106,8 @@ Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis
 at multiple spatial scales in landscape genetics. Molecular Ecology 21:3996-4009.
 }
 \seealso{
-\code{\link{MPG}}, \code{\link{grain}},
-         \code{\link{distance}}, \code{\link{point}}
+\code{\link[=MPG]{MPG()}}, \code{\link[=grain]{grain()}},
+\code{\link[=distance]{distance()}}, \code{\link[=point]{point()}}
 }
 \author{
 Paul Galpern

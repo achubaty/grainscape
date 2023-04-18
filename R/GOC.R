@@ -5,40 +5,40 @@
 #' by scalar analysis.
 #' Patch-based or lattice GOC modelling can be done with this function.
 #'
-#' @param x         A \code{mpg} object produced by \code{\link{MPG}}.
-#'                  For lattice GOC \code{MPG} must be run with patch set as an integer value.
+#' @param x         A `mpg` object produced by [MPG()].
+#'                  For lattice GOC `MPG` must be run with patch set as an integer value.
 #'
 #' @param nThresh   Optional. An integer giving the number of thresholds (or scales)
 #'                  at which to create GOC models. Thresholds are selected to produce
 #'                  a maximum number of unique grains (i.e., models).
-#'                  \code{nThresh} thresholds are also approximately evenly spread
+#'                  `nThresh` thresholds are also approximately evenly spread
 #'                  between 0 and the threshold at which all patches or focal points
 #'                  on the landscape are connected. This is a simple way to get
 #'                  a representative subset of all possible GOC models.
-#'                  Provide either \code{nThresh} or \code{doThresh} not both.
+#'                  Provide either `nThresh` or `doThresh` not both.
 #'
 #' @param doThresh  Optional. A vector giving the link thresholds at which to create GOC models.
-#'                  Use \code{\link{threshold}} to identify thresholds of interest.
-#'                  Provide either \code{nThresh} or \code{doThresh} not both.
+#'                  Use [threshold()] to identify thresholds of interest.
+#'                  Provide either `nThresh` or `doThresh` not both.
 #'
 #' @param weight    A string giving the link weight or attribute to use for threshold.
-#'                  \code{"lcpPerimWeight"} uses the accumulated resistance or least-cost
+#'                  `"lcpPerimWeight"` uses the accumulated resistance or least-cost
 #'                  path distance from the perimeters of patches as the link weight.
-#'                  \code{"eucPerimWeight"} use the Euclidean distance from the
+#'                  `"eucPerimWeight"` use the Euclidean distance from the
 #'                  perimeters of patches as the link weight.
 #'
 #'
-#' @param verbose Set \code{verbose=0} for no progress information to console.
+#' @param verbose Set `verbose=0` for no progress information to console.
 #'
 #' @param ...     Additional arguments (not used).
 #'
 #' @details
 #' Grain or scalar analysis of connectivity may be appropriate for a variety of purposes, not
 #' limited to visualization and improving connectivity estimates for highly-mobile organisms.
-#' See Galpern \emph{et al.} (2012), Galpern & Manseau (2013a, 2013b) for applications
+#' See Galpern *et al.* (2012), Galpern & Manseau (2013a, 2013b) for applications
 #' and review of these capabilities.
 #'
-#' @return  A \code{\link[=goc-class]{goc}} object.
+#' @return  A [`goc()`][goc-class] object.
 #'
 #' @note Researchers should consider whether the use of a patch-based GOC or a lattice
 #' GOC model is appropriate based on the patch-dependency of the organism under study.
@@ -47,7 +47,7 @@
 #' Lattice models can be used as a generalized and functional approach to scaling
 #' resistance surfaces.
 #'
-#' See \code{\link{MPG}} for warning related to areal measurements.
+#' See [MPG()] for warning related to areal measurements.
 #'
 #' @references
 #' Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien. (2007) Spatial graphs:
@@ -74,8 +74,8 @@
 #' @importFrom stats median
 #' @include classes.R
 #' @rdname GOC
-#' @seealso \code{\link{MPG}}, \code{\link{grain}},
-#'          \code{\link{distance}}, \code{\link{point}}
+#' @seealso [MPG()], [grain()],
+#'          [distance()], [point()]
 #'
 #' @example inst/examples/example_preamble.R
 #' @example inst/examples/example_preamble_MPG.R

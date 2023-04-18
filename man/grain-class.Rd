@@ -20,9 +20,9 @@ their properties.}
 centroids.}
 
 \item{\code{th}}{A list of \code{igraph} objects giving the graphs describing the relationship
-                 among the polygons in that grain
+among the polygons in that grain
 
-See \code{\link{grain}} for more information.}
+See \code{\link[=grain]{grain()}} for more information.}
 }}
 
 \author{

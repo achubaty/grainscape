@@ -26,10 +26,10 @@ the shortest path between coordinates}
 the shortest path between coordinates}
 
 \item{\code{corridorLength}}{A \code{numeric} of length 1 giving the length of the
-                       shortest path between coordinates in accumulated
-                       resistance units.
+shortest path between coordinates in accumulated
+resistance units.
 
-See \code{\link{corridor}} for more information.}
+See \code{\link[=corridor]{corridor()}} for more information.}
 }}
 
 \author{

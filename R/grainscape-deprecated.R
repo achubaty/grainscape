@@ -1,18 +1,18 @@
-#' \code{grainscape}: Deprecated
+#' Deprecated functions
 #'
 #' These have been deprecated and will be removed in a future release.
 #'
-#' @note the \code{sp} argument has also been deprecated from all functions.
+#' @note the `sp` argument has also been deprecated from all functions.
 #'
 #' @inheritParams GOC
 #'
-#' @param mpg  A \code{mpg} object.
+#' @param mpg  A `mpg` object.
 #'
-#' @param sp   Logical. If \code{TRUE} the \code{rgeos} package is used to create
-#'            a vector of class \code{\link{SpatialPolygonsDataFrame}} describing
+#' @param sp   Logical. If `TRUE` the `rgeos` package is used to create
+#'            a vector of class [SpatialPolygonsDataFrame()] describing
 #'            the finest grain of connectivity.
 #'
-#' @param doPlot  Logical. If \code{TRUE} plots a vector visualization of the
+#' @param doPlot  Logical. If `TRUE` plots a vector visualization of the
 #'                corridor at the given scale
 #'
 #' @export gsGOC
@@ -27,7 +27,7 @@ gsGOC <- function(mpg, nThresh = NULL, doThresh = NULL,
 
 #' @export gsGOCCorridor
 #' @inheritParams corridor
-#' @param GOC  A \code{goc} object.
+#' @param GOC  A `goc` object.
 #' @rdname grainscape-deprecated
 #'
 gsGOCCorridor <- function(GOC, whichThresh, coords, doPlot = FALSE, # nolint
@@ -102,9 +102,9 @@ gsMPG <- function(cost, patch, sa = NULL, filterPatch = NULL, spreadFactor = 0) 
 
 
 
-#' \code{grainscape}: Defunct
+#' `grainscape`: Defunct
 #'
-#' These functions have removed from \code{grainscape}.
+#' These functions have removed from `grainscape`.
 #'
 #' @export gsMPGstitch
 #' @param ... Any arguments passed to defunct functions.

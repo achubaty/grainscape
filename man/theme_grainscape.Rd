@@ -12,11 +12,11 @@ theme_grainscape(base_size = 9, base_family = "")
 \item{base_family}{Base font family}
 }
 \value{
-A theme suitable for use with \code{\link{ggplot}}
+A theme suitable for use with \code{\link[=ggplot]{ggplot()}}
 }
 \description{
-A \code{\link{ggplot2}} theme designed for \code{grainscape} based on the
-\code{\link[ggthemes]{theme_map}} theme, with several modifications.
+A \code{\link[=ggplot2]{ggplot2()}} theme designed for \code{grainscape} based on the
+\code{\link[ggthemes:theme_map]{ggthemes::theme_map()}} theme, with several modifications.
 }
 \examples{
 ## Load raster landscape
@@ -37,7 +37,7 @@ if (interactive()) {
 }
 }
 \seealso{
-\code{\link{ggGS}}, \code{\link{plot}}, \code{\link[ggthemes]{theme_map}}
+\code{\link[=ggGS]{ggGS()}}, \code{\link[=plot]{plot()}}, \code{\link[ggthemes:theme_map]{ggthemes::theme_map()}}
 }
 \author{
 Paul Galpern and Alex Chubaty

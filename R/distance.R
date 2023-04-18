@@ -3,9 +3,9 @@
 #' Find the shortest network distance between pairs of points using the GOC graph.
 #' This can be used as an effective distance for landscape connectivity assessments.
 #'
-#' @param x        A \code{goc} object produced by \code{\link{GOC}}.
+#' @param x        A `goc` object produced by [GOC()].
 #'
-#' @param  y       A two column matrix or a \code{\link{SpatialPoints}} object
+#' @param  y       A two column matrix or a [SpatialPoints()] object
 #'                 giving the coordinates of points of interest.
 #'
 #' @param ...      Additional arguments (not used).
@@ -13,10 +13,10 @@
 #' @param  weight  The GOC graph link weight to use in calculating the distance.
 #'                 Please see Details for explanation.
 #'
-#' @return  A list object giving a distance matrix for each threshold in the \code{GOC} object.
+#' @return  A list object giving a distance matrix for each threshold in the `GOC` object.
 #' Distance matrices give the pairwise grains of connectivity network distances
 #' between sampling locations.
-#' Matrix indices correspond to rows in the coordinates matrix (\code{y}).
+#' Matrix indices correspond to rows in the coordinates matrix (`y`).
 #'
 #' @references
 #' Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien. (2007) Spatial graphs:
@@ -39,7 +39,7 @@
 #' @export
 #' @include classes.R
 #' @rdname distance
-#' @seealso  \code{\link{GOC}}, \code{\link{point}}
+#' @seealso  [GOC()], [point()]
 #'
 #' @example inst/examples/example_preamble.R
 #' @example inst/examples/example_preamble_MPG.R

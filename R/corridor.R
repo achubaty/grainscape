@@ -5,19 +5,19 @@
 #' (or shortest path) between two points using one of the tessellations
 #' (i.e., scales) in these models.
 #'
-#' @param x       A \code{goc} object created by \code{\link{GOC}}.
+#' @param x       A `goc` object created by [GOC()].
 #'
 #' @param whichThresh  Integer giving the index of the threshold to visualize.
 #'
-#' @param coords  A two column matrix or a \code{\link{SpatialPoints}} object
+#' @param coords  A two column matrix or a [SpatialPoints()] object
 #'                giving coordinates at the end points of the corridor.
 #'
 #' @param weight  The GOC graph link weight to use in calculating the distance.
-#'                Please see details in \code{\link{distance}}.
+#'                Please see details in [distance()].
 #'
 #' @param ...     Additional arguments (not used).
 #'
-#' @return An object of class \code{\linkS4class{corridor}}.
+#' @return An object of class [corridor-class].
 #'
 #' @references
 #' Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien. (2007) Spatial graphs:
@@ -42,7 +42,7 @@
 #' @importFrom sp Line Lines SpatialLines SpatialLinesDataFrame SpatialPoints
 #' @include classes.R grain.R
 #' @rdname corridor
-#' @seealso \code{\link{GOC}}, \code{\link{visualize}}
+#' @seealso [GOC()], [visualize()]
 #'
 #' @example inst/examples/example_preamble.R
 #' @example inst/examples/example_preamble_MPG.R

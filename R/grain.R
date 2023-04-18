@@ -3,27 +3,27 @@
 #' @description
 #' Extract a grain (i.e. a scaled version of a Voronoi tessellation) from a GOC model.
 #'
-#' @param x   A \code{goc} object created by \code{\link{GOC}}.
+#' @param x   A `goc` object created by [GOC()].
 #'
 #' @param whichThresh  Integer giving the grain threshold to extract.
-#'                     This is the index of the threshold extracted by \code{\link{GOC}}.
+#'                     This is the index of the threshold extracted by [GOC()].
 #'
 #' @param ...     Additional arguments (not used).
 #'
 #' @return  A list object containing the following elements:
 #'
 #' \describe{
-#'   \item{\code{summary}}{gives the properties of the specified scale/grain \code{whichThresh}
+#'   \item{`summary`}{gives the properties of the specified scale/grain `whichThresh`
 #'   of the GOC model;}
 #'
-#'   \item{\code{voronoi}}{a \code{RasterLayer} giving the Voronoi tessellation the
-#'   specified scale/grain \code{whichThresh} of the GOC model;}
+#'   \item{`voronoi`}{a `RasterLayer` giving the Voronoi tessellation the
+#'   specified scale/grain `whichThresh` of the GOC model;}
 #'
-#'   \item{\code{centroids}}{a \code{SpatialPoints} objects giving the centroids
-#'   of the polygons in the Voronoi tessellation at the specified scale/grain \code{whichThresh};}
+#'   \item{`centroids`}{a `SpatialPoints` objects giving the centroids
+#'   of the polygons in the Voronoi tessellation at the specified scale/grain `whichThresh`;}
 #'
-#'   \item{\code{th}}{a \code{igraph} object giving the graph describing the relationship
-#'   among the polygons at the specified scale/grain \code{whichThresh}}
+#'   \item{`th`}{a `igraph` object giving the graph describing the relationship
+#'   among the polygons at the specified scale/grain `whichThresh`}
 #' }
 #'
 #' @references
@@ -50,7 +50,7 @@
 #' @importFrom sp geometry plot SpatialPoints SpatialPolygonsDataFrame
 #' @include classes.R
 #' @rdname grain
-#' @seealso \code{\link{GOC}}
+#' @seealso [GOC()]
 #'
 #' @example inst/examples/example_preamble.R
 #' @example inst/examples/example_preamble_MPG.R

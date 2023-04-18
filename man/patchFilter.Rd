@@ -11,7 +11,7 @@ patchFilter(x, cells = NULL, area = NULL, ...)
 }
 \arguments{
 \item{x}{A binary raster (i.e. consisting of \code{0}, \code{1},
-or \code{NA} cells), where cells \code{=1} represent
+or \code{NA} cells), where cells \verb{=1} represent
 patches}
 
 \item{cells}{The minimum number of cells that constitute a patch.
@@ -24,21 +24,21 @@ raster by multiplying the count of cells in patch by the x
 and y resolution of a raster cell). Default \code{NULL}.
 Only one of \code{cells} or \code{area} may be specified.}
 
-\item{...}{Additional arguments passed to the \code{\link{clump}}
+\item{...}{Additional arguments passed to the \code{\link[=clump]{clump()}}
 function in the \code{raster} package. For example
 \code{directions = 4} may be used to be more conservative
 about which cells constitute a patch.}
 }
 \value{
-A binary raster where all patches (i.e. clumped areas \code{=1})
-          are greater than the specified area.
+A binary raster where all patches (i.e. clumped areas \verb{=1})
+are greater than the specified area.
 }
 \description{
-Pre-process patch rasters prior to their use with \code{\link{MPG}}.
+Pre-process patch rasters prior to their use with \code{\link[=MPG]{MPG()}}.
 }
 \details{
 It examines a binary raster to identify all patches or clumps of cells with
-values \code{=1}, determines their area, and returns a binary raster where
+values \verb{=1}, determines their area, and returns a binary raster where
 only patches of area greater than or equal to the specified amount are represented.
 
 This is helpful when analyzing habitat connectivity models where patches
@@ -73,7 +73,7 @@ tinyPatchMPG <- MPG(cost = tinyCost, patch = filteredPatch)
 if (interactive()) plot(tinyPatchMPG)
 }
 \seealso{
-\code{\link{MPG}}
+\code{\link[=MPG]{MPG()}}
 }
 \author{
 Paul Galpern and Alex Chubaty

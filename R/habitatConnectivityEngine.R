@@ -10,7 +10,7 @@ if (getRversion() >= "3.1.0") {
 #' @param cost      Numeric raster cost (resistance) map.
 #' @param patches   Logical raster indicating presence of habitat patches.
 #'
-#' @return An object of class \code{\linkS4class{hce}}.
+#' @return An object of class [hce-class].
 #'
 #' @author Alex Chubaty
 #' @importFrom raster extent getValues ncol nrow raster unique

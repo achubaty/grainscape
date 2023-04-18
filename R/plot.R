@@ -3,7 +3,7 @@ if (getRversion() >= "3.1.0") {
                            "y1", "y1p", "y2", "y2p"))
 }
 
-#' \code{.gFinal}
+#' `.gFinal`
 #'
 #' @author Paul Galpern
 #' @importFrom ggplot2 coord_equal theme
@@ -24,69 +24,69 @@ if (getRversion() >= "3.1.0") {
   }
 }
 
-#' Plot quick visualizations of \code{grainscape} objects
+#' Plot quick visualizations of `grainscape` objects
 #'
 #' @description
-#' Plot quick visualizations of \code{mpg}, \code{grain}, and \code{corridor}
+#' Plot quick visualizations of `mpg`, `grain`, and `corridor`
 #' objects.
 #'
-#' This function is intended to get a quick look at the state of a \code{grainscape}
+#' This function is intended to get a quick look at the state of a `grainscape`
 #' object by rendering what are likely to be the most universally useful
 #' visualizations of the spatial data within these objects.
 #'
-#' Much more control is available using \code{\link{ggGS}} with \code{\link{ggplot}}
+#' Much more control is available using [ggGS()] with [ggplot()]
 #' enabling the layering of different different analytical products, and the
 #' visualization of node and link attributes.
 #'
 #' For high-resolution visualization and the greatest level of control use
-#' \code{\link{export}} to export spatial objects for cartographic representation
+#' [export()] to export spatial objects for cartographic representation
 #' in a geographic information system (GIS).
 #'
-#' @param x       A \code{grainscape} object (\code{corridor}, \code{grain}, or \code{mpg}).
+#' @param x       A `grainscape` object (`corridor`, `grain`, or `mpg`).
 #'
 #' @param y       Ignored.
 #'
-#' @param quick   If \code{NULL} (the default) it will plot the most useful quick
+#' @param quick   If `NULL` (the default) it will plot the most useful quick
 #'                visualization for the supplied object type. See below for a
 #'                description of the available quick plots, and the defaults.
 #'
-#' @param print   Render the \code{ggplot} on the default graphics device.
-#'                Default is \code{TRUE}.
+#' @param print   Render the `ggplot` on the default graphics device.
+#'                Default is `TRUE`.
 #'
-#' @param theme   Apply grainscape theme and scale aesthetics. Default is \code{TRUE}.
+#' @param theme   Apply grainscape theme and scale aesthetics. Default is `TRUE`.
 #'
 #' @param ...     Additional arguments (not used).
 
-#' @return        Invisibly, a \code{ggplot2} object to which additional \code{ggplot}
+#' @return        Invisibly, a `ggplot2` object to which additional `ggplot`
 #'                geoms and adjustments can be applied. Has the side effect of
-#'                rendering the plot, unless \code{print = FALSE}.
+#'                rendering the plot, unless `print = FALSE`.
 #'
-#' @section Types of visualization available with the \code{quick} parameter:
+#' @section Types of visualization available with the `quick` parameter:
 #'
-#' \code{"mpgPerimPlot"} gives a a vector rendering of the minimum planar
+#' `"mpgPerimPlot"` gives a a vector rendering of the minimum planar
 #' graph with vector links connecting the perimeters of the patches. This
 #' doesn't accurately represent the sinuosity of paths of the links between patches
 #' but offers a good approximation that renders better at large extents.
-#' Default for \code{mpg} objects. Not available for other objects.
+#' Default for `mpg` objects. Not available for other objects.
 #'
-#' \code{"mpgPlot"} gives a raster-only rendering of the minimum planar graph
-#' where \code{patchId} are positive integers, and \code{linkId} are negative
+#' `"mpgPlot"` gives a raster-only rendering of the minimum planar graph
+#' where `patchId` are positive integers, and `linkId` are negative
 #' integers showing the shortest paths between patches  Only available for
-#' \code{mpg} objects.
+#' `mpg` objects.
 #'
-#' \code{"network"} gives a vector rendering of the minimum planar graph or
+#' `"network"` gives a vector rendering of the minimum planar graph or
 #' the grains of connectivity network with nodes and links plotted at the
-#' patch or polygon centroid locations. Available for \code{mpg} and \code{grain}
-#' objects. Default for \code{grain} objects.
+#' patch or polygon centroid locations. Available for `mpg` and `grain`
+#' objects. Default for `grain` objects.
 #'
-#' \code{"grainPlot"} gives a raster and vector rendering of the grains of
+#' `"grainPlot"` gives a raster and vector rendering of the grains of
 #' connectivity network with nodes and links plotted at polygon centroid locations,
 #' superimposed over the boundaries of the Voronoi polygons.
 #' Can be time consuming on large rasters due to the Voronoi boundary extraction.
-#' Only available for \code{grain} objects.
+#' Only available for `grain` objects.
 #'
-#' \code{"corridorPlot"} renders the output of a \code{\link{corridor}} analysis.
-#' It is the only option available with \code{corridor} objects and the default.
+#' `"corridorPlot"` renders the output of a [corridor()] analysis.
+#' It is the only option available with `corridor` objects and the default.
 #'
 #' @author Alex Chubaty and Paul Galpern
 #' @export
@@ -96,11 +96,11 @@ if (getRversion() >= "3.1.0") {
 #' @importFrom grDevices rainbow
 #' @include classes.R
 #' @rdname plot
-#' @seealso \code{\link{ggGS}},
-#'          \code{\link{export}},
-#'          \code{\linkS4class{corridor}},
-#'          \code{\linkS4class{grain}},
-#'          \code{\linkS4class{mpg}}
+#' @seealso [ggGS()],
+#'          [export()],
+#'          [corridor-class],
+#'          [grain-class],
+#'          [mpg-class]
 #'
 #' @example inst/examples/example_preamble.R
 #' @example inst/examples/example_preamble_MPG.R

@@ -1,19 +1,19 @@
-#' A \code{ggplot2} theme for \code{grainscape}
+#' A `ggplot2` theme for `grainscape`
 #'
-#' A \code{\link{ggplot2}} theme designed for \code{grainscape} based on the
-#' \code{\link[ggthemes]{theme_map}} theme, with several modifications.
+#' A [ggplot2()] theme designed for `grainscape` based on the
+#' [ggthemes::theme_map()] theme, with several modifications.
 #'
 #' @param base_size     Base font size
 #'
 #' @param base_family   Base font family
 #'
-#' @return A theme suitable for use with \code{\link{ggplot}}
+#' @return A theme suitable for use with [ggplot()]
 #'
 #' @author Paul Galpern and Alex Chubaty
 #' @export
 #' @importFrom ggplot2 %+replace% element_blank theme theme_bw unit
 #' @rdname theme_grainscape
-#' @seealso \code{\link{ggGS}}, \code{\link{plot}}, \code{\link[ggthemes]{theme_map}}
+#' @seealso [ggGS()], [plot()], [ggthemes::theme_map()]
 #'
 #' @example inst/examples/example_preamble.R
 #' @example inst/examples/example_preamble_MPG.R

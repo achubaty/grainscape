@@ -24,7 +24,7 @@ accumulated costs (\code{RasterLayer}).}
 \item{\code{lcpLinkId}}{The paths of the links between patches and their id (\code{RasterLayer}).}
 
 \item{\code{mpgPlot}}{A \code{RasterLayer} version of the \code{mpg}, which can be
-                  easily plotted to visualize the MPG.
+easily plotted to visualize the MPG.
 
 The \code{mpg} slot contains useful vertex and edge attributes.
 Vertex attributes give attributes of patches including patch area,

@@ -16,9 +16,9 @@ distance(x, y, ...)
 \S4method{distance}{goc,numeric}(x, y, weight = "meanWeight", ...)
 }
 \arguments{
-\item{x}{A \code{goc} object produced by \code{\link{GOC}}.}
+\item{x}{A \code{goc} object produced by \code{\link[=GOC]{GOC()}}.}
 
-\item{y}{A two column matrix or a \code{\link{SpatialPoints}} object
+\item{y}{A two column matrix or a \code{\link[=SpatialPoints]{SpatialPoints()}} object
 giving the coordinates of points of interest.}
 
 \item{...}{Additional arguments (not used).}
@@ -74,7 +74,7 @@ Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis
 at multiple spatial scales in landscape genetics. Molecular Ecology 21:3996-4009.
 }
 \seealso{
-\code{\link{GOC}}, \code{\link{point}}
+\code{\link[=GOC]{GOC()}}, \code{\link[=point]{point()}}
 }
 \author{
 Paul Galpern and Alex Chubaty

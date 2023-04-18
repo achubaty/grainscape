@@ -10,28 +10,28 @@ grain(x, ...)
 \S4method{grain}{goc}(x, whichThresh, ...)
 }
 \arguments{
-\item{x}{A \code{goc} object created by \code{\link{GOC}}.}
+\item{x}{A \code{goc} object created by \code{\link[=GOC]{GOC()}}.}
 
 \item{...}{Additional arguments (not used).}
 
 \item{whichThresh}{Integer giving the grain threshold to extract.
-This is the index of the threshold extracted by \code{\link{GOC}}.}
+This is the index of the threshold extracted by \code{\link[=GOC]{GOC()}}.}
 }
 \value{
 A list object containing the following elements:
 
 \describe{
-  \item{\code{summary}}{gives the properties of the specified scale/grain \code{whichThresh}
-  of the GOC model;}
+\item{\code{summary}}{gives the properties of the specified scale/grain \code{whichThresh}
+of the GOC model;}
 
-  \item{\code{voronoi}}{a \code{RasterLayer} giving the Voronoi tessellation the
-  specified scale/grain \code{whichThresh} of the GOC model;}
+\item{\code{voronoi}}{a \code{RasterLayer} giving the Voronoi tessellation the
+specified scale/grain \code{whichThresh} of the GOC model;}
 
-  \item{\code{centroids}}{a \code{SpatialPoints} objects giving the centroids
-  of the polygons in the Voronoi tessellation at the specified scale/grain \code{whichThresh};}
+\item{\code{centroids}}{a \code{SpatialPoints} objects giving the centroids
+of the polygons in the Voronoi tessellation at the specified scale/grain \code{whichThresh};}
 
-  \item{\code{th}}{a \code{igraph} object giving the graph describing the relationship
-  among the polygons at the specified scale/grain \code{whichThresh}}
+\item{\code{th}}{a \code{igraph} object giving the graph describing the relationship
+among the polygons at the specified scale/grain \code{whichThresh}}
 }
 }
 \description{
@@ -80,7 +80,7 @@ Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis
 at multiple spatial scales in landscape genetics. Molecular Ecology 21:3996-4009.
 }
 \seealso{
-\code{\link{GOC}}
+\code{\link[=GOC]{GOC()}}
 }
 \author{
 Paul Galpern and Alex Chubaty
