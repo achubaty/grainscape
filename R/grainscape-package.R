@@ -28,7 +28,7 @@
 #' \pkg{raster} (Hijmans and van Etten, 2011), and \pkg{igraph} (Csardi and Nepusz, 2006) packages.
 #'
 #' A paper describing the use of this package for landscape connectivity modelling is
-#' available at <https://doi.org/10.1111/2041-210X.13350>.
+#' available at \doi{10.1111/2041-210X.13350}.
 #'
 #' A detailed tutorial is available as a vignette (see `browseVignettes('grainscape')`).
 #'

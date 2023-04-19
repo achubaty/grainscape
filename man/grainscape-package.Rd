@@ -31,7 +31,7 @@ Routines also depend on the \pkg{sp} (Pebesma and Bivand, 2005),
 \pkg{raster} (Hijmans and van Etten, 2011), and \pkg{igraph} (Csardi and Nepusz, 2006) packages.
 
 A paper describing the use of this package for landscape connectivity modelling is
-available at \url{https://doi.org/10.1111/2041-210X.13350}.
+available at \doi{10.1111/2041-210X.13350}.
 
 A detailed tutorial is available as a vignette (see \code{browseVignettes('grainscape')}).
 }
@@ -67,7 +67,7 @@ R News 5 (2), \url{https://cran.r-project.org/doc/Rnews/}.
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://alexchubaty.com/grainscape}
+  \item \url{https://www.alexchubaty.com/grainscape}
   \item \url{https://github.com/achubaty/grainscape}
   \item Report bugs at \url{https://github.com/achubaty/grainscape/issues}
 }

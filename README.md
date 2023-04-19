@@ -4,7 +4,7 @@
 [![R-CMD-check](https://github.com/achubaty/grainscape/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/achubaty/grainscape/actions/workflows/R-CMD-check.yaml)
 [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/grainscape)](https://cran.r-project.org/package=grainscape)
 [![DOI](https://zenodo.org/badge/62731055.svg)](https://zenodo.org/badge/latestdoi/62731055)
-[![Codecov test coverage](https://codecov.io/gh/achubaty/grainscape/branch/main/graph/badge.svg)](https://codecov.io/gh/achubaty/grainscape?branch=main)
+[![Codecov test coverage](https://codecov.io/gh/achubaty/grainscape/branch/main/graph/badge.svg)](https://app.codecov.io/gh/achubaty/grainscape?branch=main)
 <!-- badges: end -->
 
 <img align="right" width="80" pad="20" src="https://github.com/achubaty/grainscape/raw/main/stickers/hexsticker.png">
@@ -27,7 +27,7 @@ install.packages("grainscape")
 #### From GitHub
 
 1. **Install development libraries:** building packages from source requires the appropriate development libraries for your operating system.
-  See [here](https://support.rstudio.com/hc/en-us/articles/200486498-Package-Development-Prerequisites) for more details.
+  See [here](https://support.posit.co/hc/en-us/articles/200486498-Package-Development-Prerequisites) for more details.
     
     - *Windows:* install [Rtools](https://cran.r-project.org/bin/windows/Rtools/).
     - *macOS:* install Xcode commandline tools from the terminal: `xcode-select --install`. 
