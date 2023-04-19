@@ -172,16 +172,19 @@ The result is shown in \autoref{fig:patchycost}.
 ## Create an is-becomes matrix for reclassification
 isBecomes <- cbind(c(1, 2, 3, 4, 5), c(1, 10, 8, 3, 6))
 patchyCost <- reclassify(patchy, rcl = isBecomes)
+patchyCost_df <- ggGS(patchyCost)
+patchyCost_df$value <- as.factor(patchyCost_df$value)
 
 ## Plot this raster using ggplot2 functionality
 ## and the default grainscape theme
 ggplot() +
   geom_raster(
-    data = ggGS(patchyCost),
+    data = patchyCost_df,
     aes(x = x, y = y, fill = value)
   ) +
-  scale_fill_distiller(palette = "Paired", guide = "legend") +
+  scale_fill_brewer(type = "div", palette = "Paired", guide = "legend") +
   guides(fill = guide_legend(title = "Resistance")) +
+  theme_grainscape() +
   theme(legend.position = "right")
 ```
 
