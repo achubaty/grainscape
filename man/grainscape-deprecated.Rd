@@ -52,9 +52,7 @@ Provide either \code{nThresh} or \code{doThresh} not both.}
 
 \item{weight}{A string giving the link weight or attribute to use for threshold.
 \code{"lcpPerimWeight"} uses the accumulated resistance or least-cost
-path distance from the perimeters of patches as the link weight.
-\code{"eucPerimWeight"} use the Euclidean distance from the
-perimeters of patches as the link weight.}
+path distance from the perimeters of patches as the link weight.}
 
 \item{sp}{Logical. If \code{TRUE} the \code{sp} package is used to create
 a vector of class \code{\link[=SpatialPolygonsDataFrame]{SpatialPolygonsDataFrame()}} describing

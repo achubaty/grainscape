@@ -24,9 +24,6 @@
 #' @param weight    A string giving the link weight or attribute to use for threshold.
 #'                  `"lcpPerimWeight"` uses the accumulated resistance or least-cost
 #'                  path distance from the perimeters of patches as the link weight.
-#'                  `"eucPerimWeight"` use the Euclidean distance from the
-#'                  perimeters of patches as the link weight.
-#'
 #'
 #' @param verbose Set `verbose=0` for no progress information to console.
 #'

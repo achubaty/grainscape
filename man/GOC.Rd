@@ -37,9 +37,7 @@ Provide either \code{nThresh} or \code{doThresh} not both.}
 
 \item{weight}{A string giving the link weight or attribute to use for threshold.
 \code{"lcpPerimWeight"} uses the accumulated resistance or least-cost
-path distance from the perimeters of patches as the link weight.
-\code{"eucPerimWeight"} use the Euclidean distance from the
-perimeters of patches as the link weight.}
+path distance from the perimeters of patches as the link weight.}
 
 \item{verbose}{Set \code{verbose=0} for no progress information to console.}
 }

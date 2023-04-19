@@ -13,8 +13,6 @@
 #' @param weight  A string giving the link weight or attribute to use for threshold.
 #'                `"lcpPerimWeight"` uses the accumulated resistance or least-cost path
 #'                distance from the perimeters of patches as the link weight.
-#'                `"eucPerimWeight"` use the Euclidean distance from the
-#'                perimeters of patches as the link weight.
 #'
 #' @param nThresh  Optional. An integer giving the number of thresholds (or scales)
 #'                 at which to create GOC models.
