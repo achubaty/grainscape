@@ -76,6 +76,10 @@ setMethod(
       stop("whichThresh must index a single threshold existing in the GOC object")
     }
 
+    if (is.na(x@summary$nPolygon[whichThresh])) {
+      stop("undefined threshold: ", x@summary$id[whichThresh])
+    }
+
     results <- list()
 
     results$summary <- x@summary[whichThresh, ]
