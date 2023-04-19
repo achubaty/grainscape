@@ -20,8 +20,10 @@ selectMethod("show", "igraph")
 #' @keywords internal
 setClass(
   "hce",
-  slots = list(voronoi = "RasterLayer", patchLinks = "RasterLayer",
-               linkData = "data.frame")
+  slots = list(
+    voronoi = "RasterLayer", patchLinks = "RasterLayer",
+    linkData = "data.frame"
+  )
 )
 
 #' The `mpg` class
@@ -57,9 +59,11 @@ setClass(
 #'
 setClass(
   "mpg",
-  slots = list(mpg = "igraph", patchId = "RasterLayer", voronoi = "RasterLayer",
-               lcpPerimWeight = "RasterLayer", lcpLinkId = "RasterLayer",
-               mpgPlot = "RasterLayer")
+  slots = list(
+    mpg = "igraph", patchId = "RasterLayer", voronoi = "RasterLayer",
+    lcpPerimWeight = "RasterLayer", lcpLinkId = "RasterLayer",
+    mpgPlot = "RasterLayer"
+  )
 )
 
 #' The `goc` class
@@ -88,8 +92,10 @@ setClass(
 #' @importClassesFrom sp SpatialPolygons
 setClass(
   "goc",
-  slots = list(voronoi = "RasterLayer",
-               summary = "data.frame", th = "list")
+  slots = list(
+    voronoi = "RasterLayer",
+    summary = "data.frame", th = "list"
+  )
 )
 
 #' Show a `grainscape` object
@@ -103,8 +109,7 @@ setClass(
 #'
 #' @export
 #' @rdname show
-setMethod(
-  "show",
+setMethod("show",
   signature = "goc",
   definition = function(object) {
     cat("Slot voronoi:\n")
@@ -115,7 +120,8 @@ setMethod(
 
     cat("\nSlot th:\n")
     cat("List of ", length(object@th), " goc elements", "\n")
-})
+  }
+)
 
 #' The `grain` class
 #'
@@ -139,15 +145,16 @@ setMethod(
 #' @importClassesFrom sp SpatialPoints SpatialPolygonsDataFrame
 setClass(
   "grain",
-  slots = list(voronoi = "RasterLayer",
-               summary = "data.frame", centroids = "SpatialPoints",
-               th = "igraph")
+  slots = list(
+    voronoi = "RasterLayer",
+    summary = "data.frame", centroids = "SpatialPoints",
+    th = "igraph"
+  )
 )
 
 #' @export
 #' @rdname show
-setMethod(
-  "show",
+setMethod("show",
   signature = "grain",
   definition = function(object) {
     cat("Slot voronoi:\n")
@@ -161,7 +168,8 @@ setMethod(
 
     cat("\nSlot th:\n")
     cat(show(object@th))
-})
+  }
+)
 
 #' The `corridor` class
 #'
@@ -192,15 +200,16 @@ setMethod(
 #'
 setClass(
   "corridor",
-  slots = list(voronoi = "RasterLayer", linksSP = "SpatialLinesDataFrame",
-               nodesSP = "SpatialPoints", shortestLinksSP = "SpatialLines",
-               shortestNodesSP = "SpatialPoints", corridorLength = "numeric")
+  slots = list(
+    voronoi = "RasterLayer", linksSP = "SpatialLinesDataFrame",
+    nodesSP = "SpatialPoints", shortestLinksSP = "SpatialLines",
+    shortestNodesSP = "SpatialPoints", corridorLength = "numeric"
+  )
 )
 
 #' @export
 #' @rdname show
-setMethod(
-  "show",
+setMethod("show",
   signature = "corridor",
   definition = function(object) {
     cat("Slot voronoi:\n")
@@ -220,4 +229,5 @@ setMethod(
 
     cat("\nSlot corridorLength:\n")
     cat(show(object@corridorLength))
-})
+  }
+)

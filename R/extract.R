@@ -15,7 +15,8 @@ setMethod(
   signature(x = "goc"),
   definition = function(x, name) {
     return(slot(x, name))
-})
+  }
+)
 
 #' @export
 #' @name $<-
@@ -27,7 +28,8 @@ setReplaceMethod(
   definition = function(x, name, value) {
     slot(x, name) <- value
     return(x)
-})
+  }
+)
 
 #' @export
 #' @name $
@@ -38,7 +40,8 @@ setMethod(
   signature(x = "mpg"),
   definition = function(x, name) {
     return(slot(x, name))
-})
+  }
+)
 
 #' @export
 #' @name $<-
@@ -50,4 +53,5 @@ setReplaceMethod(
   definition = function(x, name, value) {
     slot(x, name) <- value
     return(x)
-})
+  }
+)

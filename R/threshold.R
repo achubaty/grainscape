@@ -89,8 +89,10 @@ setMethod(
     linkWeight <- try(edge_attr(baseGraph, weight), silent = TRUE)
 
     if (inherits(linkWeight, "try-error")) {
-      stop("weight must be the name of an existing link attribute to threshold",
-           " (e.g., 'lcpPerimWeight')")
+      stop(
+        "weight must be the name of an existing link attribute to threshold",
+        " (e.g., 'lcpPerimWeight')"
+      )
     }
 
     if (is.null(nThresh) && is.null(doThresh)) {
@@ -103,7 +105,7 @@ setMethod(
 
     threshGraph$summary <- data.frame(maxLink = doThresh)
 
-    threshGraph$th <- lapply(1:length(doThresh), function(i) {
+    threshGraph$th <- lapply(seq_along(doThresh), function(i) {
       delete.edges(baseGraph, which(linkWeight > doThresh[i]))
     })
 
@@ -113,4 +115,5 @@ setMethod(
       unlist()
 
     return(threshGraph)
-})
+  }
+)

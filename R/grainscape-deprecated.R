@@ -89,14 +89,17 @@ gsGraphDataFrame <- function(x) {
 #'
 gsMPG <- function(cost, patch, sa = NULL, filterPatch = NULL, spreadFactor = 0) {
   .Deprecated("MPG", old = "gsMPG")
-  if (!is.null(filterPatch))
+  if (!is.null(filterPatch)) {
     warning("gsMPG(): argument 'filterPatch' was supplied but will be ignored.")
+  }
 
-  if (!is.null(sa))
+  if (!is.null(sa)) {
     warning("gsMPG(): argument 'sa' was supplied but will be ignored.")
+  }
 
-  if (spreadFactor != 0)
+  if (spreadFactor != 0) {
     warning("gsMPG(): argument 'spreadFactor' was supplied but will be ignored.")
+  }
   MPG(cost, patch)
 }
 
@@ -111,6 +114,8 @@ gsMPG <- function(cost, patch, sa = NULL, filterPatch = NULL, spreadFactor = 0) 
 #' @rdname grainscape-defunct
 #'
 gsMPGstitch <- function(...) {
-  .Defunct("MPG", msg = paste("'gsMPGstitch' is defunct.\n",
-                              "'MPG' is now capable of handling larger rasters. Try it instead."))
+  .Defunct("MPG", msg = paste(
+    "'gsMPGstitch' is defunct.\n",
+    "'MPG' is now capable of handling larger rasters. Try it instead."
+  ))
 }

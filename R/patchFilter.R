@@ -49,7 +49,8 @@ setGeneric(
   "patchFilter",
   function(x, cells = NULL, area = NULL, ...) {
     standardGeneric("patchFilter")
-})
+  }
+)
 
 #' @export
 #' @rdname patchFilter
@@ -57,28 +58,28 @@ setMethod(
   "patchFilter",
   signature = "RasterLayer",
   definition = function(x, cells, area, ...) {
+    if (!xor(is.null(cells), is.null(area))) {
+      stop("either the cells or area parameter must be specified, not both.")
+    }
 
-  if (!xor(is.null(cells), is.null(area))) {
-    stop("either the cells or area parameter must be specified, not both.")
+    if (any(!(unique(x[]) %in% c(NA, 0, 1)))) {
+      stop("x must be a binary raster containing 0, 1 or NA values")
+    }
+
+    cellThresh <- if (!is.null(area)) {
+      ceiling(area / (res(x)[1] * res(x)[2]))
+    } else {
+      cells
+    }
+
+    patch <- clump(x, ...)
+    fp <- freq(patch)
+    rmpatch <- fp[fp[, 2] < cellThresh, 1]
+
+    out <- patch
+    out[patch[] %in% rmpatch] <- NA
+    out <- !is.na(out)
+
+    return(out)
   }
-
-  if (any(!(unique(x[]) %in% c(NA, 0, 1)))) {
-    stop("x must be a binary raster containing 0, 1 or NA values")
-  }
-
-  cellThresh <- if (!is.null(area)) {
-    ceiling(area / (res(x)[1] * res(x)[2]))
-  } else {
-    cells
-  }
-
-  patch <- clump(x, ...)
-  fp <- freq(patch)
-  rmpatch <- fp[fp[, 2] < cellThresh, 1]
-
-  out <- patch
-  out[patch[] %in% rmpatch] <- NA
-  out <- !is.na(out)
-
-  return(out)
-})
+)

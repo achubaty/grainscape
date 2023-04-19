@@ -24,7 +24,7 @@ opts_chunk$set(eval = TRUE)
 opts_chunk$set(fig.height = 6)
 opts_chunk$set(fig.width = 6)
 opts_chunk$set(message = FALSE)
-opts_chunk$set(results = 'hold')
+opts_chunk$set(results = "hold")
 opts_chunk$set(warning = FALSE)
 ```
 

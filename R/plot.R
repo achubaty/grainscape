@@ -1,6 +1,8 @@
 if (getRversion() >= "3.1.0") {
-  utils::globalVariables(c("cols", "sz", "value", "x1", "x1p", "x2", "x2p",
-                           "y1", "y1p", "y2", "y2p"))
+  utils::globalVariables(c(
+    "cols", "sz", "value", "x1", "x1p", "x2", "x2p",
+    "y1", "y1p", "y2", "y2p"
+  ))
 }
 
 #' `.gFinal`
@@ -111,17 +113,19 @@ setMethod(
   "plot",
   signature = "corridor",
   definition = function(x, y, quick = NULL, print = TRUE, theme = TRUE, ...) {
-
     .linksToDF <- function(x) {
-      out <- do.call(rbind,
-                     lapply(
-                       lapply(slot(x, "lines"), function(x) {
-                         lapply(slot(x, "Lines"), function(y) {
-                           slot(y, "coords")
-                         })
-                       }), function(z) {
-                         c(z[[1]][1, ], z[[1]][2, ])
-      }))
+      out <- do.call(
+        rbind,
+        lapply(
+          lapply(slot(x, "lines"), function(x) {
+            lapply(slot(x, "Lines"), function(y) {
+              slot(y, "coords")
+            })
+          }), function(z) {
+            c(z[[1]][1, ], z[[1]][2, ])
+          }
+        )
+      )
       dimnames(out) <- NULL
       out <- data.frame(out)
       names(out) <- c("x1", "y1", "x2", "y2")
@@ -129,9 +133,11 @@ setMethod(
     }
 
     .pathToDF <- function(x) {
-      out <- lapply(slot(x, "lines"), function(x)
-               lapply(slot(x, "Lines"), function(y)
-                 slot(y, "coords")))[[1]][[1]]
+      out <- lapply(slot(x, "lines"), function(x) {
+        lapply(slot(x, "Lines"), function(y) {
+          slot(y, "coords")
+        })
+      })[[1]][[1]]
       out <- do.call(rbind, lapply(1:(nrow(out) - 1), function(x) {
         c(out[x, ], out[x + 1, ])
       }))
@@ -154,11 +160,15 @@ setMethod(
 
     message("Extracting Voronoi boundaries...")
     g <- ggplot() +
-      geom_raster(data = ggGS(x@voronoi, "vorBound"),
-                  aes(x = x, y = y, fill = value > 0)) +
+      geom_raster(
+        data = ggGS(x@voronoi, "vorBound"),
+        aes(x = x, y = y, fill = value > 0)
+      ) +
       scale_fill_manual(values = c("white", "grey")) +
-      geom_segment(data = linesDF,
-                   aes(x = x1, y = y1, xend = x2, yend = y2, colour = cols, size = sz)) +
+      geom_segment(
+        data = linesDF,
+        aes(x = x1, y = y1, xend = x2, yend = y2, colour = cols, size = sz)
+      ) +
       geom_point(data = pointsDF, aes(x = x, y = y, col = cols, size = sz)) +
       scale_colour_identity() +
       scale_size_identity()
@@ -167,7 +177,8 @@ setMethod(
     }
     g <- g + theme(legend.position = "none")
     .gFinal(g, print, theme = FALSE)
-})
+  }
+)
 
 #' @export
 #' @rdname plot
@@ -176,27 +187,34 @@ setMethod(
   signature = "grain",
   definition = function(x, y, quick = NULL, print = TRUE, theme = TRUE, ...) {
     if (is.null(quick) || (quick == "network")) {
-
       colPar <- function(n) {
         sample(seq(0.3, 1, length.out = 50), n, replace = TRUE)
       }
 
       vor <- ggGS(x, "voronoi")
       nVor <- max(vor$value, na.rm = TRUE)
-      cols <- data.frame(n = 1:nVor,
-                         col = rainbow(nVor, s = colPar(nVor),
-                                       v = colPar(nVor))[sample(nVor, replace = TRUE)],
-                         stringsAsFactors = FALSE)
+      cols <- data.frame(
+        n = 1:nVor,
+        col = rainbow(nVor,
+          s = colPar(nVor),
+          v = colPar(nVor)
+        )[sample(nVor, replace = TRUE)],
+        stringsAsFactors = FALSE
+      )
       vor <- cbind(vor, cols = cols[match(vor$value, cols$n), "col"])
       g <- ggplot() +
         geom_raster(data = vor, aes(x = x, y = y, fill = cols), alpha = 0.5) +
         scale_fill_identity()
       g <- g +
-        geom_segment(data = ggGS(x, "links"),
-                     aes(x = x1, y = y1, xend = x2, yend = y2, colour = "black"))
+        geom_segment(
+          data = ggGS(x, "links"),
+          aes(x = x1, y = y1, xend = x2, yend = y2, colour = "black")
+        )
       g <- g +
-        geom_point(data = ggGS(x, "nodes"),
-                   aes(x = x, y = y, colour = "black")) +
+        geom_point(
+          data = ggGS(x, "nodes"),
+          aes(x = x, y = y, colour = "black")
+        ) +
         scale_colour_identity()
       if (theme) {
         g <- g + theme_grainscape()
@@ -208,11 +226,15 @@ setMethod(
         geom_raster(data = ggGS(x, "vorBound"), aes(x = x, y = y, fill = value > 0)) +
         scale_fill_manual(values = c("white", "grey"))
       g <- g +
-        geom_segment(data = ggGS(x, "links"),
-                     aes(x = x1, y = y1, xend = x2, yend = y2, colour = "forestgreen"))
+        geom_segment(
+          data = ggGS(x, "links"),
+          aes(x = x1, y = y1, xend = x2, yend = y2, colour = "forestgreen")
+        )
       g <- g +
-        geom_point(data = ggGS(x, "nodes"),
-                   aes(x = x, y = y, colour = "darkgreen")) +
+        geom_point(
+          data = ggGS(x, "nodes"),
+          aes(x = x, y = y, colour = "darkgreen")
+        ) +
         scale_colour_identity()
       if (theme) {
         g <- g + theme_grainscape()
@@ -222,7 +244,8 @@ setMethod(
     } else {
       stop("quick parameter not valid for a grain object")
     }
-})
+  }
+)
 
 #' @export
 #' @rdname plot
@@ -235,12 +258,14 @@ setMethod(
         geom_raster(data = ggGS(x, "patchId"), aes(x = x, y = y, fill = value > 0)) +
         scale_fill_manual(values = "grey")
       g <- g +
-        geom_segment(data = ggGS(x, "links"),
-          aes(x = x1p, y = y1p, xend = x2p, yend = y2p, colour = "forestgreen")) +
+        geom_segment(
+          data = ggGS(x, "links"),
+          aes(x = x1p, y = y1p, xend = x2p, yend = y2p, colour = "forestgreen")
+        ) +
         scale_colour_identity()
 
       # Plot points at the ends of links (too crowded in most use cases)
-      #g <- g +
+      # g <- g +
       #  geom_point(data = ggGS(x, "links"),
       #             aes(x = x1p, y = y1p, colour = "forestgreen"), size = 1) +
       #  geom_point(data = ggGS(x, "links"),
@@ -256,11 +281,15 @@ setMethod(
         geom_raster(data = ggGS(x, "patchId"), aes(x = x, y = y, fill = value > 0)) +
         scale_fill_manual(values = "grey")
       g <- g +
-        geom_segment(data = ggGS(x, "links"),
-                     aes(x = x1, y = y1, xend = x2, yend = y2, colour = "forestgreen"))
+        geom_segment(
+          data = ggGS(x, "links"),
+          aes(x = x1, y = y1, xend = x2, yend = y2, colour = "forestgreen")
+        )
       g <- g +
-        geom_point(data = ggGS(x, "nodes"),
-                   aes(x = x, y = y, colour = "darkgreen")) +
+        geom_point(
+          data = ggGS(x, "nodes"),
+          aes(x = x, y = y, colour = "darkgreen")
+        ) +
         scale_colour_identity()
       if (theme) {
         g <- g + theme_grainscape()
@@ -269,8 +298,10 @@ setMethod(
       .gFinal(g, print, theme = FALSE)
     } else if (quick == "mpgPlot") {
       g <- ggplot() +
-        geom_raster(data = ggGS(x, "mpgPlot"),
-          aes(x = x, y = y, fill = ifelse(value > 0, "grey", "forestgreen"))) +
+        geom_raster(
+          data = ggGS(x, "mpgPlot"),
+          aes(x = x, y = y, fill = ifelse(value > 0, "grey", "forestgreen"))
+        ) +
         scale_fill_identity() +
         theme(legend.position = "none")
       if (theme) {
@@ -280,4 +311,5 @@ setMethod(
     } else {
       stop("quick parameter not valid for an mpg object")
     }
-})
+  }
+)

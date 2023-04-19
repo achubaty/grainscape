@@ -52,8 +52,7 @@ setGeneric("distance", function(x, y, ...) {
 
 #' @export
 #' @rdname distance
-setMethod(
-  "distance",
+setMethod("distance",
   signature = c(x = "goc", y = "SpatialPoints"),
   definition = function(x, y, weight = "meanWeight", ...) {
     if (!(weight %in% names(edge_attr(x@th[[1]]$goc)))) {
@@ -65,7 +64,7 @@ setMethod(
     results <- list()
     results$th <- vector("list", ncol(whichGrain))
 
-    for (iThresh in 1:ncol(whichGrain)) {
+    for (iThresh in seq_len(ncol(whichGrain))) {
       threshGraph <- x@th[[iThresh]]$goc
 
       if (is_igraph(threshGraph)) {
@@ -74,19 +73,20 @@ setMethod(
           if (is.na(z)) NA_integer_ else which(V(threshGraph)$polygonId == z)
         })
         results$th[[iThresh]]$grainD <- distances(threshGraph,
-                                                  v = na.omit(vertices))[, na.omit(vertices)]
+          v = na.omit(vertices)
+        )[, na.omit(vertices)]
       } else {
         results$th[[iThresh]] <- NA
       }
     }
     return(results)
-  })
+  }
+)
 
 #' @importFrom sp SpatialPoints
 #' @export
 #' @rdname distance
-setMethod(
-  "distance",
+setMethod("distance",
   signature = c(x = "goc", y = "matrix"),
   definition = function(x, y, weight = "meanWeight", ...) {
     if (ncol(y) != 2) {
@@ -94,13 +94,14 @@ setMethod(
     }
 
     distance(x, SpatialPoints(y), weight, ...)
-  })
+  }
+)
 
 #' @export
 #' @rdname distance
-setMethod(
-  "distance",
+setMethod("distance",
   signature = c(x = "goc", y = "numeric"),
   definition = function(x, y, weight = "meanWeight", ...) {
     distance(x, t(as.matrix(y)), weight, ...)
-  })
+  }
+)

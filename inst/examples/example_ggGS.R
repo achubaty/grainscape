@@ -5,22 +5,22 @@ if (interactive()) {
   theme_set(theme_grainscape())
   ggplot() +
     geom_tile(data = ggGS(tinyPatchMPG, "patchId"),
-                aes(x = x, y = y, fill = value))
+              aes(x = x, y = y, fill = value))
 
   ## Plot the grain polygons in a grain of connectivity
   ggplot() +
     geom_tile(data = ggGS(grain(tinyPatchGOC, 3), "voronoi"),
-                aes(x = x, y = y, fill = value))
+              aes(x = x, y = y, fill = value))
 
   ## Plot the grain polygon boundaries
   ggplot() +
     geom_tile(data = ggGS(grain(tinyPatchGOC, 3), "vorBound"),
-                aes(x = x, y = y, fill = value))
+              aes(x = x, y = y, fill = value))
 
   ## Plot the patches and perimeter links of a minimum planar graph
   ggplot() +
     geom_tile(data = ggGS(tinyPatchMPG, "patchId"),
-                aes(x = x, y = y, fill = value)) +
+              aes(x = x, y = y, fill = value)) +
     geom_segment(data = ggGS(tinyPatchMPG, "links"),
                  aes(x = x1p, y = y1p, xend = x2p, yend = y2p))
 
@@ -28,7 +28,7 @@ if (interactive()) {
   ## of a minimum planar graph
   ggplot() +
     geom_tile(data = ggGS(tinyPatchMPG, "patchId"),
-                 aes(x = x, y = y, fill = value)) +
+              aes(x = x, y = y, fill = value)) +
     geom_segment(data = ggGS(tinyPatchMPG, "links"),
                  aes(x = x1p, y = y1p, xend = x2p, yend = y2p))
 
@@ -37,8 +37,9 @@ if (interactive()) {
   focalGrain <- grain(tinyPatchGOC, 3)
   ggplot() +
     geom_tile(data = ggGS(focalGrain, "vorBound"),
-                aes(x = x, y = y, fill = value)) +
-    geom_point(data = ggGS(focalGrain, "nodes"), aes(x = x, y = y)) +
+              aes(x = x, y = y, fill = value)) +
+    geom_point(data = ggGS(focalGrain, "nodes"),
+               aes(x = x, y = y)) +
     geom_segment(data = ggGS(focalGrain, "links"),
                  aes(x = x1, y = y1, xend = x2, yend = y2))
 }

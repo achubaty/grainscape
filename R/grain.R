@@ -84,23 +84,31 @@ setMethod(
       threshGraph <- x@th[[whichThresh]]$goc
 
       ## Produce is-becomes reclassification table for voronoi raster
-      rclTable <-  matrix(0, 1, 2)
-      for (i in 1:length(V(threshGraph)$polygonId)) {
-        rclTable <- rbind(rclTable,
-                          cbind(as.integer(unlist(strsplit(V(threshGraph)$patchId[i], ", "))),
-                                as.integer(V(threshGraph)$polygonId[i])))
+      rclTable <- matrix(0, 1, 2)
+      for (i in seq_along(V(threshGraph)$polygonId)) {
+        rclTable <- rbind(
+          rclTable,
+          cbind(
+            as.integer(unlist(strsplit(V(threshGraph)$patchId[i], ", "))),
+            as.integer(V(threshGraph)$polygonId[i])
+          )
+        )
       }
       rclTable <- rclTable[2:nrow(rclTable), ]
 
       results$voronoi <- reclassify(x@voronoi, rcl = rclTable)
 
-      results$centroids <- SpatialPoints(cbind(V(threshGraph)$centroidX,
-                                               V(threshGraph)$centroidY))
-
+      results$centroids <- SpatialPoints(cbind(
+        V(threshGraph)$centroidX,
+        V(threshGraph)$centroidY
+      ))
     }
 
-    out <- new("grain", voronoi = results$voronoi, summary = results$summary,
-               centroids = results$centroids, th = threshGraph)
+    out <- new("grain",
+      voronoi = results$voronoi, summary = results$summary,
+      centroids = results$centroids, th = threshGraph
+    )
 
     return(out)
-})
+  }
+)

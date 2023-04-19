@@ -86,98 +86,113 @@ setMethod(
   "MPG",
   signature = c(cost = "RasterLayer", patch = "RasterLayer"),
   definition = function(cost, patch, ...) {
-  ## Check patch and cost are comparable
-  if (!compareRaster(patch, cost, res = TRUE, orig = TRUE, stopiffalse = FALSE)) {
-    stop("patch and cost rasters must be identical in extent, projection, origin and resolution.")
+    ## Check patch and cost are comparable
+    if (!compareRaster(patch, cost, res = TRUE, orig = TRUE, stopiffalse = FALSE)) {
+      stop("patch and cost rasters must be identical in extent, projection, origin and resolution.")
+    }
+
+    if (!is.na(projection(cost)) && grepl("longlat", projection(cost))) {
+      warning("input rasters in geographic coordinates (i.e. '+proj=longlat') are unlikely",
+        " to produce reliable estimates of area or distance.",
+        " For accurate results, project rasters with an appropriate coordinate",
+        " system for the location and extent of interest.",
+        immediate. = TRUE
+      )
+    }
+
+    ## use `cost` raster as template for `rasCost` and `rasPatch`
+    rasCost <- cost
+    rasPatch <- patch
+
+    rasCost[] <- getValues(cost)
+    rasPatch[] <- getValues(patch)
+
+    ## Check that patch raster is binary, first coercing NAs to zeroes
+    rasPatch[is.na(rasPatch)] <- 0
+    if (!all(unique(rasPatch[]) %in% c(FALSE, TRUE))) {
+      stop("patch must be a binary raster (=1 for patches; =0 for non-patches).")
+    }
+
+    ## Check that cost raster is not equal to NA at patches
+    if (sum(is.na(rasCost[rasPatch == 1]) > 0)) {
+      stop("cost raster must not contain missing values at patch cells.")
+    }
+
+    ## Call the habitat connectivity engine
+    hce <- .habConnEngine(cost = rasCost, patches = rasPatch)
+
+    ## Establish mpg object
+    patchId <- hce@patchLinks
+    patchId[hce@patchLinks < 0] <- NA
+
+    voronoi <- hce@voronoi
+
+    lcpLinkId <- hce@patchLinks
+    lcpLinkId[hce@patchLinks >= 0] <- NA
+
+    lcpPerimWeight <- reclassify(lcpLinkId, rcl = matrix(c(
+      hce@linkData$LinkId, hce@linkData$PerimWeight
+    ), ncol = 2))
+
+    mpgPlot <- hce@patchLinks
+
+    ## Get additional patch information
+    uniquePatches <- voronoi[voronoi > 0] %>%
+      na.omit() %>%
+      unique() %>%
+      sort() # nolint
+
+    ## Patch edge
+    patchEdge <- patchId
+    patchEdge <- raster::boundaries(patchEdge, type = "inner")
+    patchEdge[patchEdge == 0] <- NA
+    patchEdge <- mask(patchId, patchEdge)
+
+    ## Patch area and core area
+    patchArea <- freq(patchId, useNA = "no")[, 2] * res(cost)[1] * res(cost)[2]
+    patchEdgeArea <- freq(patchEdge, useNA = "no")[, 2] * res(cost)[1] * res(cost)[2]
+    patch <- data.frame(
+      name = uniquePatches, patchId = uniquePatches,
+      patchArea = patchArea, patchEdgeArea = patchEdgeArea,
+      coreArea = patchArea - patchEdgeArea
+    )
+
+    ## Find centroids of each patch
+    cellXY <- coordinates(patchId)
+    r <- rasX <- rasY <- patchId
+    r[r == 0] <- NA
+    rasX[] <- cellXY[, 1]
+    rasY[] <- cellXY[, 2]
+    centroids <- cbind(
+      zonal(rasX, r, fun = "mean", na.rm = TRUE),
+      zonal(rasY, r, fun = "mean", na.rm = TRUE)[, 2]
+    ) %>%
+      as.data.frame()
+    colnames(centroids) <- c("zone", "meanX", "meanY")
+
+    toGraphV <- cbind(patch, centroidX = centroids$meanX, centroidY = centroids$meanY) %>%
+      as.data.frame()
+
+    toGraphE <- data.frame(
+      v1 = hce@linkData$StartId,
+      v2 = hce@linkData$EndId,
+      linkId = hce@linkData$LinkId * -1L,
+      lcpPerimWeight = hce@linkData$PerimWeight,
+      startPerimX = xFromCol(cost, hce@linkData$StartColumn),
+      startPerimY = yFromRow(cost, hce@linkData$StartRow),
+      endPerimX = xFromCol(cost, hce@linkData$EndColumn),
+      endPerimY = yFromRow(cost, hce@linkData$EndRow)
+    )
+    mpgIgraph <- graph_from_data_frame(toGraphE, directed = FALSE, vertices = toGraphV)
+
+    mpg <- new("mpg",
+      mpg = mpgIgraph, patchId = patchId, voronoi = voronoi,
+      lcpPerimWeight = lcpPerimWeight, lcpLinkId = lcpLinkId, mpgPlot = mpgPlot
+    )
+
+    return(mpg)
   }
-
-  if (!is.na(projection(cost)) && grepl("longlat", projection(cost))) {
-    warning("input rasters in geographic coordinates (i.e. '+proj=longlat') are unlikely",
-            " to produce reliable estimates of area or distance.",
-            " For accurate results, project rasters with an appropriate coordinate",
-            " system for the location and extent of interest.", immediate. = TRUE)
-  }
-
-  ## use `cost` raster as template for `rasCost` and `rasPatch`
-  rasCost <- cost
-  rasPatch <- patch
-
-  rasCost[] <- getValues(cost)
-  rasPatch[] <- getValues(patch)
-
-  ## Check that patch raster is binary, first coercing NAs to zeroes
-  rasPatch[is.na(rasPatch)] <- 0
-  if (!all(unique(rasPatch[]) %in% c(FALSE, TRUE))) {
-    stop("patch must be a binary raster (=1 for patches; =0 for non-patches).")
-  }
-
-  ## Check that cost raster is not equal to NA at patches
-  if (sum(is.na(rasCost[rasPatch == 1]) > 0)) {
-    stop("cost raster must not contain missing values at patch cells.")
-  }
-
-  ## Call the habitat connectivity engine
-  hce <- .habConnEngine(cost = rasCost, patches = rasPatch)
-
-  ## Establish mpg object
-  patchId <- hce@patchLinks
-  patchId[hce@patchLinks < 0] <- NA
-
-  voronoi <- hce@voronoi
-
-  lcpLinkId <- hce@patchLinks
-  lcpLinkId[hce@patchLinks >= 0] <- NA
-
-  lcpPerimWeight <- reclassify(lcpLinkId, rcl = matrix(c(
-    hce@linkData$LinkId, hce@linkData$PerimWeight), ncol = 2))
-
-  mpgPlot <- hce@patchLinks
-
-  ## Get additional patch information
-  uniquePatches <- voronoi[voronoi > 0] %>% na.omit() %>% unique() %>% sort() # nolint
-
-  ## Patch edge
-  patchEdge <- patchId
-  patchEdge <- raster::boundaries(patchEdge, type = "inner")
-  patchEdge[patchEdge == 0] <- NA
-  patchEdge <- mask(patchId, patchEdge)
-
-  ## Patch area and core area
-  patchArea <- freq(patchId, useNA = "no")[, 2] * res(cost)[1] * res(cost)[2]
-  patchEdgeArea <- freq(patchEdge, useNA = "no")[, 2] * res(cost)[1] * res(cost)[2]
-  patch <- data.frame(name = uniquePatches, patchId = uniquePatches,
-                      patchArea = patchArea, patchEdgeArea = patchEdgeArea,
-                      coreArea = patchArea - patchEdgeArea)
-
-  ## Find centroids of each patch
-  cellXY <- coordinates(patchId)
-  r <- rasX <- rasY <- patchId
-  r[r == 0] <- NA
-  rasX[] <- cellXY[, 1]
-  rasY[] <- cellXY[, 2]
-  centroids <- cbind(zonal(rasX, r, fun = "mean", na.rm = TRUE),
-                     zonal(rasY, r, fun = "mean", na.rm = TRUE)[, 2]) %>%
-    as.data.frame()
-  colnames(centroids) <- c("zone", "meanX", "meanY")
-
-  toGraphV <- cbind(patch, centroidX = centroids$meanX, centroidY = centroids$meanY) %>%
-    as.data.frame()
-
-  toGraphE <- data.frame(v1 = hce@linkData$StartId,
-                         v2 = hce@linkData$EndId,
-                         linkId = hce@linkData$LinkId * -1L,
-                         lcpPerimWeight = hce@linkData$PerimWeight,
-                         startPerimX = xFromCol(cost, hce@linkData$StartColumn),
-                         startPerimY = yFromRow(cost, hce@linkData$StartRow),
-                         endPerimX = xFromCol(cost, hce@linkData$EndColumn),
-                         endPerimY = yFromRow(cost, hce@linkData$EndRow))
-  mpgIgraph <- graph_from_data_frame(toGraphE, directed = FALSE, vertices = toGraphV)
-
-  mpg <- new("mpg", mpg = mpgIgraph, patchId = patchId, voronoi = voronoi,
-             lcpPerimWeight = lcpPerimWeight, lcpLinkId = lcpLinkId, mpgPlot = mpgPlot)
-
-  return(mpg)
-})
+)
 
 #' @export
 #' @rdname MPG
@@ -200,4 +215,5 @@ setMethod(
     patch[is.na(cost)] <- 0
 
     MPG(cost = cost, patch = patch, ...)
-})
+  }
+)

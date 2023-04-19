@@ -20,14 +20,18 @@ if (getRversion() >= "3.1.0") {
 #' @seealso \code{link{habConnRcpp}}
 #'
 .habConnEngine <- function(cost, patches) {
-  stopifnot(inherits(cost, "RasterLayer"),
-            inherits(patches, "RasterLayer"),
-            extent(cost) == extent(patches),
-            ncol(cost) == ncol(patches),
-            nrow(cost) == nrow(patches))
+  stopifnot(
+    inherits(cost, "RasterLayer"),
+    inherits(patches, "RasterLayer"),
+    extent(cost) == extent(patches),
+    ncol(cost) == ncol(patches),
+    nrow(cost) == nrow(patches)
+  )
 
-  hce <- .habConnRcpp(cost = getValues(cost), patches = getValues(patches),
-                      nrow = nrow(cost), ncol = ncol(cost))
+  hce <- .habConnRcpp(
+    cost = getValues(cost), patches = getValues(patches),
+    nrow = nrow(cost), ncol = ncol(cost)
+  )
 
   # convert `VoronoiVector` to a raster of identical dimensions etc. as `cost`
   voronoi <- patches

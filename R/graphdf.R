@@ -47,26 +47,30 @@ setMethod(
   definition = function(x, ...) {
     results <- vector("list", length(x))
 
-    for (i in 1:length(x)) {
+    for (i in seq_along(x)) {
       thisGraph <- x[[i]]
 
-      if (is_igraph(thisGraph))  {
+      if (is_igraph(thisGraph)) {
         results[[i]] <- list()
         results[[i]]$v <- data.frame(sapply(names(vertex_attr(thisGraph)), function(z) {
           vertex_attr(thisGraph, z)
         }), stringsAsFactors = FALSE)
         results[[i]]$e <- data.frame(as_edgelist(thisGraph),
-                                     sapply(names(edge_attr(thisGraph)), function(z) {
-          edge_attr(thisGraph, z)
-        }), stringsAsFactors = FALSE)
+          sapply(names(edge_attr(thisGraph)), function(z) {
+            edge_attr(thisGraph, z)
+          }),
+          stringsAsFactors = FALSE
+        )
         edgeDfNames <- names(results[[i]]$e)
         names(results[[i]]$e) <- c("e1", "e2", edgeDfNames[3:length(edgeDfNames)])
 
         ## Clean-up storage mode structure of data.frames
         results[[i]]$e <- as.data.frame(sapply(results[[i]]$e, as.character),
-                                        stringsAsFactors = FALSE)
+          stringsAsFactors = FALSE
+        )
         results[[i]]$v <- as.data.frame(sapply(results[[i]]$v, as.character),
-                                        stringsAsFactors = FALSE)
+          stringsAsFactors = FALSE
+        )
         results[[i]]$e <- as.data.frame(lapply(results[[i]]$e, function(z) {
           type.convert(z, as.is = TRUE)
         }), stringsAsFactors = FALSE)
@@ -80,7 +84,8 @@ setMethod(
     }
 
     return(results)
-})
+  }
+)
 
 #' @export
 #' @rdname graphdf
@@ -90,7 +95,8 @@ setMethod(
   definition = function(x, ...) {
     theseGraphs <- lapply(x@th, function(z) z$goc)
     graphdf(theseGraphs)
-})
+  }
+)
 
 #' @export
 #' @rdname graphdf
@@ -100,7 +106,8 @@ setMethod(
   definition = function(x, ...) {
     theseGraphs <- list(x@th)
     graphdf(theseGraphs)
-})
+  }
+)
 
 #' @export
 #' @rdname graphdf
@@ -111,7 +118,8 @@ setMethod(
     theseGraphs <- vector("list", 1)
     theseGraphs[[1]] <- x@mpg
     graphdf(theseGraphs)
-})
+  }
+)
 
 #' @export
 #' @rdname graphdf
@@ -122,4 +130,5 @@ setMethod(
     theseGraphs <- vector("list", 1)
     theseGraphs[[1]] <- x
     graphdf(theseGraphs)
-})
+  }
+)

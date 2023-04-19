@@ -91,11 +91,11 @@ setMethod(
   "ggGS",
   signature = "RasterLayer",
   definition = function(x, type = NULL, ...) {
-
-  out <- as.data.frame(as(x, "SpatialPixelsDataFrame"))
-  names(out) <- c("value", "x", "y")
-  return(out)
-})
+    out <- as.data.frame(as(x, "SpatialPixelsDataFrame"))
+    names(out) <- c("value", "x", "y")
+    return(out)
+  }
+)
 
 #' @export
 #' @rdname ggGS
@@ -103,32 +103,32 @@ setMethod(
   "ggGS",
   signature = "list",
   definition = function(x, type, ...) {
+    if (type == "nodes") {
+      out <- x[[1]]$v
+      names(out)[names(out) == "centroidX"] <- "x"
+      names(out)[names(out) == "centroidY"] <- "y"
+      return(out)
+    } else if (type == "links") {
+      nodes <- x[[1]]$v
+      links <- x[[1]]$e
+      names(nodes) <- gsub("polygonId", "patchId", names(nodes))
+      first <- nodes[match(links$e1, nodes$patchId), c("centroidX", "centroidY")]
+      names(first) <- c("x1", "y1")
+      second <- nodes[match(links$e2, nodes$patchId), c("centroidX", "centroidY")]
+      names(second) <- c("x2", "y2")
+      out <- data.frame(first, second, links)
 
-  if (type == "nodes") {
-    out <- x[[1]]$v
-    names(out)[names(out) == "centroidX"] <- "x"
-    names(out)[names(out) == "centroidY"] <- "y"
-    return(out)
-  } else if (type == "links") {
-    nodes <- x[[1]]$v
-    links <- x[[1]]$e
-    names(nodes) <- gsub("polygonId", "patchId", names(nodes))
-    first <- nodes[match(links$e1, nodes$patchId), c("centroidX", "centroidY")]
-    names(first) <- c("x1", "y1")
-    second <- nodes[match(links$e2, nodes$patchId), c("centroidX", "centroidY")]
-    names(second) <- c("x2", "y2")
-    out <- data.frame(first, second, links)
-
-    ## Rename perimeter columns (in mpg objects only)
-    names(out)[names(out) == "startPerimX"] <- "x1p"
-    names(out)[names(out) == "startPerimY"] <- "y1p"
-    names(out)[names(out) == "endPerimX"] <- "x2p"
-    names(out)[names(out) == "endPerimY"] <- "y2p"
-    return(out)
-  } else {
-    stop("parameter 'type' not valid for a list object")
+      ## Rename perimeter columns (in mpg objects only)
+      names(out)[names(out) == "startPerimX"] <- "x1p"
+      names(out)[names(out) == "startPerimY"] <- "y1p"
+      names(out)[names(out) == "endPerimX"] <- "x2p"
+      names(out)[names(out) == "endPerimY"] <- "y2p"
+      return(out)
+    } else {
+      stop("parameter 'type' not valid for a list object")
+    }
   }
-})
+)
 
 #' @export
 #' @rdname ggGS
@@ -136,28 +136,28 @@ setMethod(
   "ggGS",
   signature = "mpg",
   definition = function(x, type, ...) {
-
-  if (is.null(type)) {
-    stop("type parameter must be supplied with mpg objects")
+    if (is.null(type)) {
+      stop("type parameter must be supplied with mpg objects")
+    }
+    if (type %in% slotNames(x)[-which(slotNames(x) %in% c("voronoi", "mpg"))]) {
+      ggGS(slot(x, type))
+    } else if (type == "voronoi") {
+      out <- slot(x, type)
+      out[out[] == 0] <- NA
+      ggGS(out)
+    } else if (type == "vorBound") {
+      message("Extracting voronoi boundaries...")
+      out <- x@voronoi
+      out[out[] == 0] <- NA
+      out <- boundaries(out, classes = TRUE)
+      ggGS(out)
+    } else if (type %in% c("nodes", "links")) {
+      ggGS(graphdf(x), type = type)
+    } else {
+      stop("parameter 'type' not valid for mpg object")
+    }
   }
-  if (type %in% slotNames(x)[-which(slotNames(x) %in% c("voronoi", "mpg"))]) {
-    ggGS(slot(x, type))
-  } else if (type == "voronoi") {
-    out <- slot(x, type)
-    out[out[] == 0] <- NA
-    ggGS(out)
-  } else if (type == "vorBound") {
-    message("Extracting voronoi boundaries...")
-    out <- x@voronoi
-    out[out[] == 0] <- NA
-    out <- boundaries(out, classes = TRUE)
-    ggGS(out)
-  } else if (type %in% c("nodes", "links")) {
-    ggGS(graphdf(x), type = type)
-  } else {
-    stop("parameter 'type' not valid for mpg object")
-  }
-})
+)
 
 #' @export
 #' @rdname ggGS
@@ -165,23 +165,23 @@ setMethod(
   "ggGS",
   signature = "grain",
   definition = function(x, type, ...) {
-
-  if (type == "voronoi") {
-    out <- slot(x, type)
-    out[out[] == 0] <- NA
-    ggGS(out)
-  } else if (type == "vorBound") {
-    message("Extracting voronoi boundaries...")
-    out <- x@voronoi
-    out[out[] == 0] <- NA
-    out <- boundaries(out, classes = TRUE)
-    ggGS(out)
-  } else if (type %in% c("nodes", "links")) {
-    ggGS(graphdf(x), type = type)
-  } else {
-    stop("type parameter not valid for a grain object.")
+    if (type == "voronoi") {
+      out <- slot(x, type)
+      out[out[] == 0] <- NA
+      ggGS(out)
+    } else if (type == "vorBound") {
+      message("Extracting voronoi boundaries...")
+      out <- x@voronoi
+      out[out[] == 0] <- NA
+      out <- boundaries(out, classes = TRUE)
+      ggGS(out)
+    } else if (type %in% c("nodes", "links")) {
+      ggGS(graphdf(x), type = type)
+    } else {
+      stop("type parameter not valid for a grain object.")
+    }
   }
-})
+)
 
 #' @export
 #' @rdname ggGS
@@ -191,4 +191,5 @@ setMethod(
   definition = function(x, type, ...) {
     message("Use grain() first to prepare GOC objects for plotting.")
     return(invisible())
-})
+  }
+)

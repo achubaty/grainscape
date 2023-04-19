@@ -1,6 +1,6 @@
 #' @author Paul Galpern
 #' @keywords internal
-.createDir  <- function(xType, dirname, path, overwrite) {
+.createDir <- function(xType, dirname, path, overwrite) {
   if (is.null(dirname)) {
     dirname <- paste0(xType, "_", format(Sys.time(), "%Y%m%d_%H%M%S"))
   }
@@ -33,9 +33,11 @@
 #' @author Paul Galpern
 #' @importFrom sf st_as_sf st_write
 #' @keywords internal
-.wShp  <- function(sp, fname, dirpath, overwrite) {
-  st_write(st_as_sf(sp), dsn = dirpath, layer = fname, driver = "ESRI Shapefile",
-           delete_layer = overwrite)
+.wShp <- function(sp, fname, dirpath, overwrite) {
+  st_write(st_as_sf(sp),
+    dsn = dirpath, layer = fname, driver = "ESRI Shapefile",
+    delete_layer = overwrite
+  )
 }
 
 #' Export spatial data from MPG and GOC models
@@ -184,12 +186,12 @@ setGeneric(
   function(x, dirname = NULL, path = ".", rasterFormat = "GTiff",
            overwrite = FALSE, R = FALSE, vorBound = FALSE, ...) { # nolint
     standardGeneric("export")
-})
+  }
+)
 
 #' @export
 #' @rdname export
-setMethod(
-  "export",
+setMethod("export",
   signature = "mpg",
   definition = function(x, dirname = NULL, path = ".", rasterFormat = "GTiff",
                         overwrite = FALSE, R = FALSE, vorBound = FALSE, ...) { # nolint
@@ -199,8 +201,10 @@ setMethod(
 
     ## Prepare links
     linksDF <- graphdf(x)[[1]]$e
-    names(linksDF) <- c("e1", "e2", "linkId", "lcpPerWt", "strtPerX", "strtPerY",
-                        "endPerX", "endPerY")
+    names(linksDF) <- c(
+      "e1", "e2", "linkId", "lcpPerWt", "strtPerX", "strtPerY",
+      "endPerX", "endPerY"
+    )
     nodesDF <- graphdf(x)[[1]]$v[, -1]
     names(nodesDF) <- c("patchId", "patchA", "patchEA", "coreA", "ctrX", "ctrY")
 
@@ -272,12 +276,12 @@ setMethod(
 
       return(returnSpatial)
     }
-})
+  }
+)
 
 #' @export
 #' @rdname export
-setMethod(
-  "export",
+setMethod("export",
   signature = "grain",
   definition = function(x, dirname = NULL, path = ".", rasterFormat = "GTiff",
                         overwrite = FALSE, R = FALSE, vorBound = FALSE, ...) { # nolint
@@ -287,8 +291,10 @@ setMethod(
 
     ## Prepare links
     linksDF <- graphdf(x@th)[[1]]$e[, -10]
-    names(linksDF) <- c("e1", "e2", "maxWt", "lidMaxWt", "minWt", "lidMinWt",
-                        "medWt", "meanWt", "numEWt", "eucCtrWt")
+    names(linksDF) <- c(
+      "e1", "e2", "maxWt", "lidMaxWt", "minWt", "lidMinWt",
+      "medWt", "meanWt", "numEWt", "eucCtrWt"
+    )
     nodesDF <- graphdf(x@th)[[1]]$v[, -c(1, 9)]
     names(nodesDF) <- c("polyId", "ctrX", "ctrY", "polyA", "patchA", "patchEA", "coreA")
 
@@ -297,8 +303,8 @@ setMethod(
     secondCentr <- nodesDF[match(linksDF$e2, nodesDF$polyId), c("ctrX", "ctrY")]
     names(secondCentr) <- c("endCtrX", "endCtrY")
     linksCentr <- cbind(linksDF, firstCentr, secondCentr)
-    row.names(linksCentr) <- 1:nrow(linksCentr)
-    linksCentr$plinkId <- 1:nrow(linksCentr)
+    row.names(linksCentr) <- seq_len(nrow(linksCentr))
+    linksCentr$plinkId <- seq_len(nrow(linksCentr))
     linksCentrSP <- linksCentr[, c("strtCtrX", "strtCtrY", "endCtrX", "endCtrY", "plinkId")] %>%
       apply(., 1, function(x) {
         Lines(Line(matrix(x[1:4], 2, 2, byrow = TRUE)), ID = as.character(x[5]))
@@ -341,15 +347,16 @@ setMethod(
 
       return(returnSpatial)
     }
-})
+  }
+)
 
 #' @export
 #' @rdname export
-setMethod(
-  "export",
+setMethod("export",
   signature = "goc",
   definition = function(x, dirname = NULL, path = ".",
                         overwrite = FALSE, R = FALSE, vorBound = FALSE, ...) { # nolint
     message("Use grain() to extract a single grain of connectivity to export.")
     return(invisible())
-})
+  }
+)
