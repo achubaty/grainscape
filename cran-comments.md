@@ -1,28 +1,31 @@
 ## New submission
 
-In this version we add a citation to our newly published paper for this package.
+This release removes dependencies on retiring spatial packages `rgdal` and `rgeos`.
 See `NEWS.md` for a complete list of changes.
 
 ## Test environments
 
 ### Previous R versions
-* Ubuntu 18.04                 (GitHub), R 3.6.3
-* Windows                      (GitHub), R 3.6.3
-* Windows                 (win-builder), R 3.6.3
+* Ubuntu 20.04                 (GitHub), R 4.1.3
+* Windows                       (local), R 4.1.3
+* Windows                      (GitHub), R 4.1.3
+* Windows                 (win-builder), R 4.1.3
 
 ### Current R versions
-* macOS 10.15.6 Catalina       (GitHub), R 4.0.0
-* macOS 10.15.5 Catalina        (local), R 4.0.0
-* Ubuntu 18.04                 (GitHub), R 4.0.0
-* Ubuntu 20.04                  (local), R 4.0.0
-* Windows                      (GitHub), R 4.0.0
-* Windows                 (win-builder), R 4.0.0
+* macOS 12.6.3 Monterey        (GitHub), R 4.2.3
+* macOS (M2) 13.2.1 Ventura     (local), R 4.2.3
+* macOS (M1) Big Sur             (rhub), R 4.2.3
+* Ubuntu 20.04                 (GitHub), R 4.2.3
+* Ubuntu 20.04                  (local), R 4.2.3
+* Windows                      (GitHub), R 4.2.3
+* Windows                       (local), R 4.2.3
+* Windows                 (win-builder), R 4.2.3
 
 ### Development R version
-* Ubuntu 18.04                 (GitHub), R 4.1.0 (2020-08-30 r79091)
-* Ubuntu 20.04                  (local), R 4.1.0 (2020-08-30 r79091)
-* Windows                      (GitHub), R 4.1.0 (2020-08-30 r79091)
-* Windows                 (win-builder), R 4.1.0 (2020-08-30 r79091)
+* Ubuntu 22.04                 (GitHub), R-devel (2023-04-17 r84270)
+* Ubuntu 20.04                  (local), R-devel (2023-04-17 r84270)
+* Windows                      (GitHub), R-devel (2023-04-17 r84270 ucrt)
+* Windows                 (win-builder), R-devel (2023-04-17 r84270 ucrt)
 
 ## R CMD check results
 
