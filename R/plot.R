@@ -1,7 +1,6 @@
 if (getRversion() >= "3.1.0") {
   utils::globalVariables(c(
-    "cols", "sz", "value", "x1", "x1p", "x2", "x2p",
-    "y1", "y1p", "y2", "y2p"
+    "cols", "sz", "value", "x1", "x1p", "x2", "x2p", "y1", "y1p", "y2", "y2p"
   ))
 }
 
