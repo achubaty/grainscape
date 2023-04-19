@@ -18,7 +18,7 @@
     lint_package()
     ```
 
-3. ensure passing win-builder olrelease, release, and devel
+3. ensure passing win-builder oldrelease, release, and devel
 
     ```r
     check_win_oldrelease(args = "--compact-vignettes=both")
