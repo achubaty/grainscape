@@ -8,7 +8,7 @@ Description: Given a landscape resistance surface, creates minimum planar graph
     Documentation is provided by several vignettes, and a paper
     (Chubaty, Galpern & Doctolero (2020) <doi:10.1111/2041-210X.13350>).
 URL:
-    https://www.alexchubaty.com/grainscape,
+    https://www.alexchubaty.com/grainscape/,
     https://github.com/achubaty/grainscape
 Version: 0.4.4
 Date: 2023-04-18

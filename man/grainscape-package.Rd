@@ -67,7 +67,7 @@ R News 5 (2), \url{https://cran.r-project.org/doc/Rnews/}.
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://www.alexchubaty.com/grainscape}
+  \item \url{https://www.alexchubaty.com/grainscape/}
   \item \url{https://github.com/achubaty/grainscape}
   \item Report bugs at \url{https://github.com/achubaty/grainscape/issues}
 }
