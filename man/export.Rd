@@ -187,13 +187,18 @@ tinyCost <- raster::reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12))
 tinyPatchMPG <- MPG(cost = tinyCost, patch = tinyCost == 1)
 ## Extract a representative subset of 5 grains of connectivity
 tinyPatchGOC <- GOC(tinyPatchMPG, nThresh = 5)
-## Export raster and vectors of a grain to a specified directory
-tmpdir <- tempdir()
-export(grain(tinyPatchGOC, 2), dirname = "tiny_goc_thresh2", path = tmpdir)
-unlink(file.path(tmpdir, "tiny_goc_thresh2"), recursive = TRUE)
-
-## Export rasters and vectors of the MPG and place in an R object
+## Export rasters and vectors and place in an R object
+sp_tinyPatchGOC <- export(grain(tinyPatchGOC, 2), R = TRUE)  # nolint
 sp_tinyPatchMPG <- export(tinyPatchMPG, R = TRUE) # nolint
+
+## Export raster and vectors to a specified directory
+exportPath <- tempdir()
+export(grain(tinyPatchGOC, 2), dirname = "tiny_goc_thresh2", path = exportPath)
+export(tinyPatchMPG, dirname = "tiny_mpg", path = exportPath, vorBound = TRUE)
+
+## clean up
+unlink(file.path(exportPath, "tiny_goc_thresh2"), recursive = TRUE)
+unlink(file.path(exportPath, "tiny_mpg"), recursive = TRUE)
 }
 \seealso{
 \code{\link[=MPG]{MPG()}}, \code{\link[=GOC]{GOC()}}, \code{\link[=grain]{grain()}}
