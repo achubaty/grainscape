@@ -95,6 +95,7 @@ if (getRversion() >= "3.1.0") {
 #' @importFrom ggplot2 scale_colour_identity scale_fill_identity scale_fill_manual
 #' @importFrom ggplot2 scale_size_identity theme
 #' @importFrom grDevices rainbow
+#' @importFrom raster ncol nrow xmax xmin ymax ymin
 #' @include classes.R
 #' @rdname plot
 #' @seealso [ggGS()],
@@ -253,9 +254,29 @@ setMethod(
   signature = "mpg",
   definition = function(x, y, quick = NULL, print = TRUE, theme = TRUE, ...) {
     if (is.null(quick) || (quick == "mpgPerimPlot")) {
+      isLatticeMpg <- (length(unique(diff(unique(ggGS(x, "patchId")$x)))) == 1) &&
+        (length(unique(diff(unique(ggGS(x, "patchId")$y)))) == 1)
+
+      if (isLatticeMpg) {
+        fillx <- seq(xmin(x@mpgPlot), xmax(x@mpgPlot), length.out = ncol(x@mpgPlot) + 1)
+        filly <- seq(ymin(x@mpgPlot), ymax(x@mpgPlot), length.out = nrow(x@mpgPlot) + 1)
+
+        mpgdf <- rbind(
+          ggGS(x, "patchId"),
+          data.frame(value = 0, x = fillx, y = 1),
+          data.frame(value = 0, x = 1, y = filly)
+        )
+
+        fillCols <- c("#00000000", "darkgrey")
+      } else {
+        mpgdf <- ggGS(x, "patchId")
+        fillCols <- "darkgrey"
+      }
+
       g <- ggplot() +
-        geom_raster(data = ggGS(x, "patchId"), aes(x = x, y = y, fill = value > 0)) +
-        scale_fill_manual(values = "grey")
+        geom_raster(data = mpgdf, aes(x = x, y = y, fill = value > 0)) +
+        scale_fill_manual(values = fillCols)
+
       g <- g +
         geom_segment(
           data = ggGS(x, "links"),
