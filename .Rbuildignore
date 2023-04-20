@@ -15,3 +15,4 @@
 ^vignettes/\.pdf$
 ^codecov\.yml$
 ^pkgdown$
+^CRAN-SUBMISSION$
