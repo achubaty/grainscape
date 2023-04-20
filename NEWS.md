@@ -10,7 +10,9 @@ version 0.4.4
 
 ## Bugfixes
 
-* None
+* Improved plotting of lattice MPGs (#51)
+* Removed unused `eucPerimWeight` from documentation (#56)
+* Improved error messaging for undefined thresholds in `GOC()` (#57)
 
 ## New features & enhancements
 
