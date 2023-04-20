@@ -3,9 +3,9 @@
 #' Find the shortest network distance between pairs of points using the GOC graph.
 #' This can be used as an effective distance for landscape connectivity assessments.
 #'
-#' @param x        A \code{goc} object produced by \code{\link{GOC}}.
+#' @param x        A `goc` object produced by [GOC()].
 #'
-#' @param  y       A two column matrix or a \code{\link{SpatialPoints}} object
+#' @param  y       A two column matrix or a [SpatialPoints()] object
 #'                 giving the coordinates of points of interest.
 #'
 #' @param ...      Additional arguments (not used).
@@ -13,10 +13,10 @@
 #' @param  weight  The GOC graph link weight to use in calculating the distance.
 #'                 Please see Details for explanation.
 #'
-#' @return  A list object giving a distance matrix for each threshold in the \code{GOC} object.
+#' @return  A list object giving a distance matrix for each threshold in the `GOC` object.
 #' Distance matrices give the pairwise grains of connectivity network distances
 #' between sampling locations.
-#' Matrix indices correspond to rows in the coordinates matrix (\code{y}).
+#' Matrix indices correspond to rows in the coordinates matrix (`y`).
 #'
 #' @references
 #' Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien. (2007) Spatial graphs:
@@ -39,7 +39,7 @@
 #' @export
 #' @include classes.R
 #' @rdname distance
-#' @seealso  \code{\link{GOC}}, \code{\link{point}}
+#' @seealso  [GOC()], [point()]
 #'
 #' @example inst/examples/example_preamble.R
 #' @example inst/examples/example_preamble_MPG.R
@@ -52,8 +52,7 @@ setGeneric("distance", function(x, y, ...) {
 
 #' @export
 #' @rdname distance
-setMethod(
-  "distance",
+setMethod("distance",
   signature = c(x = "goc", y = "SpatialPoints"),
   definition = function(x, y, weight = "meanWeight", ...) {
     if (!(weight %in% names(edge_attr(x@th[[1]]$goc)))) {
@@ -65,7 +64,7 @@ setMethod(
     results <- list()
     results$th <- vector("list", ncol(whichGrain))
 
-    for (iThresh in 1:ncol(whichGrain)) {
+    for (iThresh in seq_len(ncol(whichGrain))) {
       threshGraph <- x@th[[iThresh]]$goc
 
       if (is_igraph(threshGraph)) {
@@ -74,19 +73,20 @@ setMethod(
           if (is.na(z)) NA_integer_ else which(V(threshGraph)$polygonId == z)
         })
         results$th[[iThresh]]$grainD <- distances(threshGraph,
-                                                  v = na.omit(vertices))[, na.omit(vertices)]
+          v = na.omit(vertices)
+        )[, na.omit(vertices)]
       } else {
         results$th[[iThresh]] <- NA
       }
     }
     return(results)
-  })
+  }
+)
 
 #' @importFrom sp SpatialPoints
 #' @export
 #' @rdname distance
-setMethod(
-  "distance",
+setMethod("distance",
   signature = c(x = "goc", y = "matrix"),
   definition = function(x, y, weight = "meanWeight", ...) {
     if (ncol(y) != 2) {
@@ -94,13 +94,14 @@ setMethod(
     }
 
     distance(x, SpatialPoints(y), weight, ...)
-  })
+  }
+)
 
 #' @export
 #' @rdname distance
-setMethod(
-  "distance",
+setMethod("distance",
   signature = c(x = "goc", y = "numeric"),
   definition = function(x, y, weight = "meanWeight", ...) {
     distance(x, t(as.matrix(y)), weight, ...)
-  })
+  }
+)

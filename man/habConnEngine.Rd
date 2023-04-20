@@ -12,7 +12,7 @@
 \item{patches}{Logical raster indicating presence of habitat patches.}
 }
 \value{
-An object of class \code{\linkS4class{hce}}.
+An object of class \linkS4class{hce}.
 }
 \description{
 Internal function. Serves as a wrapper around the habitat connectivity engine

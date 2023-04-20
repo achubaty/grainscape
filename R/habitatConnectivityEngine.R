@@ -10,7 +10,7 @@ if (getRversion() >= "3.1.0") {
 #' @param cost      Numeric raster cost (resistance) map.
 #' @param patches   Logical raster indicating presence of habitat patches.
 #'
-#' @return An object of class \code{\linkS4class{hce}}.
+#' @return An object of class [hce-class].
 #'
 #' @author Alex Chubaty
 #' @importFrom raster extent getValues ncol nrow raster unique
@@ -20,14 +20,18 @@ if (getRversion() >= "3.1.0") {
 #' @seealso \code{link{habConnRcpp}}
 #'
 .habConnEngine <- function(cost, patches) {
-  stopifnot(inherits(cost, "RasterLayer"),
-            inherits(patches, "RasterLayer"),
-            extent(cost) == extent(patches),
-            ncol(cost) == ncol(patches),
-            nrow(cost) == nrow(patches))
+  stopifnot(
+    inherits(cost, "RasterLayer"),
+    inherits(patches, "RasterLayer"),
+    extent(cost) == extent(patches),
+    ncol(cost) == ncol(patches),
+    nrow(cost) == nrow(patches)
+  )
 
-  hce <- .habConnRcpp(cost = getValues(cost), patches = getValues(patches),
-                      nrow = nrow(cost), ncol = ncol(cost))
+  hce <- .habConnRcpp(
+    cost = getValues(cost), patches = getValues(patches),
+    nrow = nrow(cost), ncol = ncol(cost)
+  )
 
   # convert `VoronoiVector` to a raster of identical dimensions etc. as `cost`
   voronoi <- patches

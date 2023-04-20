@@ -32,61 +32,61 @@ is supplied.}
 \item{...}{Additional arguments (not used).}
 }
 \value{
-A \code{data.frame} suitable for plotting with \code{\link{ggplot}}.
+A \code{data.frame} suitable for plotting with \code{\link[=ggplot]{ggplot()}}.
 
 Where \code{type} is a raster the \code{data.frame} will have the following columns:
 
 \describe{
-  \item{\code{value}}{the value of the raster cell}
-  \item{\code{x}}{the x coordinate of the centre of the raster cell}
-  \item{\code{y}}{the y coordinate of the centre of the raster cell}
+\item{\code{value}}{the value of the raster cell}
+\item{\code{x}}{the x coordinate of the centre of the raster cell}
+\item{\code{y}}{the y coordinate of the centre of the raster cell}
 }
 
 Where \code{type = 'nodes'} the \code{data.frame} will have the following columns:
 
 \describe{
-  \item{\code{x}}{the x coordinate of the node}
-  \item{\code{y}}{the y coordinate of the node}
-  \item{\code{...}}{other attributes associated with the network nodes}
+\item{\code{x}}{the x coordinate of the node}
+\item{\code{y}}{the y coordinate of the node}
+\item{\code{...}}{other attributes associated with the network nodes}
 }
 
 Where \code{type = 'links'} the \code{data.frame} will have the following columns:
 
 \describe{
-  \item{\code{x1}}{the x coordinate of the first node}
-  \item{\code{y1}}{the y coordinate of the first node}
-  \item{\code{x2}}{the x coordinate of the second node}
-  \item{\code{y2}}{the y coordinate of the second node}
-  \item{\code{x1p}}{the x coordinate at the perimeter of the first node}
-  \item{\code{y1p}}{the y coordinate at the perimeter of the first node}
-  \item{\code{x2p}}{the x coordinate at the perimeter of the second node}
-  \item{\code{y2p}}{the y coordinate at the perimeter of the second node}
-  \item{\code{...}}{other attributes associated with the network links}
+\item{\code{x1}}{the x coordinate of the first node}
+\item{\code{y1}}{the y coordinate of the first node}
+\item{\code{x2}}{the x coordinate of the second node}
+\item{\code{y2}}{the y coordinate of the second node}
+\item{\code{x1p}}{the x coordinate at the perimeter of the first node}
+\item{\code{y1p}}{the y coordinate at the perimeter of the first node}
+\item{\code{x2p}}{the x coordinate at the perimeter of the second node}
+\item{\code{y2p}}{the y coordinate at the perimeter of the second node}
+\item{\code{...}}{other attributes associated with the network links}
 }
 }
 \description{
 This is an informal \code{fortify}-type method that prepares either
 \code{RasterLayer} or \code{igraph} objects contained as slots within
-\code{MPG} or \code{grain} objects for easy plotting with \code{\link{ggplot}}.
+\code{MPG} or \code{grain} objects for easy plotting with \code{\link[=ggplot]{ggplot()}}.
 }
 \note{
 \strong{Options for \code{type} parameter}
 
- If a \code{RasterLayer} is supplied \code{type} is optional.
+If a \code{RasterLayer} is supplied \code{type} is optional.
 
- For \code{mpg} \code{type} options are \code{"node"} or \code{"links"}.
- This prepares the nodes and links of the minimum planar graph network for
- plotting,  Also \code{"patchId"}, \code{"voronoi"}, \code{"lcpPerimWeight"},
- \code{"lcpLinkId"}, \code{"mpgPlot"} will prepare rasters for plotting.
+For \code{mpg} \code{type} options are \code{"node"} or \code{"links"}.
+This prepares the nodes and links of the minimum planar graph network for
+plotting,  Also \code{"patchId"}, \code{"voronoi"}, \code{"lcpPerimWeight"},
+\code{"lcpLinkId"}, \code{"mpgPlot"} will prepare rasters for plotting.
 
- For \code{grain} objects \code{type}  options are \code{"nodes"} or\code{"links"}
- to prepare the nodes and links of the grains of connectivity network  for
- plotting. Also \code{"voronoi"} will prepare the grains of connectivity
- Voronoi polygons raster for plotting.
+For \code{grain} objects \code{type}  options are \code{"nodes"} or\code{"links"}
+to prepare the nodes and links of the grains of connectivity network  for
+plotting. Also \code{"voronoi"} will prepare the grains of connectivity
+Voronoi polygons raster for plotting.
 
- For either \code{mpg} or \code{grain} objects \code{type = "vorBound"}
- will identify the boundaries of the Voronoi polygons for plotting.
- This is potentially time consuming for large rasters.
+For either \code{mpg} or \code{grain} objects \code{type = "vorBound"}
+will identify the boundaries of the Voronoi polygons for plotting.
+This is potentially time consuming for large rasters.
 }
 \examples{
 ## Load raster landscape
@@ -94,13 +94,10 @@ tiny <- raster::raster(system.file("extdata/tiny.asc", package = "grainscape"))
 
 ## Create a resistance surface from a raster using an is-becomes reclassification
 tinyCost <- raster::reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
-
 ## Produce a patch-based MPG where patches are resistance features=1
 tinyPatchMPG <- MPG(cost = tinyCost, patch = tinyCost == 1)
-
 ## Extract a representative subset of 5 grains of connectivity
 tinyPatchGOC <- GOC(tinyPatchMPG, nThresh = 5)
-
 if (interactive()) {
   library(ggplot2)
 
@@ -108,22 +105,22 @@ if (interactive()) {
   theme_set(theme_grainscape())
   ggplot() +
     geom_tile(data = ggGS(tinyPatchMPG, "patchId"),
-                aes(x = x, y = y, fill = value))
+              aes(x = x, y = y, fill = value))
 
   ## Plot the grain polygons in a grain of connectivity
   ggplot() +
     geom_tile(data = ggGS(grain(tinyPatchGOC, 3), "voronoi"),
-                aes(x = x, y = y, fill = value))
+              aes(x = x, y = y, fill = value))
 
   ## Plot the grain polygon boundaries
   ggplot() +
     geom_tile(data = ggGS(grain(tinyPatchGOC, 3), "vorBound"),
-                aes(x = x, y = y, fill = value))
+              aes(x = x, y = y, fill = value))
 
   ## Plot the patches and perimeter links of a minimum planar graph
   ggplot() +
     geom_tile(data = ggGS(tinyPatchMPG, "patchId"),
-                aes(x = x, y = y, fill = value)) +
+              aes(x = x, y = y, fill = value)) +
     geom_segment(data = ggGS(tinyPatchMPG, "links"),
                  aes(x = x1p, y = y1p, xend = x2p, yend = y2p))
 
@@ -131,7 +128,7 @@ if (interactive()) {
   ## of a minimum planar graph
   ggplot() +
     geom_tile(data = ggGS(tinyPatchMPG, "patchId"),
-                 aes(x = x, y = y, fill = value)) +
+              aes(x = x, y = y, fill = value)) +
     geom_segment(data = ggGS(tinyPatchMPG, "links"),
                  aes(x = x1p, y = y1p, xend = x2p, yend = y2p))
 
@@ -140,14 +137,15 @@ if (interactive()) {
   focalGrain <- grain(tinyPatchGOC, 3)
   ggplot() +
     geom_tile(data = ggGS(focalGrain, "vorBound"),
-                aes(x = x, y = y, fill = value)) +
-    geom_point(data = ggGS(focalGrain, "nodes"), aes(x = x, y = y)) +
+              aes(x = x, y = y, fill = value)) +
+    geom_point(data = ggGS(focalGrain, "nodes"),
+               aes(x = x, y = y)) +
     geom_segment(data = ggGS(focalGrain, "links"),
                  aes(x = x1, y = y1, xend = x2, yend = y2))
 }
 }
 \seealso{
-\code{\link{MPG}}, \code{\link{GOC}}
+\code{\link[=MPG]{MPG()}}, \code{\link[=GOC]{GOC()}}
 }
 \author{
 Paul Galpern and Alex Chubaty

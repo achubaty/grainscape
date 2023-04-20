@@ -13,8 +13,8 @@
 \S4method{show}{corridor}(object)
 }
 \arguments{
-\item{object}{A \code{\link[=goc-class]{goc}} or
-\code{\link[=grain-class]{grain}} object.}
+\item{object}{A \code{\link[=goc-class]{goc()}} or
+\code{\link[=grain-class]{grain()}} object.}
 }
 \description{
 Custom \code{show} method to safely print the contents of a \code{goc} or

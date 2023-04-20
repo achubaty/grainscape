@@ -1,8 +1,8 @@
 #' Extract or Replace Parts of an Object
 #'
-#' @param x        A \code{simList} object from which to extract element(s) or
+#' @param x        A `simList` object from which to extract element(s) or
 #'                 in which to replace element(s).
-#' @param name     A literal character string or a \code{\link{name}}.
+#' @param name     A literal character string or a [name()].
 #' @param value    Any R object.
 #'
 #' @export
@@ -15,7 +15,8 @@ setMethod(
   signature(x = "goc"),
   definition = function(x, name) {
     return(slot(x, name))
-})
+  }
+)
 
 #' @export
 #' @name $<-
@@ -27,7 +28,8 @@ setReplaceMethod(
   definition = function(x, name, value) {
     slot(x, name) <- value
     return(x)
-})
+  }
+)
 
 #' @export
 #' @name $
@@ -38,7 +40,8 @@ setMethod(
   signature(x = "mpg"),
   definition = function(x, name) {
     return(slot(x, name))
-})
+  }
+)
 
 #' @export
 #' @name $<-
@@ -50,4 +53,5 @@ setReplaceMethod(
   definition = function(x, name, value) {
     slot(x, name) <- value
     return(x)
-})
+  }
+)

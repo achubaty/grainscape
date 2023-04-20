@@ -2,17 +2,17 @@
 setOldClass("igraph")
 selectMethod("show", "igraph")
 
-#' The \code{hce} class
+#' The `hce` class
 #'
 #' Used internally.
 #'
 #' @slot voronoi     The Voronoi tessellation of the patches and resistance
-#'                   surface (\code{RasterLayer}).
+#'                   surface (`RasterLayer`).
 #'
-#' @slot patchLinks  A \code{RasterLayer} whose values indicate patch ids
+#' @slot patchLinks  A `RasterLayer` whose values indicate patch ids
 #'                   (positive integers) and link ids (negative integers).
 #'
-#' @slot linkData    A \code{data.frame} of link attributes.
+#' @slot linkData    A `data.frame` of link attributes.
 #'
 #' @author Alex Chubaty and Sam Doctolero
 #' @importClassesFrom raster RasterLayer
@@ -20,29 +20,31 @@ selectMethod("show", "igraph")
 #' @keywords internal
 setClass(
   "hce",
-  slots = list(voronoi = "RasterLayer", patchLinks = "RasterLayer",
-               linkData = "data.frame")
+  slots = list(
+    voronoi = "RasterLayer", patchLinks = "RasterLayer",
+    linkData = "data.frame"
+  )
 )
 
-#' The \code{mpg} class
+#' The `mpg` class
 #'
-#' @slot mpg         The minimum planar graph as class \code{igraph}.
+#' @slot mpg         The minimum planar graph as class `igraph`.
 #'
-#' @slot patchId     The input \code{patch} raster with patch cells assigned to
-#'                   their id (\code{RasterLayer}).
+#' @slot patchId     The input `patch` raster with patch cells assigned to
+#'                   their id (`RasterLayer`).
 #'
 #' @slot voronoi     The Voronoi tessellation of the patches and resistance
-#'                   surface (\code{RasterLayer}).
+#'                   surface (`RasterLayer`).
 #'
 #' @slot lcpPerimWeight  The paths of the links between patches and their
-#'                       accumulated costs (\code{RasterLayer}).
+#'                       accumulated costs (`RasterLayer`).
 #'
-#' @slot lcpLinkId   The paths of the links between patches and their id (\code{RasterLayer}).
+#' @slot lcpLinkId   The paths of the links between patches and their id (`RasterLayer`).
 #'
-#' @slot mpgPlot     A \code{RasterLayer} version of the \code{mpg}, which can be
+#' @slot mpgPlot     A `RasterLayer` version of the `mpg`, which can be
 #'                   easily plotted to visualize the MPG.
 #'
-#' The \code{mpg} slot contains useful vertex and edge attributes.
+#' The `mpg` slot contains useful vertex and edge attributes.
 #' Vertex attributes give attributes of patches including patch area,
 #' the area of patch edges, the core area of each patch, and the coordinates
 #' of the patch centroid.
@@ -57,15 +59,17 @@ setClass(
 #'
 setClass(
   "mpg",
-  slots = list(mpg = "igraph", patchId = "RasterLayer", voronoi = "RasterLayer",
-               lcpPerimWeight = "RasterLayer", lcpLinkId = "RasterLayer",
-               mpgPlot = "RasterLayer")
+  slots = list(
+    mpg = "igraph", patchId = "RasterLayer", voronoi = "RasterLayer",
+    lcpPerimWeight = "RasterLayer", lcpLinkId = "RasterLayer",
+    mpgPlot = "RasterLayer"
+  )
 )
 
-#' The \code{goc} class
+#' The `goc` class
 #'
 #'
-#' @slot voronoi    A \code{RasterLayer} describing the regions of proximity in
+#' @slot voronoi    A `RasterLayer` describing the regions of proximity in
 #'                  resistance units around the focal patches or points.
 #'
 #'
@@ -74,37 +78,38 @@ setClass(
 #'
 #' @slot th         A list giving the GOC graph at each threshold.
 #'
-#' Each element of \code{th} contains a \code{goc} object giving the GOC graph
-#' as class \code{\link{igraph}}.
+#' Each element of `th` contains a `goc` object giving the GOC graph
+#' as class [igraph()].
 #' Vertex attributes describes qualities of each polygon including the coordinates
 #' of each polygon centroid, the area of these polygons, and the original patch
 #' IDs in the MPG that are included in each polygon.
 #' All areal measurements are given as raster cell counts.
 #' A variety of edge attributes are also given in the GOC graph.
-#' See \code{\link{distance}} for more information.
+#' See [distance()] for more information.
 #'
 #' @author Alex Chubaty and Paul Galpern
 #' @importClassesFrom raster RasterLayer
 #' @importClassesFrom sp SpatialPolygons
 setClass(
   "goc",
-  slots = list(voronoi = "RasterLayer",
-               summary = "data.frame", th = "list")
+  slots = list(
+    voronoi = "RasterLayer",
+    summary = "data.frame", th = "list"
+  )
 )
 
-#' Show a \code{grainscape} object
+#' Show a `grainscape` object
 #'
-#' Custom \code{show} method to safely print the contents of a \code{goc} or
-#' \code{grain} object.
+#' Custom `show` method to safely print the contents of a `goc` or
+#' `grain` object.
 #'
 #'
-#' @param object  A \code{\link[=goc-class]{goc}} or
-#'                \code{\link[=grain-class]{grain}} object.
+#' @param object  A [`goc()`][goc-class] or
+#'                [`grain()`][grain-class] object.
 #'
 #' @export
 #' @rdname show
-setMethod(
-  "show",
+setMethod("show",
   signature = "goc",
   definition = function(object) {
     cat("Slot voronoi:\n")
@@ -115,39 +120,41 @@ setMethod(
 
     cat("\nSlot th:\n")
     cat("List of ", length(object@th), " goc elements", "\n")
-})
+  }
+)
 
-#' The \code{grain} class
+#' The `grain` class
 #'
 #'
-#' @slot voronoi    A \code{RasterLayer} describing the regions of proximity in
+#' @slot voronoi    A `RasterLayer` describing the regions of proximity in
 #'                  resistance units around the focal patches or points.
 #'
 #' @slot summary    A summary of the the grains of connectivity generated and
 #'                  their properties.
 #'
-#' @slot centroids  A \code{SpatialPoints} object indicating the grain's polygon
+#' @slot centroids  A `SpatialPoints` object indicating the grain's polygon
 #'                  centroids.
 #'
-#' @slot th         A list of \code{igraph} objects giving the graphs describing the relationship
+#' @slot th         A list of `igraph` objects giving the graphs describing the relationship
 #'                  among the polygons in that grain
 #'
-#' See \code{\link{grain}} for more information.
+#' See [grain()] for more information.
 #'
 #' @author Alex Chubaty and Paul Galpern
 #' @importClassesFrom raster RasterLayer
 #' @importClassesFrom sp SpatialPoints SpatialPolygonsDataFrame
 setClass(
   "grain",
-  slots = list(voronoi = "RasterLayer",
-               summary = "data.frame", centroids = "SpatialPoints",
-               th = "igraph")
+  slots = list(
+    voronoi = "RasterLayer",
+    summary = "data.frame", centroids = "SpatialPoints",
+    th = "igraph"
+  )
 )
 
 #' @export
 #' @rdname show
-setMethod(
-  "show",
+setMethod("show",
   signature = "grain",
   definition = function(object) {
     cat("Slot voronoi:\n")
@@ -161,30 +168,31 @@ setMethod(
 
     cat("\nSlot th:\n")
     cat(show(object@th))
-})
+  }
+)
 
-#' The \code{corridor} class
+#' The `corridor` class
 #'
-#' @slot voronoi          A \code{RasterLayer} representation of the boundaries
+#' @slot voronoi          A `RasterLayer` representation of the boundaries
 #'                        of the voronoi polygons.
 #'
-#' @slot linksSP          A \code{SpatialLinesDataFrame} representation of links
+#' @slot linksSP          A `SpatialLinesDataFrame` representation of links
 #'                        in the grains of connectivity graph.
 #'
-#' @slot nodesSP          A \code{SpatialPoints} representation of the nodes in
+#' @slot nodesSP          A `SpatialPoints` representation of the nodes in
 #'                        the grains of connectivity graph
 #'
-#' @slot shortestLinksSP  A \code{SpatialLines} representation of the links in
+#' @slot shortestLinksSP  A `SpatialLines` representation of the links in
 #'                        the shortest path between coordinates
 #'
-#' @slot shortestNodesSP  A \code{SpatialPoints} representation of the nodes in
+#' @slot shortestNodesSP  A `SpatialPoints` representation of the nodes in
 #'                        the shortest path between coordinates
 #'
-#' @slot corridorLength   A \code{numeric} of length 1 giving the length of the
+#' @slot corridorLength   A `numeric` of length 1 giving the length of the
 #'                        shortest path between coordinates in accumulated
 #'                        resistance units.
 #'
-#' See \code{\link{corridor}} for more information.
+#' See [corridor()] for more information.
 #'
 #' @author Alex Chubaty and Paul Galpern
 #' @importClassesFrom raster RasterLayer
@@ -192,15 +200,16 @@ setMethod(
 #'
 setClass(
   "corridor",
-  slots = list(voronoi = "RasterLayer", linksSP = "SpatialLinesDataFrame",
-               nodesSP = "SpatialPoints", shortestLinksSP = "SpatialLines",
-               shortestNodesSP = "SpatialPoints", corridorLength = "numeric")
+  slots = list(
+    voronoi = "RasterLayer", linksSP = "SpatialLinesDataFrame",
+    nodesSP = "SpatialPoints", shortestLinksSP = "SpatialLines",
+    shortestNodesSP = "SpatialPoints", corridorLength = "numeric"
+  )
 )
 
 #' @export
 #' @rdname show
-setMethod(
-  "show",
+setMethod("show",
   signature = "corridor",
   definition = function(object) {
     cat("Slot voronoi:\n")
@@ -220,4 +229,5 @@ setMethod(
 
     cat("\nSlot corridorLength:\n")
     cat(show(object@corridorLength))
-})
+  }
+)

@@ -29,9 +29,10 @@ Default is \code{TRUE}.}
 \item{...}{Additional arguments (not used).}
 }
 \value{
-Invisibly, a \code{ggplot2} object to which additional \code{ggplot}
-               geoms and adjustments can be applied. Has the side effect of
-               rendering the plot, unless \code{print = FALSE}.
+\if{html}{\out{<div class="sourceCode">}}\preformatted{   Invisibly, a `ggplot2` object to which additional `ggplot`
+           geoms and adjustments can be applied. Has the side effect of
+           rendering the plot, unless `print = FALSE`.
+}\if{html}{\out{</div>}}
 }
 \description{
 Plot quick visualizations of \code{mpg}, \code{grain}, and \code{corridor}
@@ -41,12 +42,12 @@ This function is intended to get a quick look at the state of a \code{grainscape
 object by rendering what are likely to be the most universally useful
 visualizations of the spatial data within these objects.
 
-Much more control is available using \code{\link{ggGS}} with \code{\link{ggplot}}
+Much more control is available using \code{\link[=ggGS]{ggGS()}} with \code{\link[=ggplot]{ggplot()}}
 enabling the layering of different different analytical products, and the
 visualization of node and link attributes.
 
 For high-resolution visualization and the greatest level of control use
-\code{\link{export}} to export spatial objects for cartographic representation
+\code{\link[=export]{export()}} to export spatial objects for cartographic representation
 in a geographic information system (GIS).
 }
 \section{Types of visualization available with the \code{quick} parameter}{
@@ -74,7 +75,7 @@ superimposed over the boundaries of the Voronoi polygons.
 Can be time consuming on large rasters due to the Voronoi boundary extraction.
 Only available for \code{grain} objects.
 
-\code{"corridorPlot"} renders the output of a \code{\link{corridor}} analysis.
+\code{"corridorPlot"} renders the output of a \code{\link[=corridor]{corridor()}} analysis.
 It is the only option available with \code{corridor} objects and the default.
 }
 
@@ -84,13 +85,10 @@ tiny <- raster::raster(system.file("extdata/tiny.asc", package = "grainscape"))
 
 ## Create a resistance surface from a raster using an is-becomes reclassification
 tinyCost <- raster::reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
-
 ## Produce a patch-based MPG where patches are resistance features=1
 tinyPatchMPG <- MPG(cost = tinyCost, patch = tinyCost == 1)
-
 ## Extract a representative subset of 5 grains of connectivity
 tinyPatchGOC <- GOC(tinyPatchMPG, nThresh = 5)
-
 if (interactive()) {
   library(ggplot2)
 
@@ -110,9 +108,9 @@ if (interactive()) {
   ## Capture plot output for further processing with ggplot
   g <- plot(tinyPatchMPG, print = FALSE, theme = FALSE)
   g <- g + theme_minimal() + ggtitle("Minimum planar graph") +
-         theme(plot.title = element_text(size = 20, hjust = 0.5)) +
-         theme(legend.position = "none") +
-         xlab("Easting") + ylab("Northing")
+    theme(plot.title = element_text(size = 20, hjust = 0.5)) +
+    theme(legend.position = "none") +
+    xlab("Easting") + ylab("Northing")
   g
 
   ## To change aesthetics it is best to build the plot from scratch
@@ -120,11 +118,11 @@ if (interactive()) {
 }
 }
 \seealso{
-\code{\link{ggGS}},
-         \code{\link{export}},
-         \code{\linkS4class{corridor}},
-         \code{\linkS4class{grain}},
-         \code{\linkS4class{mpg}}
+\code{\link[=ggGS]{ggGS()}},
+\code{\link[=export]{export()}},
+\linkS4class{corridor},
+\linkS4class{grain},
+\linkS4class{mpg}
 }
 \author{
 Alex Chubaty and Paul Galpern

@@ -21,7 +21,7 @@
 \item{x}{A \code{simList} object from which to extract element(s) or
 in which to replace element(s).}
 
-\item{name}{A literal character string or a \code{\link{name}}.}
+\item{name}{A literal character string or a \code{\link[=name]{name()}}.}
 
 \item{value}{Any R object.}
 }

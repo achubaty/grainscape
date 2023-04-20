@@ -8,10 +8,10 @@ Description: Given a landscape resistance surface, creates minimum planar graph
     Documentation is provided by several vignettes, and a paper
     (Chubaty, Galpern & Doctolero (2020) <doi:10.1111/2041-210X.13350>).
 URL:
-    https://alexchubaty.com/grainscape,
+    https://www.alexchubaty.com/grainscape/,
     https://github.com/achubaty/grainscape
-Version: 0.4.3
-Date: 2020-08-31
+Version: 0.4.4
+Date: 2023-04-20
 Authors@R: c(
     person("Paul", "Galpern", email = "pgalpern@gmail.com", role = c("aut", "cph"),
            comment = c(ORCID = "0000-0003-0099-3981")),
@@ -26,10 +26,10 @@ Imports:
     grDevices,
     igraph,
     methods,
+    sf,
     sp,
     raster,
     Rcpp (>= 0.12.11.4),
-    rgdal,
     utils
 LinkingTo: Rcpp
 Suggests:
@@ -38,7 +38,6 @@ Suggests:
     ggthemes,
     knitr,
     parallel,
-    rgeos,
     rmarkdown,
     spelling,
     testthat
@@ -53,11 +52,11 @@ Collate:
     'RcppExports.R'
     'grain.R'
     'corridor.R'
-    'deprecated.R'
     'distance.R'
     'export.R'
     'extract.R'
     'ggGS.R'
+    'grainscape-deprecated.R'
     'graphdf.R'
     'habitatConnectivityEngine.R'
     'patchFilter.R'
@@ -68,4 +67,5 @@ Collate:
     'zzz.R'
 Encoding: UTF-8
 Language: en-CA
-RoxygenNote: 7.1.1
+RoxygenNote: 7.2.3
+Roxygen: list(markdown = TRUE)

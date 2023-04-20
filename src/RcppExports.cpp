@@ -5,6 +5,11 @@
 
 using namespace Rcpp;
 
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
 // habConnRcpp
 List habConnRcpp(NumericVector cost, NumericVector patches, int ncol, int nrow);
 RcppExport SEXP _grainscape_habConnRcpp(SEXP costSEXP, SEXP patchesSEXP, SEXP ncolSEXP, SEXP nrowSEXP) {

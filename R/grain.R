@@ -3,27 +3,27 @@
 #' @description
 #' Extract a grain (i.e. a scaled version of a Voronoi tessellation) from a GOC model.
 #'
-#' @param x   A \code{goc} object created by \code{\link{GOC}}.
+#' @param x   A `goc` object created by [GOC()].
 #'
 #' @param whichThresh  Integer giving the grain threshold to extract.
-#'                     This is the index of the threshold extracted by \code{\link{GOC}}.
+#'                     This is the index of the threshold extracted by [GOC()].
 #'
 #' @param ...     Additional arguments (not used).
 #'
 #' @return  A list object containing the following elements:
 #'
 #' \describe{
-#'   \item{\code{summary}}{gives the properties of the specified scale/grain \code{whichThresh}
+#'   \item{`summary`}{gives the properties of the specified scale/grain `whichThresh`
 #'   of the GOC model;}
 #'
-#'   \item{\code{voronoi}}{a \code{RasterLayer} giving the Voronoi tessellation the
-#'   specified scale/grain \code{whichThresh} of the GOC model;}
+#'   \item{`voronoi`}{a `RasterLayer` giving the Voronoi tessellation the
+#'   specified scale/grain `whichThresh` of the GOC model;}
 #'
-#'   \item{\code{centroids}}{a \code{SpatialPoints} objects giving the centroids
-#'   of the polygons in the Voronoi tessellation at the specified scale/grain \code{whichThresh};}
+#'   \item{`centroids`}{a `SpatialPoints` objects giving the centroids
+#'   of the polygons in the Voronoi tessellation at the specified scale/grain `whichThresh`;}
 #'
-#'   \item{\code{th}}{a \code{igraph} object giving the graph describing the relationship
-#'   among the polygons at the specified scale/grain \code{whichThresh}}
+#'   \item{`th`}{a `igraph` object giving the graph describing the relationship
+#'   among the polygons at the specified scale/grain `whichThresh`}
 #' }
 #'
 #' @references
@@ -50,7 +50,7 @@
 #' @importFrom sp geometry plot SpatialPoints SpatialPolygonsDataFrame
 #' @include classes.R
 #' @rdname grain
-#' @seealso \code{\link{GOC}}
+#' @seealso [GOC()]
 #'
 #' @example inst/examples/example_preamble.R
 #' @example inst/examples/example_preamble_MPG.R
@@ -76,6 +76,10 @@ setMethod(
       stop("whichThresh must index a single threshold existing in the GOC object")
     }
 
+    if (is.na(x@summary$nPolygon[whichThresh])) {
+      stop("undefined threshold: ", x@summary$id[whichThresh])
+    }
+
     results <- list()
 
     results$summary <- x@summary[whichThresh, ]
@@ -84,23 +88,31 @@ setMethod(
       threshGraph <- x@th[[whichThresh]]$goc
 
       ## Produce is-becomes reclassification table for voronoi raster
-      rclTable <-  matrix(0, 1, 2)
-      for (i in 1:length(V(threshGraph)$polygonId)) {
-        rclTable <- rbind(rclTable,
-                          cbind(as.integer(unlist(strsplit(V(threshGraph)$patchId[i], ", "))),
-                                as.integer(V(threshGraph)$polygonId[i])))
+      rclTable <- matrix(0, 1, 2)
+      for (i in seq_along(V(threshGraph)$polygonId)) {
+        rclTable <- rbind(
+          rclTable,
+          cbind(
+            as.integer(unlist(strsplit(V(threshGraph)$patchId[i], ", "))),
+            as.integer(V(threshGraph)$polygonId[i])
+          )
+        )
       }
       rclTable <- rclTable[2:nrow(rclTable), ]
 
       results$voronoi <- reclassify(x@voronoi, rcl = rclTable)
 
-      results$centroids <- SpatialPoints(cbind(V(threshGraph)$centroidX,
-                                               V(threshGraph)$centroidY))
-
+      results$centroids <- SpatialPoints(cbind(
+        V(threshGraph)$centroidX,
+        V(threshGraph)$centroidY
+      ))
     }
 
-    out <- new("grain", voronoi = results$voronoi, summary = results$summary,
-               centroids = results$centroids, th = threshGraph)
+    out <- new("grain",
+      voronoi = results$voronoi, summary = results$summary,
+      centroids = results$centroids, th = threshGraph
+    )
 
     return(out)
-})
+  }
+)

@@ -33,7 +33,7 @@ cells between focal points in the lattice.}
 \item{...}{Additional arguments (not used).}
 }
 \value{
-A \code{\link[=mpg-class]{mpg}} object.
+A \code{\link[=mpg-class]{mpg()}} object.
 }
 \description{
 Extracts a minimum planar graph (MPG) and is also the first step
@@ -42,7 +42,7 @@ Both patch-based and lattice MPGs can be extracted.
 }
 \details{
 Use this function to create a minimum planar graph (MPG) that can be
-further analyzed using \code{\link{igraph}} routines.
+further analyzed using \code{\link[=igraph]{igraph()}} routines.
 It is also the first step in grains of connectivity (GOC) modelling.
 }
 \note{
@@ -54,7 +54,7 @@ approach to scaling resistance surfaces.
 
 Rasters should be projected and not in geographic coordinates (i.e. \code{projection(cost)}
 should not contain \code{"+proj=longlat"}) or the function will issue a warning.
-In unprojected cases consider using \code{\link{projectRaster}} to change to an appropriate
+In unprojected cases consider using \code{\link[=projectRaster]{projectRaster()}} to change to an appropriate
 coordinate system for the location and extent of interest that balances both distance and areal
 accuracy. See \url{https://www.spatialreference.org/} for location-specific suggestions.
 Use of geographic coordinates will result in inaccurate areal and distance measurements,
@@ -66,10 +66,8 @@ tiny <- raster::raster(system.file("extdata/tiny.asc", package = "grainscape"))
 
 ## Create a resistance surface from a raster using an is-becomes reclassification
 tinyCost <- raster::reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
-
 ## Produce a patch-based MPG where patches are resistance features=1
 tinyPatchMPG <- MPG(cost = tinyCost, patch = tinyCost == 1)
-
 ## Explore the graph structure and node/link attributes
 graphdf(tinyPatchMPG)
 
@@ -104,7 +102,7 @@ Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis
 at multiple spatial scales in landscape genetics. Molecular Ecology 21:3996-4009.
 }
 \seealso{
-\code{\link{GOC}, \link{threshold}}
+\verb{[GOC], [threshold]}
 }
 \author{
 Paul Galpern, Sam Doctolero, Alex Chubaty

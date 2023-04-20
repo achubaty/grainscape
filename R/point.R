@@ -3,9 +3,9 @@
 #' @description
 #' Identify the polygon containing a location at multiple scales.
 #'
-#' @param x       A \code{goc} object produced by \code{\link{GOC}}.
+#' @param x       A `goc` object produced by [GOC()].
 #'
-#' @param coords  A two column matrix or a \code{\link{SpatialPoints}} object giving
+#' @param coords  A two column matrix or a [SpatialPoints()] object giving
 #'                the coordinates of points of interest.
 #'
 #' @param ...     Additional arguments (not used).
@@ -13,23 +13,23 @@
 #' @return A list with elements:
 #'
 #' \describe{
-#'   \item{\code{pointPolygon}}{a matrix with elements giving the id of the
-#'   polygon from the \code{goc}, where rows give points of interest and
+#'   \item{`pointPolygon`}{a matrix with elements giving the id of the
+#'   polygon from the `goc`, where rows give points of interest and
 #'   columns give thresholds;}
 #'
-#'   \item{\code{pointTotalPatchArea}}{is a matrix with elements giving the area
+#'   \item{`pointTotalPatchArea`}{is a matrix with elements giving the area
 #'   of patches in a polygon (in cell counts), where rows give points of and
 #'   columns give thresholds;}
 #'
-#'   \item{\code{pointTotalCoreArea}}{the same for core area of patches;}
+#'   \item{`pointTotalCoreArea`}{the same for core area of patches;}
 #'
-#'   \item{\code{pointECS}}{gives the patch area (in cell counts) averaged for
-#'   all points of interest (defined by O'Brien \emph{et al.}, 2006);}
+#'   \item{`pointECS`}{gives the patch area (in cell counts) averaged for
+#'   all points of interest (defined by O'Brien *et al.*, 2006);}
 #'
-#'   \item{\code{pointECSCore}}{is the same for the core area of patches.}
+#'   \item{`pointECSCore`}{is the same for the core area of patches.}
 #' }
 #'
-#' @note See \code{\link{MPG}} for warning related to areal measurements.
+#' @note See [MPG()] for warning related to areal measurements.
 #'
 #' @references
 #' Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien. (2007) Spatial graphs:
@@ -57,7 +57,7 @@
 #' @importFrom raster cellFromXY
 #' @include classes.R
 #' @rdname point
-#' @seealso \code{\link{GOC}}, \code{\link{distance}}
+#' @seealso [GOC()], [distance()]
 #'
 #' @example inst/examples/example_preamble.R
 #' @example inst/examples/example_preamble_MPG.R
@@ -79,8 +79,10 @@ setMethod(
     }
 
     if (!inherits(coords, "SpatialPoints") && (ncol(coords) != 2)) {
-      stop("coords must be a SpatialPoints object or a matrix of two columns",
-           " giving X and Y coordinates")
+      stop(
+        "coords must be a SpatialPoints object or a matrix of two columns",
+        " giving X and Y coordinates"
+      )
     }
 
     if (!inherits(coords, "SpatialPoints")) {
@@ -98,24 +100,28 @@ setMethod(
     totalPatchAreaPoints <- grainPoints
     totalCoreAreaPoints <- grainPoints
 
-    for (iThresh in 1:length(x@th)) {
+    for (iThresh in seq_along(x@th)) {
       if (is_igraph(x@th[[iThresh]]$goc)) {
         threshGraph <- x@th[[iThresh]]$goc
 
         ## Produce patchId and patchArea lookup tables with polygonId as the index
-        patchIdLookup <-  matrix(0, 1, 2)
-        for (i in 1:length(V(threshGraph)$polygonId)) {
+        patchIdLookup <- matrix(0, 1, 2)
+        for (i in seq_along(V(threshGraph)$polygonId)) {
           patchIdLookup <- rbind(
             patchIdLookup,
-            cbind(as.integer(V(threshGraph)$polygonId[i]),
-                  as.integer(unlist(strsplit(V(threshGraph)$patchId[i], ", "))))
+            cbind(
+              as.integer(V(threshGraph)$polygonId[i]),
+              as.integer(unlist(strsplit(V(threshGraph)$patchId[i], ", ")))
+            )
           )
         }
         patchIdLookup <- patchIdLookup[2:nrow(patchIdLookup), ]
-        patchAreaLookup <- cbind(V(threshGraph)$polygonId,
-                                 V(threshGraph)$totalPatchArea,
-                                 V(threshGraph)$totalPatchEdgeArea,
-                                 V(threshGraph)$totalCoreArea)
+        patchAreaLookup <- cbind(
+          V(threshGraph)$polygonId,
+          V(threshGraph)$totalPatchArea,
+          V(threshGraph)$totalPatchEdgeArea,
+          V(threshGraph)$totalCoreArea
+        )
 
         ## Faster method which references the cells from the stored voronoi raster
         ## and uses the graph vertex record to determine the polygonId
@@ -142,4 +148,5 @@ setMethod(
     results$pointECS <- apply(totalPatchAreaPoints, 2, mean, na.rm = TRUE)
     results$pointECSCore <- apply(totalCoreAreaPoints, 2, mean, na.rm = TRUE)
     return(results)
-})
+  }
+)

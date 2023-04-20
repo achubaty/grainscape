@@ -27,19 +27,15 @@ landscapes can also be generated using the software.
 
 MPG calculations and generalization of the Voronoi tessellation used in GOC models
 is based on the routines in SELES software (Fall and Fall, 2001).
-Routines also depend on the \code{sp} (Pebesma and Bivand, 2005),
-\pkg{raster} (Hijmans and van Etten, 2011), \pkg{igraph} (Csardi and Nepusz, 2006),
-and optionally \pkg{rgeos} packages (Bivand and Rundel, 2012).
+Routines also depend on the \pkg{sp} (Pebesma and Bivand, 2005),
+\pkg{raster} (Hijmans and van Etten, 2011), and \pkg{igraph} (Csardi and Nepusz, 2006) packages.
 
 A paper describing the use of this package for landscape connectivity modelling is
-available at \url{https://doi.org/10.1111/2041-210X.13350}.
+available at \doi{10.1111/2041-210X.13350}.
 
 A detailed tutorial is available as a vignette (see \code{browseVignettes('grainscape')}).
 }
 \references{
-Bivand, R.S. and C. Rundel. (2016). rgeos: Interface to Geometry Engine - Open Source (GEOS).
-R package version 0.3-19, \url{https://CRAN.R-project.org/package=rgeos}.
-
 Csardi, G. and T. Nepusz. (2006). The igraph software package for complex network research.
 InterJournal Complex Systems 1695. \url{https://igraph.org}.
 
@@ -62,8 +58,8 @@ Biological Conservation 144:44-55.
 Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis
 at multiple spatial scales in landscape genetics. Molecular Ecology 21:3996-4009.
 
-Hijmans, R.J. and J. van Etten. (2016). raster: Geographic analysis and modeling
-with raster data. R package version 2.5-8, \url{https://CRAN.R-project.org/package=raster}.
+Hijmans, R.J. (2023). raster: Geographic Data Analysis and Modeling.
+R package version 3.6-20, \url{https://CRAN.R-project.org/package=raster}.
 
 Pebesma, E.J. and R.S. Bivand. (2005). Classes and methods for spatial data in R.
 R News 5 (2), \url{https://cran.r-project.org/doc/Rnews/}.
@@ -71,7 +67,7 @@ R News 5 (2), \url{https://cran.r-project.org/doc/Rnews/}.
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://alexchubaty.com/grainscape}
+  \item \url{https://www.alexchubaty.com/grainscape/}
   \item \url{https://github.com/achubaty/grainscape}
   \item Report bugs at \url{https://github.com/achubaty/grainscape/issues}
 }

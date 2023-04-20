@@ -1,4 +1,20 @@
-Known issues: https://github.com/achubaty/grainscape/issues
+Known issues: <https://github.com/achubaty/grainscape/issues>
+
+version 0.4.4
+=============
+
+## Dependency changes
+
+* Removed retiring spatial packages `rgdal` and `rgeos` (#68)
+* Use `sf` for writing shapefiles.
+
+## Bugfixes
+
+* None
+
+## New features & enhancements
+
+* None
 
 version 0.4.3
 =============

@@ -70,7 +70,6 @@ test_that("MPG contains links to all patches (#32)", {
   tinyMPG <- MPG(cost = tinyCost, patch = (tinyCost == 1))
 
   g <- tinyMPG$mpg
-  #g <- simplify(g, remove.multiple = TRUE, remove.loops = TRUE)
   expect_equal(count_components(g), 1)
 
   ## simple map with NA regions
@@ -80,7 +79,6 @@ test_that("MPG contains links to all patches (#32)", {
   tinyNAMPG <- MPG(cost = tinyNACost, patch = (tinyNACost == 1))
 
   g <- tinyNAMPG$mpg
-  #g <- simplify(g, remove.multiple = TRUE, remove.loops = TRUE)
   expect_equal(count_components(g), 1)
 
   ## simple map with non-connected subgraphs expected
@@ -90,7 +88,6 @@ test_that("MPG contains links to all patches (#32)", {
   tinyNAMPG <- MPG(cost = tinyNACost, patch = (tinyNACost == 1))
 
   g <- tinyNAMPG$mpg
-  #g <- simplify(g, remove.multiple = TRUE, remove.loops = TRUE)
   expect_equal(count_components(g), 2)
 
   ## more complex map with NA regions
@@ -98,6 +95,5 @@ test_that("MPG contains links to all patches (#32)", {
   naErrorMPG <- MPG(cost = naError, patch = (naError == 1))
 
   g <- naErrorMPG$mpg
-  #g <- simplify(g, remove.multiple = TRUE, remove.loops = TRUE)
   expect_equal(count_components(g), 1)
 })

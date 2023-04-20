@@ -60,9 +60,9 @@ a directory with a name containing the date and time will be created.}
 \item{path}{A path to where this new directory \code{dirname} should be created.
 Defaults to the working directory.}
 
-\item{rasterFormat}{The format for exported rasters. See \code{\link{writeFormats}} for
-options. Defaults to GeoTiff (\code{rasterFormat='GTiff'}). Use
-\code{rasterFormat='raster'} to save \code{.grd} files in
+\item{rasterFormat}{The format for exported rasters. See \code{\link[=writeFormats]{writeFormats()}} for
+options. Defaults to GeoTiff (\code{rasterFormat='GTiff'}).
+Use \code{rasterFormat='raster'} to save \code{.grd} files in
 native \code{raster} package format.}
 
 \item{overwrite}{If directory already exists will overwrite existing files inside.
@@ -75,7 +75,7 @@ This is useful for visualization using R plotting functions,
 or spatial analysis within R. Defaults to \code{FALSE}}
 
 \item{vorBound}{Specify whether to create a raster with the boundaries of
-the Voronoi polygons \code{=1} and the remainder \code{=NA}.
+the Voronoi polygons \verb{=1} and the remainder \verb{=NA}.
 This may be useful for visualizing relationships among
 polygons in a grain of connectivity.
 This can add time to the export on very large rasters.
@@ -97,9 +97,9 @@ used and their meaning.
 
 \code{nodes}, \code{linksCentroid}, \code{linksPerim} are shape files giving
 the locations of the patch centroids, links among centroids, and links
-among perimeters of patches respectively. \code{patchId, voronoi} are
+among perimeters of patches respectively. \verb{patchId, voronoi} are
 rasters giving the patch identifier of the patch, or of the patch that
-the Voronoi polygon refers to. \code{lcpPerimWeight, lcpLinkId} give
+the Voronoi polygon refers to. \verb{lcpPerimWeight, lcpLinkId} give
 the weight in cost surface units of the shortest paths between perimeters,
 and the identifiers of those links respectively. \code{vorBound} gives
 the boundaries of the Voronoi polygons (if specified).
@@ -108,26 +108,26 @@ Description of node (vertex) and link (edge) weights in \code{mpg} objects
 and their corresponding attribute names in the shape files created.
 
 \tabular{llll}{
-  \strong{type} \tab \strong{MPG name} \tab \strong{SHP name} \tab \strong{Description}\cr
-  node \tab \code{patchId} \tab \code{patchId} \tab Patch ID from \code{patchId} raster \cr
-  node \tab \code{patchArea} \tab \code{patchA} \tab Area of patch \cr
-  node \tab \code{patchEdgeArea} \tab \code{patchEA} \tab Edge area of patch \cr
-  node \tab \code{coreArea} \tab \code{coreA} \tab Area excluding edge of patch \cr
-  node \tab \code{centroidX} \tab \code{ctrX} \tab Centroid of the patch (X)\cr
-  node \tab \code{centroidY} \tab \code{ctrY} \tab Centroid of the patch (Y)\cr
-  link \tab \code{e1} \tab \code{e1} \tab Id of first patch at end of link\cr
-  link \tab \code{e2} \tab \code{e2} \tab Id of second patch at end of link\cr
-  link \tab \code{linkId} \tab \code{linkId} \tab Link ID from \code{lcpLinkId} raster\cr
-  link \tab \code{lcPerimWeight} \tab \code{lcpPerWt} \tab Cost length of link from patch perimeters\cr
-  link \tab \code{startPerimX} \tab \code{strtPerX} \tab Coordinate of link endpoint on first patch (X)\cr
-  link \tab \code{startPerimY} \tab \code{strtPerY} \tab Coordinate of link endpoint on first patch (Y)\cr
-  link \tab \code{endPerimX} \tab \code{endPerX} \tab Coordinate of link endpoint on second patch (X)\cr
-  link \tab \code{endPerimY} \tab \code{endPerY} \tab Coordinate of link endpoint on second patch (Y)\cr
+\strong{type} \tab \strong{MPG name} \tab \strong{SHP name} \tab \strong{Description}\cr
+node \tab \code{patchId} \tab \code{patchId} \tab Patch ID from \code{patchId} raster \cr
+node \tab \code{patchArea} \tab \code{patchA} \tab Area of patch \cr
+node \tab \code{patchEdgeArea} \tab \code{patchEA} \tab Edge area of patch \cr
+node \tab \code{coreArea} \tab \code{coreA} \tab Area excluding edge of patch \cr
+node \tab \code{centroidX} \tab \code{ctrX} \tab Centroid of the patch (X)\cr
+node \tab \code{centroidY} \tab \code{ctrY} \tab Centroid of the patch (Y)\cr
+link \tab \code{e1} \tab \code{e1} \tab Id of first patch at end of link\cr
+link \tab \code{e2} \tab \code{e2} \tab Id of second patch at end of link\cr
+link \tab \code{linkId} \tab \code{linkId} \tab Link ID from \code{lcpLinkId} raster\cr
+link \tab \code{lcPerimWeight} \tab \code{lcpPerWt} \tab Cost length of link from patch perimeters\cr
+link \tab \code{startPerimX} \tab \code{strtPerX} \tab Coordinate of link endpoint on first patch (X)\cr
+link \tab \code{startPerimY} \tab \code{strtPerY} \tab Coordinate of link endpoint on first patch (Y)\cr
+link \tab \code{endPerimX} \tab \code{endPerX} \tab Coordinate of link endpoint on second patch (X)\cr
+link \tab \code{endPerimY} \tab \code{endPerY} \tab Coordinate of link endpoint on second patch (Y)\cr
 }
 
 \strong{Exported from \code{grain} objects:}
 
-\code{nodes, linksCentroid} are shape files giving the locations of the
+\verb{nodes, linksCentroid} are shape files giving the locations of the
 Voronoi polygon centroids and links among them respectively.
 \code{voronoi} are rasters gives the polygon identifier of each cluster of patches.
 \code{vorBound} gives the boundaries of the Voronoi polygons (if specified).
@@ -136,32 +136,32 @@ Description of node (vertex) and link (edge) weights in \code{grain}
 objects  and their corresponding attribute names in the shape files created.
 
 \tabular{llll}{
-  \strong{Type} \tab \strong{GOC name} \tab \strong{SHP name} \tab \strong{Description}\cr
-  node \tab \code{polygonId} \tab \code{polyId} \tab Polygon ID from grain voronoi raster \cr
-  node \tab \code{polygonArea} \tab \code{polyA} \tab Area of polygon from grain voronoi raster \cr
-  node \tab \code{totalPatchArea} \tab \code{patchA} \tab Total area of all patches in polygon\cr
-  node \tab \code{totalPatchEdgeArea} \tab \code{patchEA} \tab Total area of all patch edges in polygon\cr
-  node \tab \code{totalCoreArea} \tab \code{coreA} \tab Total area of patches in polygon excluding edges\cr
-  node \tab \code{centroidX} \tab \code{ctrX} \tab Centroid of the polygon (X)\cr
-  node \tab \code{centroidY} \tab \code{ctrY} \tab Centroid of the polygon (Y)\cr
-  link \tab \code{e1} \tab \code{e1} \tab ID of first patch at end of link\cr
-  link \tab \code{e2} \tab \code{e2} \tab ID of second patch at end of link\cr
-  link \tab \code{maxWeight} \tab \code{maxWt} \tab The maximum weight of all links connecting
-                                                    patches between polygons\cr
-  link \tab \code{linkIdMaxWeight} \tab \code{maxWt} \tab The link id of that maximum weight
-                                                          \code{link (lcpLinkId)}\cr
-  link \tab \code{minWeight} \tab \code{min} \tab The minimum weight of all links connecting
-                                                  patches between polygons\cr
-  link \tab \code{linkIdMinWeight} \tab \code{minWt} \tab The link id of that minimum weight
-                                                          \code{link (lcpLinkId)}\cr
-  link \tab \code{medianWeight} \tab \code{medWt} \tab The median weight of all links connecting
-                                                       patches between polygons\cr
-  link \tab \code{meanWeight} \tab \code{meanWT} \tab The minimum weight of all links connecting
-                                                      patches between polygons\cr
-  link \tab \code{numlinksWeight} \tab \code{numEWt} \tab The number of links connecting patches
-                                                          between polygons\cr
-  link \tab \code{eucCentroidWeight} \tab \code{eucCtrWt} \tab The Euclidean distance between
-                                                               centroids of polygons\cr
+\strong{Type} \tab \strong{GOC name} \tab \strong{SHP name} \tab \strong{Description}\cr
+node \tab \code{polygonId} \tab \code{polyId} \tab Polygon ID from grain voronoi raster \cr
+node \tab \code{polygonArea} \tab \code{polyA} \tab Area of polygon from grain voronoi raster \cr
+node \tab \code{totalPatchArea} \tab \code{patchA} \tab Total area of all patches in polygon\cr
+node \tab \code{totalPatchEdgeArea} \tab \code{patchEA} \tab Total area of all patch edges in polygon\cr
+node \tab \code{totalCoreArea} \tab \code{coreA} \tab Total area of patches in polygon excluding edges\cr
+node \tab \code{centroidX} \tab \code{ctrX} \tab Centroid of the polygon (X)\cr
+node \tab \code{centroidY} \tab \code{ctrY} \tab Centroid of the polygon (Y)\cr
+link \tab \code{e1} \tab \code{e1} \tab ID of first patch at end of link\cr
+link \tab \code{e2} \tab \code{e2} \tab ID of second patch at end of link\cr
+link \tab \code{maxWeight} \tab \code{maxWt} \tab The maximum weight of all links connecting
+patches between polygons\cr
+link \tab \code{linkIdMaxWeight} \tab \code{maxWt} \tab The link id of that maximum weight
+\code{link (lcpLinkId)}\cr
+link \tab \code{minWeight} \tab \code{min} \tab The minimum weight of all links connecting
+patches between polygons\cr
+link \tab \code{linkIdMinWeight} \tab \code{minWt} \tab The link id of that minimum weight
+\code{link (lcpLinkId)}\cr
+link \tab \code{medianWeight} \tab \code{medWt} \tab The median weight of all links connecting
+patches between polygons\cr
+link \tab \code{meanWeight} \tab \code{meanWT} \tab The minimum weight of all links connecting
+patches between polygons\cr
+link \tab \code{numlinksWeight} \tab \code{numEWt} \tab The number of links connecting patches
+between polygons\cr
+link \tab \code{eucCentroidWeight} \tab \code{eucCtrWt} \tab The Euclidean distance between
+centroids of polygons\cr
 }
 }
 \description{
@@ -174,9 +174,8 @@ produce R spatial objects that are convenient for plotting or analysis within R.
 Use \code{R = TRUE} in which case all parameters related to file export
 are ignored. (Default \code{R = FALSE})
 
-The \code{raster} package \code{\link{writeRaster}} is used for rasters,
-and \code{\link{writeOGR}} in the \code{rgdal} package is used to
-export ESRI compatible shape files.
+The \code{\link[raster:writeRaster]{raster::writeRaster()}} is used for rasters,
+and \code{\link[sf:st_write]{sf::st_write()}} is used to export ESRI compatible shape files.
 }
 \examples{
 ## Load raster landscape
@@ -184,23 +183,25 @@ tiny <- raster::raster(system.file("extdata/tiny.asc", package = "grainscape"))
 
 ## Create a resistance surface from a raster using an is-becomes reclassification
 tinyCost <- raster::reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
-
 ## Produce a patch-based MPG where patches are resistance features=1
 tinyPatchMPG <- MPG(cost = tinyCost, patch = tinyCost == 1)
-
 ## Extract a representative subset of 5 grains of connectivity
 tinyPatchGOC <- GOC(tinyPatchMPG, nThresh = 5)
+## Export rasters and vectors and place in an R object
+sp_tinyPatchGOC <- export(grain(tinyPatchGOC, 2), R = TRUE)  # nolint
+sp_tinyPatchMPG <- export(tinyPatchMPG, R = TRUE) # nolint
 
-## Export raster and vectors of a grain to a specified directory
-tmpdir <- tempdir()
-export(grain(tinyPatchGOC, 2), dirname = "tiny_goc_thresh2", path = tmpdir)
-unlink(file.path(tmpdir, "tiny_goc_thresh2"), recursive = TRUE)
+## Export raster and vectors to a specified directory
+exportPath <- tempdir()
+export(grain(tinyPatchGOC, 2), dirname = "tiny_goc_thresh2", path = exportPath)
+export(tinyPatchMPG, dirname = "tiny_mpg", path = exportPath, vorBound = TRUE)
 
-## Export rasters and vectors of the MPG and place in an R object
-sp_tinyPatchMPG <- export(tinyPatchMPG, R = TRUE)
+## clean up
+unlink(file.path(exportPath, "tiny_goc_thresh2"), recursive = TRUE)
+unlink(file.path(exportPath, "tiny_mpg"), recursive = TRUE)
 }
 \seealso{
-\code{\link{MPG}}, \code{\link{GOC}}, \code{\link{grain}}
+\code{\link[=MPG]{MPG()}}, \code{\link[=GOC]{GOC()}}, \code{\link[=grain]{grain()}}
 }
 \author{
 Paul Galpern and Alex Chubaty

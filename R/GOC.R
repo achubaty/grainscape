@@ -5,40 +5,37 @@
 #' by scalar analysis.
 #' Patch-based or lattice GOC modelling can be done with this function.
 #'
-#' @param x         A \code{mpg} object produced by \code{\link{MPG}}.
-#'                  For lattice GOC \code{MPG} must be run with patch set as an integer value.
+#' @param x         A `mpg` object produced by [MPG()].
+#'                  For lattice GOC `MPG` must be run with patch set as an integer value.
 #'
 #' @param nThresh   Optional. An integer giving the number of thresholds (or scales)
 #'                  at which to create GOC models. Thresholds are selected to produce
 #'                  a maximum number of unique grains (i.e., models).
-#'                  \code{nThresh} thresholds are also approximately evenly spread
+#'                  `nThresh` thresholds are also approximately evenly spread
 #'                  between 0 and the threshold at which all patches or focal points
 #'                  on the landscape are connected. This is a simple way to get
 #'                  a representative subset of all possible GOC models.
-#'                  Provide either \code{nThresh} or \code{doThresh} not both.
+#'                  Provide either `nThresh` or `doThresh` not both.
 #'
 #' @param doThresh  Optional. A vector giving the link thresholds at which to create GOC models.
-#'                  Use \code{\link{threshold}} to identify thresholds of interest.
-#'                  Provide either \code{nThresh} or \code{doThresh} not both.
+#'                  Use [threshold()] to identify thresholds of interest.
+#'                  Provide either `nThresh` or `doThresh` not both.
 #'
 #' @param weight    A string giving the link weight or attribute to use for threshold.
-#'                  \code{"lcpPerimWeight"} uses the accumulated resistance or least-cost
+#'                  `"lcpPerimWeight"` uses the accumulated resistance or least-cost
 #'                  path distance from the perimeters of patches as the link weight.
-#'                  \code{"eucPerimWeight"} use the Euclidean distance from the
-#'                  perimeters of patches as the link weight.
 #'
-#'
-#' @param verbose Set \code{verbose=0} for no progress information to console.
+#' @param verbose Set `verbose=0` for no progress information to console.
 #'
 #' @param ...     Additional arguments (not used).
 #'
 #' @details
 #' Grain or scalar analysis of connectivity may be appropriate for a variety of purposes, not
 #' limited to visualization and improving connectivity estimates for highly-mobile organisms.
-#' See Galpern \emph{et al.} (2012), Galpern & Manseau (2013a, 2013b) for applications
+#' See Galpern *et al.* (2012), Galpern & Manseau (2013a, 2013b) for applications
 #' and review of these capabilities.
 #'
-#' @return  A \code{\link[=goc-class]{goc}} object.
+#' @return  A [`goc()`][goc-class] object.
 #'
 #' @note Researchers should consider whether the use of a patch-based GOC or a lattice
 #' GOC model is appropriate based on the patch-dependency of the organism under study.
@@ -47,7 +44,7 @@
 #' Lattice models can be used as a generalized and functional approach to scaling
 #' resistance surfaces.
 #'
-#' See \code{\link{MPG}} for warning related to areal measurements.
+#' See [MPG()] for warning related to areal measurements.
 #'
 #' @references
 #' Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien. (2007) Spatial graphs:
@@ -74,8 +71,8 @@
 #' @importFrom stats median
 #' @include classes.R
 #' @rdname GOC
-#' @seealso \code{\link{MPG}}, \code{\link{grain}},
-#'          \code{\link{distance}}, \code{\link{point}}
+#' @seealso [MPG()], [grain()],
+#'          [distance()], [point()]
 #'
 #' @example inst/examples/example_preamble.R
 #' @example inst/examples/example_preamble_MPG.R
@@ -88,22 +85,24 @@ setGeneric("GOC", function(x, ...) {
 
 #' @export
 #' @rdname GOC
-setMethod(
-  "GOC",
+setMethod("GOC",
   signature = "mpg",
   definition = function(x, nThresh = NULL, doThresh = NULL,
                         weight = "lcpPerimWeight", verbose = 0, ...) {
     dots <- list(...)
-    if (!is.null(dots$sp))
+    if (!is.null(dots$sp)) {
       warning("Argument 'sp' is deprecated and will be ignored.")
+    }
 
     baseGraph <- x@mpg
 
     linkWeight <- try(edge_attr(baseGraph, weight), silent = TRUE)
 
     if (inherits(linkWeight, "try-error")) {
-      stop("weight must be the name of an existing link attribute to threshold",
-           " (e.g., 'lcpPerimWeight')")
+      stop(
+        "weight must be the name of an existing link attribute to threshold",
+        " (e.g., 'lcpPerimWeight')"
+      )
     }
 
     if (is.null(nThresh) && is.null(doThresh)) {
@@ -118,7 +117,7 @@ setMethod(
       }))
       doThresh <- allUniqueThresh[!duplicated(allUniqueThresh[, 2]), 1]
       doThresh <- doThresh[round(seq(1, length(doThresh), length = nThresh))]
-      ids <- 1:length(doThresh)
+      ids <- seq_along(doThresh)
     } else {
       ids <- doThresh
     }
@@ -134,8 +133,10 @@ setMethod(
     unlinkedPatches <- as.integer(V(baseGraph)$name[which(id == 0)])
     if (length(unlinkedPatches) > 0) {
       for (iPatch in unlinkedPatches) {
-        warning("patchId=", iPatch, " has no connecting links in the MPG.",
-                " This may be caused by a patch surrounded in missing values (NA cells).\n")
+        warning(
+          "patchId=", iPatch, " has no connecting links in the MPG.",
+          " This may be caused by a patch surrounded in missing values (NA cells).\n"
+        )
         baseGraph <- delete_vertices(baseGraph, as.character(iPatch))
       }
     }
@@ -144,7 +145,7 @@ setMethod(
     cellXY <- coordinates(voronoi)
     th <- vector("list", length(doThresh))
 
-    for (iThresh in 1:length(doThresh)) {
+    for (iThresh in seq_along(doThresh)) {
       if (verbose >= 1) message("Threshold ", iThresh, " of ", length(doThresh))
       tGraph <- delete_edges(baseGraph, which(linkWeight > doThresh[iThresh]))
 
@@ -157,16 +158,19 @@ setMethod(
 
         ## Determine which edges have endpoints in different components,
         ## and create a lookup data frame
-        linkComponentLookup <- cbind(linkId, edge_attr(baseGraph, weight), allLinks,
-                                     t(apply(allLinks, 1, function(z) {
-                                       c(components[z[1]], components[z[2]])
-                               }))) %>%
+        linkComponentLookup <- cbind(
+          linkId, edge_attr(baseGraph, weight), allLinks,
+          t(apply(allLinks, 1, function(z) {
+            c(components[z[1]], components[z[2]])
+          }))
+        ) %>%
           apply(., 2, as.numeric) %>%
           as.data.frame(stringsAsFactors = FALSE)
         linkComponentLookup <- linkComponentLookup[linkComponentLookup[, 5] !=
-                                                     linkComponentLookup[, 6], ]
-        colnames(linkComponentLookup) <- c("linkId", "linkWeight", "node1", "node2",
-                                           "compNode1", "compNode2")
+          linkComponentLookup[, 6], ] # nolint
+        colnames(linkComponentLookup) <- c(
+          "linkId", "linkWeight", "node1", "node2", "compNode1", "compNode2"
+        )
 
         ## Deal with the case when there are exactly 2 components
         if (ncol(linkComponentLookup) == 1) {
@@ -180,14 +184,14 @@ setMethod(
           linkComponentLookup$compLinkId <- rep(NA_real_, nrow(linkComponentLookup))
           done <- rep(FALSE, nrow(linkComponentLookup))
 
-          for (i in 1:nrow(linkComponentLookup)) {
+          for (i in seq_len(nrow(linkComponentLookup))) {
             if (!done[i]) {
               c1 <- linkComponentLookup[i, "compNode1"]
               c2 <- linkComponentLookup[i, "compNode2"]
               sameLink <- (linkComponentLookup[, "compNode1"] == c1) & # nolint
                 (linkComponentLookup[, "compNode2"] == c2) |
                 ((linkComponentLookup[, "compNode1"] == c2) & # nolint
-                   (linkComponentLookup[, "compNode2"] == c1)) # nolint
+                  (linkComponentLookup[, "compNode2"] == c1)) # nolint
               linkComponentLookup[sameLink, "compLinkId"] <- paste(c1, c2, sep = "_")
               done[sameLink] <- TRUE
             }
@@ -204,7 +208,8 @@ setMethod(
           linkIdMaxWeight <- as.vector(sapply(unique(lCLid), function(z) {
             ids <- linkComponentLookup$compLinkId == z
             linkComponentLookup[ids, "linkId"][
-              which.max(linkComponentLookup[ids, "linkWeight"])]
+              which.max(linkComponentLookup[ids, "linkWeight"])
+            ]
           }))
           minWeight <- as.vector(sapply(unique(lCLid), function(z) {
             ids <- linkComponentLookup$compLinkId == z
@@ -213,7 +218,8 @@ setMethod(
           linkIdMinWeight <- as.vector(sapply(unique(lCLid), function(z) {
             ids <- linkComponentLookup$compLinkId == z
             linkComponentLookup[ids, "linkId"][
-              which.min(linkComponentLookup[ids, "linkWeight"])]
+              which.min(linkComponentLookup[ids, "linkWeight"])
+            ]
           }))
           medianWeight <- as.vector(sapply(unique(lCLid), function(z) {
             ids <- linkComponentLookup$compLinkId == z
@@ -241,9 +247,11 @@ setMethod(
 
           ## Produce component graph with all edge attributes, and vertex attributeas.characters
           ## containing a comma-delimited string of vertex names
-          componentGraph <- data.frame(componentGraphNodes, maxWeight, linkIdMaxWeight,
-                                       minWeight, linkIdMinWeight, medianWeight,
-                                       meanWeight, numEdgesWeight, linkIdAll) %>%
+          componentGraph <- data.frame(
+            componentGraphNodes, maxWeight, linkIdMaxWeight,
+            minWeight, linkIdMinWeight, medianWeight,
+            meanWeight, numEdgesWeight, linkIdAll
+          ) %>%
             graph_from_data_frame(directed = FALSE)
 
           V(componentGraph)$polygonId <- V(componentGraph)$name
@@ -258,11 +266,13 @@ setMethod(
 
           rawreclassifyVor <- cbind(sourcePatchId, V(componentGraph)$polygonId)
           reclassifyVor <- matrix(0, 1, 2)
-          for (j in 1:nrow(rawreclassifyVor)) {
+          for (j in seq_len(nrow(rawreclassifyVor))) {
             reclassifyVor <- rbind(
               reclassifyVor,
-              cbind(as.integer(strsplit(rawreclassifyVor[j, 1], ", ")[[1]]),
-                    as.integer(rawreclassifyVor[j, 2]))
+              cbind(
+                as.integer(strsplit(rawreclassifyVor[j, 1], ", ")[[1]]),
+                as.integer(rawreclassifyVor[j, 2])
+              )
             )
           }
           reclassifyVor <- reclassifyVor[2:nrow(reclassifyVor), ]
@@ -277,8 +287,10 @@ setMethod(
           rasX[] <- cellXY[, 1]
           rasY[] <- cellXY[, 2]
 
-          centroids <- cbind(zonal(rasX, gocRaster, fun = "mean"),
-                             zonal(rasY, gocRaster, fun = "mean")[, 2])
+          centroids <- cbind(
+            zonal(rasX, gocRaster, fun = "mean"),
+            zonal(rasY, gocRaster, fun = "mean")[, 2]
+          )
           centroids <- centroids[centroids[, 1] %in% as.integer(uniquePolygons), ]
           row.names(centroids) <- centroids[, 1]
           centroids <- centroids[uniquePolygons, 2:3]
@@ -296,10 +308,12 @@ setMethod(
 
           ## Find the total patch area, total patch edge area, and total core area
           ##   in each polygon and add as vertex attributes.
-          patchAreaLookup <- cbind(V(baseGraph)$patchId,
-                                   V(baseGraph)$patchArea,
-                                   V(baseGraph)$patchEdgeArea,
-                                   V(baseGraph)$coreArea)
+          patchAreaLookup <- cbind(
+            V(baseGraph)$patchId,
+            V(baseGraph)$patchArea,
+            V(baseGraph)$patchEdgeArea,
+            V(baseGraph)$coreArea
+          )
 
           V(componentGraph)$totalPatchArea <- sapply(sourcePatchId, function(z) {
             sum(patchAreaLookup[patchAreaLookup[, 1] %in% as.numeric(strsplit(z, ", ")[[1]]), 2])
@@ -326,8 +340,8 @@ setMethod(
             x1 <- which(uniquePolygons == z[1])
             x2 <- which(uniquePolygons == z[2])
 
-            out <- sqrt((centroids[x2, 1] - centroids[x1, 1]) ^ 2 + # nolint
-                          (centroids[x2, 2] - centroids[x1, 2]) ^ 2)
+            out <- sqrt((centroids[x2, 1] - centroids[x1, 1])^2 +
+              (centroids[x2, 2] - centroids[x1, 2])^2) # nolint
             return(out)
           })
           E(componentGraph)$eucCentroidWeight <- eucCentroidWeight
@@ -358,15 +372,23 @@ setMethod(
 
     ## Find ECS (Expected cluster size; O'Brien et al, 2006) using totalPatchArea
     summary.df$ECS <- unlist(lapply(th, function(z) { # nolint
-      if (is_igraph(z$goc)) sum(V(z$goc)$totalPatchArea ^ 2) / sum(V(z$goc)$totalPatchArea) else NA
+      if (is_igraph(z$goc)) {
+        sum(V(z$goc)$totalPatchArea^2) / sum(V(z$goc)$totalPatchArea)
+      } else {
+        NA
+      }
     }))
     ## Find ECSCore (Expected cluster size; O'Brien et al, 2006) using totalCoreArea
     summary.df$ECSCore <- unlist(lapply(th, function(z) { # nolint
-      if (is_igraph(z$goc)) sum(V(z$goc)$totalCoreArea ^ 2) / sum(V(z$goc)$totalCoreArea) else NA
+      if (is_igraph(z$goc)) {
+        sum(V(z$goc)$totalCoreArea^2) / sum(V(z$goc)$totalCoreArea)
+      } else {
+        NA
+      }
     }))
 
-    threshGraph <- new("goc", voronoi = voronoi,
-                       summary = summary.df, th = th)
+    threshGraph <- new("goc", voronoi = voronoi, summary = summary.df, th = th)
 
     return(threshGraph)
-})
+  }
+)

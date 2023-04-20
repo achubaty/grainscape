@@ -69,8 +69,10 @@ test_that("point handles NA values", {
   coordAllNA <- rbind(c(2, 2), c(98, 98))
 
   ## names of list items returned by `point`
-  pntNames <- c("pointPolygon", "pointTotalPatchArea", "pointTotalCoreArea",
-                "pointECS", "pointECSCore")
+  pntNames <- c(
+    "pointPolygon", "pointTotalPatchArea", "pointTotalCoreArea",
+    "pointECS", "pointECSCore"
+  )
 
   ## no NA coords; only column 5 of the result is NA
   pntNoneNA <- point(goc, coordNoneNA)

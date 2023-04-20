@@ -5,43 +5,41 @@
 #' graph at a series of link thresholds.
 #' As the threshold value increases more nodes in the graph become connected,
 #' forming increasingly fewer components, until the graph becomes connected (e.g., Brooks, 2003).
-#' N.B. Grains of connectivity (GOC) done by \code{\link{GOC}} is also a scalar
-#' analysis using Voronoi tessellations rather than patches (see Galpern \emph{et al.}, 2012).
+#' N.B. Grains of connectivity (GOC) done by [GOC()] is also a scalar
+#' analysis using Voronoi tessellations rather than patches (see Galpern *et al.*, 2012).
 #'
-#' @param x       A \code{mpg} object produced by \code{\link{MPG}}.
+#' @param x       A `mpg` object produced by [MPG()].
 #'
 #' @param weight  A string giving the link weight or attribute to use for threshold.
-#'                \code{"lcpPerimWeight"} uses the accumulated resistance or least-cost path
+#'                `"lcpPerimWeight"` uses the accumulated resistance or least-cost path
 #'                distance from the perimeters of patches as the link weight.
-#'                \code{"eucPerimWeight"} use the Euclidean distance from the
-#'                perimeters of patches as the link weight.
 #'
 #' @param nThresh  Optional. An integer giving the number of thresholds (or scales)
 #'                 at which to create GOC models.
 #'                 Thresholds are selected to produce a maximum number of unique
 #'                 grains (i.e., models).
-#'                 \code{nThresh} thresholds are also approximately evenly spread
+#'                 `nThresh` thresholds are also approximately evenly spread
 #'                 between 0 and the threshold at which all patches or focal points
 #'                 on the landscape are connected.
 #'                 This is a simple way to get a representative subset of all
 #'                 possible GOC models.
-#'                 Provide either \code{nThresh} or \code{doThresh} not both.
+#'                 Provide either `nThresh` or `doThresh` not both.
 #'
 #' @param doThresh  Optional. A vector giving the link thresholds at which to create GOC models.
-#'                  Use \code{\link{threshold}} to identify thresholds of interest.
-#'                  Provide either \code{nThresh} or \code{doThresh} not both.
+#'                  Use [threshold()] to identify thresholds of interest.
+#'                  Provide either `nThresh` or `doThresh` not both.
 #'
 #' @param ...      Additional arguments (not used).
 #'
 #' @return A list object with the following elements:
 #'
 #' \describe{
-#'   \item{\code{summary}}{summarizes the thresholded graphs generated and their properties;}
-#'   \item{\code{th}}{a list of length \code{nThresh} or \code{length(doThresh)}
-#'   giving the thresholded graph (class \code{igraph}) at each threshold.}
+#'   \item{`summary`}{summarizes the thresholded graphs generated and their properties;}
+#'   \item{`th`}{a list of length `nThresh` or `length(doThresh)`
+#'   giving the thresholded graph (class `igraph`) at each threshold.}
 #' }
 #'
-#' @note See \code{\link{MPG}} for warning related to areal measurements.
+#' @note See [MPG()] for warning related to areal measurements.
 #'
 #' @references
 #' Brooks, C.P. (2003) A scalar analysis of landscape connectivity. Oikos 102:433-439.
@@ -66,7 +64,7 @@
 #' @export
 #' @include classes.R
 #' @rdname threshold
-#' @seealso \code{\link{MPG}}
+#' @seealso [MPG()]
 #'
 #' @example inst/examples/example_preamble.R
 #' @example inst/examples/example_preamble_MPG.R
@@ -89,8 +87,10 @@ setMethod(
     linkWeight <- try(edge_attr(baseGraph, weight), silent = TRUE)
 
     if (inherits(linkWeight, "try-error")) {
-      stop("weight must be the name of an existing link attribute to threshold",
-           " (e.g., 'lcpPerimWeight')")
+      stop(
+        "weight must be the name of an existing link attribute to threshold",
+        " (e.g., 'lcpPerimWeight')"
+      )
     }
 
     if (is.null(nThresh) && is.null(doThresh)) {
@@ -103,7 +103,7 @@ setMethod(
 
     threshGraph$summary <- data.frame(maxLink = doThresh)
 
-    threshGraph$th <- lapply(1:length(doThresh), function(i) {
+    threshGraph$th <- lapply(seq_along(doThresh), function(i) {
       delete.edges(baseGraph, which(linkWeight > doThresh[i]))
     })
 
@@ -113,4 +113,5 @@ setMethod(
       unlist()
 
     return(threshGraph)
-})
+  }
+)

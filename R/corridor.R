@@ -5,19 +5,19 @@
 #' (or shortest path) between two points using one of the tessellations
 #' (i.e., scales) in these models.
 #'
-#' @param x       A \code{goc} object created by \code{\link{GOC}}.
+#' @param x       A `goc` object created by [GOC()].
 #'
 #' @param whichThresh  Integer giving the index of the threshold to visualize.
 #'
-#' @param coords  A two column matrix or a \code{\link{SpatialPoints}} object
+#' @param coords  A two column matrix or a [SpatialPoints()] object
 #'                giving coordinates at the end points of the corridor.
 #'
 #' @param weight  The GOC graph link weight to use in calculating the distance.
-#'                Please see details in \code{\link{distance}}.
+#'                Please see details in [distance()].
 #'
 #' @param ...     Additional arguments (not used).
 #'
-#' @return An object of class \code{\linkS4class{corridor}}.
+#' @return An object of class [corridor-class].
 #'
 #' @references
 #' Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien. (2007) Spatial graphs:
@@ -42,7 +42,7 @@
 #' @importFrom sp Line Lines SpatialLines SpatialLinesDataFrame SpatialPoints
 #' @include classes.R grain.R
 #' @rdname corridor
-#' @seealso \code{\link{GOC}}, \code{\link{visualize}}
+#' @seealso [GOC()], [visualize()]
 #'
 #' @example inst/examples/example_preamble.R
 #' @example inst/examples/example_preamble_MPG.R
@@ -55,8 +55,7 @@ setGeneric("corridor", function(x, ...) {
 
 #' @export
 #' @rdname corridor
-setMethod(
-  "corridor",
+setMethod("corridor",
   signature = "goc",
   definition = function(x, whichThresh, coords, weight = "meanWeight", ...) {
     dots <- list(...)
@@ -75,8 +74,10 @@ setMethod(
     }
 
     if (ncol(coords) != 2) {
-      stop("coords must be a SpatialPoints object or a matrix of two columns",
-           "giving X and Y coordinates")
+      stop(
+        "coords must be a SpatialPoints object or a matrix of two columns",
+        "giving X and Y coordinates"
+      )
     }
 
     if (nrow(coords) > 2) {
@@ -91,31 +92,41 @@ setMethod(
 
     ## GOC Graph
     edges <- as_edgelist(x@th[[whichThresh]]$goc)
-    edges <- cbind(edgeNum = 1:nrow(edges),
-                   v1 = sapply(edges[, 1], function(z) {
-                     which(V(x@th[[whichThresh]]$goc)$name == z)
-                   }),
-                   v2 = sapply(edges[, 2], function(z) {
-                     which(V(x@th[[whichThresh]]$goc)$name == z)
-                   }))
+    edges <- cbind(
+      edgeNum = seq_len(nrow(edges)),
+      v1 = sapply(edges[, 1], function(z) {
+        which(V(x@th[[whichThresh]]$goc)$name == z)
+      }),
+      v2 = sapply(edges[, 2], function(z) {
+        which(V(x@th[[whichThresh]]$goc)$name == z)
+      })
+    )
     edgesGOC <- apply(edges, 1, function(i) {
-      cbind(c(V(x@th[[whichThresh]]$goc)$centroidX[i["v1"]],
-              V(x@th[[whichThresh]]$goc)$centroidX[i["v2"]]),
-            c(V(x@th[[whichThresh]]$goc)$centroidY[i["v1"]],
-              V(x@th[[whichThresh]]$goc)$centroidY[i["v2"]])) %>%
+      cbind(
+        c(
+          V(x@th[[whichThresh]]$goc)$centroidX[i["v1"]],
+          V(x@th[[whichThresh]]$goc)$centroidX[i["v2"]]
+        ),
+        c(
+          V(x@th[[whichThresh]]$goc)$centroidY[i["v1"]],
+          V(x@th[[whichThresh]]$goc)$centroidY[i["v2"]]
+        )
+      ) %>%
         Line() %>%
         Lines(ID = as.character(i["edgeNum"]))
     }) %>%
       SpatialLines() %>%
       SpatialLinesDataFrame(
         data = data.frame(
-          edgeNum = 1:nrow(edges),
+          edgeNum = seq_len(nrow(edges)),
           weight = edge_attr(x@th[[whichThresh]]$goc, weight)
         )
       )
 
-    verticesGOC <- SpatialPoints(cbind(V(x@th[[whichThresh]]$goc)$centroidX,
-                                       V(x@th[[whichThresh]]$goc)$centroidY))
+    verticesGOC <- SpatialPoints(cbind(
+      V(x@th[[whichThresh]]$goc)$centroidX,
+      V(x@th[[whichThresh]]$goc)$centroidY
+    ))
 
     ## Shortest path
     startEndPolygons <- point(x, coords)$pointPolygon[, whichThresh]
@@ -124,7 +135,8 @@ setMethod(
       x@th[[whichThresh]]$goc,
       which(V(x@th[[whichThresh]]$goc)$polygonId == na.omit(startEndPolygons[1])),
       which(V(x@th[[whichThresh]]$goc)$polygonId == na.omit(startEndPolygons[2])),
-      weights = V(x@th[[whichThresh]]$goc)$meanWeight)
+      weights = V(x@th[[whichThresh]]$goc)$meanWeight
+    )
 
     startEndPath <- if (length(pths$vpath) > 0) {
       pths %>%
@@ -135,8 +147,10 @@ setMethod(
       stop("corridor: all 'coords' correspond to cells of value 'NA'.")
     }
 
-    shortestPathEdges <- cbind(V(x@th[[whichThresh]]$goc)$centroidX[startEndPath],
-                               V(x@th[[whichThresh]]$goc)$centroidY[startEndPath]) %>%
+    shortestPathEdges <- cbind(
+      V(x@th[[whichThresh]]$goc)$centroidX[startEndPath],
+      V(x@th[[whichThresh]]$goc)$centroidY[startEndPath]
+    ) %>%
       Line() %>%
       Lines(ID = "1") %>%
       list() %>%
@@ -144,7 +158,8 @@ setMethod(
 
     shortestPathVertices <- SpatialPoints(cbind(
       V(x@th[[whichThresh]]$goc)$centroidX[startEndPath],
-      V(x@th[[whichThresh]]$goc)$centroidY[startEndPath]))
+      V(x@th[[whichThresh]]$goc)$centroidY[startEndPath]
+    ))
 
     pathDist <- distances(
       x@th[[whichThresh]]$goc,
@@ -155,12 +170,14 @@ setMethod(
     voronoiBound <- boundaries(grain(x, whichThresh = whichThresh)@voronoi, classes = TRUE)
 
     result <- new("corridor",
-                  voronoi = voronoiBound,
-                  linksSP = edgesGOC,
-                  nodesSP = verticesGOC,
-                  shortestLinksSP = shortestPathEdges,
-                  shortestNodesSP = shortestPathVertices,
-                  corridorLength = pathDist)
+      voronoi = voronoiBound,
+      linksSP = edgesGOC,
+      nodesSP = verticesGOC,
+      shortestLinksSP = shortestPathEdges,
+      shortestNodesSP = shortestPathVertices,
+      corridorLength = pathDist
+    )
 
     return(result)
-  })
+  }
+)

@@ -17,9 +17,9 @@ if (interactive()) {
   ## Capture plot output for further processing with ggplot
   g <- plot(tinyPatchMPG, print = FALSE, theme = FALSE)
   g <- g + theme_minimal() + ggtitle("Minimum planar graph") +
-         theme(plot.title = element_text(size = 20, hjust = 0.5)) +
-         theme(legend.position = "none") +
-         xlab("Easting") + ylab("Northing")
+    theme(plot.title = element_text(size = 20, hjust = 0.5)) +
+    theme(legend.position = "none") +
+    xlab("Easting") + ylab("Northing")
   g
 
   ## To change aesthetics it is best to build the plot from scratch

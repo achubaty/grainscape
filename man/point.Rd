@@ -10,38 +10,38 @@ point(x, ...)
 \S4method{point}{goc}(x, coords, ...)
 }
 \arguments{
-\item{x}{A \code{goc} object produced by \code{\link{GOC}}.}
+\item{x}{A \code{goc} object produced by \code{\link[=GOC]{GOC()}}.}
 
 \item{...}{Additional arguments (not used).}
 
-\item{coords}{A two column matrix or a \code{\link{SpatialPoints}} object giving
+\item{coords}{A two column matrix or a \code{\link[=SpatialPoints]{SpatialPoints()}} object giving
 the coordinates of points of interest.}
 }
 \value{
 A list with elements:
 
 \describe{
-  \item{\code{pointPolygon}}{a matrix with elements giving the id of the
-  polygon from the \code{goc}, where rows give points of interest and
-  columns give thresholds;}
+\item{\code{pointPolygon}}{a matrix with elements giving the id of the
+polygon from the \code{goc}, where rows give points of interest and
+columns give thresholds;}
 
-  \item{\code{pointTotalPatchArea}}{is a matrix with elements giving the area
-  of patches in a polygon (in cell counts), where rows give points of and
-  columns give thresholds;}
+\item{\code{pointTotalPatchArea}}{is a matrix with elements giving the area
+of patches in a polygon (in cell counts), where rows give points of and
+columns give thresholds;}
 
-  \item{\code{pointTotalCoreArea}}{the same for core area of patches;}
+\item{\code{pointTotalCoreArea}}{the same for core area of patches;}
 
-  \item{\code{pointECS}}{gives the patch area (in cell counts) averaged for
-  all points of interest (defined by O'Brien \emph{et al.}, 2006);}
+\item{\code{pointECS}}{gives the patch area (in cell counts) averaged for
+all points of interest (defined by O'Brien \emph{et al.}, 2006);}
 
-  \item{\code{pointECSCore}}{is the same for the core area of patches.}
+\item{\code{pointECSCore}}{is the same for the core area of patches.}
 }
 }
 \description{
 Identify the polygon containing a location at multiple scales.
 }
 \note{
-See \code{\link{MPG}} for warning related to areal measurements.
+See \code{\link[=MPG]{MPG()}} for warning related to areal measurements.
 }
 \examples{
 ## Load raster landscape
@@ -49,13 +49,10 @@ tiny <- raster::raster(system.file("extdata/tiny.asc", package = "grainscape"))
 
 ## Create a resistance surface from a raster using an is-becomes reclassification
 tinyCost <- raster::reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
-
 ## Produce a patch-based MPG where patches are resistance features=1
 tinyPatchMPG <- MPG(cost = tinyCost, patch = tinyCost == 1)
-
 ## Extract a representative subset of 5 grains of connectivity
 tinyPatchGOC <- GOC(tinyPatchMPG, nThresh = 5)
-
 ## Three sets of coordinates in the study area
 loc <- cbind(c(30, 60, 90), c(30, 60, 90))
 
@@ -85,7 +82,7 @@ spatial configuration of winter habitat for woodland caribou: An application of 
 Biological Conservation 130:70-83.
 }
 \seealso{
-\code{\link{GOC}}, \code{\link{distance}}
+\code{\link[=GOC]{GOC()}}, \code{\link[=distance]{distance()}}
 }
 \author{
 Paul Galpern and Alex Chubaty

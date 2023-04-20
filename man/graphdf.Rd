@@ -30,14 +30,14 @@ graphdf(x, ...)
 A list object containing:
 
 \describe{
-  \item{\code{v}}{node (vertex) names and associated attributes;}
+\item{\code{v}}{node (vertex) names and associated attributes;}
 
-  \item{\code{e}}{link (edge) lists and associated attributes.}
+\item{\code{e}}{link (edge) lists and associated attributes.}
 }
 
-Please see \code{\link{MPG}} and \code{\link{GOC}} for details about the attributes.
+Please see \code{\link[=MPG]{MPG()}} and \code{\link[=GOC]{GOC()}} for details about the attributes.
 
-For \code{\link{GOC}} objects which typically contain multiple thresholds,
+For \code{\link[=GOC]{GOC()}} objects which typically contain multiple thresholds,
 an enumerated list of the same length as the number of thresholds is returned
 each containing \code{v} and \code{e} elements.
 }
@@ -53,24 +53,21 @@ tiny <- raster::raster(system.file("extdata/tiny.asc", package = "grainscape"))
 
 ## Create a resistance surface from a raster using an is-becomes reclassification
 tinyCost <- raster::reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
-
 ## Produce a patch-based MPG where patches are resistance features=1
 tinyPatchMPG <- MPG(cost = tinyCost, patch = tinyCost == 1)
-
 ## Extract a representative subset of 5 grains of connectivity
 tinyPatchGOC <- GOC(tinyPatchMPG, nThresh = 5)
-
 ## Create a data.frame with the structure and attributes of a MPG object
-tinyPatchMPG_df <- graphdf(tinyPatchMPG)
+tinyPatchMPG_df <- graphdf(tinyPatchMPG) # nolint
 
 ## Create a data.frame with the structure and attributes of a GOC object
-tinyPatchGOC_df <- graphdf(tinyPatchGOC)
+tinyPatchGOC_df <- graphdf(tinyPatchGOC) # nolint
 
 ## Create a data.frame with the structure and attributes of any igraph object
 graphdf(tinyPatchGOC@th[[1]]$goc)
 }
 \seealso{
-\code{\link{MPG}}, \code{\link{GOC}}
+\code{\link[=MPG]{MPG()}}, \code{\link[=GOC]{GOC()}}
 }
 \author{
 Paul Galpern and Alex Chubaty

@@ -10,20 +10,20 @@ corridor(x, ...)
 \S4method{corridor}{goc}(x, whichThresh, coords, weight = "meanWeight", ...)
 }
 \arguments{
-\item{x}{A \code{goc} object created by \code{\link{GOC}}.}
+\item{x}{A \code{goc} object created by \code{\link[=GOC]{GOC()}}.}
 
 \item{...}{Additional arguments (not used).}
 
 \item{whichThresh}{Integer giving the index of the threshold to visualize.}
 
-\item{coords}{A two column matrix or a \code{\link{SpatialPoints}} object
+\item{coords}{A two column matrix or a \code{\link[=SpatialPoints]{SpatialPoints()}} object
 giving coordinates at the end points of the corridor.}
 
 \item{weight}{The GOC graph link weight to use in calculating the distance.
-Please see details in \code{\link{distance}}.}
+Please see details in \code{\link[=distance]{distance()}}.}
 }
 \value{
-An object of class \code{\linkS4class{corridor}}.
+An object of class \linkS4class{corridor}.
 }
 \description{
 Given a series of GOC models built at different scales, visualize the corridor
@@ -36,13 +36,10 @@ tiny <- raster::raster(system.file("extdata/tiny.asc", package = "grainscape"))
 
 ## Create a resistance surface from a raster using an is-becomes reclassification
 tinyCost <- raster::reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
-
 ## Produce a patch-based MPG where patches are resistance features=1
 tinyPatchMPG <- MPG(cost = tinyCost, patch = tinyCost == 1)
-
 ## Extract a representative subset of 5 grains of connectivity
 tinyPatchGOC <- GOC(tinyPatchMPG, nThresh = 5)
-
 ## Quick visualization of a corridor
 corridorStartEnd <- rbind(c(10, 10), c(90, 90))
 tinyPatchCorridor <- corridor(tinyPatchGOC, whichThresh = 3, coords = corridorStartEnd)
@@ -79,7 +76,7 @@ Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis
 at multiple spatial scales in landscape genetics. Molecular Ecology 21:3996-4009.
 }
 \seealso{
-\code{\link{GOC}}, \code{\link{visualize}}
+\code{\link[=GOC]{GOC()}}, \code{\link[=visualize]{visualize()}}
 }
 \author{
 Paul Galpern and Alex Chubaty

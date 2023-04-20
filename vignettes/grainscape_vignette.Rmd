@@ -172,14 +172,19 @@ The result is shown in \autoref{fig:patchycost}.
 ## Create an is-becomes matrix for reclassification
 isBecomes <- cbind(c(1, 2, 3, 4, 5), c(1, 10, 8, 3, 6))
 patchyCost <- reclassify(patchy, rcl = isBecomes)
+patchyCost_df <- ggGS(patchyCost)
+patchyCost_df$value <- as.factor(patchyCost_df$value)
 
 ## Plot this raster using ggplot2 functionality
-## and the default grainscape theme 
+## and the default grainscape theme
 ggplot() +
-  geom_raster(data = ggGS(patchyCost), 
-    aes(x = x, y = y, fill = value)) +
-  scale_fill_distiller(palette = "Paired", guide = "legend") +
+  geom_raster(
+    data = patchyCost_df,
+    aes(x = x, y = y, fill = value)
+  ) +
+  scale_fill_brewer(type = "div", palette = "Paired", guide = "legend") +
   guides(fill = guide_legend(title = "Resistance")) +
+  theme_grainscape() +
   theme(legend.position = "right")
 ```
 
@@ -254,9 +259,12 @@ scalarAnalysis <- threshold(patchyMPG, nThresh = 5)
 
 ## Use kable to render this as a table
 kable(scalarAnalysis$summary,
-      caption = paste("The number of components ('nComponents') in the",
-                      "minimum planar graph at five automatically-selected",
-                      "link thresholds ('maxLink)."))
+  caption = paste(
+    "The number of components ('nComponents') in the",
+    "minimum planar graph at five automatically-selected",
+    "link thresholds ('maxLink)."
+  )
+)
 ```
 
 The `$summary` of this analysis can be plotted to explore scales of aggregation in the landscape.
@@ -270,7 +278,8 @@ ggplot(scalarAnalysis$summary, aes(x = maxLink, y = nComponents)) +
   ylab("Number of components") +
   scale_x_continuous(breaks = seq(0, 1000, by = 100)) +
   scale_y_continuous(breaks = 1:20) +
-  theme_light() + theme(axis.title = element_text())
+  theme_light() +
+  theme(axis.title = element_text())
 ```
 
 Other independent variables describing the components (*e.g.*, area of patches) could, of course, be calculated by processing the thresholded graphs `scalarAnalysis$th` and their attributes using the `igraph` function `components()`.
@@ -285,15 +294,23 @@ This is visualized in \autoref{fig:thresholdedgraph}.
 
 ```{r figure_06, fig.cap="\\label{fig:thresholdedgraph}The thresholded MPG depicted with a link length of 250 resistance units. An organism that can disperse a maximum of 250 resistance units would experience this landscape as 6 connected regions in the depicted spatial configuration. Note that the plotting has been customized to emphasize which patches are connected. This was done by plotting links with less than the threshold length from the centroids of patches", warning=FALSE}
 ggplot() +
-  geom_raster(data = ggGS(patchyMPG, "patchId"), 
-              aes(x = x, y = y, fill = value > 0)) +
+  geom_raster(
+    data = ggGS(patchyMPG, "patchId"),
+    aes(x = x, y = y, fill = value > 0)
+  ) +
   scale_fill_manual(values = "grey") +
-  geom_segment(data  = ggGS(patchyMPG, "links"),
-               aes(x = x1, y = y1, xend = x2, yend = y2,
-                   colour = lcpPerimWeight >= 250)) +
+  geom_segment(
+    data = ggGS(patchyMPG, "links"),
+    aes(
+      x = x1, y = y1, xend = x2, yend = y2,
+      colour = lcpPerimWeight >= 250
+    )
+  ) +
   scale_colour_manual(values = c("forestgreen", NA)) +
-  geom_point(data = ggGS(patchyMPG, "nodes"), aes(x = x, y = y),
-             colour = "darkgreen")
+  geom_point(
+    data = ggGS(patchyMPG, "nodes"), aes(x = x, y = y),
+    colour = "darkgreen"
+  )
 ```
 
 \newpage
@@ -351,8 +368,8 @@ A plot with the Voronoi tessellation and the patches superimposed is shown in \a
 patchPlusVoronoi <- patchyMPG@voronoi
 patchPlusVoronoi[patchyMPG@patchId] <- 0
 
-ggplot() + 
-  geom_raster(data = ggGS(patchPlusVoronoi), aes(x = x , y = y, fill = value)) 
+ggplot() +
+  geom_raster(data = ggGS(patchPlusVoronoi), aes(x = x, y = y, fill = value))
 ```
 
 \newpage
@@ -406,11 +423,13 @@ res <- raster(xmn = 0, xmx = 100, ymn = 0, ymx = 100, resolution = 1)
 
 ## Assign all values to 1
 res[] <- 1
- 
-## Create 20 "random" points representing nodes, 
+
+## Create 20 "random" points representing nodes,
 ## (i.e. the loci of a process of interest)
-pts <- data.frame(x = rep(seq(10, 90, length.out = 5), 4),
-                  y = seq(10, 90, length.out = 4)) +
+pts <- data.frame(
+  x = rep(seq(10, 90, length.out = 5), 4),
+  y = seq(10, 90, length.out = 4)
+) +
   cbind(runif(20) * 10, runif(20) * 10)
 
 ## Represent these on a patch raster
@@ -425,9 +444,11 @@ mpg <- MPG(res, patchPts)
 
 ## Plot the result using the quick 'network' visualization
 ## setting and add labels (dodging them by 3 to the upper-right)
-figure09 <- plot(mpg, quick = "network", theme = FALSE) + 
-  geom_text(data = ggGS(mpg, "nodes"), 
-            aes(x = x + 3, y = y + 3, label = patchId)) +
+figure09 <- plot(mpg, quick = "network", theme = FALSE) +
+  geom_text(
+    data = ggGS(mpg, "nodes"),
+    aes(x = x + 3, y = y + 3, label = patchId)
+  ) +
   ggtitle("Planar 1D; Euclidean surface")
 figure09
 ```
@@ -441,7 +462,7 @@ On this particular raster one cell equals one unit of distance, therefore distan
 ## extracted from the mpg object. This shows selected columns,
 ## using the formatting function kable()
 neighbours <- graphdf(mpg)[[1]]$e[, c(1, 2, 4)]
-neighbours <- neighbours[order(neighbours[,1]), ][1:5, ]
+neighbours <- neighbours[order(neighbours[, 1]), ][1:5, ]
 names(neighbours) <- c("Node 1", "Node 2", "Path distance (Euclidean)")
 kable(neighbours, row.names = FALSE)
 ```
@@ -459,7 +480,7 @@ We will borrow objects made in  previous steps to keep the code concise.
 ## surface we used in the last step
 ## Here we use random integers >= 2
 res2 <- res
-res2[] <- floor(runif(ncell(res2))*10 + 1)
+res2[] <- floor(runif(ncell(res2)) * 10 + 1)
 
 ## Extract the minimum planar graph using the
 ## raster made previously which represents the points only
@@ -468,9 +489,11 @@ mpg <- MPG(res2, patchPts)
 ## Plot the result using the quick 'mgplot' visualization
 ## setting and add labels (dodging them by 3 to the upper-right)
 ## This demonstrates the non-linear paths.
-figure10 <- plot(mpg, quick = "mpgPlot", theme = FALSE) + 
-  geom_text(data = ggGS(mpg, "nodes"),
-            aes(x = x + 3, y = y + 3, label = patchId)) +
+figure10 <- plot(mpg, quick = "mpgPlot", theme = FALSE) +
+  geom_text(
+    data = ggGS(mpg, "nodes"),
+    aes(x = x + 3, y = y + 3, label = patchId)
+  ) +
   ggtitle("Planar 1D; Resistance surface")
 figure10
 ```
@@ -484,9 +507,9 @@ The table below demonstrates that the non-Euclidean path distance is longer amon
 ## Here we show the first five rows of the link attribute table
 ## extracted from the mpg object. This shows selected columns, using
 ## the formatting function kable()
-resNeighbours <- graphdf(mpg)[[1]]$e[ , c(1, 2, 4)]
-resNeighbours <- resNeighbours[order(resNeighbours[,1]), ][1:5, ]
-comparison <- cbind(neighbours, resNeighbours)[, -c(4,5)]
+resNeighbours <- graphdf(mpg)[[1]]$e[, c(1, 2, 4)]
+resNeighbours <- resNeighbours[order(resNeighbours[, 1]), ][1:5, ]
+comparison <- cbind(neighbours, resNeighbours)[, -c(4, 5)]
 names(comparison)[4] <- c("Path distance (Resistance)")
 kable(comparison, row.names = FALSE)
 ```
@@ -515,7 +538,7 @@ frag <- raster(system.file("extdata/fragmented.asc", package = "grainscape"))
 
 ## Convert land cover to resistance units
 ## Use an "is-becomes" reclassification
-isBecomes <- cbind(c(1, 2,  3,   4), c(1, 5, 10, 12))
+isBecomes <- cbind(c(1, 2, 3, 4), c(1, 5, 10, 12))
 
 fragRes <- reclassify(frag, rcl = isBecomes)
 
@@ -526,12 +549,17 @@ fragMPG <- MPG(fragRes, patch = patches)
 
 ## Plot the minimum planar graph with node labels for several
 ## focal nodes of interest
-figure11 <- plot(fragMPG, quick = "mpgPlot", theme = FALSE) + 
-  geom_text(data = ggGS(fragMPG, "nodes"),
-            aes(x = x, y = y,
-                label = ifelse(patchId %in% c(7, 23, 52, 106, 158, 221),
-                               patchId, "")),
-            size = 2) +
+figure11 <- plot(fragMPG, quick = "mpgPlot", theme = FALSE) +
+  geom_text(
+    data = ggGS(fragMPG, "nodes"),
+    aes(
+      x = x, y = y,
+      label = ifelse(patchId %in% c(7, 23, 52, 106, 158, 221),
+        patchId, ""
+      )
+    ),
+    size = 2
+  ) +
   ggtitle("Planar 2D; Resistance surface")
 figure11
 ```
@@ -541,8 +569,8 @@ The distances from the perimeters of the nodes along the paths of the links (gre
 ```{r table_06}
 ## Here we show only patch 7 and its neighbours that are labelled on
 ## the network using the formatting function kable().
-fragNeighbours <- graphdf(fragMPG)[[1]]$e[ , c(1, 2, 4)]
-fragNeighbours <- fragNeighbours[order(fragNeighbours[,1]), ][1:5, ]
+fragNeighbours <- graphdf(fragMPG)[[1]]$e[, c(1, 2, 4)]
+fragNeighbours <- fragNeighbours[order(fragNeighbours[, 1]), ][1:5, ]
 names(fragNeighbours) <- c("Node 1", "Node 2", "Path distance (Resistance)")
 kable(fragNeighbours, row.names = FALSE)
 ```
@@ -562,18 +590,24 @@ This example uses the resistance surface and minimum planar graph from a previou
 ```{r figure_12, fig.cap="A minimum planar graph (MPG) shown with centroid node representation and linear link representation among these nodes.", results="hide"}
 ## Plot the minimum planar graph using centroid nodes
 ## A single line of code will do this as follows:
-## plot(fragMPG, quick="network")
+## plot(fragMPG, quick = "network")
 
-## However the following approach gives more control
-## allowing reduction of the size of the nodes to
-## avoid crowding
+## However the following approach gives more control,
+## allowing reduction of the size of the nodes to avoid crowding
 figure12 <- ggplot() +
-  geom_segment(data = ggGS(fragMPG, "links"),
-               aes(x = x1, y = y1, xend = x2, yend = y2,
-                   colour = "forestgreen", size = 0.25)) +
-  geom_point(data = ggGS(fragMPG, "nodes"),
-             aes(x = x, y = y, colour = "darkgreen", size = 0.5)) +
-  scale_colour_identity() + scale_size_identity() +
+  geom_segment(
+    data = ggGS(fragMPG, "links"),
+    aes(
+      x = x1, y = y1, xend = x2, yend = y2,
+      colour = "forestgreen", size = 0.25
+    )
+  ) +
+  geom_point(
+    data = ggGS(fragMPG, "nodes"),
+    aes(x = x, y = y, colour = "darkgreen", size = 0.5)
+  ) +
+  scale_colour_identity() +
+  scale_size_identity() +
   ggtitle("Centroid representation of nodes")
 figure12
 ```
@@ -634,11 +668,15 @@ In this example, the area of the patch represented by the node is used to scale 
 
 ```{r figure_15, fig.cap="A minimum planar graph (MPG) with centroid node representation and links between centroids, where the plotted size of the node symbol has been scaled with the area of the patch it represents."}
 figure15 <- ggplot() +
-  geom_segment(data = ggGS(fragMPG, "links"),
-               aes(x = x1, y = y1, xend = x2, yend = y2),
-               colour = "forestgreen") +
-  geom_point(data = ggGS(fragMPG, "nodes"),
-             aes(x = x, y = y, size = patchArea), colour = "darkgreen") +
+  geom_segment(
+    data = ggGS(fragMPG, "links"),
+    aes(x = x1, y = y1, xend = x2, yend = y2),
+    colour = "forestgreen"
+  ) +
+  geom_point(
+    data = ggGS(fragMPG, "nodes"),
+    aes(x = x, y = y, size = patchArea), colour = "darkgreen"
+  ) +
   scale_size_area(max_size = 10, breaks = c(1000, 3000)) +
   ggtitle("Characteristics of nodes (weights)")
 figure15
@@ -658,13 +696,19 @@ On the scale used thinner lines describe a greater expectation of connectivity f
 
 ```{r figure_16, fig.cap="A minimum planar graph with centroid node and link representation where the width of the links has been scaled in proportion to the reduction in connectivity due to resistance. Wider links correspond to reduced connectivity."}
 figure16 <- ggplot() +
-  geom_segment(data = ggGS(fragMPG, "links"), 
-    aes(x = x1, y = y1, xend = x2, yend = y2, 
-        size = lcpPerimWeight / (sqrt((x2 - x1) ^ 2 + (y2 - y1) ^ 2))),
-    colour = "forestgreen", alpha = 0.5) +
+  geom_segment(
+    data = ggGS(fragMPG, "links"),
+    aes(
+      x = x1, y = y1, xend = x2, yend = y2,
+      size = lcpPerimWeight / (sqrt((x2 - x1)^2 + (y2 - y1)^2))
+    ),
+    colour = "forestgreen", alpha = 0.5
+  ) +
   scale_size(range = c(0, 3), breaks = seq(1, 6, by = 0.5)) +
-  geom_point(data = ggGS(fragMPG, "nodes"),
-             aes(x = x, y = y), size = 3, colour = "darkgreen") +
+  geom_point(
+    data = ggGS(fragMPG, "nodes"),
+    aes(x = x, y = y), size = 3, colour = "darkgreen"
+  ) +
   ggtitle("Characteristics of links (weights)")
 figure16
 ```
@@ -691,15 +735,23 @@ See the next example.
 
 ```{r figure_17, fig.cap="A link threshold representation of a minimum planar graph (MPG), where links connect the centroids of adjacent patches in the same component (cluster). Nodes that form their own component are shown as circles without links."}
 figure17 <- ggplot() +
-  geom_raster(data = ggGS(fragMPG, "patchId"),
-              aes(x = x, y = y, fill = value > 0)) +
+  geom_raster(
+    data = ggGS(fragMPG, "patchId"),
+    aes(x = x, y = y, fill = value > 0)
+  ) +
   scale_fill_manual(values = "grey") +
-  geom_segment(data  = ggGS(fragMPG, "links"),
-               aes(x = x1, y = y1, xend = x2, yend = y2, 
-                   colour = lcpPerimWeight > 20)) +
+  geom_segment(
+    data = ggGS(fragMPG, "links"),
+    aes(
+      x = x1, y = y1, xend = x2, yend = y2,
+      colour = lcpPerimWeight > 20
+    )
+  ) +
   scale_colour_manual(values = c("forestgreen", NA)) +
-  geom_point(data = ggGS(fragMPG, "nodes"),
-             aes(x = x, y = y), colour = "darkgreen") +
+  geom_point(
+    data = ggGS(fragMPG, "nodes"),
+    aes(x = x, y = y), colour = "darkgreen"
+  ) +
   ggtitle("Link thresholding by plotting")
 figure17
 ```
@@ -727,9 +779,10 @@ fragTh <- threshold(fragMPG, doThresh = 20)
 fragThC <- components(fragTh$th[[1]])
 
 ## Extract the node table and append the
-## component membership information 
+## component membership information
 fragThNodes <- data.frame(vertex_attr(fragTh$th[[1]]),
-                          component = fragThC$membership)
+  component = fragThC$membership
+)
 
 ## We don't want to show nodes that are in components with
 ## only one node, so remove them
@@ -741,17 +794,27 @@ fragThNodes$x <- fragThNodes$centroidX
 fragThNodes$y <- fragThNodes$centroidY
 
 figure18 <- ggplot() +
-  geom_raster(data = ggGS(fragMPG, "patchId"),
-              aes(x = x, y = y, fill = value > 0)) +
+  geom_raster(
+    data = ggGS(fragMPG, "patchId"),
+    aes(x = x, y = y, fill = value > 0)
+  ) +
   scale_fill_manual(values = "grey") +
-  geom_segment(data  = ggGS(fragMPG, "links"),
-               aes(x = x1, y = y1, xend = x2, yend = y2,
-                   colour = lcpPerimWeight > 20)) +
+  geom_segment(
+    data = ggGS(fragMPG, "links"),
+    aes(
+      x = x1, y = y1, xend = x2, yend = y2,
+      colour = lcpPerimWeight > 20
+    )
+  ) +
   scale_colour_manual(values = c("forestgreen", NA)) +
-  geom_point(data = fragThNodes,
-             aes(x = x, y = y), shape = 19, size = 4, colour = "darkgreen" ) +
-  geom_text(data = fragThNodes, aes(x = x, y = y, label = component),
-            colour = "white", size = 2) +
+  geom_point(
+    data = fragThNodes,
+    aes(x = x, y = y), shape = 19, size = 4, colour = "darkgreen"
+  ) +
+  geom_text(
+    data = fragThNodes, aes(x = x, y = y, label = component),
+    colour = "white", size = 2
+  ) +
   ggtitle("Link thresholding to show components")
 figure18
 ```
@@ -791,15 +854,23 @@ fragThNodes$x <- fragThNodes$centroidX
 fragThNodes$y <- fragThNodes$centroidY
 
 figure19 <- ggplot() +
-  geom_raster(data = ggGS(fragMPG, "patchId"),
-              aes(x = x, y = y, fill = value > 0)) +
+  geom_raster(
+    data = ggGS(fragMPG, "patchId"),
+    aes(x = x, y = y, fill = value > 0)
+  ) +
   scale_fill_manual(values = "grey") +
-  geom_segment(data  = ggGS(fragMPG, "links"),
-               aes(x = x1, y = y1, xend = x2, yend = y2,
-                   colour = lcpPerimWeight > 20)) +
+  geom_segment(
+    data = ggGS(fragMPG, "links"),
+    aes(
+      x = x1, y = y1, xend = x2, yend = y2,
+      colour = lcpPerimWeight > 20
+    )
+  ) +
   scale_colour_manual(values = c("forestgreen", NA)) +
-  geom_point(data = fragThNodes,
-             aes(x = x, y = y, size = degree), colour = "darkgreen" ) +
+  geom_point(
+    data = fragThNodes,
+    aes(x = x, y = y, size = degree), colour = "darkgreen"
+  ) +
   ggtitle("Node importance metrics (degree)")
 figure19
 ```
@@ -822,14 +893,15 @@ Finding shortest paths on thresholded networks may still be a useful technique, 
 ## These were identified by plotting the patchIds (see earlier examples)
 startEnd <- c(1546, 94)
 
-## Find the shortest path between these nodes using 
-## the shortest path through the resistance surface 
+## Find the shortest path between these nodes using
+## the shortest path through the resistance surface
 ## (i.e. weighted by 'lcpPerimWeight')
 shPath <- shortest_paths(fragMPG$mpg,
-                         from = which(V(fragMPG$mpg)$patchId == startEnd[1]),
-                         to = which(V(fragMPG$mpg)$patchId == startEnd[2]),
-                         weights = E(fragMPG$mpg)$lcpPerimWeight,
-                         output = "both")
+  from = which(V(fragMPG$mpg)$patchId == startEnd[1]),
+  to = which(V(fragMPG$mpg)$patchId == startEnd[2]),
+  weights = E(fragMPG$mpg)$lcpPerimWeight,
+  output = "both"
+)
 
 ## Extract the nodes and links of this shortest path
 shPathN <- as.integer(names(shPath$vpath[[1]]))
@@ -841,22 +913,30 @@ shPathLinks <- subset(ggGS(fragMPG, "links"), linkId %in% shPathL)
 
 ## Find the distance of the shortest path
 shPathD <- distances(fragMPG$mpg,
-                     v = which(V(fragMPG$mpg)$patchId == startEnd[1]),
-                     to = which(V(fragMPG$mpg)$patchId == startEnd[2]),
-                     weights = E(fragMPG$mpg)$lcpPerimWeight)[1]
+  v = which(V(fragMPG$mpg)$patchId == startEnd[1]),
+  to = which(V(fragMPG$mpg)$patchId == startEnd[2]),
+  weights = E(fragMPG$mpg)$lcpPerimWeight
+)[1]
 
 ## Plot shortest path
 figure20 <- ggplot() +
-  geom_raster(data = ggGS(fragMPG, "patchId"),
-              aes(x = x, y = y,
-                  fill = ifelse(value %in% shPathN, "grey70", "grey90"))) +
+  geom_raster(
+    data = ggGS(fragMPG, "patchId"),
+    aes(
+      x = x, y = y,
+      fill = ifelse(value %in% shPathN, "grey70", "grey90")
+    )
+  ) +
   scale_fill_identity() +
-  geom_segment(data  = shPathLinks, aes(x = x1, y = y1, xend = x2, yend = y2),
-               colour = "forestgreen", size = 1) +
+  geom_segment(
+    data = shPathLinks, aes(x = x1, y = y1, xend = x2, yend = y2),
+    colour = "forestgreen", size = 1
+  ) +
   geom_point(data = shPathNodes, aes(x = x, y = y), colour = "darkgreen") +
   ggtitle("Shortest-path distance between nodes") +
-  annotate("text", 260, 340, 
-           label = paste0(shPathD, " resistance units"), size = 2.5)
+  annotate("text", 260, 340,
+    label = paste0(shPathD, " resistance units"), size = 2.5
+  )
 figure20
 ```
 
@@ -865,7 +945,7 @@ Pairwise distances between a set of nodes can be found using the `igraph::distan
 ```{r table_07}
 ## Create a pairwise table of shortest path distances among nodes using
 ## the resistance surface based links
-allShPathD <- distances(fragMPG$mpg,  weights = E(fragMPG$mpg)$lcpPerimWeight)
+allShPathD <- distances(fragMPG$mpg, weights = E(fragMPG$mpg)$lcpPerimWeight)
 
 ## Create a table for the first 8 nodes
 tableD <- allShPathD[1:8, 1:8]
@@ -914,7 +994,8 @@ fragLatticeGOC <- GOC(fragLatticeMPG, nThresh = 5)
 
 ## Visualize the Voronoi polygons at the third threshold
 figure21 <- plot(grain(fragLatticeGOC, whichThresh = 3),
-                 quick = "grainPlot", theme = FALSE) +
+  quick = "grainPlot", theme = FALSE
+) +
   ggtitle("Lattice grains of connectivity")
 figure21
 ```
@@ -947,7 +1028,8 @@ fragPatchGOC <- GOC(fragMPG, nThresh = 5)
 
 ## Plot the fourth grain
 figure22 <- plot(grain(fragPatchGOC, whichThresh = 4),
-                 quick = "grainPlot", theme = FALSE) +
+  quick = "grainPlot", theme = FALSE
+) +
   ggtitle("Patch grains of connectivity")
 figure22
 ```
@@ -974,14 +1056,20 @@ In this resistance surface node core area appears to be correlated generally wit
 fragPatchGrain4 <- grain(fragPatchGOC, whichThresh = 4)
 
 figure23 <- ggplot() +
-  geom_raster(data = ggGS(fragPatchGrain4, "vorBound"),
-              aes(x = x, y = y, fill = ifelse(value > 0, "grey", "white"))) +
+  geom_raster(
+    data = ggGS(fragPatchGrain4, "vorBound"),
+    aes(x = x, y = y, fill = ifelse(value > 0, "grey", "white"))
+  ) +
   scale_fill_identity() +
-  geom_segment(data = ggGS(fragPatchGrain4, "links"),
-               aes(x = x1, y = y1, xend = x2, yend = y2), colour = "forestgreen") +
-  geom_point(data = ggGS(fragPatchGrain4, "nodes"),
-             aes(x = x, y = y, size = totalCoreArea), colour = "darkgreen") +
-  ggtitle("Voronoi polygon metrics (core area)") 
+  geom_segment(
+    data = ggGS(fragPatchGrain4, "links"),
+    aes(x = x1, y = y1, xend = x2, yend = y2), colour = "forestgreen"
+  ) +
+  geom_point(
+    data = ggGS(fragPatchGrain4, "nodes"),
+    aes(x = x, y = y, size = totalCoreArea), colour = "darkgreen"
+  ) +
+  ggtitle("Voronoi polygon metrics (core area)")
 figure23
 ```
 
@@ -1010,18 +1098,30 @@ fragCorridor3 <- corridor(fragPatchGOC, whichThresh = 3, coords = startEnd)
 
 ## Use the default plotting functionality for corridor objects
 figure24 <- plot(fragCorridor3, theme = FALSE) +
-  annotate("text", x = startEnd[1, 1], y = startEnd[1, 2] - 20,
-           label = "START", colour = "red", size = 2) +
-  annotate("text", x = startEnd[1, 1], y = startEnd[1, 2],
-           label = "X", colour = "red", size = 2) +
-  annotate("text", x = startEnd[2, 1], y = startEnd[2, 2] + 20,
-           label = "END", colour = "red", size = 2) +
-  annotate("text", x = startEnd[2, 1], y = startEnd[2, 2],
-           label = "X", colour = "red", size = 2) +
-  annotate("text", x =  250, y = 400, 
-           label = paste0("Corridor length: ",
-                          round(fragCorridor3@corridorLength, 0),
-                          " resistance units"), size = 2) +
+  annotate("text",
+    x = startEnd[1, 1], y = startEnd[1, 2] - 20,
+    label = "START", colour = "red", size = 2
+  ) +
+  annotate("text",
+    x = startEnd[1, 1], y = startEnd[1, 2],
+    label = "X", colour = "red", size = 2
+  ) +
+  annotate("text",
+    x = startEnd[2, 1], y = startEnd[2, 2] + 20,
+    label = "END", colour = "red", size = 2
+  ) +
+  annotate("text",
+    x = startEnd[2, 1], y = startEnd[2, 2],
+    label = "X", colour = "red", size = 2
+  ) +
+  annotate("text",
+    x = 250, y = 400,
+    label = paste0(
+      "Corridor length: ",
+      round(fragCorridor3@corridorLength, 0),
+      " resistance units"
+    ), size = 2
+  ) +
   ggtitle("Corridor analysis; grain of connectivity")
 figure24
 ```
@@ -1041,7 +1141,7 @@ However, the table that appears below shows distances for only this grain.
 
 ```{r figure_25, fig.cap="A scaled patch grains of connectivity (GOC) model showing the outline of Voronoi polygons in grey, and the network connections among polygons as links plotted from adjacent polygon centroids. The locations of eight focal points used to calculate a pairwise distance matrix are plotted in red."}
 ## Create eight random points on the map
-pts <- cbind(sample(1:ncol(fragRes))[1:8], sample(1:nrow(fragRes))[1:8])
+pts <- cbind(sample(seq_len(ncol(fragRes)))[1:8], sample(seq_len(nrow(fragRes)))[1:8])
 
 ## Plot these points and the grains of connectivity network
 figure25 <- plot(grain(fragPatchGOC, 4), quick = "grainPlot", theme = FALSE) +
@@ -1061,8 +1161,10 @@ ptsD2 <- ptsD$th[[4]]$grainD
 ## Prepare this distance matrix for printing
 ptsD2[upper.tri(ptsD2)] <- NA
 ptsD2 <- round(ptsD2, 1)
-dimnames(ptsD2)[[1]] <- paste0("Point ", 1:8, " (Polygon ",
-                               dimnames(ptsD2)[[2]], ")")
+dimnames(ptsD2)[[1]] <- paste0(
+  "Point ", 1:8, " (Polygon ",
+  dimnames(ptsD2)[[2]], ")"
+)
 dimnames(ptsD2)[[2]] <- 1:8
 
 kable(ptsD2)
@@ -1088,13 +1190,16 @@ partA <- cowplot::plot_grid(
   figure19 + theme(plot.title = element_text(size = 8)),
   figure20 + theme(plot.title = element_text(size = 8)),
   nrow = 4, ncol = 3, labels = paste0("(", 9:20, ")"), label_size = 8,
-  vjust = 1.75, hjust = -0.05) +
+  vjust = 1.75, hjust = -0.05
+) +
   theme(panel.background = element_blank())
 
 ## currently writing to tempdir for CRAN checks;
 ## be sure to save to vignettes/figures directory when changing figures.
-ggsave(file.path(tempdir(), "figure_partA.png"), plot = partA,
-       width = 8, height = 8, dpi = 600) 
+ggsave(file.path(tempdir(), "figure_partA.png"),
+  plot = partA,
+  width = 8, height = 8, dpi = 600
+)
 ```
 
 ```{r part_B, dependson="figure_25", include=FALSE}
@@ -1106,13 +1211,16 @@ partB <- cowplot::plot_grid(
   figure24 + theme(plot.title = element_text(size = 8)),
   figure25 + theme(plot.title = element_text(size = 8)),
   nrow = 4, ncol = 3, labels = paste0("(", 21:25, ")"), label_size = 8,
-  vjust = 1.75, hjust = -0.05) +
+  vjust = 1.75, hjust = -0.05
+) +
   theme(panel.background = element_blank())
 
 ## currently writing to tempdir for CRAN checks;
 ## be sure to save to vignettes/figures directory when changing figures.
-ggsave(file.path(tempdir(), "figure_partB.png"), plot = partB,
-       width = 8, height = 8, dpi = 600)
+ggsave(file.path(tempdir(), "figure_partB.png"),
+  plot = partB,
+  width = 8, height = 8, dpi = 600
+)
 ```
 
 # References
