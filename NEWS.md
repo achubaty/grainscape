@@ -1,5 +1,20 @@
 Known issues: <https://github.com/achubaty/grainscape/issues>
 
+version 0.4.4.9000
+=============
+
+## Dependency changes
+
+* none
+
+## Bugfixes
+
+* none
+
+## New features & enhancements
+
+* none
+
 version 0.4.4
 =============
 
@@ -10,7 +25,9 @@ version 0.4.4
 
 ## Bugfixes
 
-* None
+* Improved plotting of lattice MPGs (#51)
+* Removed unused `eucPerimWeight` from documentation (#56)
+* Improved error messaging for undefined thresholds in `GOC()` (#57)
 
 ## New features & enhancements
 
