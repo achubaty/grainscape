@@ -21,12 +21,23 @@
 3. ensure passing win-builder oldrelease, release, and devel
 
     ```r
+    ## macOS
+    check_mac_release(args = "--compact-vignettes=both")
+    
+    ## Windows
     check_win_oldrelease(args = "--compact-vignettes=both")
     check_win_release(args = "--compact-vignettes=both")
     check_win_devel(args = "--compact-vignettes=both")
+    
+    ## using rhub
+    rhub::check_for_cran()
     ```
 
 4. bump version number in DESCRIPTION (use non-devel suffix -- no `.9000`)
+
+    ```r
+    usethis::use_version() ## e.g., usethis::use_version("minor")
+    ````
 
 5. update `NEWS.md`
 
@@ -50,14 +61,20 @@
    spelling::update_wordlist()
    ```
 
-9. run revdep checks (see `revdep/check.R`)
+9. run reverse dependency checks (see `revdep/check.R`)
 
-10. merge `development` branch into `main`
+10. switch to `main` branch and merge in `development`
 
-11. remove `Remotes` from `DESCRIPTION`
+11. remove `Remotes` from `DESCRIPTION` (on `main` branch)
 
 12. submit to CRAN 
 
     ```r
     devtools::release(args = "--compact-vignettes=both")
+    ```
+
+13. once accepted, create a new GitHub release:
+
+    ```r
+    usethis::use_github_release()
     ```
