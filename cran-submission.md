@@ -49,19 +49,19 @@
 
    ```r
    devtools::document()
-   tools::compactPDF("vignettes", qpdf = "/usr/bin/qpdf", gs_quality = "ebook")
+   tools::compactPDF("vignettes", qpdf = Sys.which(Sys.getenv("R_QPDF", "qpdf")), gs_quality = "ebook")
    ```
 
-7. update cran-comments (incl. versions tested)
-
-8. run spell checks
+7. run spell checks
 
    ```r
    spelling::spell_check_package()
    spelling::update_wordlist()
    ```
 
-9. run reverse dependency checks (see `revdep/check.R`)
+8. run reverse dependency checks (see `revdep/check.R`)
+
+9. update cran-comments (incl. versions tested)
 
 10. switch to `main` branch and merge in `development`
 
