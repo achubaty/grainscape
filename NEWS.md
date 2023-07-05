@@ -1,7 +1,4 @@
-Known issues: <https://github.com/achubaty/grainscape/issues>
-
-version 0.4.4.9000
-=============
+# grainscape (development version)
 
 ## Dependency changes
 
@@ -15,8 +12,7 @@ version 0.4.4.9000
 
 * none
 
-version 0.4.4
-=============
+# grainscape 0.4.4
 
 ## Dependency changes
 
@@ -33,8 +29,7 @@ version 0.4.4
 
 * None
 
-version 0.4.3
-=============
+# grainscape 0.4.3
 
 ## Dependency changes
 
@@ -48,8 +43,7 @@ version 0.4.3
 
 * added MEE paper citation and updated package `DESCRIPTION` & `README`.
 
-version 0.4.2
-=============
+# grainscape 0.4.2
 
 ## Dependency changes
 
@@ -63,8 +57,7 @@ version 0.4.2
 
 * none
 
-version 0.4.1
-=============
+# grainscape 0.4.1
 
 ## Dependency changes
 
@@ -79,8 +72,7 @@ version 0.4.1
 
 * added package hexsticker
 
-version 0.4.0
-=============
+# grainscape 0.4.0
 
 ## Dependency changes
 
@@ -108,7 +100,7 @@ version 0.4.0
 
 * removed `gsMPGstitch()` as it was unreliable
 
-version 0.3.0
-=============
+# grainscape 0.3.0
+
 * original version from R-forge (http://grainscape.r-forge.r-project.org/)
 * uses a SELES binary to calculate the minimum planar graph (Windows only)
