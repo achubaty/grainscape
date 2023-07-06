@@ -78,36 +78,52 @@
 <li>
 <p>ensure passing win-builder oldrelease, release, and devel</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">check_win_oldrelease</span><span class="op">(</span>args <span class="op">=</span> <span class="st">"--compact-vignettes=both"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="co">## macOS</span></span>
+<span><span class="fu">check_mac_release</span><span class="op">(</span>args <span class="op">=</span> <span class="st">"--compact-vignettes=both"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">## Windows</span></span>
+<span><span class="fu">check_win_oldrelease</span><span class="op">(</span>args <span class="op">=</span> <span class="st">"--compact-vignettes=both"</span><span class="op">)</span></span>
 <span><span class="fu">check_win_release</span><span class="op">(</span>args <span class="op">=</span> <span class="st">"--compact-vignettes=both"</span><span class="op">)</span></span>
-<span><span class="fu">check_win_devel</span><span class="op">(</span>args <span class="op">=</span> <span class="st">"--compact-vignettes=both"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">check_win_devel</span><span class="op">(</span>args <span class="op">=</span> <span class="st">"--compact-vignettes=both"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">## using rhub</span></span>
+<span><span class="fu">rhub</span><span class="fu">::</span><span class="fu">check_for_cran</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </li>
-<li><p>bump version number in DESCRIPTION (use non-devel suffix – no <code>.9000</code>)</p></li>
+<li>
+<p>bump version number in DESCRIPTION (use non-devel suffix – no <code>.9000</code>)</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">usethis</span><span class="fu">::</span><span class="fu">use_version</span><span class="op">(</span><span class="op">)</span> <span class="co">## e.g., usethis::use_version("minor")</span></span></code></pre></div>
+</li>
 <li>
 <p>update <code>NEWS.md</code></p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">show_news</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </li>
 <li>
 <p>rebuild docs and ensure vignettes are compressed</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">document</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="fu">tools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/tools/compactPDF.html" class="external-link">compactPDF</a></span><span class="op">(</span><span class="st">"vignettes"</span>, qpdf <span class="op">=</span> <span class="st">"/usr/bin/qpdf"</span>, gs_quality <span class="op">=</span> <span class="st">"ebook"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">tools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/tools/compactPDF.html" class="external-link">compactPDF</a></span><span class="op">(</span><span class="st">"vignettes"</span>, qpdf <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.which.html" class="external-link">Sys.which</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"R_QPDF"</span>, <span class="st">"qpdf"</span><span class="op">)</span><span class="op">)</span>, gs_quality <span class="op">=</span> <span class="st">"ebook"</span><span class="op">)</span></span></code></pre></div>
 </li>
-<li><p>update cran-comments (incl. versions tested)</p></li>
 <li>
 <p>run spell checks</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">spelling</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/spelling/reference/spell_check_package.html" class="external-link">spell_check_package</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu">spelling</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/spelling/reference/wordlist.html" class="external-link">update_wordlist</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </li>
-<li><p>run revdep checks (see <code>revdep/check.R</code>)</p></li>
-<li><p>merge <code>development</code> branch into <code>main</code></p></li>
-<li><p>remove <code>Remotes</code> from <code>DESCRIPTION</code></p></li>
+<li><p>run reverse dependency checks (see <code>revdep/check.R</code>)</p></li>
+<li><p>update cran-comments (incl. versions tested)</p></li>
+<li><p>switch to <code>main</code> branch and merge in <code>development</code></p></li>
+<li><p>remove <code>Remotes</code> from <code>DESCRIPTION</code> (on <code>main</code> branch)</p></li>
 <li>
 <p>submit to CRAN</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">release</span><span class="op">(</span>args <span class="op">=</span> <span class="st">"--compact-vignettes=both"</span><span class="op">)</span></span></code></pre></div>
+</li>
+<li>
+<p>once accepted, create a new GitHub release:</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">usethis</span><span class="fu">::</span><span class="fu">use_github_release</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </li>
 </ol></div>
 
