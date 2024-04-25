@@ -10,9 +10,11 @@ name: test-coverage
 
 jobs:
   test-coverage:
+    if: "!contains(github.event.commits[0].message, '[skip-ci]')"
     runs-on: ubuntu-latest
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      USING_COVR: true
 
     steps:
       - uses: actions/checkout@v4
@@ -34,3 +36,4 @@ jobs:
       - name: Test coverage
         run: covr::codecov()
         shell: Rscript {0}
+
