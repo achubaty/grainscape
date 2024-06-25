@@ -43,7 +43,7 @@ if (getRversion() >= "3.1.0") {
   patchLinks[patchLinks == 0] <- NA
 
   # convert `LinkData` to a data.frame
-  linkData <- lapply(hce$LinkData, data.frame) %>% do.call(rbind, .)
+  linkData <- lapply(hce$LinkData, data.frame) |> do.call(rbind, args = _)
 
   out <- new("hce", voronoi = voronoi, patchLinks = patchLinks, linkData = linkData)
   return(out)

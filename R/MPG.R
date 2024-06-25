@@ -137,9 +137,9 @@ setMethod(
     mpgPlot <- hce@patchLinks
 
     ## Get additional patch information
-    uniquePatches <- voronoi[voronoi > 0] %>%
-      na.omit() %>%
-      unique() %>%
+    uniquePatches <- voronoi[voronoi > 0] |>
+      na.omit() |>
+      unique() |>
       sort() # nolint
 
     ## Patch edge
@@ -166,11 +166,11 @@ setMethod(
     centroids <- cbind(
       zonal(rasX, r, fun = "mean", na.rm = TRUE),
       zonal(rasY, r, fun = "mean", na.rm = TRUE)[, 2]
-    ) %>%
+    ) |>
       as.data.frame()
     colnames(centroids) <- c("zone", "meanX", "meanY")
 
-    toGraphV <- cbind(patch, centroidX = centroids$meanX, centroidY = centroids$meanY) %>%
+    toGraphV <- cbind(patch, centroidX = centroids$meanX, centroidY = centroids$meanY) |>
       as.data.frame()
 
     toGraphE <- data.frame(

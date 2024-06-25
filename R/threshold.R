@@ -109,7 +109,7 @@ setMethod(
 
     threshGraph$summary$nComponents <- lapply(threshGraph$th, function(z) {
       clusters(z)$no
-    }) %>%
+    }) |>
       unlist()
 
     return(threshGraph)

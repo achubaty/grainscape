@@ -111,11 +111,11 @@ setMethod("corridor",
           V(x@th[[whichThresh]]$goc)$centroidY[i["v1"]],
           V(x@th[[whichThresh]]$goc)$centroidY[i["v2"]]
         )
-      ) %>%
-        Line() %>%
+      ) |>
+        Line() |>
         Lines(ID = as.character(i["edgeNum"]))
-    }) %>%
-      SpatialLines() %>%
+    }) |>
+      SpatialLines() |>
       SpatialLinesDataFrame(
         data = data.frame(
           edgeNum = seq_len(nrow(edges)),
@@ -139,9 +139,9 @@ setMethod("corridor",
     )
 
     startEndPath <- if (length(pths$vpath) > 0) {
-      pths %>%
-        `[[`(1) %>%
-        `[[`(1) %>%
+      pths |>
+        (\(x) x[[1]])() |> ## extract 1st element; was %>% `[[`(1)
+        (\(x) x[[1]])() |> ## extract 1st element; was %>% `[[`(1)
         as.numeric()
     } else {
       stop("corridor: all 'coords' correspond to cells of value 'NA'.")
@@ -150,10 +150,10 @@ setMethod("corridor",
     shortestPathEdges <- cbind(
       V(x@th[[whichThresh]]$goc)$centroidX[startEndPath],
       V(x@th[[whichThresh]]$goc)$centroidY[startEndPath]
-    ) %>%
-      Line() %>%
-      Lines(ID = "1") %>%
-      list() %>%
+    ) |>
+      Line() |>
+      Lines(ID = "1") |>
+      list() |>
       SpatialLines()
 
     shortestPathVertices <- SpatialPoints(cbind(

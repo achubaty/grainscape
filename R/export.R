@@ -214,24 +214,24 @@ setMethod("export",
     names(secondCentr) <- c("endCtrX", "endCtrY")
     linksCentr <- cbind(linksDF, firstCentr, secondCentr)
     row.names(linksCentr) <- linksDF$linkId
-    linksCentrSP <- linksCentr[, c("strtCtrX", "strtCtrY", "endCtrX", "endCtrY", "linkId")] %>%
-      apply(., 1, function(x) {
+    linksCentrSP <- linksCentr[, c("strtCtrX", "strtCtrY", "endCtrX", "endCtrY", "linkId")] |>
+      apply(1, function(x) {
         Lines(Line(matrix(x[1:4], 2, 2, byrow = TRUE)), ID = as.character(x[5]))
-      }) %>%
-      SpatialLines(.) %>%
-      SpatialLinesDataFrame(., data = linksCentr)
+      }) |>
+      SpatialLines() |>
+      SpatialLinesDataFrame(data = linksCentr)
     projection(linksCentrSP) <- CRS(projection(x@patchId))
 
     firstPerim <- linksDF[, c("strtPerX", "strtPerY")]
     secondPerim <- linksDF[, c("endPerX", "endPerY")]
     linksPerim <- cbind(linksDF, firstPerim, secondPerim)
     row.names(linksPerim) <- linksDF$linkId
-    linksPerimSP <- linksPerim[, c("strtPerX", "strtPerY", "endPerX", "endPerY", "linkId")] %>%
-      apply(., 1, function(x) {
+    linksPerimSP <- linksPerim[, c("strtPerX", "strtPerY", "endPerX", "endPerY", "linkId")] |>
+      apply(1, function(x) {
         Lines(Line(matrix(x[1:4], 2, 2, byrow = TRUE)), ID = as.character(x[5]))
-      }) %>%
-      SpatialLines(.) %>%
-      SpatialLinesDataFrame(., data = linksPerim[, -which(duplicated(names(linksPerim)))])
+      }) |>
+      SpatialLines() |>
+      SpatialLinesDataFrame(data = linksPerim[, -which(duplicated(names(linksPerim)))])
     proj4string(linksPerimSP) <- CRS(projection(x@patchId))
 
     ## Create voronoi boundaries
@@ -305,12 +305,12 @@ setMethod("export",
     linksCentr <- cbind(linksDF, firstCentr, secondCentr)
     row.names(linksCentr) <- seq_len(nrow(linksCentr))
     linksCentr$plinkId <- seq_len(nrow(linksCentr))
-    linksCentrSP <- linksCentr[, c("strtCtrX", "strtCtrY", "endCtrX", "endCtrY", "plinkId")] %>%
-      apply(., 1, function(x) {
+    linksCentrSP <- linksCentr[, c("strtCtrX", "strtCtrY", "endCtrX", "endCtrY", "plinkId")] |>
+      apply(1, function(x) {
         Lines(Line(matrix(x[1:4], 2, 2, byrow = TRUE)), ID = as.character(x[5]))
-      }) %>%
-      SpatialLines() %>%
-      SpatialLinesDataFrame(., data = linksCentr)
+      }) |>
+      SpatialLines() |>
+      SpatialLinesDataFrame(data = linksCentr)
     projection(linksCentrSP) <- CRS(projection(x@voronoi))
 
     ## Create voronoi boundaries

@@ -2,7 +2,7 @@
 
 ## Dependency changes
 
-* none
+* Require R 4.2 or higher (for native pipe and placeholder)
 
 ## Bugfixes
 
@@ -10,7 +10,7 @@
 
 ## New features & enhancements
 
-* none
+* Use native R pipe throughout instead of `magrittr` pipe
 
 # grainscape 0.4.4
 
