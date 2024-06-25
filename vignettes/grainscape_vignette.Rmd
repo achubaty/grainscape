@@ -5,6 +5,7 @@ author:
 - Alex M. Chubaty^[FOR-CAST Research & Analytics, Calgary, AB, Canada]
 output:
   pdf_document:
+    latex_engine: xelatex
     toc: yes
     toc_depth: 3
 header-includes:

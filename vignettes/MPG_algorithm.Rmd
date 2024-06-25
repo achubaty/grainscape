@@ -4,6 +4,7 @@ author: "Sam Doctolero and Alex M Chubaty"
 date: '`r Sys.Date()`'
 output:
   pdf_document:
+    latex_engine: xelatex
     toc: yes
     toc_depth: 3
 bibliography: bibliography.bib
