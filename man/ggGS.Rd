@@ -7,7 +7,7 @@
 \alias{ggGS,mpg-method}
 \alias{ggGS,grain-method}
 \alias{ggGS,goc-method}
-\title{Prepare data in \code{MPG} and \code{grain} objects for use with \code{ggplot2}}
+\title{Prepare data in \code{MPG} and \code{grain} objects for use with \pkg{ggplot2}}
 \usage{
 ggGS(x, type = NULL, ...)
 
@@ -25,14 +25,14 @@ ggGS(x, type = NULL, ...)
 \item{x}{A \code{mpg}, \code{grain}, or \code{RasterLayer} object.}
 
 \item{type}{If a \code{mpg} or \code{grain} object is supplied, this
-gives the name of the slot to prepare for plotting. Options
-are discussed below. Not required if a \code{RasterLayer}
-is supplied.}
+gives the name of the slot to prepare for plotting.
+Options are discussed below.
+Not required if a \code{RasterLayer} is supplied.}
 
 \item{...}{Additional arguments (not used).}
 }
 \value{
-A \code{data.frame} suitable for plotting with \code{\link[=ggplot]{ggplot()}}.
+A \code{data.frame} suitable for plotting with \code{\link[ggplot2:ggplot]{ggplot2::ggplot()}}.
 
 Where \code{type} is a raster the \code{data.frame} will have the following columns:
 
@@ -67,7 +67,7 @@ Where \code{type = 'links'} the \code{data.frame} will have the following column
 \description{
 This is an informal \code{fortify}-type method that prepares either
 \code{RasterLayer} or \code{igraph} objects contained as slots within
-\code{MPG} or \code{grain} objects for easy plotting with \code{\link[=ggplot]{ggplot()}}.
+\code{MPG} or \code{grain} objects for easy plotting with \code{\link[ggplot2:ggplot]{ggplot2::ggplot()}}.
 }
 \note{
 \strong{Options for \code{type} parameter}

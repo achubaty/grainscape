@@ -68,18 +68,16 @@ setClass(
 
 #' The `goc` class
 #'
-#'
 #' @slot voronoi    A `RasterLayer` describing the regions of proximity in
 #'                  resistance units around the focal patches or points.
-#'
 #'
 #' @slot summary    A summary of the the grains of connectivity generated and
 #'                  their properties.
 #'
 #' @slot th         A list giving the GOC graph at each threshold.
 #'
-#' Each element of `th` contains a `goc` object giving the GOC graph
-#' as class [igraph()].
+#' Each element of `th` contains a `goc` object giving the GOC graph as
+#' class [igraph::igraph()].
 #' Vertex attributes describes qualities of each polygon including the coordinates
 #' of each polygon centroid, the area of these polygons, and the original patch
 #' IDs in the MPG that are included in each polygon.
@@ -100,8 +98,7 @@ setClass(
 
 #' Show a `grainscape` object
 #'
-#' Custom `show` method to safely print the contents of a `goc` or
-#' `grain` object.
+#' Custom `show` method to safely print the contents of a `goc` or `grain` object.
 #'
 #'
 #' @param object  A [`goc()`][goc-class] or
@@ -124,7 +121,6 @@ setMethod("show",
 )
 
 #' The `grain` class
-#'
 #'
 #' @slot voronoi    A `RasterLayer` describing the regions of proximity in
 #'                  resistance units around the focal patches or points.

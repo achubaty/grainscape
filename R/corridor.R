@@ -5,11 +5,11 @@
 #' (or shortest path) between two points using one of the tessellations
 #' (i.e., scales) in these models.
 #'
-#' @param x       A `goc` object created by [GOC()].
+#' @param x       A [goc-class] object created by [GOC()].
 #'
 #' @param whichThresh  Integer giving the index of the threshold to visualize.
 #'
-#' @param coords  A two column matrix or a [SpatialPoints()] object
+#' @param coords  A two column matrix or a [sp::SpatialPoints-class] object
 #'                giving coordinates at the end points of the corridor.
 #'
 #' @param weight  The GOC graph link weight to use in calculating the distance.

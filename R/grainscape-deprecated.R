@@ -9,8 +9,8 @@
 #' @param mpg  A `mpg` object.
 #'
 #' @param sp   Logical. If `TRUE` the `sp` package is used to create
-#'            a vector of class [SpatialPolygonsDataFrame()] describing
-#'            the finest grain of connectivity.
+#'             a vector of class [sp::SpatialPolygonsDataFrame-class] describing
+#'             the finest grain of connectivity.
 #'
 #' @param doPlot  Logical. If `TRUE` plots a vector visualization of the
 #'                corridor at the given scale
@@ -102,8 +102,6 @@ gsMPG <- function(cost, patch, sa = NULL, filterPatch = NULL, spreadFactor = 0) 
   }
   MPG(cost, patch)
 }
-
-
 
 #' `grainscape`: Defunct
 #'

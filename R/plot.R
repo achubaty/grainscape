@@ -35,7 +35,7 @@ if (getRversion() >= "3.1.0") {
 #' object by rendering what are likely to be the most universally useful
 #' visualizations of the spatial data within these objects.
 #'
-#' Much more control is available using [ggGS()] with [ggplot()]
+#' Much more control is available using [ggGS()] with [ggplot2::ggplot()]
 #' enabling the layering of different different analytical products, and the
 #' visualization of node and link attributes.
 #'

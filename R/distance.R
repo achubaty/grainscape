@@ -5,7 +5,7 @@
 #'
 #' @param x        A `goc` object produced by [GOC()].
 #'
-#' @param  y       A two column matrix or a [SpatialPoints()] object
+#' @param  y       A two column matrix or a [sp::SpatialPoints-class] object
 #'                 giving the coordinates of points of interest.
 #'
 #' @param ...      Additional arguments (not used).

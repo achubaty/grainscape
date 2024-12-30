@@ -1,13 +1,13 @@
 #' A `ggplot2` theme for `grainscape`
 #'
-#' A [ggplot2()] theme designed for `grainscape` based on the
+#' A \pkg{ggplot2} theme designed for `grainscape` based on the
 #' [ggthemes::theme_map()] theme, with several modifications.
 #'
 #' @param base_size     Base font size
 #'
 #' @param base_family   Base font family
 #'
-#' @return A theme suitable for use with [ggplot()]
+#' @return A theme suitable for use with [ggplot2::ggplot()]
 #'
 #' @author Paul Galpern and Alex Chubaty
 #' @export

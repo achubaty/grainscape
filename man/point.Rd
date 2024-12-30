@@ -10,11 +10,11 @@ point(x, ...)
 \S4method{point}{goc}(x, coords, ...)
 }
 \arguments{
-\item{x}{A \code{goc} object produced by \code{\link[=GOC]{GOC()}}.}
+\item{x}{A \linkS4class{goc} object produced by \code{\link[=GOC]{GOC()}}.}
 
 \item{...}{Additional arguments (not used).}
 
-\item{coords}{A two column matrix or a \code{\link[=SpatialPoints]{SpatialPoints()}} object giving
+\item{coords}{A two column matrix or a \link[sp:SpatialPoints-class]{sp::SpatialPoints} object giving
 the coordinates of points of interest.}
 }
 \value{

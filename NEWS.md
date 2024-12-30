@@ -6,11 +6,12 @@
 
 ## Bugfixes
 
-* none
+* Fixed documentation issues on R-devel (#73)
 
 ## New features & enhancements
 
 * Use native R pipe throughout instead of `magrittr` pipe
+* Improved documentation
 
 # grainscape 0.4.4
 

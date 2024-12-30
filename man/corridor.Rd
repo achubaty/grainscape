@@ -10,13 +10,13 @@ corridor(x, ...)
 \S4method{corridor}{goc}(x, whichThresh, coords, weight = "meanWeight", ...)
 }
 \arguments{
-\item{x}{A \code{goc} object created by \code{\link[=GOC]{GOC()}}.}
+\item{x}{A \linkS4class{goc} object created by \code{\link[=GOC]{GOC()}}.}
 
 \item{...}{Additional arguments (not used).}
 
 \item{whichThresh}{Integer giving the index of the threshold to visualize.}
 
-\item{coords}{A two column matrix or a \code{\link[=SpatialPoints]{SpatialPoints()}} object
+\item{coords}{A two column matrix or a \link[sp:SpatialPoints-class]{sp::SpatialPoints} object
 giving coordinates at the end points of the corridor.}
 
 \item{weight}{The GOC graph link weight to use in calculating the distance.

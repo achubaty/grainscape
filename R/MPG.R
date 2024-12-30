@@ -5,7 +5,7 @@
 #' Both patch-based and lattice MPGs can be extracted.
 #'
 #' @details Use this function to create a minimum planar graph (MPG) that can be
-#' further analyzed using [igraph()] routines.
+#' further analyzed using [igraph::igraph()] routines.
 #' It is also the first step in grains of connectivity (GOC) modelling.
 #'
 #' @note Researchers should consider whether the use of a patch-based MPG or a lattice
@@ -14,9 +14,9 @@
 #' a resource patch. Lattice models can be used as a generalized and functional
 #' approach to scaling resistance surfaces.
 #'
-#' Rasters should be projected and not in geographic coordinates (i.e. `projection(cost)`
+#' Rasters should be projected and not in geographic coordinates (i.e. `raster::projection(cost)`
 #' should not contain `"+proj=longlat"`) or the function will issue a warning.
-#' In unprojected cases consider using [projectRaster()] to change to an appropriate
+#' In unprojected cases consider using [raster::projectRaster()] to change to an appropriate
 #' coordinate system for the location and extent of interest that balances both distance and areal
 #' accuracy. See <https://www.spatialreference.org/> for location-specific suggestions.
 #' Use of geographic coordinates will result in inaccurate areal and distance measurements,

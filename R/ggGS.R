@@ -1,21 +1,21 @@
-#' Prepare data in `MPG` and `grain` objects for use with `ggplot2`
+#' Prepare data in `MPG` and `grain` objects for use with \pkg{ggplot2}
 #'
 #' @description
 #' This is an informal `fortify`-type method that prepares either
 #' `RasterLayer` or `igraph` objects contained as slots within
-#' `MPG` or `grain` objects for easy plotting with [ggplot()].
+#' `MPG` or `grain` objects for easy plotting with [ggplot2::ggplot()].
 #'
 #'
 #' @param x       A `mpg`, `grain`, or `RasterLayer` object.
 #'
 #' @param type    If a `mpg` or `grain` object is supplied, this
-#'                gives the name of the slot to prepare for plotting. Options
-#'                are discussed below. Not required if a `RasterLayer`
-#'                is supplied.
+#'                gives the name of the slot to prepare for plotting.
+#'                Options are discussed below.
+#'                Not required if a `RasterLayer` is supplied.
 #'
 #' @param ...  Additional arguments (not used).
 #'
-#' @return A `data.frame` suitable for plotting with [ggplot()].
+#' @return A `data.frame` suitable for plotting with [ggplot2::ggplot()].
 #'
 #' Where `type` is a raster the `data.frame` will have the following columns:
 #'

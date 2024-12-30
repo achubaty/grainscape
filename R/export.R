@@ -52,7 +52,7 @@
 #' Use `R = TRUE` in which case all parameters related to file export
 #' are ignored. (Default `R = FALSE`)
 #'
-#' The [raster::writeRaster()] is used for rasters,
+#' The [raster::writeRaster()] function is used for rasters,
 #' and [sf::st_write()] is used to export ESRI compatible shape files.
 #'
 #' @param x             A `mpg` or `grain` object
@@ -63,10 +63,10 @@
 #' @param path          A path to where this new directory `dirname` should be created.
 #'                      Defaults to the working directory.
 #'
-#' @param rasterFormat  The format for exported rasters. See [writeFormats()] for
-#'                      options. Defaults to GeoTiff (`rasterFormat='GTiff'`).
+#' @param rasterFormat  The format for exported rasters. See [raster::writeFormats()] for options.
+#'                      Defaults to GeoTiff (`rasterFormat='GTiff'`).
 #'                      Use `rasterFormat='raster'` to save `.grd` files in
-#'                      native `raster` package format.
+#'                      native \pkg{raster} package format.
 #'
 #' @param overwrite     If directory already exists will overwrite existing files inside.
 #'                      Defaults to `FALSE`.

@@ -3,9 +3,9 @@
 #' @description
 #' Identify the polygon containing a location at multiple scales.
 #'
-#' @param x       A `goc` object produced by [GOC()].
+#' @param x       A [goc-class] object produced by [GOC()].
 #'
-#' @param coords  A two column matrix or a [SpatialPoints()] object giving
+#' @param coords  A two column matrix or a [sp::SpatialPoints-class] object giving
 #'                the coordinates of points of interest.
 #'
 #' @param ...     Additional arguments (not used).
