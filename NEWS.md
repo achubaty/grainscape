@@ -7,6 +7,7 @@
 ## Bugfixes
 
 * Fixed documentation issues on R-devel (#73)
+* Improved handling of user-added attributes in exported objects (#71)
 
 ## New features & enhancements
 

@@ -1,3 +1,45 @@
+#' Abbreviate names
+#'
+#' Manually specify field names for writing to shapefile instead of relying on
+#' `sf:::abbreviate_shapefile_names()` (which uses `abbreviate()`) during save.
+#' Names must contain fewer than 10 characters.
+#'
+#' @author Alex Chubaty
+#' @keywords internal
+.abbrev <- function(x) {
+  names_linksDF <- c(
+    "e1", "e2", "linkId", "lcpPerimWeight", "startPerimX", "startPerimY", "endPerimX", "endPerimY"
+  )
+  names_nodesDF <- c(
+    "patchId", "patchArea", "patchEdgeArea", "coreArea", "centroidX", "centroidY"
+  )
+
+  names_gs <- c(names_linksDF, names_nodesDF) |>
+    unique() |>
+    sort()
+
+  ## abbreviate other (e.g., user-added) fields
+  names_usr_ids <- which(!(x %in% names_gs))
+  names_usr <- x[names_usr_ids]
+  if (length(names_usr) > 0) {
+    for (i in names_usr_ids) {
+      x <- gsub(x[i], abbreviate(x[i], minlength = 7L), x)
+    }
+  }
+
+  ## abbreviate **our** fields (`names_gs`)
+  ## `e1`, `e2`, `linkId`, `patchId` are already short, so don't abbrev
+  x <- gsub("centroid", "ctr", x)
+  x <- gsub("coreArea", "coreA", x)
+  x <- gsub("endPerim", "endPer", x)
+  x <- gsub("lcpPerimWeight", "lcpPerWt", x)
+  x <- gsub("patchArea", "patchA", x)
+  x <- gsub("patchEdgeArea", "patchEA", x)
+  x <- gsub("startPerim", "strtPer", x)
+
+  return(x)
+}
+
 #' @author Paul Galpern
 #' @keywords internal
 .createDir <- function(xType, dirname, path, overwrite) {
@@ -201,12 +243,9 @@ setMethod("export",
 
     ## Prepare links
     linksDF <- graphdf(x)[[1]]$e
-    names(linksDF) <- c(
-      "e1", "e2", "linkId", "lcpPerWt", "strtPerX", "strtPerY",
-      "endPerX", "endPerY"
-    )
+    names(linksDF) <- names(linksDF) |> .abbrev()
     nodesDF <- graphdf(x)[[1]]$v[, -1]
-    names(nodesDF) <- c("patchId", "patchA", "patchEA", "coreA", "ctrX", "ctrY")
+    names(nodesDF) <- names(nodesDF) |> .abbrev()
 
     firstCentr <- nodesDF[match(linksDF$e1, nodesDF$patchId), c("ctrX", "ctrY")]
     names(firstCentr) <- c("strtCtrX", "strtCtrY")
