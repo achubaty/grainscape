@@ -32,6 +32,7 @@ Imports:
     Rcpp (>= 0.12.11.4),
     sf,
     sp,
+    stats,
     utils
 LinkingTo: Rcpp
 Suggests:

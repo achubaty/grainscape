@@ -123,18 +123,23 @@ setMethod("corridor",
         )
       )
 
-    verticesGOC <- SpatialPoints(cbind(
+    verticesGOC <- cbind(
       V(x@th[[whichThresh]]$goc)$centroidX,
       V(x@th[[whichThresh]]$goc)$centroidY
-    ))
+    ) |>
+      SpatialPoints()
 
     ## Shortest path
     startEndPolygons <- point(x, coords)$pointPolygon[, whichThresh]
 
+    if (any(is.na(startEndPolygons))) {
+      stop("corridor: 'coords' correspond to cells of value 'NA'.")
+    }
+
     pths <- shortest_paths(
-      x@th[[whichThresh]]$goc,
-      which(V(x@th[[whichThresh]]$goc)$polygonId == na.omit(startEndPolygons[1])),
-      which(V(x@th[[whichThresh]]$goc)$polygonId == na.omit(startEndPolygons[2])),
+      graph = x@th[[whichThresh]]$goc,
+      from = which(V(x@th[[whichThresh]]$goc)$polygonId == na.omit(startEndPolygons[1])),
+      to = which(V(x@th[[whichThresh]]$goc)$polygonId == na.omit(startEndPolygons[2])),
       weights = V(x@th[[whichThresh]]$goc)$meanWeight
     )
 
