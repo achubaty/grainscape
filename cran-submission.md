@@ -26,12 +26,12 @@
 
     ```r
     ## macOS
-    check_mac_release(args = "--compact-vignettes=both")
+    devtools::check_mac_release(args = "--compact-vignettes=both")
     
     ## Windows
-    check_win_oldrelease(args = "--compact-vignettes=both")
-    check_win_release(args = "--compact-vignettes=both")
-    check_win_devel(args = "--compact-vignettes=both")
+    devtools::check_win_oldrelease(args = "--compact-vignettes=both")
+    devtools::check_win_release(args = "--compact-vignettes=both")
+    devtools::check_win_devel(args = "--compact-vignettes=both")
     ```
 
     ```r
