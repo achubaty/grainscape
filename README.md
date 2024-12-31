@@ -36,7 +36,7 @@ install.packages("grainscape")
 2. **Install from GitHub:**
     
     ```r
-    #install.packages("remotes")
+    # install.packages("remotes")
     library("remotes")
     install_github("achubaty/grainscape")
     ```

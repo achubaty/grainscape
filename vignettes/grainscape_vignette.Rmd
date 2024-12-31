@@ -183,8 +183,10 @@ ggplot() +
     data = patchyCost_df,
     aes(x = x, y = y, fill = value)
   ) +
-  scale_fill_brewer(type = "qual", palette = "Paired",
-                    direction = -1, guide = "legend") +
+  scale_fill_brewer(
+    type = "qual", palette = "Paired",
+    direction = -1, guide = "legend"
+  ) +
   guides(fill = guide_legend(title = "Resistance")) +
   theme_grainscape() +
   theme(legend.position = "right")

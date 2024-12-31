@@ -9,12 +9,17 @@ test_that("export() handles user-added node attributes (#71)", {
   ig <- graph_from_adjacency_matrix(as_adjacency_matrix(tiny_mpg_graph), mode = "undirected")
   betweenness_scores <- betweenness(ig)
 
-  V(tinyPatchMPG$mpg)$betweenness = betweenness_scores
+  V(tinyPatchMPG$mpg)$betweenness <- betweenness_scores
 
   ## Export raster and vectors to a specified directory
   exportPath <- tempdir()
-  fout <- export(tinyPatchMPG, dirname = "tiny_mpg", path = exportPath,
-                 vorBound = TRUE, overwrite = TRUE)
+  fout <- export(
+    tinyPatchMPG,
+    dirname = "tiny_mpg",
+    path = exportPath,
+    vorBound = TRUE,
+    overwrite = TRUE
+  )
   expect_true(file.exists(fout))
 
   unlink(file.path(exportPath, "tiny_mpg"), recursive = TRUE)

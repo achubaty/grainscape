@@ -13,9 +13,13 @@
 2. check code formatting and cleanup as needed
 
     ```r
-    #install_github("jimhester/lintr")
-    library(lintr)
-    lint_package()
+    # install_github("jimhester/lintr")
+    lintr::lint_package()
+    ```
+
+    ```r
+    # install_github("r-lib/styler")
+    styler:::style_active_pkg()
     ```
 
 3. ensure passing win-builder oldrelease, release, and devel
