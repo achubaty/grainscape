@@ -1,111 +1,39 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://alexchubaty.com/grainscape/404.html</loc>
-  </url>
-  <url>
-    <loc>https://alexchubaty.com/grainscape/articles/MPG_algorithm.html</loc>
-  </url>
-  <url>
-    <loc>https://alexchubaty.com/grainscape/articles/grainscape_vignette.html</loc>
-  </url>
-  <url>
-    <loc>https://alexchubaty.com/grainscape/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>https://alexchubaty.com/grainscape/authors.html</loc>
-  </url>
-  <url>
-    <loc>https://alexchubaty.com/grainscape/cran-submission.html</loc>
-  </url>
-  <url>
-    <loc>https://alexchubaty.com/grainscape/index.html</loc>
-  </url>
-  <url>
-    <loc>https://alexchubaty.com/grainscape/news/index.html</loc>
-  </url>
-  <url>
-    <loc>https://alexchubaty.com/grainscape/reference/GOC.html</loc>
-  </url>
-  <url>
-    <loc>https://alexchubaty.com/grainscape/reference/MPG.html</loc>
-  </url>
-  <url>
-    <loc>https://alexchubaty.com/grainscape/reference/corridor-class.html</loc>
-  </url>
-  <url>
-    <loc>https://alexchubaty.com/grainscape/reference/corridor.html</loc>
-  </url>
-  <url>
-    <loc>https://alexchubaty.com/grainscape/reference/distance.html</loc>
-  </url>
-  <url>
-    <loc>https://alexchubaty.com/grainscape/reference/export.html</loc>
-  </url>
-  <url>
-    <loc>https://alexchubaty.com/grainscape/reference/extract.html</loc>
-  </url>
-  <url>
-    <loc>https://alexchubaty.com/grainscape/reference/gFinal.html</loc>
-  </url>
-  <url>
-    <loc>https://alexchubaty.com/grainscape/reference/ggGS.html</loc>
-  </url>
-  <url>
-    <loc>https://alexchubaty.com/grainscape/reference/goc-class.html</loc>
-  </url>
-  <url>
-    <loc>https://alexchubaty.com/grainscape/reference/grain-class.html</loc>
-  </url>
-  <url>
-    <loc>https://alexchubaty.com/grainscape/reference/grain.html</loc>
-  </url>
-  <url>
-    <loc>https://alexchubaty.com/grainscape/reference/grainscape-defunct.html</loc>
-  </url>
-  <url>
-    <loc>https://alexchubaty.com/grainscape/reference/grainscape-deprecated.html</loc>
-  </url>
-  <url>
-    <loc>https://alexchubaty.com/grainscape/reference/grainscape-maps.html</loc>
-  </url>
-  <url>
-    <loc>https://alexchubaty.com/grainscape/reference/grainscape-package.html</loc>
-  </url>
-  <url>
-    <loc>https://alexchubaty.com/grainscape/reference/graphdf.html</loc>
-  </url>
-  <url>
-    <loc>https://alexchubaty.com/grainscape/reference/habConnEngine.html</loc>
-  </url>
-  <url>
-    <loc>https://alexchubaty.com/grainscape/reference/habConnRcpp.html</loc>
-  </url>
-  <url>
-    <loc>https://alexchubaty.com/grainscape/reference/hce-class.html</loc>
-  </url>
-  <url>
-    <loc>https://alexchubaty.com/grainscape/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>https://alexchubaty.com/grainscape/reference/mpg-class.html</loc>
-  </url>
-  <url>
-    <loc>https://alexchubaty.com/grainscape/reference/patchFilter.html</loc>
-  </url>
-  <url>
-    <loc>https://alexchubaty.com/grainscape/reference/plot.html</loc>
-  </url>
-  <url>
-    <loc>https://alexchubaty.com/grainscape/reference/point.html</loc>
-  </url>
-  <url>
-    <loc>https://alexchubaty.com/grainscape/reference/show.html</loc>
-  </url>
-  <url>
-    <loc>https://alexchubaty.com/grainscape/reference/theme_grainscape.html</loc>
-  </url>
-  <url>
-    <loc>https://alexchubaty.com/grainscape/reference/threshold.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://alexchubaty.com/grainscape/404.html</loc></url>
+<url><loc>https://alexchubaty.com/grainscape/articles/MPG_algorithm.html</loc></url>
+<url><loc>https://alexchubaty.com/grainscape/articles/grainscape_vignette.html</loc></url>
+<url><loc>https://alexchubaty.com/grainscape/articles/index.html</loc></url>
+<url><loc>https://alexchubaty.com/grainscape/authors.html</loc></url>
+<url><loc>https://alexchubaty.com/grainscape/cran-submission.html</loc></url>
+<url><loc>https://alexchubaty.com/grainscape/index.html</loc></url>
+<url><loc>https://alexchubaty.com/grainscape/news/index.html</loc></url>
+<url><loc>https://alexchubaty.com/grainscape/reference/GOC.html</loc></url>
+<url><loc>https://alexchubaty.com/grainscape/reference/MPG.html</loc></url>
+<url><loc>https://alexchubaty.com/grainscape/reference/corridor-class.html</loc></url>
+<url><loc>https://alexchubaty.com/grainscape/reference/corridor.html</loc></url>
+<url><loc>https://alexchubaty.com/grainscape/reference/distance.html</loc></url>
+<url><loc>https://alexchubaty.com/grainscape/reference/export.html</loc></url>
+<url><loc>https://alexchubaty.com/grainscape/reference/extract.html</loc></url>
+<url><loc>https://alexchubaty.com/grainscape/reference/gFinal.html</loc></url>
+<url><loc>https://alexchubaty.com/grainscape/reference/ggGS.html</loc></url>
+<url><loc>https://alexchubaty.com/grainscape/reference/goc-class.html</loc></url>
+<url><loc>https://alexchubaty.com/grainscape/reference/grain-class.html</loc></url>
+<url><loc>https://alexchubaty.com/grainscape/reference/grain.html</loc></url>
+<url><loc>https://alexchubaty.com/grainscape/reference/grainscape-defunct.html</loc></url>
+<url><loc>https://alexchubaty.com/grainscape/reference/grainscape-deprecated.html</loc></url>
+<url><loc>https://alexchubaty.com/grainscape/reference/grainscape-maps.html</loc></url>
+<url><loc>https://alexchubaty.com/grainscape/reference/grainscape-package.html</loc></url>
+<url><loc>https://alexchubaty.com/grainscape/reference/graphdf.html</loc></url>
+<url><loc>https://alexchubaty.com/grainscape/reference/habConnEngine.html</loc></url>
+<url><loc>https://alexchubaty.com/grainscape/reference/habConnRcpp.html</loc></url>
+<url><loc>https://alexchubaty.com/grainscape/reference/hce-class.html</loc></url>
+<url><loc>https://alexchubaty.com/grainscape/reference/index.html</loc></url>
+<url><loc>https://alexchubaty.com/grainscape/reference/mpg-class.html</loc></url>
+<url><loc>https://alexchubaty.com/grainscape/reference/patchFilter.html</loc></url>
+<url><loc>https://alexchubaty.com/grainscape/reference/plot.html</loc></url>
+<url><loc>https://alexchubaty.com/grainscape/reference/point.html</loc></url>
+<url><loc>https://alexchubaty.com/grainscape/reference/show.html</loc></url>
+<url><loc>https://alexchubaty.com/grainscape/reference/theme_grainscape.html</loc></url>
+<url><loc>https://alexchubaty.com/grainscape/reference/threshold.html</loc></url>
 </urlset>
+
