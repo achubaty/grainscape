@@ -37,7 +37,7 @@ Engine::Engine()
 Engine::~Engine()
 {}
 
-//' Intialize the engine
+//' Initialize the engine
 //'
 //' This function should be called before running the engine.
 //'
@@ -269,8 +269,8 @@ void Engine::activeCellSpreadChecker(ActiveCell * ac)
       spread_list.push_back(*ac);
     else
     {
-      //the active cell with the shortest eucledian distance should be placed up front
-      // the spread_list is in increasing order of euclediance distance
+      //the active cell with the shortest euclidean distance should be placed up front
+      // the spread_list is in increasing order of euclidean distance
       int index = 0;
       for (int i = spread_list.size() - 1; i >= 0; i--)
       {
@@ -409,7 +409,7 @@ void Engine::writeErrorMessage(char* msg, int size)
   }
 }
 
-//' Find the minimum value in a vector
+//' Find the maximum value in a vector
 //'
 //' @author Sam Doctolero
 //' @family C++ helper functions
@@ -428,7 +428,7 @@ float Engine::emax(std::vector<float> vec)
   return ret;
 }
 
-//' Find the maximum value in a vector
+//' Find the minimum value in a vector
 //'
 //' @author Sam Doctolero
 //' @family C++ helper functions
@@ -693,7 +693,7 @@ void Engine::connectCell(ActiveCell * ac, int row, int col, float cost)
   iLinkMap[row][col] = lc;          //set the row'th an col'th element of iLinkMap to lc
 }
 
-//' Check whether a path path already exists in the path_list
+//' Check whether a path already exists in the path_list
 //'
 //' @author Sam Doctolero
 //' @family C++ linking functions
@@ -722,13 +722,6 @@ void Engine::findPath(LinkCell &ac1, LinkCell &ac2, std::vector<Link> & path_lis
   //end cell
   lc_temp = iLinkMap[ac2.row][ac2.column];  //get the LinkCell from iLinkMap using ac2's location (row and column)
   path.end = parseMap(lc_temp, path);       //from ac2's location (or lc_temp's location) follow its connections until it reaches a path
-
-  /*//check if a cheaper indirect path is available
-  lookForIndirectPath(path_list, path);  //if a cheaper inderect path exists the
-                                         //function updates the Link called 'path'
-
-  //insert the new Link (path) in the path_list property of the Engine object
-  path_list.push_back(path);*/
 
   if(lookForIndirectPath(path_list, path))
     path_list.push_back(path);
@@ -767,9 +760,7 @@ Cell Engine::parseMap(LinkCell lc, Link & path)
   return ret;
 }
 
-//' Find an indirect path between two patches
-//'
-//' DESCRIPTION NEEDED
+//' Find a 'cheaper' indirect path between two patches
 //'
 //' @author Sam Doctolero
 //' @family C++ linking functions

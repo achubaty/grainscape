@@ -116,7 +116,7 @@ setMethod("GOC",
         cbind(z, components(delete_edges(x@mpg, which(linkWeight > z)))$no)
       }))
       doThresh <- allUniqueThresh[!duplicated(allUniqueThresh[, 2]), 1]
-      doThresh <- doThresh[round(seq(1, length(doThresh), length = nThresh))]
+      doThresh <- doThresh[round(seq(1, length(doThresh), length.out = nThresh))]
       ids <- seq_along(doThresh)
     } else {
       ids <- doThresh

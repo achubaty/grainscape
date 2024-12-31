@@ -65,7 +65,7 @@ List habConnRcpp(NumericVector cost, NumericVector patches, int ncol, int nrow)
   NumericVector nmvor(cost.size());
   NumericVector nmpatch(cost.size());
 
-  //transfer the vector data to the numericvector variables
+  //transfer the vector data to the NumericVector variables
   for (unsigned int i = 0; i < cost.size(); i++)
   {
     nmvor[i] = (double)out_data.voronoi_map[i];
@@ -78,7 +78,7 @@ List habConnRcpp(NumericVector cost, NumericVector patches, int ncol, int nrow)
   {
     link_data_vec[i] = List::create(Named("LinkId", (double)(i + 1)*(-1.0)),
       Named("StartId", out_data.link_data[i].start.id),
-      Named("StartRow", out_data.link_data[i].start.row+ 1),
+      Named("StartRow", out_data.link_data[i].start.row + 1),
       Named("StartColumn", out_data.link_data[i].start.column + 1),
       Named("EndId", out_data.link_data[i].end.id),
       Named("EndRow", out_data.link_data[i].end.row + 1),
@@ -94,7 +94,9 @@ List habConnRcpp(NumericVector cost, NumericVector patches, int ncol, int nrow)
     }
   }
 
-  return List::create(Named("VoronoiVector", nmvor),
-                      Named("PatchLinkIDsVector", nmpatch),
-                      Named("LinkData", link_data_vec));
+  return List::create(
+    Named("VoronoiVector", nmvor),
+    Named("PatchLinkIDsVector", nmpatch),
+    Named("LinkData", link_data_vec)
+  );
 }

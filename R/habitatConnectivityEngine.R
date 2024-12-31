@@ -29,20 +29,22 @@ if (getRversion() >= "3.1.0") {
   )
 
   hce <- .habConnRcpp(
-    cost = getValues(cost), patches = getValues(patches),
-    nrow = nrow(cost), ncol = ncol(cost)
+    cost = getValues(cost),
+    patches = getValues(patches),
+    nrow = nrow(cost),
+    ncol = ncol(cost)
   )
 
-  # convert `VoronoiVector` to a raster of identical dimensions etc. as `cost`
+  ## convert `VoronoiVector` to a raster of identical dimensions etc. as `cost`
   voronoi <- patches
   voronoi[] <- hce$VoronoiVector
 
-  # convert `PatchLinkIDsVector` to a raster of identical dimensions etc. as `cost`
+  ## convert `PatchLinkIDsVector` to a raster of identical dimensions etc. as `cost`
   patchLinks <- cost
   patchLinks[] <- hce$PatchLinkIDsVector
   patchLinks[patchLinks == 0] <- NA
 
-  # convert `LinkData` to a data.frame
+  ## convert `LinkData` to a data.frame
   linkData <- lapply(hce$LinkData, data.frame) |> do.call(rbind, args = _)
 
   out <- new("hce", voronoi = voronoi, patchLinks = patchLinks, linkData = linkData)
