@@ -97,3 +97,47 @@ test_that("MPG contains links to all patches (#32)", {
   g <- naErrorMPG$mpg
   expect_equal(count_components(g), 1)
 })
+
+test_that("least-cost paths are correct (#72)", {
+  patchMap <- system.file("extdata/issue72_patchID.tif", package = "grainscape") |>
+    raster::raster()
+  patchIDs <- which(!is.na(raster::getValues(patchMap)))
+  patchMap[] <- 0L
+  patchMap[patchIDs] <- 1L
+
+  if (interactive()) {
+    raster::plot(patchMap)
+  }
+
+  resistanceMap <- system.file("extdata/issue72_resistance.tif", package = "grainscape") |>
+    raster::raster()
+
+  patchVal <- 500L
+  combinedMap <- resistanceMap
+  combinedMap[patchIDs] <- patchVal
+
+  if (interactive()) {
+    # raster::plot(resistanceMap)
+    raster::plot(combinedMap)
+  }
+
+  ## crop to smaller extent to better visualize the issue
+  zoomExtent <- raster::extent(patchMap, r1 = 120, r2 = 150, c1 = 85, c2 = 110)
+  patchMap_zoom <- raster::crop(patchMap, zoomExtent)
+  resistanceMap_zoom <- raster::crop(resistanceMap, zoomExtent)
+  combinedMap_zoom <- raster::crop(combinedMap, zoomExtent)
+
+  if (interactive()) {
+    raster::plot(combinedMap_zoom)
+  }
+
+  patchyMPG_zoom <- MPG(combinedMap_zoom, patch = combinedMap_zoom == patchVal)
+
+  if (interactive()) {
+    # plot(patchyMPG_zoom, quick = "mpgPlot", theme = FALSE)
+    plot(patchyMPG_zoom@mpgPlot)
+  }
+
+  lcpWeight <- raster::getValues(patchyMPG_zoom@lcpPerimWeight) |> unique() |> na.omit()
+  expect_true(lcpWeight == 3L)
+})
