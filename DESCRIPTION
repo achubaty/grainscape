@@ -42,7 +42,8 @@ Suggests:
     parallel,
     rmarkdown,
     spelling,
-    testthat
+    testthat,
+    withr
 VignetteBuilder: knitr, rmarkdown
 BugReports: https://github.com/achubaty/grainscape/issues
 ByteCompile: yes

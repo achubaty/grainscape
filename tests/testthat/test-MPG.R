@@ -1,6 +1,6 @@
 test_that("MPG handles NA values correctly (#28)", {
-  library(igraph)
-  library(raster)
+  withr::local_package("igraph")
+  withr::local_package("raster")
 
   ## simplest case
   x <- 100
@@ -61,8 +61,8 @@ test_that("MPG handles NA values correctly (#28)", {
 })
 
 test_that("MPG contains links to all patches (#32)", {
-  library(igraph)
-  library(raster)
+  withr::local_package("igraph")
+  withr::local_package("raster")
 
   ## simple map with no NA regions
   tiny <- raster(system.file("extdata/tiny.asc", package = "grainscape"))

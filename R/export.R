@@ -276,7 +276,7 @@ setMethod("export",
     ## Create voronoi boundaries
     if (vorBound) {
       message("Extracting voronoi boundaries...")
-      vorB <- boundaries(x@voronoi, class = TRUE, asNA = TRUE)
+      vorB <- raster::boundaries(x@voronoi, classes = TRUE, asNA = TRUE)
     } else {
       vorB <- "Not created. Use vorBound=TRUE."
     }
@@ -355,7 +355,7 @@ setMethod("export",
     ## Create voronoi boundaries
     if (vorBound) {
       message("Extracting voronoi boundaries...")
-      vorB <- boundaries(x@voronoi, class = TRUE, asNA = TRUE)
+      vorB <- raster::boundaries(x@voronoi, classes = TRUE, asNA = TRUE)
     } else {
       vorB <- "Not created. Use vorBound=TRUE."
     }
