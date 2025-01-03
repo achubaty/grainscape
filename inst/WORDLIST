@@ -4,9 +4,6 @@
 210X
 294X
 2D
-ActiveCell
-ActiveCellQueue
-ActiveCells
 ArcASCII
 Bivand
 Bool
@@ -23,8 +20,6 @@ GeoTiff
 Hijmans
 InputData
 InterJournal
-LinkCell
-LinkMap
 MEE
 MPGs
 Manseau
@@ -32,7 +27,6 @@ Modeling
 Nepusz
 ORCID
 Oikos
-OutputData
 Pebesma
 Pre
 Rtools
@@ -58,7 +52,6 @@ figure10
 figure11
 figure20
 figure24
-flMap
 forestgreen
 fragCorridor3
 fragMPG
