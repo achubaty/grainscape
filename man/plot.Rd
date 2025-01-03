@@ -35,8 +35,7 @@ Default is \code{TRUE}.}
 }\if{html}{\out{</div>}}
 }
 \description{
-Plot quick visualizations of \code{mpg}, \code{grain}, and \code{corridor}
-objects.
+Plot quick visualizations of \code{mpg}, \code{grain}, and \code{corridor} objects.
 
 This function is intended to get a quick look at the state of a \code{grainscape}
 object by rendering what are likely to be the most universally useful

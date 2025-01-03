@@ -20,7 +20,6 @@ non-habitat (i.e., matrix) cells.}
 }
 \description{
 Internal function, not intended to be called directly.
-DESCRIPTION NEEDED.
 }
 \author{
 Sam Doctolero

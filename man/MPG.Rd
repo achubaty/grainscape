@@ -56,7 +56,7 @@ Rasters should be projected and not in geographic coordinates (i.e. \code{raster
 should not contain \code{"+proj=longlat"}) or the function will issue a warning.
 In unprojected cases consider using \code{\link[raster:projectRaster]{raster::projectRaster()}} to change to an appropriate
 coordinate system for the location and extent of interest that balances both distance and areal
-accuracy. See \url{https://www.spatialreference.org/} for location-specific suggestions.
+accuracy. See \url{https://spatialreference.org/} for location-specific suggestions.
 Use of geographic coordinates will result in inaccurate areal and distance measurements,
 rendering the models themselves inaccurate.
 }

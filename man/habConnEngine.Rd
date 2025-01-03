@@ -15,8 +15,8 @@
 An object of class \linkS4class{hce}.
 }
 \description{
-Internal function. Serves as a wrapper around the habitat connectivity engine
-developed in C++.
+Internal function.
+Serves as a wrapper around the habitat connectivity engine developed in C++.
 }
 \seealso{
 \code{link{habConnRcpp}}

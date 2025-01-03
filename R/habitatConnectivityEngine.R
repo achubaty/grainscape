@@ -1,11 +1,9 @@
-if (getRversion() >= "3.1.0") {
-  utils::globalVariables(".")
-}
+utils::globalVariables(".")
 
 #' Habitat connectivity engine
 #'
-#' Internal function. Serves as a wrapper around the habitat connectivity engine
-#' developed in C++.
+#' Internal function.
+#' Serves as a wrapper around the habitat connectivity engine developed in C++.
 #'
 #' @param cost      Numeric raster cost (resistance) map.
 #' @param patches   Logical raster indicating presence of habitat patches.
@@ -35,7 +33,7 @@ if (getRversion() >= "3.1.0") {
     ncol = ncol(cost)
   )
 
-  ## convert `VoronoiVector` to a raster of identical dimensions etc. as `cost`
+  ## convert `VoronoiVector` to a raster of identical dimensions etc. as `patches`
   voronoi <- patches
   voronoi[] <- hce$VoronoiVector
 

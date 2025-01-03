@@ -92,7 +92,8 @@ setMethod(
     }
 
     if (!is.na(projection(cost)) && grepl("longlat", projection(cost))) {
-      warning("input rasters in geographic coordinates (i.e. '+proj=longlat') are unlikely",
+      warning(
+        "input rasters in geographic coordinates (i.e. '+proj=longlat') are unlikely",
         " to produce reliable estimates of area or distance.",
         " For accurate results, project rasters with an appropriate coordinate",
         " system for the location and extent of interest.",
