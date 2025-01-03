@@ -62,12 +62,6 @@
 #'
 #' @author Paul Galpern, Sam Doctolero, Alex Chubaty
 #' @export
-#' @importFrom raster boundaries cellFromRowCol cellFromRowColCombine compareRaster
-#' @importFrom raster getValues mask projection raster res writeRaster
-#' @importFrom raster xFromCol xyFromCell yFromRow
-#' @importFrom sp coordinates
-#' @importFrom stats na.omit
-#' @importFrom utils read.table
 #' @include classes.R
 #' @rdname MPG
 #' @seealso `[GOC], [threshold]`
@@ -81,6 +75,12 @@ setGeneric("MPG", function(cost, patch, ...) {
 })
 
 #' @export
+#' @importFrom raster boundaries cellFromRowCol cellFromRowColCombine compareRaster
+#' @importFrom raster getValues mask projection raster res writeRaster
+#' @importFrom raster xFromCol xyFromCell yFromRow
+#' @importFrom sp coordinates
+#' @importFrom stats na.omit
+#' @importFrom utils read.table
 #' @rdname MPG
 setMethod(
   "MPG",
@@ -196,6 +196,7 @@ setMethod(
 )
 
 #' @export
+#' @importFrom raster cellFromRowColCombine ncol nrow
 #' @rdname MPG
 setMethod(
   "MPG",
