@@ -62,12 +62,6 @@
 #'
 #' @author Paul Galpern, Sam Doctolero, Alex Chubaty
 #' @export
-#' @importFrom raster boundaries cellFromRowCol cellFromRowColCombine compareRaster
-#' @importFrom raster getValues mask projection raster res writeRaster
-#' @importFrom raster xFromCol xyFromCell yFromRow
-#' @importFrom sp coordinates
-#' @importFrom stats na.omit
-#' @importFrom utils read.table
 #' @include classes.R
 #' @rdname MPG
 #' @seealso `[GOC], [threshold]`
@@ -81,6 +75,12 @@ setGeneric("MPG", function(cost, patch, ...) {
 })
 
 #' @export
+#' @importFrom raster boundaries cellFromRowCol cellFromRowColCombine compareRaster
+#' @importFrom raster getValues mask projection raster res writeRaster
+#' @importFrom raster xFromCol xyFromCell yFromRow
+#' @importFrom sp coordinates
+#' @importFrom stats na.omit
+#' @importFrom utils read.table
 #' @rdname MPG
 setMethod(
   "MPG",
@@ -92,7 +92,8 @@ setMethod(
     }
 
     if (!is.na(projection(cost)) && grepl("longlat", projection(cost))) {
-      warning("input rasters in geographic coordinates (i.e. '+proj=longlat') are unlikely",
+      warning(
+        "input rasters in geographic coordinates (i.e. '+proj=longlat') are unlikely",
         " to produce reliable estimates of area or distance.",
         " For accurate results, project rasters with an appropriate coordinate",
         " system for the location and extent of interest.",
@@ -195,6 +196,7 @@ setMethod(
 )
 
 #' @export
+#' @importFrom raster cellFromRowColCombine ncol nrow
 #' @rdname MPG
 setMethod(
   "MPG",

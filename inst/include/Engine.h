@@ -4,8 +4,7 @@
 #include <cmath>
 #include <math.h>
 
-#define MAX_CHAR_SIZE 1024  //maximum number of characters that can or should be
-                            //stored for the error message.
+#define MAX_CHAR_SIZE 1024  //max number of characters that should be stored for the error message
 
 //' The Engine Class
 //'
@@ -107,8 +106,6 @@ public:
 
     //find the lowest value in the vector of values
     static float emin(std::vector<float> vec);
-
     //finds the Euclidean distance between two cells
     static float calcDistance(Cell c1, Cell c2);
 };
-

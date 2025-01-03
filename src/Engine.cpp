@@ -117,7 +117,7 @@ bool Engine::initialize()
           ActiveCell ac;                         //create an instance of an ActiveCell called 'ac'
           ac.time = 0.0f;                        //set the time inside 'ac' to zero
           ac.id = c.id;                          //set the id of 'ac' to 'c' id
-          ac.distance = 0.0f;                    //set the Euclidian distance from this element/cell to its origin element/cell to to zero
+          ac.distance = 0.0f;                    //set the Euclidean distance from this element/cell to its origin element/cell to to zero
           ac.resistance = cost_map[i][j];        //set the resistance of 'ac' to the value in the cost map's i'th and j'th element
           ac.originCell = c;                     //set the origin cell of 'ac' to c's properties
           ac.row = i;                            //set ac's row to i's value
@@ -151,13 +151,13 @@ bool Engine::initialize()
     lc.column = ac.column;             //set lc's column to ac's column
     lc.fromCell = ac.originCell;       //set lc's fromCell property to ac's originCell property
     lc.originCell = ac.originCell;     //set lc's originCell property to ac's originCell property
-    lc.distance = 0.0f;                //set the euclidian distance to zero
+    lc.distance = 0.0f;                //set the Euclidean distance to zero
     lc.id = ac.id;                     //set lc's id to ac's id
     lc.cost = 0.0f;                    //set the cost to zero
     iLinkMap[lc.row][lc.column] = lc;  //insert lc to the appropriate element in the iLinkMap property of the engine
   }
 
-  //once all the initiaization parameters are done set the initialized property to true
+  //once all the initialization parameters are done set the initialized property to true
   initialized = true;
   //then return true
   return initialized;
@@ -254,7 +254,7 @@ bool Engine::cellIsZero(int row, int col)
   return false;
 }
 
-//' Check the spread status of an ActiveCell
+//' Check the spread status of an \code{ActiveCell}
 //'
 //' @author Sam Doctolero
 //' @keywords internal
@@ -459,9 +459,7 @@ bool Engine::outOfBounds(int row, int col, int nrow, int ncol)
   return false;
 }
 
-//' Calculate distance between two cells
-//'
-//' Implements Pythagorean theorem to determine the distance between two cells.
+//' Calculate Euclidean distance between two cells
 //'
 //' @note Assumes cells are square.
 //'
@@ -671,7 +669,7 @@ int Engine::getIndexFromList(float & id, std::vector<Patch> & patches)
 
 //' Create a new link connecting two cells in a map
 //'
-//' Given \code{ac} (a pointer to an ActiveCell) as the parent cell and the integer
+//' Given \code{ac} (a pointer to an \code{ActiveCell}) as the parent cell and the integer
 //' parameters \code{row} and \code{col} as the child cell, and \code{cost} as the
 //' child cell's resistance value, create a connection between the parent the child cells.
 //'
@@ -693,7 +691,9 @@ void Engine::connectCell(ActiveCell * ac, int row, int col, float cost)
   iLinkMap[row][col] = lc;          //set the row'th an col'th element of iLinkMap to lc
 }
 
-//' Check whether a path already exists in the path_list
+//' Finds the least cost path between two patches
+//'
+//' Checks whether a path already exists in the path_list.
 //'
 //' @author Sam Doctolero
 //' @family C++ linking functions
@@ -729,7 +729,8 @@ void Engine::findPath(LinkCell &ac1, LinkCell &ac2, std::vector<Link> & path_lis
 
 //' Parse a map
 //'
-//' DESCRIPTION NEEDED
+//' Given a starting \code{Cell} it follows the connections until it reaches a patch.
+//' The last cell in the connection is returned.
 //'
 //' @author Sam Doctolero
 //' @family C++ linking functions
@@ -773,7 +774,7 @@ bool Engine::lookForIndirectPath(std::vector<Link> & path_list, Link & path)
     return true;
   }
 
-  //otherwise parse through all the paths currently in the memory and check for
+  //otherwise parse through all the paths currently in the memory and check for lower cost ones
   for (unsigned int i = 0; i < path_list.size(); i++)
   {
     //if the i'th path_list's start or end id equal to path's start id then this may be a possible indirect Link
