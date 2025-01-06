@@ -30,6 +30,14 @@ See `NEWS.md` for a complete list of changes.
 
 There are no WARNINGS nor ERRORs.
 
+There was 1 NOTE, which appears to be spurious, as the URL works in a web browser.
+
+    Found the following (possibly) invalid URLs:
+      URL: https://support.posit.co/hc/en-us/articles/200486498-Package-Development-Prerequisites
+        From: README.md
+        Status: 403
+        Message: Forbidden
+
 ## Downstream dependencies
 
 There are currently no reverse dependencies for this package.
