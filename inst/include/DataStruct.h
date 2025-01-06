@@ -1,51 +1,56 @@
 #include <vector>
 
-//base cell or pixel structure
+// base cell or pixel structure
 struct Cell
 {
    int row, column;
    float id;
 };
 
+// stores all the links (directly and indirectly) between the patches
+// Links are given a negative ID to distinguish them from patch IDs
 struct Link
 {
-   Cell start, end;               //start and end nodes
-   std::vector<Cell> connection;  //collection of cells that create the link
-   float cost;                    //cost of the link or path
+   Cell start, end;               // start and end nodes
+   std::vector<Cell> connection;  // collection of cells that create the link
+   float cost;                    // cost of the link or path
 };
 
+// a patch (cluster) of habitat pixels in the resistance map with similar values
 struct Patch
 {
-   std::vector<Cell> body;        //body of the patch
-   float id;                      //id of the patch
+   std::vector<Cell> body;        // body of the patch
+   float id;                      // id of the patch
 };
 
-//Map/Matrix container of type float
-//used to contain the output data (voronoi, link, and patches) as well as the cost map
+// Map/Matrix container of type float
+// used to contain the output data (voronoi, link, and patches) as well as the cost map
 typedef std::vector<float> flCol;
 typedef std::vector<flCol> flMap;
 
-//LinkCell is used in a map to connect Cells together as the spreading progresses
+// LinkCell is used in a map to connect Cells together as the spreading progresses
 struct LinkCell
-   : Cell   //inherits the cell structure
+   : Cell  // inherits from Cell structure
 {
-   Cell fromCell, originCell;  //fromCell - cell that it connects to | originCell - perimeter cell in the patch that the link came from
+   // fromCell: Cell that it connects to
+   // originCell: perimeter cell in the patch that the link came from
+   Cell fromCell, originCell;
    float distance, cost;
 };
 
-//Link map - used to create the links
+// Link map (used to create the links)
 typedef std::vector<LinkCell> lcCol;
 typedef std::vector<lcCol> LinkMap;
 
-//ActiveCell is used in the spreading algorithm
+// ActiveCell is used in the spreading algorithm
 struct ActiveCell
-   :Cell      //inherits the cell structure
+   :Cell  // inherits from Cell structure
 {
    float time, distance, resistance, parentResistance;
    Cell originCell;
 };
 
-//interface input data
+// interface input data
 struct InputData
 {
    std::vector<float> cost_vec;
@@ -53,7 +58,7 @@ struct InputData
    std::vector<float> patch_vec;
 };
 
-//interface output data
+// interface output data
 struct OutputData
 {
    std::vector<float> voronoi_map, patch_map;
@@ -61,13 +66,13 @@ struct OutputData
    std::vector<Patch> patch_list;
 };
 
-//queue for active cell holders used for spreading
+// active cell holder used for spreading
 struct ActiveCellHolder
 {
    float value;
    std::vector<ActiveCell> list;
 
-   //adds the ActiveCell c in a specific order
+   // adds the ActiveCell c in ascending order by Euclidean distance
    void add(ActiveCell c)
    {
       if (list.size() <= 0)
@@ -85,18 +90,19 @@ struct ActiveCellHolder
       }
    }
 
-   //returns size of the vector
+   // returns size of the vector
    unsigned int size()
    {
       return list.size();
    }
 };
 
+// queue for active cell holders used for spreading
 struct ActiveCellQueue
 {
    std::vector<ActiveCellHolder> holder_list;
 
-   //inserts the ActiveCellHolder h in a specific order
+   // inserts the ActiveCellHolder h in ascending order by value (Euclidean distance)
    void insertH(ActiveCellHolder h)
    {
       int index = 0;
@@ -136,7 +142,7 @@ struct ActiveCellQueue
       }
    }
 
-   //returns the size of the vector
+   // returns the size of the vector
    unsigned int size()
    {
       return holder_list.size();
