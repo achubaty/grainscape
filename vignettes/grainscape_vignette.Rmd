@@ -490,7 +490,7 @@ res2[] <- floor(runif(ncell(res2)) * 10 + 1)
 ## raster made previously which represents the points only
 mpg <- MPG(res2, patchPts)
 
-## Plot the result using the quick 'mgplot' visualization
+## Plot the result using the quick 'mpgPlot' visualization
 ## setting and add labels (dodging them by 3 to the upper-right)
 ## This demonstrates the non-linear paths.
 figure10 <- plot(mpg, quick = "mpgPlot", theme = FALSE) +

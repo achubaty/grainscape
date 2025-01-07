@@ -14,6 +14,21 @@ opts_chunk$set(fig.show = "hold")
 
 options(knitr.kable.NA = "")
 
+## ----initial_stuff, include=FALSE---------------------------------------------
+library(igraph)
+library(grainscape)
+library(raster)
+library(ggplot2)
+
+set.seed(674)
+
+theme_visualRef <- theme_grainscape() +
+  theme(panel.background = element_rect(colour = "black", size = 0.25, fill = NA))
+theme_set(theme_visualRef)
+
+## ----results="hide"-----------------------------------------------------------
+patchy <- raster(system.file("extdata/patchy.asc", package = "grainscape"))
+
 ## ----figure_03, fig.cap='\\label{fig:patchycost}Input raster resistance surface to create the minimum planar graph (MPG). Features with value of 1 (red) will be the patches in the network. A river (light blue) has the highest resistance in this example.'----
 ## Create an is-becomes matrix for reclassification
 isBecomes <- cbind(c(1, 2, 3, 4, 5), c(1, 10, 8, 3, 6))
@@ -28,7 +43,10 @@ ggplot() +
     data = patchyCost_df,
     aes(x = x, y = y, fill = value)
   ) +
-  scale_fill_brewer(type = "div", palette = "Paired", guide = "legend") +
+  scale_fill_brewer(
+    type = "qual", palette = "Paired",
+    direction = -1, guide = "legend"
+  ) +
   guides(fill = guide_legend(title = "Resistance")) +
   theme_grainscape() +
   theme(legend.position = "right")
@@ -116,7 +134,7 @@ patchPlusVoronoi[patchyMPG@patchId] <- 0
 ggplot() +
   geom_raster(data = ggGS(patchPlusVoronoi), aes(x = x, y = y, fill = value))
 
-## ---- results="hide"----------------------------------------------------------
+## ----results="hide"-----------------------------------------------------------
 patchyGOC <- GOC(patchyMPG, nThresh = 10)
 
 ## ----figure_08, fig.cap='\\label{fig:gocthresh}A visualization of a GOC model. In this case it is the 6th scale or threshold extracted. Voronoi polygons imply regions that are functionally-connected at the given movement threshold.'----
@@ -178,7 +196,7 @@ res2[] <- floor(runif(ncell(res2)) * 10 + 1)
 ## raster made previously which represents the points only
 mpg <- MPG(res2, patchPts)
 
-## Plot the result using the quick 'mgplot' visualization
+## Plot the result using the quick 'mpgPlot' visualization
 ## setting and add labels (dodging them by 3 to the upper-right)
 ## This demonstrates the non-linear paths.
 figure10 <- plot(mpg, quick = "mpgPlot", theme = FALSE) +
