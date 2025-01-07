@@ -2,4 +2,4 @@
 tinyThresh <- threshold(tinyPatchMPG, nThresh = 10)
 
 ## Examine the properties of one of these threshold graphs
-print(tinyThresh$th[[7]], vertex = TRUE, edge = TRUE)
+print(tinyThresh$th[[7]], vertex.attributes = TRUE, edge.attributes = TRUE)

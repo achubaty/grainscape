@@ -98,7 +98,7 @@ setMethod(
     } else if (!is.null(nThresh) && !is.null(doThresh)) {
       stop("only one of nThresh or doThresh must be specified")
     } else if (is.null(doThresh)) {
-      doThresh <- seq(0, max(linkWeight), length = nThresh)
+      doThresh <- seq(0, max(linkWeight), length.out = nThresh)
     }
 
     threshGraph$summary <- data.frame(maxLink = doThresh)
