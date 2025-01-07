@@ -127,10 +127,12 @@ bool Engine::initialize()
         {
           ActiveCellHolder holder_t;             // instance of an ActiveCellHolder called 'holder_t'
           holder_t.value = 0.0f;                 // set the property "value" to zero
+
           Cell c;                                // create an instance of a Cell called 'c'
           c.row = i;                             // set the row variable of Cell 'c' to i's current value
           c.column = j;                          // set the column variable of Cell 'c' to 'j' current value
           c.id = (voronoi_map[i][j]);            // give Cell 'c' an id, corresponding to voronoi map's i'th and j'th element
+
           ActiveCell ac;                         // create an instance of an ActiveCell called 'ac'
           ac.time = 0.0f;                        // set the time inside 'ac' to zero
           ac.id = c.id;                          // set the id of 'ac' to 'c' id
@@ -140,6 +142,7 @@ bool Engine::initialize()
           ac.row = i;                            // set ac's row to i's value
           ac.column = j;                         // set ac's column to i's value
           ac.parentResistance = 0.0f;            // set the parentResistance to zero
+
           holder_t.add(ac);                      // add the ActiveCell 'ac' to the ActiveCellHolder 'holder_t' by calling the add function
           active_cell_holder.insertH(holder_t);  // insert holder_t in the active_cell_holder variable of the engine object
         }
@@ -163,14 +166,16 @@ bool Engine::initialize()
   {
     // at this point the active_cell_holder will only have one list element
     ActiveCell ac = active_cell_holder.holder_list[0].list[i];  // grab the i'th ActiveCell in the list and call it 'ac'
+
     LinkCell lc;                       // create an instance of a LinkCell called 'lc'
     lc.row = ac.row;                   // set lc's row to ac's row
     lc.column = ac.column;             // set lc's column to ac's column
+    lc.id = ac.id;                     // set lc's id to ac's id
     lc.fromCell = ac.originCell;       // set lc's fromCell property to ac's originCell property
     lc.originCell = ac.originCell;     // set lc's originCell property to ac's originCell property
     lc.distance = 0.0f;                // set the Euclidean distance to zero
-    lc.id = ac.id;                     // set lc's id to ac's id
     lc.cost = 0.0f;                    // set the cost to zero
+
     iLinkMap[lc.row][lc.column] = lc;  // insert lc to the appropriate element in the iLinkMap property of the engine
   }
 
@@ -232,7 +237,7 @@ void Engine::start()
     active_cell_holder = temporary_active_cell_holder;
   }
 
-  //fill the output's voronoi vector with the engine's voronoi_map values
+  // fill the output's voronoi vector with the engine's voronoi_map values
   updateOutputMap(out_data->voronoi_map, voronoi_map);
 }
 
@@ -753,7 +758,7 @@ void Engine::findPath(LinkCell &ac1, LinkCell &ac2, std::vector<Link> & path_lis
   //from ac2's location (or lc_temp's location) follow its connections until it reaches a path
   path.end = parseMap(lc_temp, path);
 
-  if(lookForIndirectPath(path_list, path))
+  if (lookForIndirectPath(path_list, path))
     path_list.push_back(path);
 }
 
@@ -774,7 +779,7 @@ Cell Engine::parseMap(LinkCell lc, Link & path)
   Cell ret = c1;  // create an instance of Cell called ret (this will be returned)
 
   // as long as c1 does not equal lc's originCell (a cell as part of a patch)
-  while (!cellsEqual(c1,lc.fromCell))
+  while (!cellsEqual(c1, lc.fromCell))
   {
     path.cost += lc.cost;                  // increment the cost by lc's cost
     path.connection.push_back(c1);         // insert the Cell c1 to path (a referenced Link parameter)

@@ -30,7 +30,7 @@ typedef std::vector<flCol> flMap;
 
 // LinkCell is used in a map to connect Cells together as the spreading progresses
 struct LinkCell
-   : Cell  // inherits from Cell structure
+   :Cell  // inherits from Cell structure
 {
    // fromCell: Cell that it connects to
    // originCell: perimeter cell in the patch that the link came from
