@@ -104,11 +104,11 @@ setMethod(
     threshGraph$summary <- data.frame(maxLink = doThresh)
 
     threshGraph$th <- lapply(seq_along(doThresh), function(i) {
-      delete.edges(baseGraph, which(linkWeight > doThresh[i]))
+      delete_edges(baseGraph, which(linkWeight > doThresh[i]))
     })
 
     threshGraph$summary$nComponents <- lapply(threshGraph$th, function(z) {
-      clusters(z)$no
+      components(z)$no
     }) |>
       unlist()
 

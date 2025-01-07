@@ -10,6 +10,7 @@
 * Fixed documentation issues and 'memory not mapped' segfault errors on R-devel (#73)
 * Improved handling of user-added attributes in exported objects (#71)
 * Fixed partial match warnings
+* Use replacements for deprecated `igraph` functions
 
 ## New features & enhancements
 
