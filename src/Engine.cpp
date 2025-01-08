@@ -277,6 +277,11 @@ bool Engine::cellIsZero(int row, int col)
 
 //' Check the spread status of an \code{ActiveCell}
 //'
+//' @param ac \code{ActiveCell} pointer
+//'
+//' @return Nothing.
+//'         As a side effect, updates \code{spread_list} and \code{temporary_active_cell_holder}.
+//'
 //' @author Sam Doctolero
 //' @keywords internal
 void Engine::activeCellSpreadChecker(ActiveCell * ac)
@@ -403,13 +408,12 @@ void Engine::createActiveCell(ActiveCell * ac, int row, int col)
   //   and not ac's id, then this is a voronoi boundary
   if (!outOfBounds(row, col, in_data->nrow, in_data->ncol) &&
       voronoi_map[row][col] != 0.0f &&
-      voronoi_map[row][col] != ac->id )
-  {
+      voronoi_map[row][col] != ac->id) {
+    // 'no_data' cells should not be included in the link or path between habitats or patches
+    //
     // if the cost_map's row'th and col'th element is not a no_data element then create the link,
     // otherwise ignore it.
-    // no_data cells should not be included in the link or path between habitats or patches.
-    if (!std::isnan(cost_map[row][col]) && !std::isnan(cost_map[ac->row][ac->column]))
-    {
+    if (!std::isnan(cost_map[row][col]) && !std::isnan(cost_map[ac->row][ac->column])) {
       findPath(iLinkMap[(ac->row)][(ac->column)], iLinkMap[row][col], out_data->link_data);
     }
   }
@@ -724,7 +728,14 @@ void Engine::connectCell(ActiveCell * ac, int row, int col, float cost)
 
 //' Finds the least cost path between two patches
 //'
-//' Checks whether a path already exists in the \code{path_list}.
+//' Checks whether a path between patches exists in the \code{path_list}
+//'
+//' @param ac1,ac2 objects of \code{LinkCell}
+//'
+//' @param path_list vector of \code{Link}s
+//'
+//' @return No return value. As a side effect, updates \code{path_list} with
+//'         new path linking \code{ac2} and \code{ac2}.
 //'
 //' @author Sam Doctolero
 //' @family C++ linking functions

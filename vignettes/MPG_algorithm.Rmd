@@ -25,9 +25,11 @@ opts_chunk$set(
   cache = TRUE,
   echo = TRUE,
   eval = TRUE,
+  fig.align = "left",
   fig.height = 6,
   fig.width = 6,
   message = FALSE,
+  out.extra = "",
   results = "hold",
   warning = FALSE
 )
@@ -141,6 +143,79 @@ It creates the minimum planar graph (MPG) using the MPG algorithm, finds least c
 
 #### Methods/Functions
 
+After instantiating an `Engine` object, the connectivity engine is run by first calling `initialize()` and then `start()`.
+The call graphs for each of these principal functions are presented below.
+
+```{r call_graph_engine_initialize, echo = FALSE,  fig.cap = "Call diagram for Engine::initialize()"}
+DiagrammeR::grViz("
+  digraph initialize {
+    graph [overlap = true, fontsize = 10]
+    
+    # nodes
+    node [fillcolor = navy, fontcolor = white,
+          fontname = Courier,
+          shape = oval, style = filled]
+    
+    initialize
+    
+    node [fillcolor = grey50, fontcolor = white,
+          fontname = Courier,
+          shape = box, style = filled]
+    
+    cellIsZero; combinePatches; findPatches; getIndexFromList;
+    outOfBounds; updateOutputMap; writeErrorMessage;
+    
+    # edges
+    initialize->writeErrorMessage
+    initialize->findPatches
+    initialize->updateOutputMap
+    initialize->cellIsZero
+    cellIsZero->outOfBounds
+    findPatches->outOfBounds
+    findPatches->getIndexFromList
+    findPatches->combinePatches
+  }
+")
+```
+
+```{r call_graph_engine_start, echo = FALSE, fig.cap = "Call diagram for Engine::start()"}
+DiagrammeR::grViz("
+  digraph start {
+    graph [overlap = true, fontsize = 10]
+    
+    # nodes
+    node [fillcolor = navy, fontcolor = white,
+          fontname = Courier,
+          shape = oval, style = filled]
+    
+    start
+    
+    node [fillcolor = grey50, fontcolor = white,
+          fontname = Courier,
+          shape = box, style = filled]
+    
+    activeCellSpreadChecker; calcDistance; cellsEqual; connectCell; createActiveCell;
+    findPath; lookForIndirectPath;
+    outOfBounds; parseMap; updateOutputMap; writeErrorMessage;
+    
+    # edges
+    start->writeErrorMessage
+    start->activeCellSpreadChecker
+    start->createActiveCell
+    start->updateOutputMap
+    createActiveCell->outOfBounds
+    createActiveCell->calcDistance
+    createActiveCell->connectCell
+    createActiveCell->findPath
+    findPath->parseMap;
+    findPath->lookForIndirectPath
+    parseMap->cellsEqual
+  }
+")
+```
+
+\newpage
+
 ##### Public Functions
 
 These are the functions that are visible to the user. 
@@ -151,6 +226,20 @@ These are the functions that are visible to the user.
 `Engine`            | Instance of an `Engine`       | `InputData` Pointer, `OutputData` Pointer, Char Pointer | `Engine` constructor.
 `initialize`        | Boolean                       | None                          | Prepares the engine for calculation.
 `start`             | Void                          | None                          | Runs the MPG algorithm.
+
+\newpage
+
+##### Patch Finding Functions
+
+The functions are responsible for identifying the patches (clusters) in a resistance map, given a value for a habitat.
+
+**Function**        | **Return Type**     | **Input Arguments**           | **Description**  
+--------------------|---------------------|-------------------------------|---------------------------
+`findPatches`       | Void                | Nothing                       | Finds all the patches in the patch vector and assign patch IDs.
+`getIndexFromList`  | Int                 | Float, Vector of `Patch`es    | Finds the index in the vector of patches that the given ID correspond to.
+`combinePatches`    | Int                 | Int, Int, Vector of `Patch`es | Given two indices and the list of patches. Extract the two patches from the list and combine those two into one patch. Insert the new patch into the list and return the index value of the new patch. 
+
+\newpage
 
 ##### Linking Functions
 
@@ -163,15 +252,7 @@ These functions create the links between cells and finds the least cost (direct 
 `parseMap`            | `Cell`              | `LinkCell`, `Link` | Given a starting `Cell` it follows the connections until it reaches a patch. The last cell in the connection is returned.
 `lookForIndirectPath` | Void                | Vector of `Links`, `Link`   | Tries to find an indirect link and updates the second argument.
 
-##### Patch Finding Functions
-
-The functions are responsible for finding the patches or clusters in a resistance map, given a value for a habitat. 
-
-**Function**        | **Return Type**     | **Input Arguments**           | **Description**  
---------------------|---------------------|-------------------------------|---------------------------
-`findPatches`       | Void                | Nothing                       | Finds all the patches in the patch vector and assign patch IDs.
-`getIndexFromList`  | Int                 | Float, Vector of `Patch`es    | Finds the index in the vector of patches that the given ID correspond to.
-`combinePatches`    | Int                 | Int, Int, Vector of `Patch`es | Given two indices and the list of patches. Extract the two patches from the list and combine those two into one patch. Insert the new patch into the list and return the index value of the new patch. 
+\newpage
 
 ##### Common Functions
 
@@ -181,6 +262,8 @@ Common functions are used in almost all of the functions in the engine.
 ----------------|---------------------|-------------------------------|---------------------------
 `outOfBounds`   | Bool                | Int, Int, Int, Int            | Checks to see if the given row and column is still within the resistance map's dimensions.
 `cellIsEqual`   | Bool                | `Cell`, `Cell`                    | Compares the two `Cell`s' row and column if they match.
+
+\newpage
 
 ##### Static Functions
 
