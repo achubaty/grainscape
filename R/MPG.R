@@ -64,7 +64,7 @@
 #' @export
 #' @include classes.R
 #' @rdname MPG
-#' @seealso `[GOC], [threshold]`
+#' @seealso [GOC()], [threshold()]
 #'
 #' @example inst/examples/example_preamble.R
 #' @example inst/examples/example_preamble_MPG.R

@@ -1,5 +1,5 @@
 ## New submission
-This release fixes CRAN check problems and other bugs, and improves documentation.
+This release fixes CRAN check problems and issues arising from changes in dependency packages.
 See `NEWS.md` for a complete list of changes.
 
 ## Test environments

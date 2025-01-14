@@ -102,7 +102,7 @@ Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis
 at multiple spatial scales in landscape genetics. Molecular Ecology 21:3996-4009.
 }
 \seealso{
-\verb{[GOC], [threshold]}
+\code{\link[=GOC]{GOC()}}, \code{\link[=threshold]{threshold()}}
 }
 \author{
 Paul Galpern, Sam Doctolero, Alex Chubaty
