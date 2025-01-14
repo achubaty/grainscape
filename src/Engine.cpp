@@ -276,15 +276,16 @@ void Engine::activeCellSpreadChecker(ActiveCell * ac) {
   // if the time or number of iteration since the ActiveCell is instantiated is
   // greater than the resistance value at that cell, include it in the spread_list.
   if (ac->time >= ac->resistance) {
-    // include the list in spread list in an order by increasing distance
+    // include the list in spread list in an order by increasing effective distance
     if (spread_list.size() <= 0) {
       spread_list.push_back(*ac);
     } else {
-      // the active cell with the shortest Euclidean distance should be placed up front
-      // (the spread_list is kept sorted in increasing order of Euclidean distance)
+      // the active cell with the shortest effective distance should be placed up front
+      // (the spread_list is kept sorted in increasing order of effective distance)
       int index = 0;
       for (int i = spread_list.size() - 1; i >= 0; i--) {
-        if (spread_list[i].distance <= ac->distance) {
+        // 2025-01: use resistance instead of distance (#72)
+        if (spread_list[i].resistance <= ac->resistance) {
           index = i + 1;
           break;
         }
@@ -301,7 +302,7 @@ void Engine::activeCellSpreadChecker(ActiveCell * ac) {
     ac->time += std::max(1.0f, (ac->resistance - ac->parentResistance) * costRes / maxCost);
 
     ActiveCellHolder h_temp;       // create an instance of an ActiveCellHolder called 'h_temp'
-    h_temp.value = ac->distance;  // set h_temp's value to ac's distance
+    h_temp.value = ac->resistance; // set h_temp's value to ac's resistance (#72)
     h_temp.list.push_back(*ac);    // insert the ActiveCell that ac is pointing to
                                    // at the end of h_temp's list property (a vector of ActiveCells)
 
@@ -349,7 +350,7 @@ void Engine::createActiveCell(ActiveCell * ac, int row, int col) {
 
     // insert new_ac to the temporary_active_cell_holder as a new ActiveCell
     ActiveCellHolder h_temp;           // create an instance of ActiveCellHolder called 'h_temp'
-    h_temp.value = dist;            // set h_temp's value to dist
+    h_temp.value = new_ac.resistance;  // set h_temp's value to new_ac's resistance (#72)
     h_temp.list.push_back(new_ac);     // insert new_ac into h_temp's list property
 
     // insert the temporary_active_cell holder (keep properly sorted)

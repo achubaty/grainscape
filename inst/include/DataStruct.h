@@ -70,13 +70,14 @@ struct ActiveCellHolder {
    float value;
    std::vector<ActiveCell> list;
 
-   // adds the ActiveCell c in ascending order by Euclidean distance
+   // adds the ActiveCell c in ascending order by resistance (effective distance)
    void add(ActiveCell c) {
       if (list.size() <= 0) {
          list.push_back(c);
       } else {
          for (int i = list.size() - 1; i >= 0; i--) {
-            if (list[i].distance <= c.distance) {
+            // 2025-01: changed to use resistance instead of distance (#72)
+            if (list[i].resistance <= c.resistance) {
                list.insert(list.begin() + i + 1, c);
                break;
             }
@@ -94,7 +95,7 @@ struct ActiveCellHolder {
 struct ActiveCellQueue {
    std::vector<ActiveCellHolder> holder_list;
 
-   // inserts the ActiveCellHolder h in ascending order by value (Euclidean distance)
+   // inserts the ActiveCellHolder h in ascending order by value (resistance)
    void insertH(ActiveCellHolder h) {
       int index = 0;
       bool found = false;
