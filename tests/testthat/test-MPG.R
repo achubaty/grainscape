@@ -61,6 +61,8 @@ test_that("MPG handles NA values correctly (#28)", {
 })
 
 test_that("MPG contains links to all patches (#32)", {
+  skip_if_not_installed("dplyr")
+
   withr::local_package("igraph")
   withr::local_package("raster")
 
@@ -98,46 +100,116 @@ test_that("MPG contains links to all patches (#32)", {
   expect_equal(count_components(g), 1)
 })
 
-test_that("least-cost paths are correct (#72)", {
+test_that("least-cost paths are correctly calculated (#72)", {
+  debug_cpp = FALSE
+  # debug_cpp = TRUE
+
   patchMap <- system.file("extdata/issue72_patchID.tif", package = "grainscape") |>
     raster::raster()
   patchIDs <- which(!is.na(raster::getValues(patchMap)))
   patchMap[] <- 0L
   patchMap[patchIDs] <- 1L
 
-  if (interactive()) {
+  if (!debug_cpp && interactive()) {
     raster::plot(patchMap)
   }
 
   resistanceMap <- system.file("extdata/issue72_resistance.tif", package = "grainscape") |>
     raster::raster()
 
-  patchVal <- 500L
+  if (!debug_cpp && interactive()) {
+    raster::plot(resistanceMap)
+  }
+
   combinedMap <- resistanceMap
+
+  mapVals <- raster::getValues(resistanceMap) |> unique() |> sort() ## 1, 10, 1000
+  patchVal <- 1L ## should be 1 (i.e., no additional resistance to movement than distance alone)
+
   combinedMap[patchIDs] <- patchVal
 
-  if (interactive()) {
-    # raster::plot(resistanceMap)
-    raster::plot(combinedMap)
+  ## crop to smaller extent to better visualize the issue [416 px]
+  zoomExtent1 <- raster::extent(patchMap, r1 = 120, r2 = 145, c1 = 90, c2 = 105)
+  patchMap_zoom1 <- raster::crop(patchMap, zoomExtent1)
+  resistanceMap_zoom1 <- raster::crop(resistanceMap, zoomExtent1)
+  combinedMap_zoom1 <- raster::crop(combinedMap, zoomExtent1)
+
+  if (!debug_cpp && interactive()) {
+    raster::plot(combinedMap_zoom1)
   }
 
-  ## crop to smaller extent to better visualize the issue
-  zoomExtent <- raster::extent(patchMap, r1 = 120, r2 = 150, c1 = 85, c2 = 110)
-  patchMap_zoom <- raster::crop(patchMap, zoomExtent)
-  resistanceMap_zoom <- raster::crop(resistanceMap, zoomExtent)
-  combinedMap_zoom <- raster::crop(combinedMap, zoomExtent)
+  patchyMPG_zoom1 <- MPG(combinedMap_zoom1, patch = patchMap_zoom1)
 
-  if (interactive()) {
-    raster::plot(combinedMap_zoom)
+  if (!debug_cpp && interactive()) {
+    # plot(patchyMPG_zoom@mpgPlot)
+    plot(patchyMPG_zoom1, quick = "mpgPlot", theme = FALSE)
   }
 
-  patchyMPG_zoom <- MPG(combinedMap_zoom, patch = combinedMap_zoom == patchVal)
+  lcpWeight_zoom1 <- raster::getValues(patchyMPG_zoom1@lcpPerimWeight) |> unique() |> na.omit()
+  expect_true(lcpWeight_zoom1 == 3L)
 
-  if (interactive()) {
-    # plot(patchyMPG_zoom, quick = "mpgPlot", theme = FALSE)
-    plot(patchyMPG_zoom@mpgPlot)
+  expect_true(nrow(graphdf(patchyMPG_zoom1)[[1]]$v) == 2)
+  expect_true(nrow(graphdf(patchyMPG_zoom1)[[1]]$e) == 1)
+
+  ## crop to different, larger extent with more patches (nodes) [1681 px]
+  zoomExtent2 <- raster::extent(patchMap, r1 = 170, r2 = 210, c1 = 80, c2 = 120)
+  patchMap_zoom2 <- raster::crop(patchMap, zoomExtent2)
+  resistanceMap_zoom2 <- raster::crop(resistanceMap, zoomExtent2)
+  combinedMap_zoom2 <- raster::crop(combinedMap, zoomExtent2)
+
+  if (!debug_cpp && interactive()) {
+    raster::plot(combinedMap_zoom2)
   }
 
-  lcpWeight <- raster::getValues(patchyMPG_zoom@lcpPerimWeight) |> unique() |> na.omit()
-  expect_true(lcpWeight == 3L)
+  patchyMPG_zoom2 <- MPG(combinedMap_zoom2, patch = patchMap_zoom2)
+
+  if (!debug_cpp && interactive()) {
+    # plot(patchyMPG_zoom2@mpgPlot)
+    plot(patchyMPG_zoom2, quick = "mpgPlot", theme = FALSE)
+  }
+
+  lcpWeight_zoom2 <- raster::getValues(patchyMPG_zoom2@lcpPerimWeight) |> unique() |> na.omit()
+  expect_identical(as.integer(lcpWeight_zoom2), c(8L, 1L))
+
+  expect_true(nrow(graphdf(patchyMPG_zoom2)[[1]]$v) == 3)
+  expect_true(nrow(graphdf(patchyMPG_zoom2)[[1]]$e) == 2) ## TODO: remove dupes from cpp
+
+  ## crop to even larger extent with more patches (nodes) [7371 px]
+  zoomExtent3 <- raster::extent(patchMap, r1 = 120, r2 = 210, c1 = 50, c2 = 130)
+  patchMap_zoom3 <- raster::crop(patchMap, zoomExtent3)
+  resistanceMap_zoom3 <- raster::crop(resistanceMap, zoomExtent)
+  combinedMap_zoom3 <- raster::crop(combinedMap, zoomExtent3)
+
+  if (!debug_cpp && interactive()) {
+    raster::plot(combinedMap_zoom3)
+  }
+
+  patchyMPG_zoom3 <- MPG(combinedMap_zoom3, patch = patchMap_zoom3) ## TODO: fix excessive RAM use
+
+  if (!debug_cpp && interactive()) {
+    # plot(patchyMPG_zoom2@mpgPlot)
+    plot(patchyMPG_zoom3, quick = "mpgPlot", theme = FALSE)
+    graphdf(patchyMPG_zoom3)[[1]]
+  }
+
+  lcpWeight_zoom3 <- raster::getValues(patchyMPG_zoom3@lcpPerimWeight) |> unique() |> na.omit()
+  expect_identical(as.integer(lcpWeight_zoom3), c(8L, 1L)) ## TODO
+
+  expect_true(nrow(graphdf(patchyMPG_zoom2)[[1]]$v) == 7) ## TODO
+  expect_true(nrow(graphdf(patchyMPG_zoom2)[[1]]$e) == 9) ## TODO: remove dupes from cpp
+
+
+  ## now with the full original extent [32550 px]
+  patchyMPG <- MPG(combinedMap, patch = patchMap) ## TODO: fix excessive RAM use
+
+  if (!debug_cpp && interactive()) {
+    # plot(patchyMPG@mpgPlot)
+    plot(patchyMPG, quick = "mpgPlot", theme = FALSE)
+  }
+
+  lcpWeights <- raster::getValues(patchyMPG@lcpPerimWeight) |> unique() |> na.omit()
+  expect_identical(as.integer(lcpWeight_zoom3), c(8L, 1L)) ## TODO
+
+  expect_true(nrow(graphdf(patchyMPG_zoom2)[[1]]$v) == 9) ## TODO
+  expect_true(nrow(graphdf(patchyMPG_zoom2)[[1]]$e) == 13) ## TODO: remove dupes from cpp
 })
