@@ -63,15 +63,15 @@ setMethod(
           data.frame(edgeAttr, stringsAsFactors = FALSE) |>
           stats::setNames(c("e1", "e2", colnames(edgeAttr)))
 
-        # ## Clean-up storage mode structure of data.frames
-        # results[[i]]$e <- sapply(results[[i]]$e, as.character) |>
-        #   as.data.frame(stringsAsFactors = FALSE)
-        # results[[i]]$v <- sapply(results[[i]]$v, as.character) |>
-        #   as.data.frame(stringsAsFactors = FALSE)
-        # results[[i]]$e <- lapply(results[[i]]$e, function(z) type.convert(z, as.is = TRUE)) |>
-        #   as.data.frame(stringsAsFactors = FALSE)
-        # results[[i]]$v <- lapply(results[[i]]$v, function(z) type.convert(z, as.is = TRUE)) |>
-        #   as.data.frame(stringsAsFactors = FALSE)
+        ## Clean-up storage mode structure of data.frames
+        results[[i]]$e <- sapply(results[[i]]$e, as.character) |>
+          as.data.frame(stringsAsFactors = FALSE)
+        results[[i]]$v <- sapply(results[[i]]$v, as.character) |>
+          as.data.frame(stringsAsFactors = FALSE)
+        results[[i]]$e <- lapply(results[[i]]$e, function(z) type.convert(z, as.is = TRUE)) |>
+          as.data.frame(stringsAsFactors = FALSE)
+        results[[i]]$v <- lapply(results[[i]]$v, function(z) type.convert(z, as.is = TRUE)) |>
+          as.data.frame(stringsAsFactors = FALSE)
       } else {
         results[[i]]$v <- NA
         results[[i]]$e <- NA
