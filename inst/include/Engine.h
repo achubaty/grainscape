@@ -54,6 +54,9 @@ private:
     // creates new active cells and stores them in the temporary active cell holder
     void createActiveCell(ActiveCell * ac, int row, int col);
 
+    // create links between nodes
+    void createLinks(ActiveCell * ac, int row, int col);
+
     // updates the output data's vectors,
     // given the vector that needs to be updated (vm) and the map that contains the new data (mm)
     void updateOutputMap(std::vector<float> & vm, flMap mm);

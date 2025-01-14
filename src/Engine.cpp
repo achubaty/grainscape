@@ -220,6 +220,15 @@ void Engine::start() {
       createActiveCell(&spread_list[i], spread_list[i].row, spread_list[i].column - 1);  // left
     }
 
+    // using updated (re-sorted!) spread_list, find paths between nodes
+    // TODO: don't create link for the new active cells (which were added to temp list for later)
+    for (unsigned int i = 0; i < spread_list.size(); i++) {
+      createLinks(&spread_list[i], spread_list[i].row - 1, spread_list[i].column);  // top
+      createLinks(&spread_list[i], spread_list[i].row + 1, spread_list[i].column);  // bottom
+      createLinks(&spread_list[i], spread_list[i].row, spread_list[i].column + 1);  // right
+      createLinks(&spread_list[i], spread_list[i].row, spread_list[i].column - 1);  // left
+    }
+
     spread_list.clear(); // clear the spread list
 
     active_cell_holder = temporary_active_cell_holder; // set the new active cells
@@ -358,9 +367,12 @@ void Engine::createActiveCell(ActiveCell * ac, int row, int col) {
   }
 }
 
-  }
-
-  // create the links
+//' Create links between nodes
+//'
+//' @author Sam Doctolero and Alex Chubaty
+//' @keywords internal
+void Engine::createLinks(ActiveCell * ac, int row, int col) {
+  // create the links between nodes (patches)
   // check if the row and col arguments are not out of bounds,
   //   voronoi_map's row'th and col'th element is not zero,
   //   and not ac's id, then this is a voronoi boundary
