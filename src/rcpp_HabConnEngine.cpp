@@ -26,23 +26,20 @@ using namespace Rcpp;
 //' @keywords internal
 //' @rdname habConnRcpp
 // [[Rcpp::export(name = ".habConnRcpp")]]
-List habConnRcpp(NumericVector cost, NumericVector patches, int ncol, int nrow)
-{
+List habConnRcpp(NumericVector cost, NumericVector patches, int ncol, int nrow) {
   // create instances of inputdata and output data
   InputData in_data;
   OutputData out_data;
 
   // initialize the input data cost vector
   in_data.cost_vec.resize(cost.size());
-  for (unsigned int i = 0; i < in_data.cost_vec.size(); i++)
-  {
+  for (unsigned int i = 0; i < in_data.cost_vec.size(); i++) {
     in_data.cost_vec[i] = (float)cost[i];
   }
 
   // initialize the input data patches vector
   in_data.patch_vec.resize(patches.size());
-  for (unsigned int i = 0; i < in_data.patch_vec.size(); i++)
-  {
+  for (unsigned int i = 0; i < in_data.patch_vec.size(); i++) {
 	  in_data.patch_vec[i] = (float)patches[i];
   }
 
@@ -54,8 +51,7 @@ List habConnRcpp(NumericVector cost, NumericVector patches, int ncol, int nrow)
 
   Engine habConnCalculator(&in_data, &out_data, error_msg, MAX_CHAR_SIZE);
 
-  if (!habConnCalculator.initialize())
-  {
+  if (!habConnCalculator.initialize()) {
     Rprintf("Engine did not initialize due to %s\n", error_msg);
     return R_NilValue;
   }
@@ -66,16 +62,14 @@ List habConnRcpp(NumericVector cost, NumericVector patches, int ncol, int nrow)
   NumericVector nmpatch(cost.size());
 
   // transfer the vector data to the NumericVector variables
-  for (unsigned int i = 0; i < cost.size(); i++)
-  {
+  for (unsigned int i = 0; i < cost.size(); i++) {
     nmvor[i] = (double)out_data.voronoi_map[i];
     nmpatch[i] = (double)out_data.patch_map[i];
   }
 
   // create the returned data structure (R indexes from 1, so add 1 to the row/col values)
   List link_data_vec(out_data.link_data.size());
-  for (unsigned int i = 0; i < out_data.link_data.size(); i++)
-  {
+  for (unsigned int i = 0; i < out_data.link_data.size(); i++) {
     link_data_vec[i] = List::create(
       Named("LinkId", (double)(i + 1)*(-1.0)),
       Named("StartId", out_data.link_data[i].start.id),
@@ -88,8 +82,7 @@ List habConnRcpp(NumericVector cost, NumericVector patches, int ncol, int nrow)
     );
 
     // go through each cell in the link data and put in their values
-    for (unsigned int j = 0; j < out_data.link_data[i].connection.size(); j++)
-    {
+    for (unsigned int j = 0; j < out_data.link_data[i].connection.size(); j++) {
       int row = out_data.link_data[i].connection[j].row;
       int col = out_data.link_data[i].connection[j].column;
       nmpatch[row*in_data.ncol + col] = (double)(i + 1)*(-1.0);

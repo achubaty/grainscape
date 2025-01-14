@@ -58,7 +58,7 @@ Using a marching algorithm to find the Voronoi boundaries makes it possible to i
 As a cell is spread into (let's call it a child cell) it then creates a link or connection between the child cell and the cell that it spread from, which we call a parent cell.
 
 Finding the least-cost path in this way is only possible because the algorithm stores the child cells (which will eventually become parent cells) in a queuing table that sorts the cells in a certain order.
-The child cells are sorted by increasing Euclidean distance between the child cell and their origin cell, the perimeter cell that the connection originally spawned from.
+The child cells are sorted by increasing effective distance (i.e., resistance or cost) between the child cell and their origin cell, the perimeter cell that the connection originally spawned from.
 A link or path between patches is then created at the first Voronoi boundary between two patches.
 
 The MPG algorithm has the following general steps.
@@ -101,7 +101,7 @@ An interface to this code has been abstracted to R functions using the `Rcpp` pa
 ![Schematic representation of Cell type data structures.](figures/cells_diagram.jpg)
 
 - `ActiveCellHolder`: a type of container that stores a vector of `ActiveCell`s in an order.
-- `ActiveCellQueue`: contains an `ActiveCellHolder`. Its main purpose is to properly store the `ActiveCellHolder` in a vector in order of increasing Euclidean distance.
+- `ActiveCellQueue`: contains an `ActiveCellHolder`. Its main purpose is to properly store the `ActiveCellHolder` in a vector in order of increasing effective distance (i.e., resistance or cost).
 - `InputData`: contains all the data that is needed for the engine to operate. The user of the engine has to create an instance of it and initialize all the properties before giving the address of the object to the engine's constructor.
 - `Link`: stores all the links (directly and indirectly) between the patches. Links are given a negative ID to distinguish them from patch IDs.
 - `OutputData`: similar to `InputData` but it acts as a container for all the data that are calculated by the engine and gives that data to the user.
@@ -166,14 +166,14 @@ DiagrammeR::grViz("
     outOfBounds; updateOutputMap; writeErrorMessage;
     
     # edges
-    initialize->writeErrorMessage
+    initialize->cellIsZero
     initialize->findPatches
     initialize->updateOutputMap
-    initialize->cellIsZero
+    initialize->writeErrorMessage
     cellIsZero->outOfBounds
-    findPatches->outOfBounds
-    findPatches->getIndexFromList
     findPatches->combinePatches
+    findPatches->getIndexFromList
+    findPatches->outOfBounds
   }
 ")
 ```
@@ -196,19 +196,21 @@ DiagrammeR::grViz("
     
     activeCellSpreadChecker; calcDistance; cellsEqual; connectCell; createActiveCell;
     findPath; lookForIndirectPath;
-    outOfBounds; parseMap; updateOutputMap; writeErrorMessage;
+    outOfBounds; parseMap; prunePaths;
+    updateOutputMap; writeErrorMessage;
     
     # edges
-    start->writeErrorMessage
     start->activeCellSpreadChecker
     start->createActiveCell
     start->updateOutputMap
-    createActiveCell->outOfBounds
+    start->writeErrorMessage
     createActiveCell->calcDistance
     createActiveCell->connectCell
     createActiveCell->findPath
-    findPath->parseMap;
+    createActiveCell->outOfBounds
     findPath->lookForIndirectPath
+    findPath->parseMap
+    findPath->prunePaths
     parseMap->cellsEqual
   }
 ")
@@ -250,7 +252,8 @@ These functions create the links between cells and finds the least cost (direct 
 `findPath`            | Void                | `LinkCell` Pointer, `LinkCell` Pointer, Vector of `Links` | Finds the least cost path between two patches.
 `connectCell`         | Void                | `ActiveCell` Pointer, Integer, Integer, Float | Connects the child cell to the parent cell.
 `parseMap`            | `Cell`              | `LinkCell`, `Link` | Given a starting `Cell` it follows the connections until it reaches a patch. The last cell in the connection is returned.
-`lookForIndirectPath` | Void                | Vector of `Links`, `Link`   | Tries to find an indirect link and updates the second argument.
+`lookForIndirectPath` | Bool                | Vector of `Links`, `Link`   | Tries to find an indirect link and updates the second argument.
+`prunePaths`          | Void                | Vector of `Links` | Removes paths  between nodes that are not the least cost ones.
 
 \newpage
 

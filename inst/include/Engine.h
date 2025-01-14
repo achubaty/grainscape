@@ -16,15 +16,14 @@
 //'
 //' @author Sam Doctolero
 //' @keywords internal
-class Engine
-{
+class Engine {
 private:
     // properties
     InputData * in_data;     // stores the data given by the user
     OutputData * out_data;   // stores the data that's given to the user
 
     float maxCost;           // maximum cost in the cost vector
-    float costRes;           // cost resolution
+    float costRes;           // cost resolution (minimum cost in the cost vector)
 
     ActiveCellQueue active_cell_holder;  // active cells holder
 
@@ -121,6 +120,7 @@ public:
 
     // find the lowest value in the vector of values
     static float emin(std::vector<float> vec);
+
     // finds the Euclidean distance between two cells
     static float calcDistance(Cell c1, Cell c2);
 };
