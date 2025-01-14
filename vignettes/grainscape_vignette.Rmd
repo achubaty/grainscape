@@ -23,7 +23,7 @@ vignette: >
   %\VignetteKeyword{resistance surface}
   %\VignetteKeyword{spatial graph}
   %\VignetteKeyword{Voronoi tessellation}
-  %\VignetteDepends{cowplot, ggplot2, igraph, raster}
+  %\VignetteDepends{cowplot, dplyr, ggplot2, igraph, raster}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 

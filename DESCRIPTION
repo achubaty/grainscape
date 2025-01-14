@@ -38,6 +38,8 @@ LinkingTo: Rcpp
 Suggests:
     covr,
     cowplot,
+    DiagrammeR,
+    dplyr,
     ggthemes,
     knitr,
     parallel,

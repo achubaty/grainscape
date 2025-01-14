@@ -12,6 +12,7 @@ fontsize: 11pt
 geometry: margin=1in
 vignette: >
   %\VignetteIndexEntry{grainscape MPG algorithm}
+  %\VignetteDepends{DiagrammeR}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
