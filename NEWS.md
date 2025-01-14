@@ -3,7 +3,7 @@
 ## Dependency changes
 
 * Require R 4.2 or higher (for native pipe and placeholder)
-* Add `withr` to Suggests for use with tests
+* Add `dplyr` and `withr` to Suggests for use with vignettes and tests
 
 ## Bugfixes
 
