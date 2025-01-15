@@ -5,12 +5,12 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Calculating the minimum planar graph and generating Voronoi tessellations • grainscape</title>
+<title>Calculating the minimum planar graph • grainscape</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Calculating the minimum planar graph and generating Voronoi tessellations">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Calculating the minimum planar graph">
 <!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=G-SBRW4YWBD0"></script><script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
@@ -27,7 +27,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">grainscape</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -41,7 +41,7 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/grainscape_vignette.html">Modelling, visualization and analysis with the `grainscape` package</a></li>
-    <li><a class="dropdown-item" href="../articles/MPG_algorithm.html">Calculating the minimum planar graph and generating Voronoi tessellations</a></li>
+    <li><a class="dropdown-item" href="../articles/MPG_algorithm.html">Calculating the minimum planar graph</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -64,11 +64,11 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
 
-      <h1>Calculating the minimum planar graph and generating Voronoi tessellations</h1>
+      <h1>Calculating the minimum planar graph</h1>
                         <h4 data-toc-skip class="author">Sam Doctolero
 and Alex M Chubaty</h4>
             
-            <h4 data-toc-skip class="date">2025-01-03</h4>
+            <h4 data-toc-skip class="date">2025-01-15</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/achubaty/grainscape/blob/main/vignettes/MPG_algorithm.Rmd" class="external-link"><code>vignettes/MPG_algorithm.Rmd</code></a></small>
       <div class="d-none name"><code>MPG_algorithm.Rmd</code></div>
@@ -76,27 +76,33 @@ and Alex M Chubaty</h4>
 
     
     
-<div style="page-break-after: always;"></div>
 <div class="section level2">
 <h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
 <p>The Minimum Planar Graph (MPG) is a spatial representation of a
 mathematical graph or network that is useful for modelling dense
-two-dimensional landscape networks. It can efficiently approximate
-pairwise connections between graph nodes, and this can assist in the
-visualization and analysis of how a set of patches is connected. The MPG
-also has the useful property that the proximity, size and shape of
-patches in the network combined with the pattern of resistance presented
-by the landscape collectively influence the paths among patches and the
+two-dimensional landscape networks <span class="citation">(see Fall et
+al. 2007)</span>. It can efficiently approximate pairwise connections
+between graph nodes, and this can assist in the visualization and
+analysis of how a set of patches is connected. The MPG also has the
+useful property that the proximity, size and shape of patches in the
+network combined with the pattern of resistance presented by the
+landscape collectively influence the paths among patches and the
 end-points of those links. In this sense the MPG can be said to be
 spatially-explicit, and therefore to be a property of the entire
 landscape under analysis (or alternatively a property of the digital
 resistance map used to represent the landscape).</p>
-<p>The Minimum Planar Graph (MPG) achieves this spatially-explicit
-property by finding Voronoi polygons that describe regions of proximity
-in resistance units around focal patches. The algorithm that is used to
-find the Voronoi boundaries and approximate the least cost-paths between
-patches and their end-points is described below.</p>
+<p>The MPG achieves this spatially-explicit property by finding Voronoi
+polygons that describe regions of proximity in resistance units around
+focal patches <span class="citation">(Fall et al. 2007)</span>. The
+algorithm that is used to find the Voronoi boundaries and approximate
+the least cost-paths between patches and their end-points is described
+below.</p>
+<div style="page-break-after: always;"></div>
+</div>
+<div class="section level2">
+<h2 id="finding-the-minimum-planar-graph">Finding the Minimum Planar Graph<a class="anchor" aria-label="anchor" href="#finding-the-minimum-planar-graph"></a>
+</h2>
 <p>In <code>grainscape</code>, the boundaries of Voronoi polygons are
 found by using a spreading or marching algorithm. This is done beginning
 in each perimeter cell of a patch and spreading out to adjacent cells
@@ -104,7 +110,7 @@ that are not part of any patch and have not been visited yet by the
 algorithm. These cells are then given a patch ID to mark the Voronoi
 territory. A Voronoi boundary is found when a cell is visited twice by
 two different Voronoi territories or IDs originating from different
-patches.</p>
+patches <span class="citation">(see Fall et al. 2007)</span>.</p>
 <p>Using a marching algorithm to find the Voronoi boundaries makes it
 possible to implement a linking algorithm that can run in parallel with
 the marching algorithm. As a cell is spread into (let’s call it a child
@@ -113,10 +119,11 @@ the cell that it spread from, which we call a parent cell.</p>
 <p>Finding the least-cost path in this way is only possible because the
 algorithm stores the child cells (which will eventually become parent
 cells) in a queuing table that sorts the cells in a certain order. The
-child cells are sorted by increasing Euclidean distance between the
-child cell and their origin cell, the perimeter cell that the connection
-originally spawned from. A link or path between patches is then created
-at the first Voronoi boundary between two patches.</p>
+child cells are sorted by increasing effective distance (i.e.,
+resistance or cost) between the child cell and their origin cell, the
+perimeter cell that the connection originally spawned from. A link or
+path between patches is then created at the first Voronoi boundary
+between two patches.</p>
 <p>The MPG algorithm has the following general steps. These are
 represented in more detail in a flow chart in Figure 1.</p>
 <ol style="list-style-type: decimal">
@@ -132,10 +139,10 @@ Cells.</li>
 <img src="figures%2FHabConnFlowchart.jpg" style="height:90.0%" alt="Overview of the MPG algorithm."><div class="figcaption">Overview of the MPG algorithm.</div>
 </div>
 <p>The linking algorithm is embedded within the spreading functions of
-the MPG algorithm. When an Active Cell spreads a link map creates a
-connection between the parent Active Cell to the new (child) Active
-Cell. Linking is assisted by the queue when finding the least-cost
-paths.</p>
+the MPG algorithm. When an <code>ActiveCell</code> spreads, a link map
+creates a connection between the parent <code>ActiveCell</code> to the
+new (child) <code>ActiveCell</code>. Linking is assisted by the queue
+when finding the least-cost paths.</p>
 </div>
 <div class="section level2">
 <h2 id="technical-reference-to-the-mpg-engine-written-in-c">Technical reference to the MPG engine written in C++<a class="anchor" aria-label="anchor" href="#technical-reference-to-the-mpg-engine-written-in-c"></a>
@@ -146,7 +153,8 @@ useful for those who wish to implement MPG extraction in other
 programming languages. Reading and interpretation of this section is not
 required for the use of <code>grainscape</code> in R. An interface to
 this code has been abstracted to R functions using the <code>Rcpp</code>
-package.</p>
+package <span class="citation">(Eddelbuettel et al. 2024)</span>.</p>
+<div style="page-break-after: always;"></div>
 <div class="section level3">
 <h3 id="terminology">Terminology<a class="anchor" aria-label="anchor" href="#terminology"></a>
 </h3>
@@ -160,8 +168,8 @@ evaluated. It refers to the child cell mentioned above.</li>
 <em>Time:</em> An index of the iteration.</li>
 <li>
 <em>Object:</em> An instance of a certain data type, class, or data
-structure (<em>i.e.</em>, <code>Cell c</code>, <code>c</code> then is an
-object of type <code>Cell</code>).</li>
+structure (<em>e.g.</em>, <code>Cell c</code>, refers to an object
+<code>c</code> of type <code>Cell</code>).</li>
 </ul>
 </div>
 <div class="section level3">
@@ -196,8 +204,8 @@ vector of <code>ActiveCell</code>s in an order.</li>
 <li>
 <code>ActiveCellQueue</code>: contains an
 <code>ActiveCellHolder</code>. Its main purpose is to properly store the
-<code>ActiveCellHolder</code> in a vector in an order, increasing
-Euclidean distance.</li>
+<code>ActiveCellHolder</code> in a vector in order of increasing
+effective distance (i.e., resistance or cost).</li>
 <li>
 <code>InputData</code>: contains all the data that is needed for the
 engine to operate. The user of the engine has to create an instance of
@@ -255,10 +263,10 @@ Class</div>
 <div class="section level4">
 <h4 id="fieldsproperties">Fields/Properties<a class="anchor" aria-label="anchor" href="#fieldsproperties"></a>
 </h4>
-<table class="table">
+<table style="width:100%;" class="table">
 <colgroup>
 <col width="35%">
-<col width="28%">
+<col width="27%">
 <col width="36%">
 </colgroup>
 <thead><tr class="header">
@@ -269,59 +277,62 @@ Class</div>
 <tbody>
 <tr class="odd">
 <td><code>in_data</code></td>
-<td>InputData Pointer</td>
+<td>
+<code>InputData</code> Pointer</td>
 <td>Points to an <code>InputData</code> object. This is where the engine
 gets all the initialization values from.</td>
 </tr>
 <tr class="even">
 <td><code>out_data</code></td>
-<td>OutputData Pointer</td>
+<td>
+<code>OutputData</code> Pointer</td>
 <td>Points to an <code>OutputData</code> object. The engine stores all
 the calculated values in this variable.</td>
 </tr>
 <tr class="odd">
 <td><code>maxCost</code></td>
-<td>float</td>
+<td>Float</td>
 <td>The maximum resistance or cost in the resistance map.</td>
 </tr>
 <tr class="even">
 <td><code>costRes</code></td>
-<td>float</td>
+<td>Float</td>
 <td>The minimum resistance or cost in the resistance map.</td>
 </tr>
 <tr class="odd">
 <td><code>active_cell_holder</code></td>
-<td>ActiveCellQueue</td>
+<td><code>ActiveCellQueue</code></td>
 <td>Holds or stores all the <code>ActiveCells</code>.</td>
 </tr>
 <tr class="even">
 <td><code>temporary_active_cell_holder</code></td>
-<td>ActiveCellQueue</td>
+<td><code>ActiveCellQueue</code></td>
 <td>Similar to <code>active_cell_holder</code>, except it acts as an
 intermediate or temporary holder of <code>ActiveCells</code>. Required
 for vector resizing and comparing.</td>
 </tr>
 <tr class="odd">
 <td><code>spread_list</code></td>
-<td>vector of ActiveCells</td>
+<td>vector of <code>ActiveCells</code>
+</td>
 <td>Stores all the <code>ActiveCells</code> that are ready to spread to
 all 4 adjacent cells, if possible.</td>
 </tr>
 <tr class="even">
 <td><code>iLinkMap</code></td>
-<td>LinkMap</td>
+<td><code>LinkMap</code></td>
 <td>A map that keeps track of all the connections between cells due to
 the spreading and queuing functions.</td>
 </tr>
 <tr class="odd">
 <td><code>voronoi_map</code></td>
-<td>flMap</td>
+<td><code>flMap</code></td>
 <td>A map that contains floating point values, it stores the Voronoi
 boundaries/polygons.</td>
 </tr>
 <tr class="even">
 <td><code>cost_map</code></td>
-<td>flMap</td>
+<td><code>flMap</code></td>
 <td>A map that contains the resistance or cost in each
 cell/element.</td>
 </tr>
@@ -337,6 +348,11 @@ to diagnose problems in the engine.</td>
 <div class="section level4">
 <h4 id="methodsfunctions">Methods/Functions<a class="anchor" aria-label="anchor" href="#methodsfunctions"></a>
 </h4>
+<p>After instantiating an <code>Engine</code> object, the connectivity
+engine is run by first calling <code>initialize()</code> and then
+<code><a href="https://rdrr.io/r/stats/start.html" class="external-link">start()</a></code>. The call graphs for each of these principal
+functions are presented below.</p>
+<div style="page-break-after: always;"></div>
 <div class="section level5">
 <h5 id="public-functions">Public Functions<a class="anchor" aria-label="anchor" href="#public-functions"></a>
 </h5>
@@ -359,30 +375,78 @@ to diagnose problems in the engine.</td>
 <td><code>Engine</code></td>
 <td>Instance of an <code>Engine</code>
 </td>
-<td>Nothing</td>
+<td>None</td>
 <td>Default Engine constructor.</td>
 </tr>
 <tr class="even">
 <td><code>Engine</code></td>
 <td>Instance of an <code>Engine</code>
 </td>
-<td>InputData Pointer, OutputData Pointer, Char Pointer</td>
-<td>Engine constructor.</td>
+<td>
+<code>InputData</code> Pointer, <code>OutputData</code> Pointer,
+Char Pointer</td>
+<td>
+<code>Engine</code> constructor.</td>
 </tr>
 <tr class="odd">
 <td><code>initialize</code></td>
 <td>Boolean</td>
-<td>Nothing</td>
+<td>None</td>
 <td>Prepares the engine for calculation.</td>
 </tr>
 <tr class="even">
 <td><code>start</code></td>
 <td>Void</td>
-<td>Nothing</td>
-<td>It runs the MPG algorithm.</td>
+<td>None</td>
+<td>Runs the MPG algorithm.</td>
 </tr>
 </tbody>
 </table>
+<div style="page-break-after: always;"></div>
+</div>
+<div class="section level5">
+<h5 id="patch-finding-functions">Patch Finding Functions<a class="anchor" aria-label="anchor" href="#patch-finding-functions"></a>
+</h5>
+<p>The functions are responsible for identifying the patches (clusters)
+in a resistance map, given a value for a habitat.</p>
+<table class="table">
+<colgroup>
+<col width="20%">
+<col width="21%">
+<col width="31%">
+<col width="27%">
+</colgroup>
+<thead><tr class="header">
+<th><strong>Function</strong></th>
+<th><strong>Return Type</strong></th>
+<th><strong>Input Arguments</strong></th>
+<th><strong>Description</strong></th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td><code>findPatches</code></td>
+<td>Void</td>
+<td>Nothing</td>
+<td>Finds all the patches in the patch vector and assign patch IDs.</td>
+</tr>
+<tr class="even">
+<td><code>getIndexFromList</code></td>
+<td>Int</td>
+<td>Float, Vector of <code>Patch</code>es</td>
+<td>Finds the index in the vector of patches that the given ID
+correspond to.</td>
+</tr>
+<tr class="odd">
+<td><code>combinePatches</code></td>
+<td>Int</td>
+<td>Int, Int, Vector of <code>Patch</code>es</td>
+<td>Given two indices and the list of patches. Extract the two patches
+from the list and combine those two into one patch. Insert the new patch
+into the list and return the index value of the new patch.</td>
+</tr>
+</tbody>
+</table>
+<div style="page-break-after: always;"></div>
 </div>
 <div class="section level5">
 <h5 id="linking-functions">Linking Functions<a class="anchor" aria-label="anchor" href="#linking-functions"></a>
@@ -406,73 +470,45 @@ cost (direct or indirect) paths between patches.</p>
 <tr class="odd">
 <td><code>findPath</code></td>
 <td>Void</td>
-<td>LinkCell Pointer, LinkCell Pointer, Vector of Links</td>
+<td>
+<code>LinkCell</code> Pointer, <code>LinkCell</code> Pointer, Vector
+of <code>Links</code>
+</td>
 <td>Finds the least cost path between two patches.</td>
 </tr>
 <tr class="even">
 <td><code>connectCell</code></td>
 <td>Void</td>
-<td>ActiveCell Pointer, Integer, Integer, Float</td>
+<td>
+<code>ActiveCell</code> Pointer, Integer, Integer, Float</td>
 <td>Connects the child cell to the parent cell.</td>
 </tr>
 <tr class="odd">
 <td><code>parseMap</code></td>
-<td>Cell</td>
-<td>LinkCell, Link</td>
-<td>Given a starting Cell it follows the connections until it reaches a
-patch. The last cell in the connection is returned.</td>
+<td><code>Cell</code></td>
+<td>
+<code>LinkCell</code>, <code>Link</code>
+</td>
+<td>Given a starting <code>Cell</code> it follows the connections until
+it reaches a patch. The last cell in the connection is returned.</td>
 </tr>
 <tr class="even">
 <td><code>lookForIndirectPath</code></td>
-<td>Void</td>
-<td>Vector of Links, Link</td>
+<td>Bool</td>
+<td>Vector of <code>Links</code>, <code>Link</code>
+</td>
 <td>Tries to find an indirect link and updates the second argument.</td>
 </tr>
-</tbody>
-</table>
-</div>
-<div class="section level5">
-<h5 id="patch-finding-functions">Patch Finding Functions<a class="anchor" aria-label="anchor" href="#patch-finding-functions"></a>
-</h5>
-<p>The functions are responsible for finding the patches or clusters in
-a resistance map, given a value for a habitat.</p>
-<table class="table">
-<colgroup>
-<col width="20%">
-<col width="21%">
-<col width="29%">
-<col width="27%">
-</colgroup>
-<thead><tr class="header">
-<th><strong>Function</strong></th>
-<th><strong>Return Type</strong></th>
-<th><strong>Input Arguments</strong></th>
-<th><strong>Description</strong></th>
-</tr></thead>
-<tbody>
 <tr class="odd">
-<td><code>findPatches</code></td>
+<td><code>prunePaths</code></td>
 <td>Void</td>
-<td>Nothing</td>
-<td>Finds all the patches in the patch vector and assign patch IDs.</td>
-</tr>
-<tr class="even">
-<td><code>getIndexFromList</code></td>
-<td>Int</td>
-<td>Float, Vector of Patches</td>
-<td>Finds the index in the vector of patches that the given ID
-correspond to.</td>
-</tr>
-<tr class="odd">
-<td><code>combinePatches</code></td>
-<td>Int</td>
-<td>Int, Int, Vector of Patches</td>
-<td>Given two indices and the list of patches. Extract the two patches
-from the list and combine those two into one patch. Insert the new patch
-into the list and return the index value of the new patch.</td>
+<td>Vector of <code>Links</code>
+</td>
+<td>Removes paths between nodes that are not the least cost ones.</td>
 </tr>
 </tbody>
 </table>
+<div style="page-break-after: always;"></div>
 </div>
 <div class="section level5">
 <h5 id="common-functions">Common Functions<a class="anchor" aria-label="anchor" href="#common-functions"></a>
@@ -503,11 +539,15 @@ resistance map’s dimensions.</td>
 <tr class="even">
 <td><code>cellIsEqual</code></td>
 <td>Bool</td>
-<td>Cell, Cell</td>
-<td>Compares the two cells’ row and column if they match.</td>
+<td>
+<code>Cell</code>, <code>Cell</code>
+</td>
+<td>Compares the two <code>Cell</code>s’ row and column if they
+match.</td>
 </tr>
 </tbody>
 </table>
+<div style="page-break-after: always;"></div>
 </div>
 <div class="section level5">
 <h5 id="static-functions">Static Functions<a class="anchor" aria-label="anchor" href="#static-functions"></a>
@@ -545,7 +585,9 @@ values</td>
 <tr class="odd">
 <td><code>calcDistance</code></td>
 <td>Float</td>
-<td>Cell, Cell</td>
+<td>
+<code>Cell</code>, <code>Cell</code>
+</td>
 <td>Finds the Euclidean distance between two Cells</td>
 </tr>
 </tbody>
@@ -561,8 +603,9 @@ values</td>
 <li>Create <code>InputData</code> and <code>OutputData</code>
 objects.</li>
 <li>Initialize the <code>InputData</code> object’s fields. Keep in mind
-that the vectors in the InputData and Output data structures are all of
-type <code>float</code>.</li>
+that the vectors in the <code>InputData</code> and
+<code>OutputData</code> structures are all of type
+<code>float</code>.</li>
 <li>Create an array of <code>Char</code> with the length of
 <code>MAX_CHAR_SIZE</code> or a larger value.</li>
 <li>Create an <code>Engine</code> object and give the address of the
@@ -577,9 +620,9 @@ failure.</li>
 <li>Once the engine is done calculating, extract all the fields needed
 in the <code>OutputData</code> object.</li>
 </ol>
-<p>A snippet C++ code is shown on the next page as an example.</p>
+<p>A snippet of C++ code is shown on the next page as an example.</p>
 <p>Note that the current <code>Engine</code> has two lines of code that
-are meant for interfacing with R. In order to make the
+are meant for interfacing with R via <code>Rcpp</code> <span class="citation">(Eddelbuettel et al. 2024)</span>. In order to make the
 <code>Engine</code> run with any programming or scripting language,
 remove those two lines. One of them is an <code>include</code> statement
 for <code>Rcpp</code>, at the very top of source code, and the other is
@@ -591,37 +634,50 @@ crashing their console and possibly losing their data.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>vector<span class="op">&lt;</span><span class="dt">float</span><span class="op">&gt;</span> EngineInterface<span class="op">(</span>vector<span class="op">&lt;</span><span class="dt">float</span><span class="op">&gt;</span> resistance<span class="op">,</span> vector<span class="op">&lt;</span><span class="dt">float</span><span class="op">&gt;</span> patches<span class="op">,</span></span>
 <span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>                              <span class="dt">int</span> nrow<span class="op">,</span> <span class="dt">int</span> ncol<span class="op">)</span></span>
 <span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="op">{</span></span>
-<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>    <span class="co">//InputData and OutputData objects</span></span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>    <span class="co">// InputData and OutputData objects</span></span>
 <span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>    InputData inObj<span class="op">;</span></span>
 <span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a>    OutputData outObj<span class="op">;</span> </span>
 <span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a></span>
-<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a>    <span class="co">//Initialize InputData object</span></span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a>    <span class="co">// Initialize InputData object</span></span>
 <span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a>    inObj<span class="op">.</span>cost_vec <span class="op">=</span> resistance<span class="op">;</span></span>
 <span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a>    inObj<span class="op">.</span>nrow <span class="op">=</span> nrow<span class="op">;</span></span>
 <span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a>    inObj<span class="op">.</span>ncol <span class="op">=</span> ncol<span class="op">;</span></span>
 <span id="cb1-12"><a href="#cb1-12" tabindex="-1"></a>    inObj<span class="op">.</span>patch_vec <span class="op">=</span> patches<span class="op">;</span></span>
 <span id="cb1-13"><a href="#cb1-13" tabindex="-1"></a></span>
-<span id="cb1-14"><a href="#cb1-14" tabindex="-1"></a>    <span class="co">//Array of chars with a size of MAX_CHAR_SIZE</span></span>
+<span id="cb1-14"><a href="#cb1-14" tabindex="-1"></a>    <span class="co">// Array of chars with a size of MAX_CHAR_SIZE</span></span>
 <span id="cb1-15"><a href="#cb1-15" tabindex="-1"></a>    <span class="dt">char</span> error<span class="op">[</span>MAX_CHAR_SIZE<span class="op">];</span></span>
 <span id="cb1-16"><a href="#cb1-16" tabindex="-1"></a></span>
-<span id="cb1-17"><a href="#cb1-17" tabindex="-1"></a>    <span class="co">//Engine object while passing in the InputData and OutputData objects'</span></span>
+<span id="cb1-17"><a href="#cb1-17" tabindex="-1"></a>    <span class="co">// Engine object while passing in the InputData and OutputData objects'</span></span>
 <span id="cb1-18"><a href="#cb1-18" tabindex="-1"></a>    <span class="co">// address and the array of chars</span></span>
 <span id="cb1-19"><a href="#cb1-19" tabindex="-1"></a>    Engine engineObj<span class="op">(&amp;</span>inObj<span class="op">,</span> <span class="op">&amp;</span>outObj<span class="op">,</span> error<span class="op">,</span> MAX_CHAR_SIZE<span class="op">);</span></span>
 <span id="cb1-20"><a href="#cb1-20" tabindex="-1"></a></span>
-<span id="cb1-21"><a href="#cb1-21" tabindex="-1"></a>    <span class="co">//Initialize the engineObj;</span></span>
-<span id="cb1-22"><a href="#cb1-22" tabindex="-1"></a>    <span class="co">//If it fails output the reason why and exit the function</span></span>
+<span id="cb1-21"><a href="#cb1-21" tabindex="-1"></a>    <span class="co">// Initialize the engineObj;</span></span>
+<span id="cb1-22"><a href="#cb1-22" tabindex="-1"></a>    <span class="co">// If it fails output the reason why and exit the function</span></span>
 <span id="cb1-23"><a href="#cb1-23" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>engineObj<span class="op">.</span>initialize<span class="op">()</span> <span class="op">==</span> <span class="kw">false</span><span class="op">)</span></span>
 <span id="cb1-24"><a href="#cb1-24" tabindex="-1"></a>    <span class="op">{</span></span>
 <span id="cb1-25"><a href="#cb1-25" tabindex="-1"></a>        cout <span class="op">&lt;&lt;</span> error <span class="op">&lt;&lt;</span> endl<span class="op">;</span></span>
 <span id="cb1-26"><a href="#cb1-26" tabindex="-1"></a>        <span class="cf">return</span> outObj<span class="op">.</span>voronoi_map<span class="op">;</span></span>
 <span id="cb1-27"><a href="#cb1-27" tabindex="-1"></a>    <span class="op">}</span></span>
 <span id="cb1-28"><a href="#cb1-28" tabindex="-1"></a></span>
-<span id="cb1-29"><a href="#cb1-29" tabindex="-1"></a>    <span class="co">//start the calculation</span></span>
+<span id="cb1-29"><a href="#cb1-29" tabindex="-1"></a>    <span class="co">// start the calculation</span></span>
 <span id="cb1-30"><a href="#cb1-30" tabindex="-1"></a>    engineObj<span class="op">.</span>start<span class="op">();</span></span>
 <span id="cb1-31"><a href="#cb1-31" tabindex="-1"></a></span>
 <span id="cb1-32"><a href="#cb1-32" tabindex="-1"></a>    <span class="co">//extract the data needed, in this case the voronoi_map</span></span>
 <span id="cb1-33"><a href="#cb1-33" tabindex="-1"></a>    <span class="cf">return</span> outObj<span class="op">.</span>voronoi_map<span class="op">;</span></span>
 <span id="cb1-34"><a href="#cb1-34" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
+<div id="ref-package:Rcpp" class="csl-entry">
+Eddelbuettel, Dirk, Romain Francois, JJ Allaire, Kevin Ushey, Qiang Kou,
+Nathan Russell, Iñaki Ucar, Doug Bates, and John Chambers. 2024.
+<em>Rcpp: Seamless r and c++ Integration</em>. <a href="https://www.rcpp.org" class="external-link">https://www.rcpp.org</a>.
+</div>
+<div id="ref-Fall:2007eo" class="csl-entry">
+Fall, Andrew, Marie-Josée Fortin, Micheline Manseau, and Dan O’Brien.
+2007. <span>“<span class="nocase">Spatial Graphs: Principles and
+Applications for Habitat Connectivity</span>.”</span>
+<em>Ecosystems</em> 10 (3): 448–61. <a href="https://doi.org/10.1007/s10021-007-9038-7" class="external-link">https://doi.org/10.1007/s10021-007-9038-7</a>.
+</div>
+</div>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

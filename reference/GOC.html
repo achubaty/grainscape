@@ -17,7 +17,7 @@ Patch-based or lattice GOC modelling can be done with this function."><!-- Globa
 
     <a class="navbar-brand me-2" href="../index.html">grainscape</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -29,7 +29,7 @@ Patch-based or lattice GOC modelling can be done with this function."><!-- Globa
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/grainscape_vignette.html">Modelling, visualization and analysis with the `grainscape` package</a></li>
-    <li><a class="dropdown-item" href="../articles/MPG_algorithm.html">Calculating the minimum planar graph and generating Voronoi tessellations</a></li>
+    <li><a class="dropdown-item" href="../articles/MPG_algorithm.html">Calculating the minimum planar graph</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -174,125 +174,127 @@ at multiple spatial scales in landscape genetics. Molecular Ecology 21:3996-4009
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2    14        14 91.982587  6.067164         201             26</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3     1         1 31.441401 71.328875        2355            349</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4    13        13 55.800797 12.209163         502             32</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5     8         8 40.915855 33.420723         719             88</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6     2         2 72.141353 87.096043        1567            202</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5     2         2 72.141353 87.096043        1567            202</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6     8         8 40.915855 33.420723         719             88</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 7     7         7 11.853001 32.207019         983             68</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 8    12        12 22.657810 12.435588         621             42</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 9     5         5 92.944795 58.755521         317              6</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 10    4         4  8.658451 58.595070         284              9</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 11   15        15 64.756757  3.216216          74              2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12   11        11 60.324561 33.085965         285             15</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13    6         6 73.349741 51.795337         193              4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14    3         3 60.669856 71.672249         418              2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15   17        17 76.169643  4.223214         112              2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 16   16        16 36.820000  3.692000         125              2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 17   10        10 96.468504 35.633858         127              3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12   10        10 96.468504 35.633858         127              3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13   11        11 60.324561 33.085965         285             15</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14    6         6 73.349741 51.795337         193              4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15    3         3 60.669856 71.672249         418              2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16   17        17 76.169643  4.223214         112              2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17   16        16 36.820000  3.692000         125              2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    totalPatchEdgeArea totalCoreArea</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1                  80             0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2                  26             0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3                 336            13</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4                  32             0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5                  84             4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6                 197             5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5                 197             5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6                  84             4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 7                  68             0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 8                  39             3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 9                   6             0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 10                  9             0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 11                  2             0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12                 15             0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13                  4             0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14                  2             0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12                  3             0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13                 15             0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14                  4             0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 15                  2             0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 16                  2             0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 17                  3             0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17                  2             0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                                         patchId</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1                                    68, 80, 86</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2                                           100</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3  5, 7, 22, 30, 32, 37, 40, 41, 48, 54, 55, 56</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4                                       95, 103</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5                                        67, 85</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6                  8, 9, 12, 14, 19, 28, 29, 31</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5                  8, 9, 12, 14, 19, 28, 29, 31</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6                                        67, 85</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 7                                62, 64, 74, 84</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 8                                            93</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 9                                            60</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 10                                           50</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 11                                          105</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12                                           76</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13                                           61</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14                                           46</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15                                          107</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 16                                          106</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 17                                       73, 78</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12                                       73, 78</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13                                           76</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14                                           61</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15                                           46</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16                                          107</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17                                          106</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[1]]$e</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    e1 e2 maxWeight linkIdMaxWeight minWeight linkIdMinWeight medianWeight</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1   9 14        55              34        55              34         55.0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2  14 17        54              35        54              35         54.0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3   1  4       135              74        55              36         95.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   1  4       135              79        55              36         95.0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4   1 11        64              37        64              37         64.0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5   1  6        59              38        59              38         59.0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6  13 15        75              41        65              39         70.0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7   8 11        95              60        75              42         85.0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8   1  8        95              59        75              43         75.0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9   1  2       107              62        70              48         76.0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10  7 12        80              47        80              47         80.0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11  2  3       220              89        81              49        140.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6  13 15        75              42        65              39         70.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7   1  2       107              65        69              41         75.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8   8 11        95              62        75              43         85.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9   1  8       210              96        75              44         85.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10  7 12        80              48        80              48         80.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11  2  3       220              97        81              49        140.0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 12  9 17        85              51        85              51         85.0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 13 12 16        85              52        85              52         85.0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14 13  8        85              55        85              55         85.0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15  5 10        88              58        88              58         88.0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 16  7  4       133              79       105              61        119.0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 17 15 17       105              63       105              63        105.0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 18  8 12       146              81       105              65        125.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 19  1  3       132              78       100              66        127.0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 20  9 10       129              72       114              67        121.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 21 13 16       125              76       115              68        120.0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 22 13 12       115              69       115              69        115.0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 23  9  5       130              70       130              70        130.0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 24 13 11       123              71       123              71        123.0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 25  9  6       210              88       123              73        166.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 26  9 11       144              80       144              80        144.0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 27  2  5       290              90       162              83        226.0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 28 11  6       200              84       200              84        200.0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 29 13 17       195              85       195              85        195.0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 30  9 13       208              86       208              86        208.0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 31  6  3       365              91       365              91        365.0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 32  9  2       358              92       358              92        358.0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 33  2  6       432              93       432              93        432.0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    meanWeight numEdgesWeight  linkIdAll eucCentroidWeight</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1    55.00000              1         34          26.41430</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2    54.00000              1         35          15.92009</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3    95.00000              2     36, 74          26.10005</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4    64.00000              1         37          47.92449</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5    59.00000              1         38          46.23709</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6    70.00000              2     39, 41          12.69182</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7    85.00000              2     42, 60          19.41159</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8    81.66667              3 43, 44, 59          39.07420</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9    84.33333              3 45, 48, 62          43.64733</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10   80.00000              2     47, 53          22.53117</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11  147.00000              3 49, 82, 89          19.22209</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12   85.00000              1         51          27.40975</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13   85.00000              1         52          16.64386</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14   85.00000              1         55          25.91316</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15   88.00000              1         58          23.38863</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 16  119.00000              2     61, 79          26.58071</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 17  105.00000              1         63          11.45723</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 18  125.50000              2     65, 81          27.81604</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 19  119.66667              3 66, 77, 78          29.23047</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 20  121.50000              2     67, 72          14.51266</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 21  120.00000              2     68, 76          20.80415</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 22  115.00000              1         69          33.14376</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 23  130.00000              1         70          29.72415</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 24  123.00000              1         71          21.36130</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 25  166.50000              2     73, 88          22.99142</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 26  144.00000              1         80          22.56474</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 27  226.00000              2     83, 90          35.15634</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 28  200.00000              1         84          22.79684</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 29  195.00000              1         85          21.87842</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 30  208.00000              2     86, 87          32.77493</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 31  365.00000              1         91          23.57692</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 32  358.00000              1         92          57.26712</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 33  432.00000              1         93          35.32138</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14 13  8        85              56        85              56         85.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15  5 10        88              60        88              60         88.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16  7  4       130              82       105              64        117.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17 15 17       105              66       105              66        105.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18  9 10       129              76       105              67        113.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19  8 12       146              87       105              69        125.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20  1  3       132              84       105              70        127.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21 13 16       125              81       115              73        120.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22 13 12       115              74       115              74        115.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23  9  5       130              75       130              75        130.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24 13 11       123              77       123              77        123.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25  9  6       210              92       123              78        166.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26  9 11       144              85       144              85        144.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27  8  7       180              89       151              86        165.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28  2  5       290              98       162              90        226.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 29 11  6       200              91       200              91        200.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 30 13 17       195              93       195              93        195.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 31  9 13       208              95       201              94        204.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 32  6  3       365              99       365              99        365.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 33  9  2       358             100       358             100        358.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 34  2  6       432             101       432             101        432.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    meanWeight numEdgesWeight      linkIdAll eucCentroidWeight</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1    55.00000              1             34          26.41430</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2    54.00000              1             35          15.92009</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3    95.00000              2         36, 79          26.10005</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4    64.00000              1             37          47.92449</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5    59.00000              1             38          46.23709</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6    70.00000              2         39, 42          12.69182</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7    83.66667              3     41, 47, 65          43.64733</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8    85.00000              2         43, 62          19.41159</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9   113.75000              4 44, 45, 61, 96          39.07420</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10   80.00000              2         48, 53          22.53117</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11  147.00000              3     49, 88, 97          19.22209</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12   85.00000              1             51          27.40975</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13   85.00000              1             52          16.64386</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14   85.00000              1             56          25.91316</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15   88.00000              1             60          23.38863</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16  117.50000              2         64, 82          26.58071</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17  105.00000              1             66          11.45723</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18  115.00000              4 67, 71, 72, 76          14.51266</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19  125.50000              2         69, 87          27.81604</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20  121.33333              3     70, 83, 84          29.23047</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21  120.00000              2         73, 81          20.80415</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22  115.00000              1             74          33.14376</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23  130.00000              1             75          29.72415</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24  123.00000              1             77          21.36130</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25  166.50000              2         78, 92          22.99142</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26  144.00000              1             85          22.56474</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27  165.50000              2         86, 89          29.08819</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28  226.00000              2         90, 98          35.15634</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 29  200.00000              1             91          22.79684</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 30  195.00000              1             93          21.87842</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 31  204.50000              2         94, 95          32.77493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 32  365.00000              1             99          23.57692</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 33  358.00000              1            100          57.26712</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 34  432.00000              1            101          35.32138</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>

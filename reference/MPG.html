@@ -17,7 +17,7 @@ Both patch-based and lattice MPGs can be extracted."><!-- Global site tag (gtag.
 
     <a class="navbar-brand me-2" href="../index.html">grainscape</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -29,7 +29,7 @@ Both patch-based and lattice MPGs can be extracted."><!-- Global site tag (gtag.
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/grainscape_vignette.html">Modelling, visualization and analysis with the `grainscape` package</a></li>
-    <li><a class="dropdown-item" href="../articles/MPG_algorithm.html">Calculating the minimum planar graph and generating Voronoi tessellations</a></li>
+    <li><a class="dropdown-item" href="../articles/MPG_algorithm.html">Calculating the minimum planar graph</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -101,7 +101,7 @@ cells between focal points in the lattice.</p></dd>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>Use this function to create a minimum planar graph (MPG) that can be
-further analyzed using <code>igraph()</code> routines.
+further analyzed using <code><a href="https://r.igraph.org/reference/aaa-igraph-package.html" class="external-link">igraph::igraph()</a></code> routines.
 It is also the first step in grains of connectivity (GOC) modelling.</p>
     </div>
     <div class="section level2">
@@ -111,11 +111,11 @@ MPG model is appropriate based on the patch-dependency of the organism under stu
 Patch-based models make most sense when animals are restricted to, or dependent on,
 a resource patch. Lattice models can be used as a generalized and functional
 approach to scaling resistance surfaces.</p>
-<p>Rasters should be projected and not in geographic coordinates (i.e. <code>projection(cost)</code>
+<p>Rasters should be projected and not in geographic coordinates (i.e. <code>raster::projection(cost)</code>
 should not contain <code>"+proj=longlat"</code>) or the function will issue a warning.
-In unprojected cases consider using <code>projectRaster()</code> to change to an appropriate
+In unprojected cases consider using <code><a href="https://rdrr.io/pkg/raster/man/projectRaster.html" class="external-link">raster::projectRaster()</a></code> to change to an appropriate
 coordinate system for the location and extent of interest that balances both distance and areal
-accuracy. See <a href="https://www.spatialreference.org/" class="external-link">https://www.spatialreference.org/</a> for location-specific suggestions.
+accuracy. See <a href="https://spatialreference.org/" class="external-link">https://spatialreference.org/</a> for location-specific suggestions.
 Use of geographic coordinates will result in inaccurate areal and distance measurements,
 rendering the models themselves inaccurate.</p>
     </div>
@@ -135,7 +135,7 @@ at multiple spatial scales in landscape genetics. Molecular Ecology 21:3996-4009
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p><code>[GOC], [threshold]</code></p></div>
+    <div class="dont-index"><p><code><a href="GOC.html">GOC()</a></code>, <code><a href="threshold.html">threshold()</a></code></p></div>
     </div>
     <div class="section level2">
     <h2 id="author">Author<a class="anchor" aria-label="anchor" href="#author"></a></h2>
@@ -201,100 +201,108 @@ at multiple spatial scales in landscape genetics. Molecular Ecology 21:3996-4009
 <span class="r-out co"><span class="r-pr">#&gt;</span> 43  107     107         2             2        0 80.000000  0.500000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[1]]$e</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     e1  e2 linkId lcpPerimWeight startPerimX startPerimY endPerimX endPerimY</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1   62  74      1             12        17.5        41.5      17.5      40.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2   30  41      2             12        24.5        72.5      24.5      71.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3   30  40      3             10        24.5        75.5      24.5      74.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4    7  22      4             10        20.5        96.5      21.5      96.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5    5   7      5              5        11.5        98.5      12.5      98.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6   80  86      6             10        82.5        28.5      81.5      28.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7   73  78      7             15        99.5        37.5      99.5      38.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8   29  31      8             10        98.5        85.5      98.5      86.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9   19  29      9             10        99.5        89.5      99.5      90.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10  67  85     10             20        42.5        28.5      42.5      30.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11  41  48     11             20        22.5        63.5      22.5      64.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12  40  41     12             20        19.5        76.5      21.5      76.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13  37  41     13             20        14.5        76.5      14.5      77.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14   8  28     14             25        48.5        92.5      50.5      90.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15   9  12     15             20        67.5        99.5      70.5      99.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 16  12  14     16             30        76.5        99.5      72.5      99.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 17  30  48     17             40        33.5        63.5      29.5      62.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 18   8   9     18             32        53.5        94.5      50.5      95.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 19  48  54     19             35        30.5        56.5      35.5      55.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 20  95 103     20             40        54.5         5.5      56.5       7.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 21  62  64     21             44        11.5        41.5      15.5      41.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 22   5  22     22             40        12.5        93.5      18.5      93.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 23  32  37     23             50         3.5        81.5       9.5      81.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 24  74  84     24             40        10.5        26.5      13.5      30.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 25  55  56     25             45        52.5        53.5      49.5      57.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 26   5  32     26             45         3.5        85.5       6.5      89.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 27   9  28     27             40        52.5        88.5      55.5      92.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 28  68  80     28             45        83.5        40.5      80.5      35.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 29  14  19     29             45        96.5        96.5      90.5      94.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 30  30  54     30             50        38.5        58.5      37.5      65.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 31   5  37     31             45        12.5        90.5      12.5      82.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 32  54  55     32             50        39.5        57.5      45.5      57.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 33  64  74     33             52        11.5        41.5      14.5      38.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 34  86 100     34             55        89.5         7.5      89.5      15.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 35 100 107     35             54        86.5         1.5      81.5       0.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 36  41  50     36             55        11.5        70.5      12.5      63.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 37  56  76     37             64        58.5        37.5      58.5      45.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 38  56  61     38             59        69.5        47.5      62.5      48.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 39 103 105     39             65        62.5         2.5      54.5       3.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 40   9  14     40             60        77.5        94.5      68.5      94.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 41  95 105     41             75        58.5         7.5      62.5       2.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 42  67  76     42             75        45.5        34.5      57.5      34.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 43  55  67     43             75        45.5        44.5      47.5      55.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 44  56  67     44             75        53.5        50.5      45.5      44.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 45   8  30     45             76        36.5        85.5      40.5      91.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 46  14  29     46             75        98.5        88.5      87.5      91.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 47  74  93     47             80        18.5        31.5      18.5      17.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 48   7   8     48             70        25.5        97.5      38.5      97.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 49  28  46     49             81        54.5        83.5      55.5      73.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 50  37  40     50             80        22.5        77.5      14.5      81.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 51  86 107     51             85        80.5         1.5      82.5      13.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 52  93 106     52             85        31.5        13.5      34.5       1.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 53  84  93     53             80         8.5        22.5      18.5      17.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 54  30  55     54             85        37.5        65.5      45.5      57.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 55  85  95     55             85        45.5        23.5      52.5      15.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 56  14  31     56             85        97.5        85.5      87.5      91.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 57  22  37     57             85        19.5        92.5      14.5      81.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 58  60  73     58             88        98.5        49.5      98.5      39.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 59  54  67     59             95        39.5        56.5      43.5      44.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 60  76  85     60             95        46.5        25.5      56.5      32.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 61  50  64     61            105        10.5        58.5      10.5      45.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 62  28  30     62            107        37.5        84.5      48.5      85.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 63 105 107     63            105        78.5         0.5      64.5       0.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 64  32  41     64            100        13.5        74.5       2.5      80.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 65  85  93     65            105        40.5        23.5      30.5      14.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 66  30  46     66            100        36.5        71.5      54.5      72.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 67  68  78     67            114        84.5        40.5      98.5      36.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 68 103 106     68            115        35.5         1.5      54.5       3.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 69  93  95     69            115        31.5        13.5      51.5      12.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 70  60  68     70            130        86.5        44.5      96.5      51.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 71  76  95     71            123        61.5        32.5      60.5      15.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 72  68  73     72            129        98.5        39.5      87.5      43.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 73  61  68     73            123        70.5        46.5      83.5      42.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 74  48  50     74            135        12.5        59.5      22.5      60.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 75  64  84     75            125         8.5        43.5       4.5      28.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 76  95 106     76            125        35.5         1.5      51.5       9.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 77  46  55     77            127        46.5        58.5      55.5      71.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 78  46  56     78            132        55.5        71.5      56.5      56.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 79  50  62     79            133        16.5        46.5      10.5      58.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 80  76  80     80            144        75.5        28.5      61.5      32.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 81  67  93     81            146        28.5        15.5      37.5      29.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 82   9  46     82            140        63.5        92.5      56.5      73.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 83  31  60     83            162        97.5        53.5      97.5      83.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 84  61  76     84            200        62.5        36.5      69.5      47.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 85  95 107     85            195        60.5        10.5      79.5       1.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 86  80  95     86            208        76.5        27.5      60.5      15.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 87  86  95     87            208        81.5        20.5      60.5      15.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 88  61  80     88            210        76.5        35.5      70.5      46.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 89  14  46     89            220        56.5        73.5      78.5      93.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 90  14  60     90            290        97.5        53.5      84.5      89.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 91  46  61     91            365        57.5        72.5      72.5      50.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 92  14  68     92            358        81.5        91.5      83.5      42.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 93  14  61     93            432        78.5        93.5      72.5      50.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      e1  e2 linkId lcpPerimWeight startPerimX startPerimY endPerimX endPerimY</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1    62  74      1             12        17.5        41.5      17.5      40.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2    30  41      2             12        24.5        72.5      24.5      71.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3    30  40      3             10        24.5        75.5      24.5      74.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4     7  22      4             10        20.5        96.5      21.5      96.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5     5   7      5              5        11.5        98.5      12.5      98.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6    80  86      6             10        82.5        28.5      81.5      28.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7    73  78      7             15        99.5        37.5      99.5      38.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8    29  31      8             10        98.5        85.5      98.5      86.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9    19  29      9             10        99.5        89.5      99.5      90.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10   67  85     10             20        42.5        28.5      42.5      30.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11   41  48     11             20        22.5        63.5      22.5      64.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12   40  41     12             20        19.5        76.5      21.5      76.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13   37  41     13             20        14.5        76.5      14.5      77.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14    8  28     14             25        48.5        92.5      50.5      90.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15    9  12     15             20        67.5        99.5      70.5      99.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16   12  14     16             30        76.5        99.5      72.5      99.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17   30  48     17             40        33.5        63.5      29.5      62.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18    8   9     18             32        53.5        94.5      50.5      95.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19   48  54     19             35        30.5        56.5      35.5      55.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20   95 103     20             40        54.5         5.5      56.5       7.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21   62  64     21             44        11.5        41.5      15.5      41.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22    5  22     22             40        12.5        93.5      18.5      93.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23   32  37     23             50         3.5        81.5       9.5      81.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24   74  84     24             40        10.5        26.5      13.5      30.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25   55  56     25             45        52.5        53.5      49.5      57.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26    5  32     26             45         3.5        85.5       6.5      89.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27    9  28     27             40        52.5        88.5      55.5      92.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28   68  80     28             45        83.5        40.5      80.5      35.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 29   14  19     29             45        96.5        96.5      90.5      94.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 30   30  54     30             50        38.5        58.5      37.5      65.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 31    5  37     31             45        12.5        90.5      12.5      82.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 32   54  55     32             50        39.5        57.5      45.5      57.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 33   64  74     33             52        11.5        41.5      14.5      38.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 34   86 100     34             55        89.5         7.5      89.5      15.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 35  100 107     35             54        86.5         1.5      81.5       0.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 36   41  50     36             55        11.5        70.5      12.5      63.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 37   56  76     37             64        58.5        37.5      58.5      45.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 38   56  61     38             59        69.5        47.5      62.5      48.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 39  103 105     39             65        62.5         2.5      54.5       3.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 40    9  14     40             60        77.5        94.5      68.5      94.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 41    8  30     41             69        40.5        91.5      36.5      85.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 42   95 105     42             75        58.5         7.5      62.5       2.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 43   67  76     43             75        45.5        34.5      57.5      34.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 44   55  67     44             75        45.5        44.5      47.5      55.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 45   56  67     45             75        53.5        50.5      45.5      44.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 46   14  29     46             75        98.5        88.5      87.5      91.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 47    7   8     47             75        38.5        96.5      25.5      95.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 48   74  93     48             80        18.5        31.5      18.5      17.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 49   28  46     49             81        54.5        83.5      55.5      73.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 50   37  40     50             80        14.5        81.5      22.5      77.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 51   86 107     51             85        80.5         1.5      82.5      13.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 52   93 106     52             85        31.5        13.5      34.5       1.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 53   84  93     53             80         8.5        22.5      18.5      17.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 54   30  55     54             85        37.5        65.5      45.5      57.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 55    7  30     55             85        24.5        92.5      32.5      85.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 56   85  95     56             85        45.5        23.5      52.5      15.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 57   14  31     57             85        97.5        85.5      87.5      91.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 58   22  37     58             85        19.5        92.5      14.5      81.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 59    7  40     59             85        24.5        92.5      24.5      78.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 60   60  73     60             88        98.5        49.5      98.5      39.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 61   54  67     61             95        39.5        56.5      43.5      44.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 62   76  85     62             95        46.5        25.5      56.5      32.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 63   22  40     63             95        20.5        92.5      22.5      77.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 64   50  64     64            105        10.5        58.5      10.5      45.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 65   28  30     65            107        37.5        84.5      48.5      85.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 66  105 107     66            105        78.5         0.5      64.5       0.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 67   78  86     67            105        98.5        34.5      88.5      26.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 68   32  41     68            100         2.5        80.5      13.5      73.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 69   85  93     69            105        40.5        23.5      30.5      14.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 70   30  46     70            105        54.5        72.5      37.5      70.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 71   78  80     71            112        98.5        34.5      81.5      34.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 72   68  78     72            114        84.5        40.5      98.5      36.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 73  103 106     73            115        35.5         1.5      54.5       3.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 74   93  95     74            115        31.5        13.5      51.5      12.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 75   60  68     75            130        86.5        44.5      96.5      51.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 76   68  73     76            129        85.5        41.5      98.5      39.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 77   76  95     77            123        61.5        32.5      60.5      15.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 78   61  68     78            123        70.5        46.5      83.5      42.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 79   48  50     79            135        12.5        59.5      22.5      60.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 80   64  84     80            125         8.5        43.5       4.5      28.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 81   95 106     81            125        35.5         1.5      51.5       9.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 82   50  62     82            130        10.5        58.5      16.5      46.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 83   46  55     83            127        46.5        58.5      55.5      71.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 84   46  56     84            132        55.5        71.5      56.5      56.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 85   76  80     85            144        75.5        28.5      61.5      32.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 86   67  74     86            151        37.5        30.5      20.5      31.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 87   67  93     87            146        28.5        15.5      37.5      29.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 88    9  46     88            140        63.5        92.5      56.5      73.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 89   62  67     89            180        34.5        39.5      21.5      40.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 90   31  60     90            162        97.5        53.5      97.5      83.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 91   61  76     91            200        69.5        47.5      62.5      36.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 92   61  80     92            210        70.5        46.5      76.5      35.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 93   95 107     93            195        60.5        10.5      79.5       1.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 94   80  95     94            201        60.5        15.5      76.5      27.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 95   86  95     95            208        81.5        20.5      60.5      15.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 96   48  67     96            210        30.5        56.5      37.5      44.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 97   14  46     97            220        56.5        73.5      78.5      93.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 98   14  60     98            290        97.5        53.5      84.5      89.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 99   46  61     99            365        57.5        72.5      72.5      50.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 100  14  68    100            358        81.5        91.5      83.5      42.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 101  14  61    101            432        78.5        93.5      72.5      50.5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>

@@ -13,7 +13,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">grainscape</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -25,7 +25,7 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/grainscape_vignette.html">Modelling, visualization and analysis with the `grainscape` package</a></li>
-    <li><a class="dropdown-item" href="../articles/MPG_algorithm.html">Calculating the minimum planar graph and generating Voronoi tessellations</a></li>
+    <li><a class="dropdown-item" href="../articles/MPG_algorithm.html">Calculating the minimum planar graph</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -65,8 +65,8 @@ their properties.</p></dd>
 
 <dt><code>th</code></dt>
 <dd><p>A list giving the GOC graph at each threshold.</p>
-<p>Each element of <code>th</code> contains a <code>goc</code> object giving the GOC graph
-as class <code>igraph()</code>.
+<p>Each element of <code>th</code> contains a <code>goc</code> object giving the GOC graph as
+class <code><a href="https://r.igraph.org/reference/aaa-igraph-package.html" class="external-link">igraph::igraph()</a></code>.
 Vertex attributes describes qualities of each polygon including the coordinates
 of each polygon centroid, the area of these polygons, and the original patch
 IDs in the MPG that are included in each polygon.
