@@ -1,4 +1,4 @@
-# grainscape (development version)
+# grainscape 0.5.0
 
 ## Dependency changes
 
