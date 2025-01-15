@@ -98,18 +98,18 @@ setMethod(
     } else if (!is.null(nThresh) && !is.null(doThresh)) {
       stop("only one of nThresh or doThresh must be specified")
     } else if (is.null(doThresh)) {
-      doThresh <- seq(0, max(linkWeight), length = nThresh)
+      doThresh <- seq(0, max(linkWeight), length.out = nThresh)
     }
 
     threshGraph$summary <- data.frame(maxLink = doThresh)
 
     threshGraph$th <- lapply(seq_along(doThresh), function(i) {
-      delete.edges(baseGraph, which(linkWeight > doThresh[i]))
+      delete_edges(baseGraph, which(linkWeight > doThresh[i]))
     })
 
     threshGraph$summary$nComponents <- lapply(threshGraph$th, function(z) {
-      clusters(z)$no
-    }) %>%
+      components(z)$no
+    }) |>
       unlist()
 
     return(threshGraph)

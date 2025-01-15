@@ -3,9 +3,9 @@
 #' @description
 #' Identify the polygon containing a location at multiple scales.
 #'
-#' @param x       A `goc` object produced by [GOC()].
+#' @param x       A [goc-class] object produced by [GOC()].
 #'
-#' @param coords  A two column matrix or a [SpatialPoints()] object giving
+#' @param coords  A two column matrix or a [sp::SpatialPoints-class] object giving
 #'                the coordinates of points of interest.
 #'
 #' @param ...     Additional arguments (not used).
@@ -74,15 +74,15 @@ setMethod(
   "point",
   signature = "goc",
   definition = function(x, coords, ...) {
-    if (is.null(dim(coords)) & !inherits(coords, "SpatialPoints")) {
+    if (is.null(dim(coords)) && !inherits(coords, "SpatialPoints")) {
       coords <- t(as.matrix(coords))
     }
 
     if (!inherits(coords, "SpatialPoints") && (ncol(coords) != 2)) {
-      stop(
+      stop(paste(
         "coords must be a SpatialPoints object or a matrix of two columns",
-        " giving X and Y coordinates"
-      )
+        "giving X and Y coordinates"
+      ))
     }
 
     if (!inherits(coords, "SpatialPoints")) {
@@ -105,7 +105,7 @@ setMethod(
         threshGraph <- x@th[[iThresh]]$goc
 
         ## Produce patchId and patchArea lookup tables with polygonId as the index
-        patchIdLookup <- matrix(0, 1, 2)
+        patchIdLookup <- matrix(0, nrow = 1, ncol = 2)
         for (i in seq_along(V(threshGraph)$polygonId)) {
           patchIdLookup <- rbind(
             patchIdLookup,
@@ -130,7 +130,9 @@ setMethod(
         }))
 
         totalPatchAreaPoints[, iThresh] <- as.numeric(sapply(grainPoints[, iThresh], function(z) {
-          if (is.na(z)) warning("values of 'coords' correspond to cells with value 'NA'.")
+          if (is.na(z)) {
+            warning("values of 'coords' correspond to cells with value 'NA'.")
+          }
           patchAreaLookup[patchAreaLookup[, 1] == na.omit(z), 2]
         }))
 

@@ -116,7 +116,7 @@ setMethod("GOC",
         cbind(z, components(delete_edges(x@mpg, which(linkWeight > z)))$no)
       }))
       doThresh <- allUniqueThresh[!duplicated(allUniqueThresh[, 2]), 1]
-      doThresh <- doThresh[round(seq(1, length(doThresh), length = nThresh))]
+      doThresh <- doThresh[round(seq(1, length(doThresh), length.out = nThresh))]
       ids <- seq_along(doThresh)
     } else {
       ids <- doThresh
@@ -163,8 +163,8 @@ setMethod("GOC",
           t(apply(allLinks, 1, function(z) {
             c(components[z[1]], components[z[2]])
           }))
-        ) %>%
-          apply(., 2, as.numeric) %>%
+        ) |>
+          apply(2, as.numeric) |>
           as.data.frame(stringsAsFactors = FALSE)
         linkComponentLookup <- linkComponentLookup[linkComponentLookup[, 5] !=
           linkComponentLookup[, 6], ] # nolint
@@ -241,9 +241,9 @@ setMethod("GOC",
           }))
 
           ## Convert back from string representation of component linkIds to numeric
-          componentGraphNodes <- unique(linkComponentLookup$compLinkId) %>%
-            strsplit(., "_") %>%
-            do.call(rbind, .)
+          componentGraphNodes <- unique(linkComponentLookup$compLinkId) |>
+            strsplit("_") |>
+            do.call(rbind, args = _)
 
           ## Produce component graph with all edge attributes, and vertex attributeas.characters
           ## containing a comma-delimited string of vertex names
@@ -251,13 +251,13 @@ setMethod("GOC",
             componentGraphNodes, maxWeight, linkIdMaxWeight,
             minWeight, linkIdMinWeight, medianWeight,
             meanWeight, numEdgesWeight, linkIdAll
-          ) %>%
+          ) |>
             graph_from_data_frame(directed = FALSE)
 
           V(componentGraph)$polygonId <- V(componentGraph)$name
-          sourcePatchId <- as.character(V(componentGraph)$polygonId) %>%
-            as.numeric() %>%
-            sapply(., function(z) {
+          sourcePatchId <- as.character(V(componentGraph)$polygonId) |>
+            as.numeric() |>
+            sapply(function(z) {
               paste(as.character(V(baseGraph)$patchId[components == z]), collapse = ", ")
             })
 
@@ -317,20 +317,20 @@ setMethod("GOC",
 
           V(componentGraph)$totalPatchArea <- sapply(sourcePatchId, function(z) {
             sum(patchAreaLookup[patchAreaLookup[, 1] %in% as.numeric(strsplit(z, ", ")[[1]]), 2])
-          }) %>%
-            unlist() %>%
+          }) |>
+            unlist() |>
             as.numeric()
 
           V(componentGraph)$totalPatchEdgeArea <- sapply(sourcePatchId, function(z) {
             sum(patchAreaLookup[patchAreaLookup[, 1] %in% as.numeric(strsplit(z, ", ")[[1]]), 3])
-          }) %>%
-            unlist() %>%
+          }) |>
+            unlist() |>
             as.numeric()
 
           V(componentGraph)$totalCoreArea <- sapply(sourcePatchId, function(z) {
             sum(patchAreaLookup[patchAreaLookup[, 1] %in% as.numeric(strsplit(z, ", ")[[1]]), 4])
-          }) %>%
-            unlist() %>%
+          }) |>
+            unlist() |>
             as.numeric()
 
           V(componentGraph)$patchId <- sourcePatchId

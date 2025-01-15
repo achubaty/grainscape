@@ -1,3 +1,45 @@
+#' Abbreviate names
+#'
+#' Manually specify field names for writing to shapefile instead of relying on
+#' `sf:::abbreviate_shapefile_names()` (which uses `abbreviate()`) during save.
+#' Names must contain fewer than 10 characters.
+#'
+#' @author Alex Chubaty
+#' @keywords internal
+.abbrev <- function(x) {
+  names_linksDF <- c(
+    "e1", "e2", "linkId", "lcpPerimWeight", "startPerimX", "startPerimY", "endPerimX", "endPerimY"
+  )
+  names_nodesDF <- c(
+    "patchId", "patchArea", "patchEdgeArea", "coreArea", "centroidX", "centroidY"
+  )
+
+  names_gs <- c(names_linksDF, names_nodesDF) |>
+    unique() |>
+    sort()
+
+  ## abbreviate other (e.g., user-added) fields
+  names_usr_ids <- which(!(x %in% names_gs))
+  names_usr <- x[names_usr_ids]
+  if (length(names_usr) > 0) {
+    for (i in names_usr_ids) {
+      x <- gsub(x[i], abbreviate(x[i], minlength = 7L), x)
+    }
+  }
+
+  ## abbreviate **our** fields (`names_gs`)
+  ## `e1`, `e2`, `linkId`, `patchId` are already short, so don't abbrev
+  x <- gsub("centroid", "ctr", x)
+  x <- gsub("coreArea", "coreA", x)
+  x <- gsub("endPerim", "endPer", x)
+  x <- gsub("lcpPerimWeight", "lcpPerWt", x)
+  x <- gsub("patchArea", "patchA", x)
+  x <- gsub("patchEdgeArea", "patchEA", x)
+  x <- gsub("startPerim", "strtPer", x)
+
+  return(x)
+}
+
 #' @author Paul Galpern
 #' @keywords internal
 .createDir <- function(xType, dirname, path, overwrite) {
@@ -52,7 +94,7 @@
 #' Use `R = TRUE` in which case all parameters related to file export
 #' are ignored. (Default `R = FALSE`)
 #'
-#' The [raster::writeRaster()] is used for rasters,
+#' The [raster::writeRaster()] function is used for rasters,
 #' and [sf::st_write()] is used to export ESRI compatible shape files.
 #'
 #' @param x             A `mpg` or `grain` object
@@ -63,10 +105,10 @@
 #' @param path          A path to where this new directory `dirname` should be created.
 #'                      Defaults to the working directory.
 #'
-#' @param rasterFormat  The format for exported rasters. See [writeFormats()] for
-#'                      options. Defaults to GeoTiff (`rasterFormat='GTiff'`).
+#' @param rasterFormat  The format for exported rasters. See [raster::writeFormats()] for options.
+#'                      Defaults to GeoTiff (`rasterFormat='GTiff'`).
 #'                      Use `rasterFormat='raster'` to save `.grd` files in
-#'                      native `raster` package format.
+#'                      native \pkg{raster} package format.
 #'
 #' @param overwrite     If directory already exists will overwrite existing files inside.
 #'                      Defaults to `FALSE`.
@@ -201,12 +243,9 @@ setMethod("export",
 
     ## Prepare links
     linksDF <- graphdf(x)[[1]]$e
-    names(linksDF) <- c(
-      "e1", "e2", "linkId", "lcpPerWt", "strtPerX", "strtPerY",
-      "endPerX", "endPerY"
-    )
+    names(linksDF) <- names(linksDF) |> .abbrev()
     nodesDF <- graphdf(x)[[1]]$v[, -1]
-    names(nodesDF) <- c("patchId", "patchA", "patchEA", "coreA", "ctrX", "ctrY")
+    names(nodesDF) <- names(nodesDF) |> .abbrev()
 
     firstCentr <- nodesDF[match(linksDF$e1, nodesDF$patchId), c("ctrX", "ctrY")]
     names(firstCentr) <- c("strtCtrX", "strtCtrY")
@@ -214,30 +253,30 @@ setMethod("export",
     names(secondCentr) <- c("endCtrX", "endCtrY")
     linksCentr <- cbind(linksDF, firstCentr, secondCentr)
     row.names(linksCentr) <- linksDF$linkId
-    linksCentrSP <- linksCentr[, c("strtCtrX", "strtCtrY", "endCtrX", "endCtrY", "linkId")] %>%
-      apply(., 1, function(x) {
+    linksCentrSP <- linksCentr[, c("strtCtrX", "strtCtrY", "endCtrX", "endCtrY", "linkId")] |>
+      apply(1, function(x) {
         Lines(Line(matrix(x[1:4], 2, 2, byrow = TRUE)), ID = as.character(x[5]))
-      }) %>%
-      SpatialLines(.) %>%
-      SpatialLinesDataFrame(., data = linksCentr)
+      }) |>
+      SpatialLines() |>
+      SpatialLinesDataFrame(data = linksCentr)
     projection(linksCentrSP) <- CRS(projection(x@patchId))
 
     firstPerim <- linksDF[, c("strtPerX", "strtPerY")]
     secondPerim <- linksDF[, c("endPerX", "endPerY")]
     linksPerim <- cbind(linksDF, firstPerim, secondPerim)
     row.names(linksPerim) <- linksDF$linkId
-    linksPerimSP <- linksPerim[, c("strtPerX", "strtPerY", "endPerX", "endPerY", "linkId")] %>%
-      apply(., 1, function(x) {
+    linksPerimSP <- linksPerim[, c("strtPerX", "strtPerY", "endPerX", "endPerY", "linkId")] |>
+      apply(1, function(x) {
         Lines(Line(matrix(x[1:4], 2, 2, byrow = TRUE)), ID = as.character(x[5]))
-      }) %>%
-      SpatialLines(.) %>%
-      SpatialLinesDataFrame(., data = linksPerim[, -which(duplicated(names(linksPerim)))])
+      }) |>
+      SpatialLines() |>
+      SpatialLinesDataFrame(data = linksPerim[, -which(duplicated(names(linksPerim)))])
     proj4string(linksPerimSP) <- CRS(projection(x@patchId))
 
     ## Create voronoi boundaries
     if (vorBound) {
       message("Extracting voronoi boundaries...")
-      vorB <- boundaries(x@voronoi, class = TRUE, asNA = TRUE)
+      vorB <- raster::boundaries(x@voronoi, classes = TRUE, asNA = TRUE)
     } else {
       vorB <- "Not created. Use vorBound=TRUE."
     }
@@ -305,18 +344,18 @@ setMethod("export",
     linksCentr <- cbind(linksDF, firstCentr, secondCentr)
     row.names(linksCentr) <- seq_len(nrow(linksCentr))
     linksCentr$plinkId <- seq_len(nrow(linksCentr))
-    linksCentrSP <- linksCentr[, c("strtCtrX", "strtCtrY", "endCtrX", "endCtrY", "plinkId")] %>%
-      apply(., 1, function(x) {
+    linksCentrSP <- linksCentr[, c("strtCtrX", "strtCtrY", "endCtrX", "endCtrY", "plinkId")] |>
+      apply(1, function(x) {
         Lines(Line(matrix(x[1:4], 2, 2, byrow = TRUE)), ID = as.character(x[5]))
-      }) %>%
-      SpatialLines() %>%
-      SpatialLinesDataFrame(., data = linksCentr)
+      }) |>
+      SpatialLines() |>
+      SpatialLinesDataFrame(data = linksCentr)
     projection(linksCentrSP) <- CRS(projection(x@voronoi))
 
     ## Create voronoi boundaries
     if (vorBound) {
       message("Extracting voronoi boundaries...")
-      vorB <- boundaries(x@voronoi, class = TRUE, asNA = TRUE)
+      vorB <- raster::boundaries(x@voronoi, classes = TRUE, asNA = TRUE)
     } else {
       vorB <- "Not created. Use vorBound=TRUE."
     }

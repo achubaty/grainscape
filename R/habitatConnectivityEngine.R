@@ -1,11 +1,9 @@
-if (getRversion() >= "3.1.0") {
-  utils::globalVariables(".")
-}
+utils::globalVariables(".")
 
 #' Habitat connectivity engine
 #'
-#' Internal function. Serves as a wrapper around the habitat connectivity engine
-#' developed in C++.
+#' Internal function.
+#' Serves as a wrapper around the habitat connectivity engine developed in C++.
 #'
 #' @param cost      Numeric raster cost (resistance) map.
 #' @param patches   Logical raster indicating presence of habitat patches.
@@ -29,21 +27,23 @@ if (getRversion() >= "3.1.0") {
   )
 
   hce <- .habConnRcpp(
-    cost = getValues(cost), patches = getValues(patches),
-    nrow = nrow(cost), ncol = ncol(cost)
+    cost = getValues(cost),
+    patches = getValues(patches),
+    nrow = nrow(cost),
+    ncol = ncol(cost)
   )
 
-  # convert `VoronoiVector` to a raster of identical dimensions etc. as `cost`
+  ## convert `VoronoiVector` to a raster of identical dimensions etc. as `patches`
   voronoi <- patches
   voronoi[] <- hce$VoronoiVector
 
-  # convert `PatchLinkIDsVector` to a raster of identical dimensions etc. as `cost`
+  ## convert `PatchLinkIDsVector` to a raster of identical dimensions etc. as `cost`
   patchLinks <- cost
   patchLinks[] <- hce$PatchLinkIDsVector
   patchLinks[patchLinks == 0] <- NA
 
-  # convert `LinkData` to a data.frame
-  linkData <- lapply(hce$LinkData, data.frame) %>% do.call(rbind, .)
+  ## convert `LinkData` to a data.frame
+  linkData <- lapply(hce$LinkData, data.frame) |> do.call(rbind, args = _)
 
   out <- new("hce", voronoi = voronoi, patchLinks = patchLinks, linkData = linkData)
   return(out)

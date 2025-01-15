@@ -27,10 +27,9 @@
 #'                      and y resolution of a raster cell). Default `NULL`.
 #'                      Only one of `cells` or `area` may be specified.
 #'
-#' @param ...           Additional arguments passed to the [clump()]
-#'                      function in the `raster` package. For example
-#'                      `directions = 4` may be used to be more conservative
-#'                      about which cells constitute a patch.
+#' @param ...           Additional arguments passed to [raster::clump()].
+#'                      For example, `directions = 4` may be used to be more
+#'                      conservative about which cells constitute a patch.
 #'
 #' @return   A binary raster where all patches (i.e. clumped areas `=1`)
 #'           are greater than the specified area.

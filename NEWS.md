@@ -1,7 +1,23 @@
-Known issues: <https://github.com/achubaty/grainscape/issues>
+# grainscape (development version)
 
-version 0.4.4
-=============
+## Dependency changes
+
+* Require R 4.2 or higher (for native pipe and placeholder)
+* Add `DiagrammeR`, `dplyr`, `webshot2` and `withr` to Suggests for use with vignettes and tests
+
+## Bugfixes
+
+* Fixed documentation issues and 'memory not mapped' segfault errors on R-devel (#73)
+* Improved handling of user-added attributes in exported objects (#71)
+* Fixed partial match warnings
+* Use replacements for deprecated `igraph` functions
+
+## New features & enhancements
+
+* Use native R pipe throughout instead of `magrittr` pipe
+* Improved documentation
+
+# grainscape 0.4.4
 
 ## Dependency changes
 
@@ -18,8 +34,7 @@ version 0.4.4
 
 * None
 
-version 0.4.3
-=============
+# grainscape 0.4.3
 
 ## Dependency changes
 
@@ -33,8 +48,7 @@ version 0.4.3
 
 * added MEE paper citation and updated package `DESCRIPTION` & `README`.
 
-version 0.4.2
-=============
+# grainscape 0.4.2
 
 ## Dependency changes
 
@@ -48,8 +62,7 @@ version 0.4.2
 
 * none
 
-version 0.4.1
-=============
+# grainscape 0.4.1
 
 ## Dependency changes
 
@@ -64,8 +77,7 @@ version 0.4.1
 
 * added package hexsticker
 
-version 0.4.0
-=============
+# grainscape 0.4.0
 
 ## Dependency changes
 
@@ -93,7 +105,7 @@ version 0.4.0
 
 * removed `gsMPGstitch()` as it was unreliable
 
-version 0.3.0
-=============
+# grainscape 0.3.0
+
 * original version from R-forge (http://grainscape.r-forge.r-project.org/)
 * uses a SELES binary to calculate the minimum planar graph (Windows only)

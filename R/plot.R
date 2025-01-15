@@ -1,8 +1,6 @@
-if (getRversion() >= "3.1.0") {
-  utils::globalVariables(c(
-    "cols", "sz", "value", "x1", "x1p", "x2", "x2p", "y1", "y1p", "y2", "y2p"
-  ))
-}
+utils::globalVariables(c(
+  "cols", "sz", "value", "x1", "x1p", "x2", "x2p", "y1", "y1p", "y2", "y2p"
+))
 
 #' `.gFinal`
 #'
@@ -28,14 +26,13 @@ if (getRversion() >= "3.1.0") {
 #' Plot quick visualizations of `grainscape` objects
 #'
 #' @description
-#' Plot quick visualizations of `mpg`, `grain`, and `corridor`
-#' objects.
+#' Plot quick visualizations of `mpg`, `grain`, and `corridor` objects.
 #'
 #' This function is intended to get a quick look at the state of a `grainscape`
 #' object by rendering what are likely to be the most universally useful
 #' visualizations of the spatial data within these objects.
 #'
-#' Much more control is available using [ggGS()] with [ggplot()]
+#' Much more control is available using [ggGS()] with [ggplot2::ggplot()]
 #' enabling the layering of different different analytical products, and the
 #' visualization of node and link attributes.
 #'

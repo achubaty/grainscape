@@ -17,6 +17,5 @@
 \code{\link[=grain-class]{grain()}} object.}
 }
 \description{
-Custom \code{show} method to safely print the contents of a \code{goc} or
-\code{grain} object.
+Custom \code{show} method to safely print the contents of a \code{goc} or \code{grain} object.
 }

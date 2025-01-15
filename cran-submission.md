@@ -13,24 +13,34 @@
 2. check code formatting and cleanup as needed
 
     ```r
-    #install_github("jimhester/lintr")
-    library(lintr)
-    lint_package()
+    # remotes::install_github("jimhester/lintr")
+    lintr::lint_package()
+    ```
+
+    ```r
+    # remotes::install_github("r-lib/styler")
+    styler:::style_active_pkg()
     ```
 
 3. ensure passing win-builder oldrelease, release, and devel
 
     ```r
     ## macOS
-    check_mac_release(args = "--compact-vignettes=both")
+    devtools::check_mac_release(args = "--compact-vignettes=both")
     
     ## Windows
-    check_win_oldrelease(args = "--compact-vignettes=both")
-    check_win_release(args = "--compact-vignettes=both")
-    check_win_devel(args = "--compact-vignettes=both")
-    
-    ## using rhub
-    rhub::check_for_cran()
+    devtools::check_win_oldrelease(args = "--compact-vignettes=both")
+    devtools::check_win_release(args = "--compact-vignettes=both")
+    devtools::check_win_devel(args = "--compact-vignettes=both")
+    ```
+
+    ```r
+    ## r-hub on GitHub Actions
+    # remotes::install_github("r-hub/rhub")
+    rhub::rhub_check(
+      gh_url = "https://github.com/achubaty/grainscape",
+      branch = "development"
+    )
     ```
 
 4. bump version number in DESCRIPTION (use non-devel suffix -- no `.9000`)

@@ -1,35 +1,42 @@
 ## New submission
-
-This release removes dependencies on retiring spatial packages `rgdal` and `rgeos`.
+This release fixes CRAN check problems and issues arising from changes in dependency packages.
 See `NEWS.md` for a complete list of changes.
 
 ## Test environments
 
 ### Previous R versions
-* Ubuntu 20.04                 (GitHub), R 4.1.3
-* Windows                       (local), R 4.1.3
-* Windows                      (GitHub), R 4.1.3
-* Windows                 (win-builder), R 4.1.3
+* Ubuntu 24.04                 (GitHub), R 4.2.3, 4.3.3
+* Windows                      (GitHub), R 4.2.3, 4.3.3
+* Windows                       (local), R 4.2.3, 4.3.3
+* Windows                 (win-builder), R 4.3.3
 
 ### Current R versions
-* macOS 12.6.3 Monterey        (GitHub), R 4.2.3
-* macOS (M2) 13.2.1 Ventura     (local), R 4.2.3
-* macOS (M1) Big Sur             (rhub), R 4.2.3
-* Ubuntu 20.04                 (GitHub), R 4.2.3
-* Ubuntu 20.04                  (local), R 4.2.3
-* Windows                      (GitHub), R 4.2.3
-* Windows                       (local), R 4.2.3
-* Windows                 (win-builder), R 4.2.3
+* macOS 13.3.1            (mac-builder), R 4.4.2
+* macOS 14.7.2                 (GitHub), R 4.4.2
+* macOS 15.1.1                  (local), R 4.4.2
+* Ubuntu 24.04                 (GitHub), R 4.4.2
+* Ubuntu 24.04                  (local), R 4.4.2
+* Windows                      (GitHub), R 4.4.2
+* Windows                       (local), R 4.4.2
+* Windows                 (win-builder), R 4.4.2
 
 ### Development R version
-* Ubuntu 22.04                 (GitHub), R-devel (2023-04-17 r84270)
-* Ubuntu 20.04                  (local), R-devel (2023-04-17 r84270)
-* Windows                      (GitHub), R-devel (2023-04-17 r84270 ucrt)
-* Windows                 (win-builder), R-devel (2023-04-18 r84280 ucrt)
+* Ubuntu 24.04                 (GitHub), R-devel (2025-01-13 r87564)
+* Ubuntu 24.04                  (local), R-devel (2025-01-13 r87564)
+* Windows                      (GitHub), R-devel (2025-01-13 r87564 ucrt)
+* Windows                 (win-builder), R-devel (2025-01-13 r87564 ucrt)
 
 ## R CMD check results
 
 There are no WARNINGS nor ERRORs.
+
+There was 1 NOTE, which appears to be spurious, as the URL works in a web browser.
+
+    Found the following (possibly) invalid URLs:
+      URL: https://support.posit.co/hc/en-us/articles/200486498-Package-Development-Prerequisites
+        From: README.md
+        Status: 403
+        Message: Forbidden
 
 ## Downstream dependencies
 

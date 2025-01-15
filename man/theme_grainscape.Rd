@@ -12,10 +12,10 @@ theme_grainscape(base_size = 9, base_family = "")
 \item{base_family}{Base font family}
 }
 \value{
-A theme suitable for use with \code{\link[=ggplot]{ggplot()}}
+A theme suitable for use with \code{\link[ggplot2:ggplot]{ggplot2::ggplot()}}
 }
 \description{
-A \code{\link[=ggplot2]{ggplot2()}} theme designed for \code{grainscape} based on the
+A \pkg{ggplot2} theme designed for \code{grainscape} based on the
 \code{\link[ggthemes:theme_map]{ggthemes::theme_map()}} theme, with several modifications.
 }
 \examples{

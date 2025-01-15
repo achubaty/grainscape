@@ -18,7 +18,7 @@ distance(x, y, ...)
 \arguments{
 \item{x}{A \code{goc} object produced by \code{\link[=GOC]{GOC()}}.}
 
-\item{y}{A two column matrix or a \code{\link[=SpatialPoints]{SpatialPoints()}} object
+\item{y}{A two column matrix or a \link[sp:SpatialPoints-class]{sp::SpatialPoints} object
 giving the coordinates of points of interest.}
 
 \item{...}{Additional arguments (not used).}

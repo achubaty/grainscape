@@ -5,6 +5,7 @@ author:
 - Alex M. Chubaty^[FOR-CAST Research & Analytics, Calgary, AB, Canada]
 output:
   pdf_document:
+    latex_engine: xelatex
     toc: yes
     toc_depth: 3
 header-includes:
@@ -22,7 +23,7 @@ vignette: >
   %\VignetteKeyword{resistance surface}
   %\VignetteKeyword{spatial graph}
   %\VignetteKeyword{Voronoi tessellation}
-  %\VignetteDepends{cowplot, ggplot2, igraph, raster}
+  %\VignetteDepends{cowplot, dplyr, ggplot2, igraph, raster}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
@@ -182,7 +183,10 @@ ggplot() +
     data = patchyCost_df,
     aes(x = x, y = y, fill = value)
   ) +
-  scale_fill_brewer(type = "div", palette = "Paired", guide = "legend") +
+  scale_fill_brewer(
+    type = "qual", palette = "Paired",
+    direction = -1, guide = "legend"
+  ) +
   guides(fill = guide_legend(title = "Resistance")) +
   theme_grainscape() +
   theme(legend.position = "right")
@@ -293,22 +297,26 @@ According to \autoref{fig:scalesaggregation} this organism would experience this
 This is visualized in \autoref{fig:thresholdedgraph}.
 
 ```{r figure_06, fig.cap="\\label{fig:thresholdedgraph}The thresholded MPG depicted with a link length of 250 resistance units. An organism that can disperse a maximum of 250 resistance units would experience this landscape as 6 connected regions in the depicted spatial configuration. Note that the plotting has been customized to emphasize which patches are connected. This was done by plotting links with less than the threshold length from the centroids of patches", warning=FALSE}
+links_df <- ggGS(patchyMPG, "links") |>
+  dplyr::filter(lcpPerimWeight >= 250)
+
 ggplot() +
   geom_raster(
     data = ggGS(patchyMPG, "patchId"),
-    aes(x = x, y = y, fill = value > 0)
+    mapping = aes(x = x, y = y, fill = value > 0)
   ) +
   scale_fill_manual(values = "grey") +
   geom_segment(
-    data = ggGS(patchyMPG, "links"),
-    aes(
+    data = links_df,
+    mapping = aes(
       x = x1, y = y1, xend = x2, yend = y2,
-      colour = lcpPerimWeight >= 250
+      colour = as.factor(lcpPerimWeight)
     )
   ) +
-  scale_colour_manual(values = c("forestgreen", NA)) +
+  scale_colour_manual(values = rep("forestgreen", nrow(links_df))) +
   geom_point(
-    data = ggGS(patchyMPG, "nodes"), aes(x = x, y = y),
+    data = ggGS(patchyMPG, "nodes"),
+    mapping = aes(x = x, y = y),
     colour = "darkgreen"
   )
 ```
@@ -486,7 +494,7 @@ res2[] <- floor(runif(ncell(res2)) * 10 + 1)
 ## raster made previously which represents the points only
 mpg <- MPG(res2, patchPts)
 
-## Plot the result using the quick 'mgplot' visualization
+## Plot the result using the quick 'mpgPlot' visualization
 ## setting and add labels (dodging them by 3 to the upper-right)
 ## This demonstrates the non-linear paths.
 figure10 <- plot(mpg, quick = "mpgPlot", theme = FALSE) +

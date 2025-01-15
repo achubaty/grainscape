@@ -1,6 +1,6 @@
 ## Make a random raster with a border of NA values
 .makeRaster <- function(dim, naBorder = NULL,
-                        FUN = function() floor(rgamma(dim * dim, 2.5)) + 1) { # nolint
+                        FUN = function() floor(stats::rgamma(dim * dim, 2.5)) + 1) { # nolint
   ras <- raster::raster(xmn = 0, xmx = dim, ymn = 0, ymx = dim, resolution = 1)
   ras[] <- FUN() # nolint
   if (!is.null(naBorder)) {
@@ -12,9 +12,7 @@
   return(ras)
 }
 
-test_that("corridor handles NA values", {
-  ## based on https://github.com/achubaty/grainscape/issues/50 # nolint
-
+test_that("corridor() handles NA values (#50)", {
   ## Create a random raster with a border of five NA cells
   cost <- .makeRaster(100, 5)
 
@@ -27,14 +25,16 @@ test_that("corridor handles NA values", {
   coordSomeNA <- rbind(c(2, 2), c(90, 90))
   coordAllNA <- rbind(c(2, 2), c(98, 98))
 
-  expect_warning(corridorNoneNA <- corridor(goc, whichThresh = 2, coordNoneNA), NA) ## OK
-  expect_warning(corridorSomeNA <- corridor(goc, whichThresh = 2, coordSomeNA))
-  expect_error(corridorAllNA <- corridor(goc, whichThresh = 2, coordAllNA))
+  expect_no_error(corridorNoneNA <- corridor(goc, whichThresh = 2, coordNoneNA))
+  expect_error(
+    expect_warning(corridorSomeNA <- corridor(goc, whichThresh = 2, coordSomeNA))
+  )
+  expect_error(
+    expect_warning(corridorAllNA <- corridor(goc, whichThresh = 2, coordAllNA))
+  )
 })
 
-test_that("distance handles NA values", {
-  ## based on https://github.com/achubaty/grainscape/issues/50 # nolint
-
+test_that("distance() handles NA values (#50)", {
   ## Create a random raster with a border of five NA cells
   cost <- .makeRaster(100, 5)
 
@@ -48,7 +48,7 @@ test_that("distance handles NA values", {
   coordAllNA <- rbind(c(2, 2), c(98, 98))
 
   ## Fails
-  expect_warning(distanceNoneNA <- distance(goc, coordNoneNA), NA)
+  expect_no_error(distanceNoneNA <- distance(goc, coordNoneNA))
   expect_warning(distanceSomeNA <- distance(goc, coordSomeNA))
   expect_warning(distanceAllNA <- distance(goc, coordAllNA))
 })

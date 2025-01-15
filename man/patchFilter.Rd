@@ -24,10 +24,9 @@ raster by multiplying the count of cells in patch by the x
 and y resolution of a raster cell). Default \code{NULL}.
 Only one of \code{cells} or \code{area} may be specified.}
 
-\item{...}{Additional arguments passed to the \code{\link[=clump]{clump()}}
-function in the \code{raster} package. For example
-\code{directions = 4} may be used to be more conservative
-about which cells constitute a patch.}
+\item{...}{Additional arguments passed to \code{\link[raster:clump]{raster::clump()}}.
+For example, \code{directions = 4} may be used to be more
+conservative about which cells constitute a patch.}
 }
 \value{
 A binary raster where all patches (i.e. clumped areas \verb{=1})

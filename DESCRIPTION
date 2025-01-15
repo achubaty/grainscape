@@ -10,37 +10,44 @@ Description: Given a landscape resistance surface, creates minimum planar graph
 URL:
     https://www.alexchubaty.com/grainscape/,
     https://github.com/achubaty/grainscape
-Version: 0.4.4
-Date: 2023-04-20
+Version: 0.5.0
+Date: 2025-01-14
 Authors@R: c(
     person("Paul", "Galpern", email = "pgalpern@gmail.com", role = c("aut", "cph"),
            comment = c(ORCID = "0000-0003-0099-3981")),
     person("Sam", "Doctolero", email = "sam.doctolero@gmail.com", role = "aut"),
-    person("Alex M", "Chubaty", email = "alex.chubaty@gmail.com", role = c("aut", "cre"),
+    person("Alex M", "Chubaty", email = "achubaty@for-cast.ca", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-7146-8135"))
     )
 License: GPL (>= 2)
+Depends:
+    R (>= 4.2)
 Imports:
     ggplot2,
     graphics,
     grDevices,
     igraph,
     methods,
-    sf,
-    sp,
     raster,
     Rcpp (>= 0.12.11.4),
+    sf,
+    sp,
+    stats,
     utils
 LinkingTo: Rcpp
 Suggests:
     covr,
     cowplot,
+    DiagrammeR,
+    dplyr,
     ggthemes,
     knitr,
     parallel,
     rmarkdown,
     spelling,
-    testthat
+    testthat,
+    webshot2,
+    withr
 VignetteBuilder: knitr, rmarkdown
 BugReports: https://github.com/achubaty/grainscape/issues
 ByteCompile: yes

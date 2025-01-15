@@ -35,14 +35,13 @@ Default is \code{TRUE}.}
 }\if{html}{\out{</div>}}
 }
 \description{
-Plot quick visualizations of \code{mpg}, \code{grain}, and \code{corridor}
-objects.
+Plot quick visualizations of \code{mpg}, \code{grain}, and \code{corridor} objects.
 
 This function is intended to get a quick look at the state of a \code{grainscape}
 object by rendering what are likely to be the most universally useful
 visualizations of the spatial data within these objects.
 
-Much more control is available using \code{\link[=ggGS]{ggGS()}} with \code{\link[=ggplot]{ggplot()}}
+Much more control is available using \code{\link[=ggGS]{ggGS()}} with \code{\link[ggplot2:ggplot]{ggplot2::ggplot()}}
 enabling the layering of different different analytical products, and the
 visualization of node and link attributes.
 

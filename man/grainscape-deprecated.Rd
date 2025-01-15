@@ -55,7 +55,7 @@ Provide either \code{nThresh} or \code{doThresh} not both.}
 path distance from the perimeters of patches as the link weight.}
 
 \item{sp}{Logical. If \code{TRUE} the \code{sp} package is used to create
-a vector of class \code{\link[=SpatialPolygonsDataFrame]{SpatialPolygonsDataFrame()}} describing
+a vector of class \link[sp:SpatialPolygonsDataFrame-class]{sp::SpatialPolygonsDataFrame} describing
 the finest grain of connectivity.}
 
 \item{verbose}{Set \code{verbose=0} for no progress information to console.}
@@ -64,7 +64,7 @@ the finest grain of connectivity.}
 
 \item{whichThresh}{Integer giving the index of the threshold to visualize.}
 
-\item{coords}{A two column matrix or a \code{\link[=SpatialPoints]{SpatialPoints()}} object
+\item{coords}{A two column matrix or a \link[sp:SpatialPoints-class]{sp::SpatialPoints} object
 giving coordinates at the end points of the corridor.}
 
 \item{doPlot}{Logical. If \code{TRUE} plots a vector visualization of the

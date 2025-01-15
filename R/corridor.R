@@ -5,11 +5,11 @@
 #' (or shortest path) between two points using one of the tessellations
 #' (i.e., scales) in these models.
 #'
-#' @param x       A `goc` object created by [GOC()].
+#' @param x       A [goc-class] object created by [GOC()].
 #'
 #' @param whichThresh  Integer giving the index of the threshold to visualize.
 #'
-#' @param coords  A two column matrix or a [SpatialPoints()] object
+#' @param coords  A two column matrix or a [sp::SpatialPoints-class] object
 #'                giving coordinates at the end points of the corridor.
 #'
 #' @param weight  The GOC graph link weight to use in calculating the distance.
@@ -111,11 +111,11 @@ setMethod("corridor",
           V(x@th[[whichThresh]]$goc)$centroidY[i["v1"]],
           V(x@th[[whichThresh]]$goc)$centroidY[i["v2"]]
         )
-      ) %>%
-        Line() %>%
+      ) |>
+        Line() |>
         Lines(ID = as.character(i["edgeNum"]))
-    }) %>%
-      SpatialLines() %>%
+    }) |>
+      SpatialLines() |>
       SpatialLinesDataFrame(
         data = data.frame(
           edgeNum = seq_len(nrow(edges)),
@@ -123,25 +123,30 @@ setMethod("corridor",
         )
       )
 
-    verticesGOC <- SpatialPoints(cbind(
+    verticesGOC <- cbind(
       V(x@th[[whichThresh]]$goc)$centroidX,
       V(x@th[[whichThresh]]$goc)$centroidY
-    ))
+    ) |>
+      SpatialPoints()
 
     ## Shortest path
     startEndPolygons <- point(x, coords)$pointPolygon[, whichThresh]
 
+    if (any(is.na(startEndPolygons))) {
+      stop("corridor: 'coords' correspond to cells of value 'NA'.")
+    }
+
     pths <- shortest_paths(
-      x@th[[whichThresh]]$goc,
-      which(V(x@th[[whichThresh]]$goc)$polygonId == na.omit(startEndPolygons[1])),
-      which(V(x@th[[whichThresh]]$goc)$polygonId == na.omit(startEndPolygons[2])),
+      graph = x@th[[whichThresh]]$goc,
+      from = which(V(x@th[[whichThresh]]$goc)$polygonId == na.omit(startEndPolygons[1])),
+      to = which(V(x@th[[whichThresh]]$goc)$polygonId == na.omit(startEndPolygons[2])),
       weights = V(x@th[[whichThresh]]$goc)$meanWeight
     )
 
     startEndPath <- if (length(pths$vpath) > 0) {
-      pths %>%
-        `[[`(1) %>%
-        `[[`(1) %>%
+      pths |>
+        (\(x) x[[1]])() |> ## extract 1st element; was %>% `[[`(1)
+        (\(x) x[[1]])() |> ## extract 1st element; was %>% `[[`(1)
         as.numeric()
     } else {
       stop("corridor: all 'coords' correspond to cells of value 'NA'.")
@@ -150,10 +155,10 @@ setMethod("corridor",
     shortestPathEdges <- cbind(
       V(x@th[[whichThresh]]$goc)$centroidX[startEndPath],
       V(x@th[[whichThresh]]$goc)$centroidY[startEndPath]
-    ) %>%
-      Line() %>%
-      Lines(ID = "1") %>%
-      list() %>%
+    ) |>
+      Line() |>
+      Lines(ID = "1") |>
+      list() |>
       SpatialLines()
 
     shortestPathVertices <- SpatialPoints(cbind(
