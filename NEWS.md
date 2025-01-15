@@ -3,7 +3,7 @@
 ## Dependency changes
 
 * Require R 4.2 or higher (for native pipe and placeholder)
-* Add `DiagrammeR`, `dplyr` and `withr` to Suggests for use with vignettes and tests
+* Add `DiagrammeR`, `dplyr`, `webshot2` and `withr` to Suggests for use with vignettes and tests
 
 ## Bugfixes
 
