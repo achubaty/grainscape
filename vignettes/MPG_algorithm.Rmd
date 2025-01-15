@@ -1,5 +1,5 @@
 ---
-title: "Calculating the minimum planar graph and generating Voronoi tessellations"
+title: "Calculating the minimum planar graph"
 author: "Sam Doctolero and Alex M Chubaty"
 date: '`r Sys.Date()`'
 output:
@@ -11,8 +11,8 @@ bibliography: bibliography.bib
 fontsize: 11pt
 geometry: margin=1in
 vignette: >
-  %\VignetteIndexEntry{grainscape MPG algorithm}
-  %\VignetteDepends{DiagrammeR}
+  %\VignetteIndexEntry{Calculating the minimum planar graph}
+  %\VignetteDepends{DiagrammeR, webshot2}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
@@ -34,6 +34,8 @@ opts_chunk$set(
   results = "hold",
   warning = FALSE
 )
+
+not_cran = !identical(Sys.getenv("NOT_CRAN"), "")
 ```
 
 ## Overview
@@ -147,7 +149,7 @@ It creates the minimum planar graph (MPG) using the MPG algorithm, finds least c
 After instantiating an `Engine` object, the connectivity engine is run by first calling `initialize()` and then `start()`.
 The call graphs for each of these principal functions are presented below.
 
-```{r call_graph_engine_initialize, echo = FALSE,  fig.cap = "Call diagram for Engine::initialize()"}
+```{r call_graph_engine_initialize, echo = FALSE, eval = not_cran, fig.cap = "Call diagram for Engine::initialize()"}
 DiagrammeR::grViz("
   digraph initialize {
     graph [overlap = true, fontsize = 10]
@@ -179,7 +181,7 @@ DiagrammeR::grViz("
 ")
 ```
 
-```{r call_graph_engine_start, echo = FALSE, fig.cap = "Call diagram for Engine::start()"}
+```{r call_graph_engine_start, echo = FALSE, eval = not_cran, fig.cap = "Call diagram for Engine::start()"}
 DiagrammeR::grViz("
   digraph start {
     graph [overlap = true, fontsize = 10]
