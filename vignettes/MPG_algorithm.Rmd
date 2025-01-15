@@ -338,3 +338,63 @@ vector<float> EngineInterface(vector<float> resistance, vector<float> patches,
 	return outObj.voronoi_map;
 }
 ```
+
+\newpage
+
+## Debugging the package `C++` code
+
+Since we are using `clang++` to compile the code locally, we need `lldb` installed.
+
+```{bash debug_rcpp, echo = TRUE, eval = FALSE}
+cd ~/GitHub/grainscape
+
+## start R in debug mode
+R -d lldb
+
+## from the lldb shell, set breakpoint(s) in functions for debugging
+# breakpoint set --name initialize
+# breakpoint set --name start
+# breakpoint set --name activeCellSpreadChecker
+breakpoint set --name createActiveCell
+breakpoint set --name createLinks
+breakpoint set --name findPath
+breakpoint set --name lookForIndirectPath
+
+## start R
+run
+
+## from the R shell, run the code needed to debug
+devtools::dev_mode()
+devtools::load_all()
+
+## RUN ADDITIONAL R CODE FOR DEBUGGING
+```
+
+Some useful `lldb` shell commands for stepping through code:
+
+```{bash debug_lldb, echo = TRUE, eval = FALSE}
+## run next line
+n
+
+## continue
+c
+
+## skip
+s
+
+## step up into the parent frame
+up
+
+## inspect variables the current frame
+frame variable
+
+## inspect a particular value or evaluate code
+expr i
+expr spread_list[23];
+```
+
+See <https://lldb.llvm.org/use/tutorial.html#controlling-your-program> for more help.
+
+## References
+
+<!-- bibliography automatically appended below -->
