@@ -1,3 +1,17 @@
+# grainscape (development version)
+
+## Dependency changes
+
+* none
+
+## Bugfixes
+
+* none
+
+## New features & enhancements
+
+* none
+
 # grainscape 0.5.0
 
 ## Dependency changes
