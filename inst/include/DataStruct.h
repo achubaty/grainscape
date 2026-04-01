@@ -43,6 +43,10 @@ struct LinkCell
 typedef std::vector<LinkCell> lcCol;
 typedef std::vector<lcCol> LinkMap;
 
+// boolMap is used for per-cell boolean flags (e.g., settled_map)
+typedef std::vector<bool> boolCol;
+typedef std::vector<boolCol> boolMap;
+
 // ActiveCell is used in the spreading algorithm
 struct ActiveCell
    :Cell  // inherits from Cell structure

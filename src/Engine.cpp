@@ -148,6 +148,21 @@ bool Engine::initialize() {
   // resize link map (nrow rows and ncol columns)
   iLinkMap = LinkMap(in_data->nrow, lcCol(in_data->ncol));
 
+  // initialize settled_map: a cell is settled once it has appeared in spread_list and
+  // spread to its neighbours, meaning its iLinkMap entry is as optimal as possible.
+  // createLinks only fires findPath when the neighbour cell is settled, so that a
+  // sub-optimal (high-cost) path cannot be recorded before the cheap path is found (#72).
+  // All patch cells (set by findPatches) are considered settled from the outset because
+  // their iLinkMap entries are initialised correctly above and they form the path origins.
+  settled_map = boolMap(in_data->nrow, boolCol(in_data->ncol, false));
+  for (unsigned int i = 0; i < in_data->nrow; i++) {
+    for (unsigned int j = 0; j < in_data->ncol; j++) {
+      if (voronoi_map[i][j] > 0.0f) {
+        settled_map[i][j] = true;
+      }
+    }
+  }
+
   // initialize the LinkCells in iLinkMap to some default value,
   // as the for loop below only initializes active cells
   for (unsigned int i = 0; i < in_data->nrow; i++) {
@@ -220,8 +235,9 @@ void Engine::start() {
       createActiveCell(&spread_list[i], spread_list[i].row, spread_list[i].column - 1);  // left
     }
 
-    // using updated (re-sorted!) spread_list, find paths between nodes
-    // TODO: don't create link for the new active cells (which were added to temp list for later)
+    // using updated (re-sorted!) spread_list, find paths between nodes;
+    // cells conquered in the current iteration (conquest_gen_map == current_gen) are skipped
+    // because their iLinkMap entries haven't settled yet (#72)
     for (unsigned int i = 0; i < spread_list.size(); i++) {
       createLinks(&spread_list[i], spread_list[i].row - 1, spread_list[i].column);  // top
       createLinks(&spread_list[i], spread_list[i].row + 1, spread_list[i].column);  // bottom
@@ -285,6 +301,11 @@ void Engine::activeCellSpreadChecker(ActiveCell * ac) {
   // if the time or number of iteration since the ActiveCell is instantiated is
   // greater than the resistance value at that cell, include it in the spread_list.
   if (ac->time >= ac->resistance) {
+    // mark as settled: this cell has now fully "processed" its waiting time, so its
+    // iLinkMap entry is as optimal as possible; createLinks may now use it as a
+    // boundary when detecting paths between patches (#72)
+    settled_map[ac->row][ac->column] = true;
+
     // include the list in spread list in an order by increasing effective distance
     if (spread_list.size() <= 0) {
       spread_list.push_back(*ac);
@@ -375,10 +396,17 @@ void Engine::createLinks(ActiveCell * ac, int row, int col) {
   // create the links between nodes (patches)
   // check if the row and col arguments are not out of bounds,
   //   voronoi_map's row'th and col'th element is not zero,
-  //   and not ac's id, then this is a voronoi boundary
+  //   and not ac's id, then this is a voronoi boundary.
+  // only fire path detection when the neighbouring cell is settled — i.e. it has already
+  // been in the spread_list and its iLinkMap entry traces back to its patch origin via the
+  // cheapest path seen so far.  Skipping unsettled cells prevents a high-resistance cell
+  // that was claimed early (and is sitting in the queue waiting to spread) from triggering
+  // a premature, expensive link before the low-resistance path through another route has
+  // had a chance to settle and be detected (#72).
   if (!outOfBounds(row, col, in_data->nrow, in_data->ncol) &&
       voronoi_map[row][col] != 0.0f &&
-      voronoi_map[row][col] != ac->id) {
+      voronoi_map[row][col] != ac->id &&
+      settled_map[row][col]) {
     // 'no_data' cells should not be included in the link or path between habitats or patches
     //
     // if the cost_map's row'th and col'th element is not a no_data element then create the link,
@@ -685,29 +713,23 @@ void Engine::connectCell(ActiveCell * ac, int row, int col, float cost) {
 
 //' Finds the least cost path between two patches
 //'
-//' Checks whether a path between patches exists in the \code{path_list}
+//' Computes the candidate path cost and either records a new link or updates an existing
+//' one when a cheaper route is found for the same patch pair.
 //'
 //' @param ac1,ac2 objects of \code{LinkCell}
 //'
 //' @param path_list vector of \code{Link}s
 //'
 //' @return No return value. As a side effect, updates \code{path_list} with
-//'         new path linking \code{ac2} and \code{ac2}.
+//'         new path linking \code{ac1} and \code{ac2}.
 //'
-//' @author Sam Doctolero
+//' @author Sam Doctolero and Alex Chubaty
 //' @family C++ linking functions
 //' @keywords internal
 void Engine::findPath(LinkCell &ac1, LinkCell &ac2, std::vector<Link> & path_list) {
-  for (unsigned int i = 0; i < path_list.size(); i++) {
-    // if the end id and start id correspond to ac1's id and ac2's id OR if the
-    // start id and end id correspond to ac1's id and ac2's id then the link already exists
-    if ((path_list[i].end.id == ac1.id && path_list[i].start.id == ac2.id) ||
-        (path_list[i].start.id == ac1.id && path_list[i].end.id == ac2.id)) {
-      return;
-    }
-  }
-
-  // create the path
+  // compute the candidate path first so its cost can be compared against any existing
+  // link for the same patch pair (#72: the original code returned early without comparing
+  // costs, locking in the first-detected boundary even if it wasn't the cheapest)
   Link path;         // create a Link instance and name it path
   path.cost = 0.0f;  // set the initial cost counter to zero
 
@@ -725,7 +747,19 @@ void Engine::findPath(LinkCell &ac1, LinkCell &ac2, std::vector<Link> & path_lis
   // from ac2's location (or lc_temp's location) follow its connections until it reaches a path
   path.end = parseMap(lc_temp, path); // will also update path.connection to lc_temp's value
 
-  // if no cheaper indirect path found, add path to path_list
+  // check if a link for this patch pair already exists
+  for (unsigned int i = 0; i < path_list.size(); i++) {
+    if ((path_list[i].end.id == ac1.id && path_list[i].start.id == ac2.id) ||
+        (path_list[i].start.id == ac1.id && path_list[i].end.id == ac2.id)) {
+      // link exists; replace it only when the new direct path is strictly cheaper (#72)
+      if (path.cost < path_list[i].cost) {
+        path_list[i] = path;
+      }
+      return;
+    }
+  }
+
+  // no existing link for this patch pair — check for cheaper indirect path and add
   if (lookForIndirectPath(path_list, path)) {
     path_list.push_back(path);
   }
@@ -795,61 +829,44 @@ bool Engine::lookForIndirectPath(std::vector<Link> & path_list, Link & path) {
     return true;
   }
 
-  // otherwise parse through all the paths currently in the memory and check for lower cost ones
-  for (unsigned int i = 0; i < path_list.size() - 1; i++) {
-    // if the i'th path_list's start or end id equal to path's start id,
-    // then this may be a possible indirect Link
-    if (path_list[i].start.id == path.start.id || path_list[i].end.id == path.start.id) {
-      // create an instance of a pointer to a Link called pPath1
-      // and set it to the address of the i'th Link in the path_list
-      Link * pPath1 = &path_list[i];
+  // Search all pairs of existing links for a cheaper two-hop indirect path A→X→B.
+  // The original algorithm required j > i (inner loop started after i), which missed
+  // cases where the pivot link X is stored earlier in path_list than the A→X link (#72).
+  // This order-independent replacement checks all pairs regardless of list order.
+  for (unsigned int i = 0; i < path_list.size(); i++) {
+    Rcpp::checkUserInterrupt();  // comment this when NOT using R
 
-      // create a floating point variable called cost and initialize it with pPath1's cost
-      float cost = pPath1->cost;
+    // find pivot patch X: path_list[i] must connect path.start to X (either direction)
+    float pivot_id = -1.0f;
+    if (path_list[i].start.id == path.start.id) {
+      pivot_id = path_list[i].end.id;
+    } else if (path_list[i].end.id == path.start.id) {
+      pivot_id = path_list[i].start.id;
+    } else {
+      continue;  // link does not touch path.start
+    }
 
-      // create a vector of Links called connection
-      // (this will serve as the new indirect list of cells that create the Link)
-      std::vector<Link> connection;
+    float cost1 = path_list[i].cost;
+    if (cost1 >= path.cost) continue;  // first hop already too expensive
 
-      // loop through all the links in path_list to compare costs
-      for (unsigned int j = i + 1; j < path_list.size(); j++) {
-        Rcpp::checkUserInterrupt();  // comment this when NOT using R
+    // find a second link connecting pivot X to path.end (either direction)
+    for (unsigned int j = 0; j < path_list.size(); j++) {
+      if (j == i) continue;  // skip same link
 
-        // create an instance of a pointer to a Link called pPath2,
-        // and set it to the j'th Link in the path_list
-        Link * pPath2 = &path_list[j];
+      bool connects =
+        (path_list[j].start.id == pivot_id && path_list[j].end.id == path.end.id) ||
+        (path_list[j].end.id   == pivot_id && path_list[j].start.id == path.end.id);
+      if (!connects) continue;
 
-        // proceed if pPath1 and pPath2 do not point to the same address (same Link)
-        if (pPath1 != pPath2) {
-          cost += pPath2->cost;  // increment the cost variable with pPath2's cost
-
-          // if the cost is not less than the parameter path's cost,
-          // then the current indirect link is not valid
-          // NOTE: in case of a tie, the first link (shorter distance) is used
-          if (cost >= path.cost) {
-            // decrement the cost variable with pPath2's cost and exit the inner loop
-            cost -= pPath2->cost;
-            break;
-          }
-          connection.push_back(*pPath1);  // otherwise, insert pPath1's Link in connection
-          pPath1 = pPath2;
-
-          // if the path's end patch is reached then this is the end of the processing,
-          // and a proper indirect Link is found
-          if (pPath2->end.id == path.end.id || pPath2->start.id == path.end.id) {
-            path.cost = cost;
-            path.connection = connection[0].connection;
-
-            // parse through all the Links in connection to create a new Link,
-            // then update path with that new Link
-            for (unsigned int k = 1; k < connection.size(); k++) {
-              for (unsigned int m = 0; m < connection[k].connection.size(); m++) {
-                path.connection.push_back(connection[k].connection[m]);
-              }
-            }
-            return false;
-          }
+      float total_cost = cost1 + path_list[j].cost;
+      if (total_cost < path.cost) {
+        // indirect path is cheaper: update path with the two-hop route
+        path.cost = total_cost;
+        path.connection = path_list[i].connection;
+        for (unsigned int m = 0; m < path_list[j].connection.size(); m++) {
+          path.connection.push_back(path_list[j].connection[m]);
         }
+        return false;  // do not add the direct (more expensive) link
       }
     }
   }

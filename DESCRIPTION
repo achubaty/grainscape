@@ -10,8 +10,8 @@ Description: Given a landscape resistance surface, creates minimum planar graph
 URL:
     https://www.alexchubaty.com/grainscape/,
     https://github.com/achubaty/grainscape
-Version: 0.5.0
-Date: 2025-01-14
+Version: 0.5.1
+Date: 2026-04-01
 Authors@R: c(
     person("Paul", "Galpern", email = "pgalpern@gmail.com", role = c("aut", "cph"),
            comment = c(ORCID = "0000-0003-0099-3981")),
@@ -74,5 +74,5 @@ Collate:
     'zzz.R'
 Encoding: UTF-8
 Language: en-CA
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 Roxygen: list(markdown = TRUE)

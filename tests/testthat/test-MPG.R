@@ -177,7 +177,7 @@ test_that("least-cost paths are correctly calculated (#72)", {
   ## crop to even larger extent with more patches (nodes) [7371 px]
   zoomExtent3 <- raster::extent(patchMap, r1 = 120, r2 = 210, c1 = 50, c2 = 130)
   patchMap_zoom3 <- raster::crop(patchMap, zoomExtent3)
-  resistanceMap_zoom3 <- raster::crop(resistanceMap, zoomExtent)
+  resistanceMap_zoom3 <- raster::crop(resistanceMap, zoomExtent3)
   combinedMap_zoom3 <- raster::crop(combinedMap, zoomExtent3)
 
   if (!debug_cpp && interactive()) {
@@ -193,14 +193,14 @@ test_that("least-cost paths are correctly calculated (#72)", {
   }
 
   lcpWeight_zoom3 <- raster::getValues(patchyMPG_zoom3@lcpPerimWeight) |> unique() |> na.omit()
-  expect_identical(as.integer(lcpWeight_zoom3), c(8L, 1L)) ## TODO
+  expect_identical(sort(as.integer(lcpWeight_zoom3)), c(1L, 3L, 8L, 25L, 32L, 43L, 44L, 60L))
 
-  expect_true(nrow(graphdf(patchyMPG_zoom2)[[1]]$v) == 7) ## TODO
-  expect_true(nrow(graphdf(patchyMPG_zoom2)[[1]]$e) == 9) ## TODO: remove dupes from cpp
+  expect_true(nrow(graphdf(patchyMPG_zoom3)[[1]]$v) == 7)
+  expect_true(nrow(graphdf(patchyMPG_zoom3)[[1]]$e) == 8)
 
 
   ## now with the full original extent [32550 px]
-  patchyMPG <- MPG(combinedMap, patch = patchMap) ## TODO: fix excessive RAM use
+  patchyMPG <- MPG(combinedMap, patch = patchMap)
 
   if (!debug_cpp && interactive()) {
     # plot(patchyMPG@mpgPlot)
@@ -208,8 +208,8 @@ test_that("least-cost paths are correctly calculated (#72)", {
   }
 
   lcpWeights <- raster::getValues(patchyMPG@lcpPerimWeight) |> unique() |> na.omit()
-  expect_identical(as.integer(lcpWeight_zoom3), c(8L, 1L)) ## TODO
+  expect_identical(sort(as.integer(lcpWeights)), c(1L, 3L, 8L, 25L, 32L, 43L, 44L, 60L, 148L, 150L, 181L, 194L))
 
-  expect_true(nrow(graphdf(patchyMPG_zoom2)[[1]]$v) == 9) ## TODO
-  expect_true(nrow(graphdf(patchyMPG_zoom2)[[1]]$e) == 13) ## TODO: remove dupes from cpp
+  expect_true(nrow(graphdf(patchyMPG)[[1]]$v) == 9)
+  expect_true(nrow(graphdf(patchyMPG)[[1]]$e) == 12)
 })

@@ -1,4 +1,15 @@
-# grainscape (development version)
+# grainscape 0.5.1
+
+## Dependency changes
+
+* none
+
+## Bugfixes
+
+* Fixed incorrect least-cost paths in MPG (#72);
+* Fixed `graphdf` returning a transposed (single-column) data frame for MPGs with only one link;
+
+# grainscape 0.5.0
 
 ## Dependency changes
 
@@ -21,18 +32,18 @@
 
 ## Dependency changes
 
-* Removed retiring spatial packages `rgdal` and `rgeos` (#68)
-* Use `sf` for writing shapefiles.
+* Removed retiring spatial packages `rgdal` and `rgeos` (#68);
+* Use `sf` for writing shapefiles;
 
 ## Bugfixes
 
-* Improved plotting of lattice MPGs (#51)
-* Removed unused `eucPerimWeight` from documentation (#56)
-* Improved error messaging for undefined thresholds in `GOC()` (#57)
+* Improved plotting of lattice MPGs (#51);
+* Removed unused `eucPerimWeight` from documentation (#56);
+* Improved error messaging for undefined thresholds in `GOC()` (#57);
 
 ## New features & enhancements
 
-* None
+* none
 
 # grainscape 0.4.3
 
