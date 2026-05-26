@@ -29,7 +29,15 @@ lintr::lint_package()
 
 # Generate documentation from roxygen2
 devtools::document()
+```
 
+Formatting is handled by [air](https://posit-dev.github.io/air/) (configured in `air.toml`), run from the shell:
+
+```sh
+air format .
+```
+
+```r
 # Build pkgdown site
 pkgdown::build_site()
 
@@ -96,9 +104,10 @@ The C++ engine is accessed via `R/RcppExports.R` (auto-generated — do not edit
 
 ## Code Style
 
+- Formatting via [air](https://posit-dev.github.io/air/) (`air format .`, configured in `air.toml`)
 - 2-space indentation, UTF-8 encoding, LF line endings
-- Line length limit: 100 characters (enforced by `.lintr`)
+- Line length limit: 100 characters (enforced by `air.toml` and `.lintr`)
 - Object names: **camelCase** (enforced by lintr's `object_name_linter`)
-- Documentation via roxygen2 with markdown enabled (`RoxygenNote: 7.3.2`)
+- Documentation via roxygen2 with markdown enabled (`Config/roxygen2/version: 8.0.0`)
 - Tests use `withr::local_options(warnPartialMatchArgs = TRUE, warnPartialMatchAttr = TRUE, warnPartialMatchDollar = TRUE)`
 - Comments use `##` for prose comments; single `#` is reserved for commented-out code
