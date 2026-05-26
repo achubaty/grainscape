@@ -2,16 +2,16 @@
 #'
 #' @description
 #' This is an informal `fortify`-type method that prepares either
-#' `RasterLayer` or `igraph` objects contained as slots within
+#' `SpatRaster` or `igraph` objects contained as slots within
 #' `MPG` or `grain` objects for easy plotting with [ggplot2::ggplot()].
 #'
 #'
-#' @param x       A `mpg`, `grain`, or `RasterLayer` object.
+#' @param x       A `mpg`, `grain`, or `SpatRaster` object.
 #'
 #' @param type    If a `mpg` or `grain` object is supplied, this
 #'                gives the name of the slot to prepare for plotting.
 #'                Options are discussed below.
-#'                Not required if a `RasterLayer` is supplied.
+#'                Not required if a `SpatRaster` is supplied.
 #'
 #' @param ...  Additional arguments (not used).
 #'
@@ -50,7 +50,7 @@
 #' @note
 #' **Options for `type` parameter**
 #'
-#'  If a `RasterLayer` is supplied `type` is optional.
+#'  If a `SpatRaster` is supplied `type` is optional.
 #'
 #'  For `mpg` `type` options are `"node"` or `"links"`.
 #'  This prepares the nodes and links of the minimum planar graph network for
@@ -69,8 +69,7 @@
 #'
 #' @author Paul Galpern and Alex Chubaty
 #' @export
-#' @importFrom sp SpatialPixelsDataFrame
-#' @importFrom raster boundaries
+#' @importFrom terra as.data.frame boundaries values
 #' @importFrom utils type.convert
 #' @include classes.R
 #' @rdname ggGS
@@ -89,10 +88,11 @@ setGeneric("ggGS", function(x, type = NULL, ...) {
 #' @rdname ggGS
 setMethod(
   "ggGS",
-  signature = "RasterLayer",
+  signature = "SpatRaster",
   definition = function(x, type = NULL, ...) {
-    out <- as.data.frame(as(x, "SpatialPixelsDataFrame"))
-    names(out) <- c("value", "x", "y")
+    out <- terra::as.data.frame(x, xy = TRUE)
+    names(out) <- c("x", "y", "value")
+    out <- out[, c("value", "x", "y")]
     return(out)
   }
 )
@@ -149,7 +149,7 @@ setMethod(
       message("Extracting voronoi boundaries...")
       out <- x@voronoi
       out[out[] == 0] <- NA
-      out <- boundaries(out, classes = TRUE)
+      out <- terra::boundaries(out, classes = TRUE)
       ggGS(out)
     } else if (type %in% c("nodes", "links")) {
       ggGS(graphdf(x), type = type)
@@ -173,7 +173,7 @@ setMethod(
       message("Extracting voronoi boundaries...")
       out <- x@voronoi
       out[out[] == 0] <- NA
-      out <- boundaries(out, classes = TRUE)
+      out <- terra::boundaries(out, classes = TRUE)
       ggGS(out)
     } else if (type %in% c("nodes", "links")) {
       ggGS(graphdf(x), type = type)

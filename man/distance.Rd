@@ -2,14 +2,14 @@
 % Please edit documentation in R/distance.R
 \name{distance}
 \alias{distance}
-\alias{distance,goc,SpatialPoints-method}
+\alias{distance,goc,sf-method}
 \alias{distance,goc,matrix-method}
 \alias{distance,goc,numeric-method}
 \title{Find the grains of connectivity network distance}
 \usage{
 distance(x, y, ...)
 
-\S4method{distance}{goc,SpatialPoints}(x, y, weight = "meanWeight", ...)
+\S4method{distance}{goc,sf}(x, y, weight = "meanWeight", ...)
 
 \S4method{distance}{goc,matrix}(x, y, weight = "meanWeight", ...)
 
@@ -18,7 +18,7 @@ distance(x, y, ...)
 \arguments{
 \item{x}{A \code{goc} object produced by \code{\link[=GOC]{GOC()}}.}
 
-\item{y}{A two column matrix or a \link[sp:SpatialPoints-class]{sp::SpatialPoints} object
+\item{y}{A two-column matrix or an \code{sf} (POINT) object
 giving the coordinates of points of interest.}
 
 \item{...}{Additional arguments (not used).}
@@ -38,10 +38,10 @@ This can be used as an effective distance for landscape connectivity assessments
 }
 \examples{
 ## Load raster landscape
-tiny <- raster::raster(system.file("extdata/tiny.asc", package = "grainscape"))
+tiny <- terra::rast(system.file("extdata/tiny.asc", package = "grainscape"))
 
 ## Create a resistance surface from a raster using an is-becomes reclassification
-tinyCost <- raster::reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
+tinyCost <- terra::classify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
 ## Produce a patch-based MPG where patches are resistance features=1
 tinyPatchMPG <- MPG(cost = tinyCost, patch = tinyCost == 1)
 ## Extract a representative subset of 5 grains of connectivity

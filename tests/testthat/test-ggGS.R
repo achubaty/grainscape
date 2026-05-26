@@ -1,5 +1,4 @@
 test_that("ggGS() for mpg 'patchId' returns data.frame with x, y, value", {
-  withr::local_package("raster")
   withr::local_package("igraph")
 
   mpg <- .tinyMPG()
@@ -11,7 +10,6 @@ test_that("ggGS() for mpg 'patchId' returns data.frame with x, y, value", {
 })
 
 test_that("ggGS() for mpg 'voronoi' returns data.frame with x, y, value", {
-  withr::local_package("raster")
   withr::local_package("igraph")
 
   mpg <- .tinyMPG()
@@ -22,7 +20,6 @@ test_that("ggGS() for mpg 'voronoi' returns data.frame with x, y, value", {
 })
 
 test_that("ggGS() for mpg 'links' returns data.frame with link coordinate columns", {
-  withr::local_package("raster")
   withr::local_package("igraph")
 
   mpg <- .tinyMPG()
@@ -33,7 +30,6 @@ test_that("ggGS() for mpg 'links' returns data.frame with link coordinate column
 })
 
 test_that("ggGS() for grain 'voronoi' returns data.frame with x, y, value", {
-  withr::local_package("raster")
   withr::local_package("igraph")
 
   goc <- .tinyGOC()
@@ -45,7 +41,6 @@ test_that("ggGS() for grain 'voronoi' returns data.frame with x, y, value", {
 })
 
 test_that("ggGS() for grain 'vorBound' returns data.frame with x, y, value", {
-  withr::local_package("raster")
   withr::local_package("igraph")
 
   goc <- .tinyGOC()
@@ -57,7 +52,6 @@ test_that("ggGS() for grain 'vorBound' returns data.frame with x, y, value", {
 })
 
 test_that("ggGS() for grain 'nodes' returns data.frame with x, y columns", {
-  withr::local_package("raster")
   withr::local_package("igraph")
 
   goc <- .tinyGOC()
@@ -69,7 +63,6 @@ test_that("ggGS() for grain 'nodes' returns data.frame with x, y columns", {
 })
 
 test_that("ggGS() for grain 'links' returns data.frame with link coordinate columns", {
-  withr::local_package("raster")
   withr::local_package("igraph")
 
   goc <- .tinyGOC()
@@ -80,8 +73,7 @@ test_that("ggGS() for grain 'links' returns data.frame with link coordinate colu
   expect_true(all(c("x1", "y1", "x2", "y2") %in% names(df)))
 })
 
-test_that("ggGS() for RasterLayer returns data.frame with x, y, value", {
-  withr::local_package("raster")
+test_that("ggGS() for SpatRaster returns data.frame with x, y, value", {
   withr::local_package("igraph")
 
   mpg <- .tinyMPG()

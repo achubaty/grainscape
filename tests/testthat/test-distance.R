@@ -30,32 +30,32 @@ test_that("distance() grainD matrices are symmetric, square, and non-negative", 
   }
 })
 
-test_that("distance() with SpatialPoints input works", {
+test_that("distance() with sf input works", {
   withr::local_package("igraph")
 
   goc <- .tinyGOC(nThresh = 3)
   mat <- cbind(c(30, 60, 90), c(30, 60, 90))
-  sp_pts <- sp::SpatialPoints(mat)
-  d <- grainscape::distance(goc, sp_pts)
+  sf_pts <- sf::st_as_sf(as.data.frame(mat), coords = c("V1", "V2"))
+  d <- grainscape::distance(goc, sf_pts)
 
   expect_type(d, "list")
   expect_length(d$th, 3)
 })
 
-test_that("distance() matrix and SpatialPoints give same result", {
+test_that("distance() matrix and sf give same result", {
   withr::local_package("igraph")
 
   goc <- .tinyGOC(nThresh = 3)
   mat <- cbind(c(30, 60, 90), c(30, 60, 90))
-  sp_pts <- sp::SpatialPoints(mat)
+  sf_pts <- sf::st_as_sf(as.data.frame(mat), coords = c("V1", "V2"))
 
   d_mat <- grainscape::distance(goc, mat)
-  d_sp <- grainscape::distance(goc, sp_pts)
+  d_sf <- grainscape::distance(goc, sf_pts)
 
   for (i in seq_along(d_mat$th)) {
     if (!is.list(d_mat$th[[i]])) next
     m1 <- d_mat$th[[i]]$grainD
-    m2 <- d_sp$th[[i]]$grainD
+    m2 <- d_sf$th[[i]]$grainD
     if (is.matrix(m1) && is.matrix(m2)) {
       expect_equal(m1, m2)
     }

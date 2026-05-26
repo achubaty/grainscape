@@ -14,15 +14,15 @@
 #' a resource patch. Lattice models can be used as a generalized and functional
 #' approach to scaling resistance surfaces.
 #'
-#' Rasters should be projected and not in geographic coordinates (i.e. `raster::projection(cost)`
-#' should not contain `"+proj=longlat"`) or the function will issue a warning.
-#' In unprojected cases consider using [raster::projectRaster()] to change to an appropriate
+#' Rasters should be projected and not in geographic coordinates (i.e. `terra::crs(cost)`
+#' should not contain `"longlat"`) or the function will issue a warning.
+#' In unprojected cases consider using [terra::project()] to change to an appropriate
 #' coordinate system for the location and extent of interest that balances both distance and areal
 #' accuracy. See <https://spatialreference.org/> for location-specific suggestions.
 #' Use of geographic coordinates will result in inaccurate areal and distance measurements,
 #' rendering the models themselves inaccurate.
 #'
-#' @param cost   A `RasterLayer` giving a landscape resistance surface,
+#' @param cost   A `SpatRaster` giving a landscape resistance surface,
 #'               where the values of each raster cell are proportional to the
 #'               resistance to movement, dispersal, or gene flow for an organism
 #'               in the landscape feature they represent.
@@ -31,7 +31,7 @@
 #'               To extract an MPG with Euclidean links (i.e., and not least-cost
 #'               path links) set `cost[] <- 1`.
 #'
-#' @param patch  A raster of class `RasterLayer` for a patch-based analysis
+#' @param patch  A raster of class `SpatRaster` for a patch-based analysis
 #'               OR an integer for a lattice analysis.
 #'               If a raster is given it must be of the same extent, origin and
 #'               projection as `cost` and be binary, without missing values,
@@ -75,23 +75,24 @@ setGeneric("MPG", function(cost, patch, ...) {
 })
 
 #' @export
-#' @importFrom raster boundaries cellFromRowCol cellFromRowColCombine compareRaster
-#' @importFrom raster getValues mask projection raster res writeRaster
-#' @importFrom raster xFromCol xyFromCell yFromRow
-#' @importFrom sp coordinates
+#' @importFrom igraph graph_from_data_frame
+#' @importFrom terra boundaries cellFromRowCol classify compareGeom crs
+#' @importFrom terra freq mask ncol nrow res values xyFromCell xFromCol yFromRow
+#' @importFrom terra zonal
 #' @importFrom stats na.omit
 #' @importFrom utils read.table
 #' @rdname MPG
 setMethod(
   "MPG",
-  signature = c(cost = "RasterLayer", patch = "RasterLayer"),
+  signature = c(cost = "SpatRaster", patch = "SpatRaster"),
   definition = function(cost, patch, ...) {
     ## Check patch and cost are comparable
-    if (!compareRaster(patch, cost, res = TRUE, orig = TRUE, stopiffalse = FALSE)) {
+    if (!terra::compareGeom(patch, cost, res = TRUE, stopOnError = FALSE)) {
       stop("patch and cost rasters must be identical in extent, projection, origin and resolution.")
     }
 
-    if (!is.na(projection(cost)) && grepl("longlat", projection(cost))) {
+    crs_str <- terra::crs(cost, proj = TRUE)
+    if (!is.na(crs_str) && nchar(crs_str) > 0 && grepl("longlat", crs_str)) {
       warning(
         "input rasters in geographic coordinates (i.e. '+proj=longlat') are unlikely",
         " to produce reliable estimates of area or distance.",
@@ -105,17 +106,19 @@ setMethod(
     rasCost <- cost
     rasPatch <- patch
 
-    rasCost[] <- getValues(cost)
-    rasPatch[] <- getValues(patch)
+    terra::values(rasCost) <- terra::values(cost)
+    terra::values(rasPatch) <- terra::values(patch)
 
     ## Check that patch raster is binary, first coercing NAs to zeroes
     rasPatch[is.na(rasPatch)] <- 0
-    if (!all(unique(rasPatch[]) %in% c(FALSE, TRUE))) {
+    if (!all(unique(terra::values(rasPatch)) %in% c(FALSE, TRUE))) {
       stop("patch must be a binary raster (=1 for patches; =0 for non-patches).")
     }
 
     ## Check that cost raster is not equal to NA at patches
-    if (sum(is.na(rasCost[rasPatch == 1]) > 0)) {
+    costVals <- terra::values(rasCost)[, 1]
+    patchVals <- terra::values(rasPatch)[, 1]
+    if (sum(is.na(costVals[patchVals == 1]) > 0)) {
       stop("cost raster must not contain missing values at patch cells.")
     }
 
@@ -131,27 +134,27 @@ setMethod(
     lcpLinkId <- hce@patchLinks
     lcpLinkId[hce@patchLinks >= 0] <- NA
 
-    lcpPerimWeight <- reclassify(lcpLinkId, rcl = matrix(c(
+    lcpPerimWeight <- terra::classify(lcpLinkId, rcl = matrix(c(
       hce@linkData$LinkId, hce@linkData$PerimWeight
     ), ncol = 2))
 
     mpgPlot <- hce@patchLinks
 
     ## Get additional patch information
-    uniquePatches <- voronoi[voronoi > 0] |>
-      na.omit() |>
-      unique() |>
-      sort() # nolint
+    uniquePatches <- terra::values(voronoi)[, 1]
+    uniquePatches <- sort(unique(na.omit(uniquePatches[uniquePatches > 0])))
 
     ## Patch edge
     patchEdge <- patchId
-    patchEdge <- raster::boundaries(patchEdge, type = "inner")
+    patchEdge <- terra::boundaries(patchEdge, inner = TRUE)
     patchEdge[patchEdge == 0] <- NA
-    patchEdge <- mask(patchId, patchEdge)
+    patchEdge <- terra::mask(patchId, patchEdge)
 
     ## Patch area and core area
-    patchArea <- freq(patchId, useNA = "no")[, 2] * res(cost)[1] * res(cost)[2]
-    patchEdgeArea <- freq(patchEdge, useNA = "no")[, 2] * res(cost)[1] * res(cost)[2]
+    patchFreq <- terra::freq(patchId, usenames = FALSE)
+    patchArea <- patchFreq[, "count"] * terra::res(cost)[1] * terra::res(cost)[2]
+    patchEdgeFreq <- terra::freq(patchEdge, usenames = FALSE)
+    patchEdgeArea <- patchEdgeFreq[, "count"] * terra::res(cost)[1] * terra::res(cost)[2]
     patch <- data.frame(
       name = uniquePatches, patchId = uniquePatches,
       patchArea = patchArea, patchEdgeArea = patchEdgeArea,
@@ -159,14 +162,14 @@ setMethod(
     )
 
     ## Find centroids of each patch
-    cellXY <- coordinates(patchId)
+    cellXY <- terra::xyFromCell(patchId, 1:terra::ncell(patchId))
     r <- rasX <- rasY <- patchId
     r[r == 0] <- NA
-    rasX[] <- cellXY[, 1]
-    rasY[] <- cellXY[, 2]
+    terra::values(rasX) <- cellXY[, 1]
+    terra::values(rasY) <- cellXY[, 2]
     centroids <- cbind(
-      zonal(rasX, r, fun = "mean", na.rm = TRUE),
-      zonal(rasY, r, fun = "mean", na.rm = TRUE)[, 2]
+      terra::zonal(rasX, r, fun = "mean", na.rm = TRUE),
+      terra::zonal(rasY, r, fun = "mean", na.rm = TRUE)[, 2]
     ) |>
       as.data.frame()
     colnames(centroids) <- c("zone", "meanX", "meanY")
@@ -179,11 +182,13 @@ setMethod(
       v2 = hce@linkData$EndId,
       linkId = hce@linkData$LinkId * -1L,
       lcpPerimWeight = hce@linkData$PerimWeight,
-      startPerimX = xFromCol(cost, hce@linkData$StartColumn),
-      startPerimY = yFromRow(cost, hce@linkData$StartRow),
-      endPerimX = xFromCol(cost, hce@linkData$EndColumn),
-      endPerimY = yFromRow(cost, hce@linkData$EndRow)
+      startPerimX = terra::xFromCol(cost, hce@linkData$StartColumn),
+      startPerimY = terra::yFromRow(cost, hce@linkData$StartRow),
+      endPerimX = terra::xFromCol(cost, hce@linkData$EndColumn),
+      endPerimY = terra::yFromRow(cost, hce@linkData$EndRow)
     )
+    ## Filter out degenerate links where StartId or EndId is the C++ sentinel value (-99)
+    toGraphE <- toGraphE[toGraphE$v1 != -99 & toGraphE$v2 != -99, ]
     mpgIgraph <- graph_from_data_frame(toGraphE, directed = FALSE, vertices = toGraphV)
 
     mpg <- new("mpg",
@@ -196,22 +201,22 @@ setMethod(
 )
 
 #' @export
-#' @importFrom raster cellFromRowColCombine ncol nrow
+#' @importFrom terra cellFromRowCol ncol nrow
 #' @rdname MPG
 setMethod(
   "MPG",
-  signature = c(cost = "RasterLayer", patch = "numeric"),
+  signature = c(cost = "SpatRaster", patch = "numeric"),
   definition = function(cost, patch, ...) {
     ## Produce the lattice patch rasters
     focalPointDistFreq <- patch
     patch <- cost
     patch[] <- 0
 
-    ids <- cellFromRowColCombine(
-      patch,
-      seq(1, nrow(patch), by = focalPointDistFreq) + focalPointDistFreq / 2,
-      seq(1, ncol(patch), by = focalPointDistFreq) + focalPointDistFreq / 2
-    )
+    rows <- seq(1, terra::nrow(patch), by = focalPointDistFreq) + focalPointDistFreq / 2
+    cols <- seq(1, terra::ncol(patch), by = focalPointDistFreq) + focalPointDistFreq / 2
+    grid <- expand.grid(row = rows, col = cols)
+    ids <- terra::cellFromRowCol(patch, grid$row, grid$col)
+
     patch[ids] <- 1
     ## Remove lattice points that fall on NA cost cells
     patch[is.na(cost)] <- 0
@@ -219,3 +224,4 @@ setMethod(
     MPG(cost = cost, patch = patch, ...)
   }
 )
+

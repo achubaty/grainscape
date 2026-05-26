@@ -58,7 +58,7 @@
 }
 
 #' @author Paul Galpern
-#' @importFrom raster extension<- writeRaster
+#' @importFrom terra writeRaster
 #' @keywords internal
 .wRas <- function(ras, fname, dirpath, rasterFormat, overwrite) {
   extensions <- data.frame(
@@ -67,16 +67,19 @@
     stringsAsFactors = FALSE
   )
   id <- which(extensions$format == rasterFormat)
-  filename <- file.path(dirpath, fname)
-  extension(filename) <- extensions[id, "ext"]
-  writeRaster(ras, filename = filename, format = rasterFormat, overwrite = overwrite)
+  filename <- paste0(file.path(dirpath, fname), extensions[id, "ext"])
+  terra::writeRaster(ras, filename = filename, overwrite = overwrite)
 }
 
 #' @author Paul Galpern
-#' @importFrom sf st_as_sf st_write
+#' @importFrom sf st_write
 #' @keywords internal
 .wShp <- function(sp, fname, dirpath, overwrite) {
-  st_write(st_as_sf(sp),
+  ## accept both sf objects and legacy sp objects
+  if (!inherits(sp, "sf")) {
+    sp <- sf::st_as_sf(sp)
+  }
+  sf::st_write(sp,
     dsn = dirpath, layer = fname, driver = "ESRI Shapefile",
     delete_layer = overwrite
   )
@@ -94,7 +97,7 @@
 #' Use `R = TRUE` in which case all parameters related to file export
 #' are ignored. (Default `R = FALSE`)
 #'
-#' The [raster::writeRaster()] function is used for rasters,
+#' The [terra::writeRaster()] function is used for rasters,
 #' and [sf::st_write()] is used to export ESRI compatible shape files.
 #'
 #' @param x             A `mpg` or `grain` object
@@ -105,10 +108,8 @@
 #' @param path          A path to where this new directory `dirname` should be created.
 #'                      Defaults to the working directory.
 #'
-#' @param rasterFormat  The format for exported rasters. See [raster::writeFormats()] for options.
+#' @param rasterFormat  The format for exported rasters. See [terra::writeRaster()] for options.
 #'                      Defaults to GeoTiff (`rasterFormat='GTiff'`).
-#'                      Use `rasterFormat='raster'` to save `.grd` files in
-#'                      native \pkg{raster} package format.
 #'
 #' @param overwrite     If directory already exists will overwrite existing files inside.
 #'                      Defaults to `FALSE`.
@@ -210,10 +211,8 @@
 #'
 #' @author Paul Galpern and Alex Chubaty
 #' @export
-#' @importFrom raster boundaries projection projection<- writeRaster
-#' @importFrom sf st_write
-#' @importFrom sp coordinates<- CRS Line Lines proj4string proj4string<-
-#' @importFrom sp SpatialLines SpatialLinesDataFrame
+#' @importFrom sf st_as_sf st_crs st_linestring st_sf st_sfc st_write
+#' @importFrom terra boundaries crs writeRaster
 #' @include classes.R
 #' @rdname export
 #' @seealso [MPG()], [GOC()], [grain()]
@@ -247,50 +246,58 @@ setMethod("export",
     nodesDF <- graphdf(x)[[1]]$v[, -1]
     names(nodesDF) <- names(nodesDF) |> .abbrev()
 
+    crs_wkt <- terra::crs(x@patchId)
+
     firstCentr <- nodesDF[match(linksDF$e1, nodesDF$patchId), c("ctrX", "ctrY")]
     names(firstCentr) <- c("strtCtrX", "strtCtrY")
     secondCentr <- nodesDF[match(linksDF$e2, nodesDF$patchId), c("ctrX", "ctrY")]
     names(secondCentr) <- c("endCtrX", "endCtrY")
     linksCentr <- cbind(linksDF, firstCentr, secondCentr)
     row.names(linksCentr) <- linksDF$linkId
-    linksCentrSP <- linksCentr[, c("strtCtrX", "strtCtrY", "endCtrX", "endCtrY", "linkId")] |>
-      apply(1, function(x) {
-        Lines(Line(matrix(x[1:4], 2, 2, byrow = TRUE)), ID = as.character(x[5]))
-      }) |>
-      SpatialLines() |>
-      SpatialLinesDataFrame(data = linksCentr)
-    projection(linksCentrSP) <- CRS(projection(x@patchId))
+
+    linksCentrSF <- sf::st_sf(
+      linksCentr,
+      geometry = sf::st_sfc(lapply(seq_len(nrow(linksCentr)), function(i) {
+        sf::st_linestring(matrix(c(
+          linksCentr$strtCtrX[i], linksCentr$strtCtrY[i],
+          linksCentr$endCtrX[i], linksCentr$endCtrY[i]
+        ), ncol = 2, byrow = TRUE))
+      })),
+      crs = crs_wkt
+    )
 
     firstPerim <- linksDF[, c("strtPerX", "strtPerY")]
     secondPerim <- linksDF[, c("endPerX", "endPerY")]
     linksPerim <- cbind(linksDF, firstPerim, secondPerim)
     row.names(linksPerim) <- linksDF$linkId
-    linksPerimSP <- linksPerim[, c("strtPerX", "strtPerY", "endPerX", "endPerY", "linkId")] |>
-      apply(1, function(x) {
-        Lines(Line(matrix(x[1:4], 2, 2, byrow = TRUE)), ID = as.character(x[5]))
-      }) |>
-      SpatialLines() |>
-      SpatialLinesDataFrame(data = linksPerim[, -which(duplicated(names(linksPerim)))])
-    proj4string(linksPerimSP) <- CRS(projection(x@patchId))
+
+    linksPerimSF <- sf::st_sf(
+      linksPerim[, !duplicated(names(linksPerim))],
+      geometry = sf::st_sfc(lapply(seq_len(nrow(linksPerim)), function(i) {
+        sf::st_linestring(matrix(c(
+          linksPerim$strtPerX[i], linksPerim$strtPerY[i],
+          linksPerim$endPerX[i], linksPerim$endPerY[i]
+        ), ncol = 2, byrow = TRUE))
+      })),
+      crs = crs_wkt
+    )
 
     ## Create voronoi boundaries
     if (vorBound) {
       message("Extracting voronoi boundaries...")
-      vorB <- raster::boundaries(x@voronoi, classes = TRUE, asNA = TRUE)
+      vorB <- terra::boundaries(x@voronoi, classes = TRUE, inner = FALSE)
     } else {
       vorB <- "Not created. Use vorBound=TRUE."
     }
 
-    ## Prepare nodes
-    nodesSP <- nodesDF
-    coordinates(nodesSP) <- ~ ctrX + ctrY
-    proj4string(nodesSP) <- CRS(projection(x@patchId))
+    ## Prepare nodes as sf
+    nodesSF <- sf::st_as_sf(nodesDF, coords = c("ctrX", "ctrY"), crs = crs_wkt)
 
     if (!R) {
       ## Write shapefiles
-      .wShp(nodesSP, "nodes", dirpath, overwrite)
-      .wShp(linksCentrSP, "linksCentroid", dirpath, overwrite)
-      .wShp(linksPerimSP, "linksPerim", dirpath, overwrite)
+      .wShp(nodesSF, "nodes", dirpath, overwrite)
+      .wShp(linksCentrSF, "linksCentroid", dirpath, overwrite)
+      .wShp(linksPerimSF, "linksPerim", dirpath, overwrite)
 
       ## Write rasters
       .wRas(x@patchId, "patchId", dirpath, rasterFormat, overwrite)
@@ -303,9 +310,9 @@ setMethod("export",
       invisible(normalizePath(dirpath))
     } else {
       returnSpatial <- list(
-        nodes = nodesSP,
-        linksCentroid = linksCentrSP,
-        linksPerim = linksPerimSP,
+        nodes = nodesSF,
+        linksCentroid = linksCentrSF,
+        linksPerim = linksPerimSF,
         patchId = x@patchId,
         voronoi = x@voronoi,
         lcpPerimWeight = x@lcpPerimWeight,
@@ -337,6 +344,8 @@ setMethod("export",
     nodesDF <- graphdf(x@th)[[1]]$v[, -c(1, 9)]
     names(nodesDF) <- c("polyId", "ctrX", "ctrY", "polyA", "patchA", "patchEA", "coreA")
 
+    crs_wkt <- terra::crs(x@voronoi)
+
     firstCentr <- nodesDF[match(linksDF$e1, nodesDF$polyId), c("ctrX", "ctrY")]
     names(firstCentr) <- c("strtCtrX", "strtCtrY")
     secondCentr <- nodesDF[match(linksDF$e2, nodesDF$polyId), c("ctrX", "ctrY")]
@@ -344,31 +353,33 @@ setMethod("export",
     linksCentr <- cbind(linksDF, firstCentr, secondCentr)
     row.names(linksCentr) <- seq_len(nrow(linksCentr))
     linksCentr$plinkId <- seq_len(nrow(linksCentr))
-    linksCentrSP <- linksCentr[, c("strtCtrX", "strtCtrY", "endCtrX", "endCtrY", "plinkId")] |>
-      apply(1, function(x) {
-        Lines(Line(matrix(x[1:4], 2, 2, byrow = TRUE)), ID = as.character(x[5]))
-      }) |>
-      SpatialLines() |>
-      SpatialLinesDataFrame(data = linksCentr)
-    projection(linksCentrSP) <- CRS(projection(x@voronoi))
+
+    linksCentrSF <- sf::st_sf(
+      linksCentr,
+      geometry = sf::st_sfc(lapply(seq_len(nrow(linksCentr)), function(i) {
+        sf::st_linestring(matrix(c(
+          linksCentr$strtCtrX[i], linksCentr$strtCtrY[i],
+          linksCentr$endCtrX[i], linksCentr$endCtrY[i]
+        ), ncol = 2, byrow = TRUE))
+      })),
+      crs = crs_wkt
+    )
 
     ## Create voronoi boundaries
     if (vorBound) {
       message("Extracting voronoi boundaries...")
-      vorB <- raster::boundaries(x@voronoi, classes = TRUE, asNA = TRUE)
+      vorB <- terra::boundaries(x@voronoi, classes = TRUE, inner = FALSE)
     } else {
       vorB <- "Not created. Use vorBound=TRUE."
     }
 
-    ## Prepare nodes
-    nodesSP <- nodesDF
-    coordinates(nodesSP) <- ~ ctrX + ctrY
-    proj4string(nodesSP) <- CRS(projection(x@voronoi))
+    ## Prepare nodes as sf
+    nodesSF <- sf::st_as_sf(nodesDF, coords = c("ctrX", "ctrY"), crs = crs_wkt)
 
     if (!R) {
       ## Write shapefiles
-      .wShp(nodesSP, "nodes", dirpath, overwrite)
-      .wShp(linksCentrSP, "linksCentroid", dirpath, overwrite)
+      .wShp(nodesSF, "nodes", dirpath, overwrite)
+      .wShp(linksCentrSF, "linksCentroid", dirpath, overwrite)
 
       ## Write rasters
       .wRas(x@voronoi, "voronoi", dirpath, rasterFormat, overwrite)
@@ -378,8 +389,8 @@ setMethod("export",
       invisible(normalizePath(dirpath))
     } else {
       returnSpatial <- list(
-        nodes = nodesSP,
-        linksCentroid = linksCentrSP,
+        nodes = nodesSF,
+        linksCentroid = linksCentrSF,
         voronoi = x@voronoi,
         vorBound = vorB
       )

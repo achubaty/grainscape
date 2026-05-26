@@ -1,13 +1,25 @@
-# grainscape 0.5.1
+# grainscape 1.0.0
 
 ## Dependency changes
 
-* none
+* Migrated from `raster`/`sp` to `terra`/`sf` for all spatial operations:
+  - `terra` and `sf` added to `Imports`;
+  - `raster` and `sp` dependencies removed entirely.
+
+## Breaking changes
+
+* `MPG()`, `patchFilter()`, and `ggGS()` no longer accept `RasterLayer` inputs;
+  pass `SpatRaster` objects (from `terra`) instead;
+* `corridor()`, `distance()`, and `point()` no longer accept `SpatialPoints` inputs;
+  pass a two-column matrix or `sf` object instead;
+* Slot types in `mpg`, `goc`, `grain`, and `corridor` S4 classes have changed from
+  `RasterLayer`/`SpatialPoints`/`SpatialLines`/`SpatialLinesDataFrame` to `SpatRaster`/`sf`;
 
 ## Bugfixes
 
 * Fixed incorrect least-cost paths in MPG (#72);
 * Fixed `graphdf` returning a transposed (single-column) data frame for MPGs with only one link;
+* `point()` (and `distance()`, which calls it) now emit the "coords correspond to NA cells" warning once per call instead of once per coordinate-threshold combination (#50);
 
 # grainscape 0.5.0
 

@@ -54,9 +54,9 @@ Provide either \code{nThresh} or \code{doThresh} not both.}
 \code{"lcpPerimWeight"} uses the accumulated resistance or least-cost
 path distance from the perimeters of patches as the link weight.}
 
-\item{sp}{Logical. If \code{TRUE} the \code{sp} package is used to create
-a vector of class \link[sp:SpatialPolygonsDataFrame-class]{sp::SpatialPolygonsDataFrame} describing
-the finest grain of connectivity.}
+\item{sp}{Logical. Previously toggled creation of \code{sp::SpatialPolygonsDataFrame}
+output describing the finest grain of connectivity.
+Ignored: outputs are now \code{sf}/\code{terra} objects.}
 
 \item{verbose}{Set \code{verbose=0} for no progress information to console.}
 
@@ -64,7 +64,7 @@ the finest grain of connectivity.}
 
 \item{whichThresh}{Integer giving the index of the threshold to visualize.}
 
-\item{coords}{A two column matrix or a \link[sp:SpatialPoints-class]{sp::SpatialPoints} object
+\item{coords}{A two-column matrix or an \code{sf} (POINT) object
 giving coordinates at the end points of the corridor.}
 
 \item{doPlot}{Logical. If \code{TRUE} plots a vector visualization of the
@@ -73,7 +73,7 @@ corridor at the given scale}
 \item{x}{A \code{mpg} object produced by \code{\link[=MPG]{MPG()}}.
 For lattice GOC \code{MPG} must be run with patch set as an integer value.}
 
-\item{cost}{A \code{RasterLayer} giving a landscape resistance surface,
+\item{cost}{A \code{SpatRaster} giving a landscape resistance surface,
 where the values of each raster cell are proportional to the
 resistance to movement, dispersal, or gene flow for an organism
 in the landscape feature they represent.
@@ -82,7 +82,7 @@ Negative values are not.
 To extract an MPG with Euclidean links (i.e., and not least-cost
 path links) set \code{cost[] <- 1}.}
 
-\item{patch}{A raster of class \code{RasterLayer} for a patch-based analysis
+\item{patch}{A raster of class \code{SpatRaster} for a patch-based analysis
 OR an integer for a lattice analysis.
 If a raster is given it must be of the same extent, origin and
 projection as \code{cost} and be binary, without missing values,

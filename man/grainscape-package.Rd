@@ -27,8 +27,8 @@ landscapes can also be generated using the software.
 
 MPG calculations and generalization of the Voronoi tessellation used in GOC models
 is based on the routines in SELES software (Fall and Fall, 2001).
-Routines also depend on the \pkg{sp} (Pebesma and Bivand, 2005),
-\pkg{raster} (Hijmans and van Etten, 2011), and \pkg{igraph} (Csardi and Nepusz, 2006) packages.
+Routines depend on the \pkg{terra} (Hijmans, 2023), \pkg{sf} (Pebesma, 2018),
+and \pkg{igraph} (Csardi and Nepusz, 2006) packages.
 
 A paper describing the use of this package for landscape connectivity modelling is
 available at \doi{10.1111/2041-210X.13350}.
@@ -58,11 +58,11 @@ Biological Conservation 144:44-55.
 Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis
 at multiple spatial scales in landscape genetics. Molecular Ecology 21:3996-4009.
 
-Hijmans, R.J. (2023). raster: Geographic Data Analysis and Modeling.
-R package version 3.6-20, \url{https://CRAN.R-project.org/package=raster}.
+Hijmans, R.J. (2023). terra: Spatial Data Analysis.
+R package, \url{https://CRAN.R-project.org/package=terra}.
 
-Pebesma, E.J. and R.S. Bivand. (2005). Classes and methods for spatial data in R.
-R News 5 (2), \url{https://cran.r-project.org/doc/Rnews/}.
+Pebesma, E.J. (2018). Simple features for R: Standardized support for spatial vector data.
+The R Journal 10:1, 439-446, \url{https://doi.org/10.32614/RJ-2018-009}.
 }
 \seealso{
 Useful links:
@@ -78,6 +78,7 @@ Useful links:
 
 Authors:
 \itemize{
+  \item Alex M Chubaty \email{achubaty@for-cast.ca} (\href{https://orcid.org/0000-0001-7146-8135}{ORCID})
   \item Paul Galpern \email{pgalpern@gmail.com} (\href{https://orcid.org/0000-0003-0099-3981}{ORCID}) [copyright holder]
   \item Sam Doctolero \email{sam.doctolero@gmail.com}
 }

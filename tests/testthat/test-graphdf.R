@@ -1,5 +1,4 @@
 test_that("graphdf() for mpg returns correct structure", {
-  withr::local_package("raster")
   withr::local_package("igraph")
 
   mpg <- .tinyMPG()
@@ -13,7 +12,6 @@ test_that("graphdf() for mpg returns correct structure", {
 })
 
 test_that("graphdf() for mpg v has expected vertex attribute columns", {
-  withr::local_package("raster")
   withr::local_package("igraph")
 
   mpg <- .tinyMPG()
@@ -25,7 +23,6 @@ test_that("graphdf() for mpg v has expected vertex attribute columns", {
 })
 
 test_that("graphdf() for mpg e has expected edge attribute columns", {
-  withr::local_package("raster")
   withr::local_package("igraph")
 
   mpg <- .tinyMPG()
@@ -36,7 +33,6 @@ test_that("graphdf() for mpg e has expected edge attribute columns", {
 })
 
 test_that("graphdf() row counts match igraph vertex and edge counts", {
-  withr::local_package("raster")
   withr::local_package("igraph")
 
   mpg <- .tinyMPG()
@@ -48,7 +44,6 @@ test_that("graphdf() row counts match igraph vertex and edge counts", {
 })
 
 test_that("graphdf() for goc returns a list of length nThresh", {
-  withr::local_package("raster")
   withr::local_package("igraph")
 
   goc <- .tinyGOC(nThresh = 5)
@@ -62,7 +57,6 @@ test_that("graphdf() for goc returns a list of length nThresh", {
 })
 
 test_that("graphdf() for grain returns correct structure", {
-  withr::local_package("raster")
   withr::local_package("igraph")
 
   goc <- .tinyGOC()
@@ -77,7 +71,6 @@ test_that("graphdf() for grain returns correct structure", {
 })
 
 test_that("graphdf() for igraph returns correct structure", {
-  withr::local_package("raster")
   withr::local_package("igraph")
 
   mpg <- .tinyMPG()
@@ -92,7 +85,6 @@ test_that("graphdf() for igraph returns correct structure", {
 })
 
 test_that("graphdf() handles single-edge graphs without transposing rows/cols", {
-  withr::local_package("raster")
   withr::local_package("igraph")
 
   ## two-vertex, one-edge graph

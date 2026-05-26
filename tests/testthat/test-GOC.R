@@ -1,19 +1,17 @@
 test_that("GOC() returns a goc object with the correct structure", {
-  withr::local_package("raster")
   withr::local_package("igraph")
 
   mpg <- .tinyMPG()
   goc <- GOC(mpg, nThresh = 5)
 
   expect_s4_class(goc, "goc")
-  expect_s4_class(goc@voronoi, "RasterLayer")
+  expect_s4_class(goc@voronoi, "SpatRaster")
   expect_s3_class(goc@summary, "data.frame")
   expect_type(goc@th, "list")
   expect_length(goc@th, 5)
 })
 
 test_that("GOC() nThresh produces at most nThresh unique thresholds", {
-  withr::local_package("raster")
   withr::local_package("igraph")
 
   mpg <- .tinyMPG()
@@ -26,7 +24,6 @@ test_that("GOC() nThresh produces at most nThresh unique thresholds", {
 })
 
 test_that("GOC() doThresh uses the specified thresholds", {
-  withr::local_package("raster")
   withr::local_package("igraph")
 
   mpg <- .tinyMPG()
@@ -38,7 +35,6 @@ test_that("GOC() doThresh uses the specified thresholds", {
 })
 
 test_that("GOC() summary has expected columns", {
-  withr::local_package("raster")
   withr::local_package("igraph")
 
   goc <- .tinyGOC()
@@ -47,7 +43,6 @@ test_that("GOC() summary has expected columns", {
 })
 
 test_that("GOC() th elements contain igraph objects for defined thresholds", {
-  withr::local_package("raster")
   withr::local_package("igraph")
 
   goc <- .tinyGOC()
@@ -58,7 +53,6 @@ test_that("GOC() th elements contain igraph objects for defined thresholds", {
 })
 
 test_that("GOC() show() runs without error", {
-  withr::local_package("raster")
   withr::local_package("igraph")
 
   goc <- .tinyGOC()
@@ -66,18 +60,16 @@ test_that("GOC() show() runs without error", {
 })
 
 test_that("$ accessor works for goc slots", {
-  withr::local_package("raster")
   withr::local_package("igraph")
 
   goc <- .tinyGOC()
 
-  expect_s4_class(goc$voronoi, "RasterLayer")
+  expect_s4_class(goc$voronoi, "SpatRaster")
   expect_s3_class(goc$summary, "data.frame")
   expect_type(goc$th, "list")
 })
 
 test_that("$<- replacement works for goc slots", {
-  withr::local_package("raster")
   withr::local_package("igraph")
 
   goc <- .tinyGOC()
@@ -90,15 +82,14 @@ test_that("$<- replacement works for goc slots", {
 })
 
 test_that("$ accessor works for mpg slots", {
-  withr::local_package("raster")
   withr::local_package("igraph")
 
   mpg <- .tinyMPG()
 
   expect_true(is_igraph(mpg$mpg))
-  expect_s4_class(mpg$patchId, "RasterLayer")
-  expect_s4_class(mpg$voronoi, "RasterLayer")
-  expect_s4_class(mpg$lcpPerimWeight, "RasterLayer")
-  expect_s4_class(mpg$lcpLinkId, "RasterLayer")
-  expect_s4_class(mpg$mpgPlot, "RasterLayer")
+  expect_s4_class(mpg$patchId, "SpatRaster")
+  expect_s4_class(mpg$voronoi, "SpatRaster")
+  expect_s4_class(mpg$lcpPerimWeight, "SpatRaster")
+  expect_s4_class(mpg$lcpLinkId, "SpatRaster")
+  expect_s4_class(mpg$mpgPlot, "SpatRaster")
 })

@@ -48,15 +48,15 @@ test_that("point() ECS values are non-negative", {
   expect_true(all(pts$pointECSCore >= 0 | is.nan(pts$pointECSCore)))
 })
 
-test_that("point() accepts SpatialPoints input", {
+test_that("point() accepts sf input", {
   withr::local_package("igraph")
 
   goc <- .tinyGOC(nThresh = 3)
   mat <- cbind(c(30, 60, 90), c(30, 60, 90))
-  sp_pts <- sp::SpatialPoints(mat)
+  sf_pts <- sf::st_as_sf(as.data.frame(mat), coords = c("V1", "V2"))
 
   pts_mat <- grainscape::point(goc, mat)
-  pts_sp <- grainscape::point(goc, sp_pts)
+  pts_sf <- grainscape::point(goc, sf_pts)
 
-  expect_equal(pts_mat$pointPolygon, pts_sp$pointPolygon)
+  expect_equal(pts_mat$pointPolygon, pts_sf$pointPolygon)
 })

@@ -66,8 +66,7 @@
 #'
 #' @author Paul Galpern
 #' @export
-#' @importFrom raster freq rasterToPolygons reclassify zonal
-#' @importFrom sp coordinates
+#' @importFrom terra classify freq ncell values xyFromCell zonal
 #' @importFrom stats median
 #' @include classes.R
 #' @rdname GOC
@@ -142,7 +141,7 @@ setMethod("GOC",
     }
 
     linkId <- edge_attr(baseGraph, "linkId")
-    cellXY <- coordinates(voronoi)
+    cellXY <- terra::xyFromCell(voronoi, 1:terra::ncell(voronoi))
     th <- vector("list", length(doThresh))
 
     for (iThresh in seq_along(doThresh)) {
@@ -245,7 +244,7 @@ setMethod("GOC",
             strsplit("_") |>
             do.call(rbind, args = _)
 
-          ## Produce component graph with all edge attributes, and vertex attributeas.characters
+          ## Produce component graph with all edge attributes, and vertex attributes
           ## containing a comma-delimited string of vertex names
           componentGraph <- data.frame(
             componentGraphNodes, maxWeight, linkIdMaxWeight,
@@ -277,19 +276,19 @@ setMethod("GOC",
           }
           reclassifyVor <- reclassifyVor[2:nrow(reclassifyVor), ]
 
-          gocRaster <- reclassify(gocRaster, rcl = reclassifyVor)
+          gocRaster <- terra::classify(gocRaster, rcl = reclassifyVor)
 
           ## Find centroids of each polygon and add as vertex attributes
           uniquePolygons <- V(componentGraph)$polygonId
 
           rasX <- gocRaster
           rasY <- rasX
-          rasX[] <- cellXY[, 1]
-          rasY[] <- cellXY[, 2]
+          terra::values(rasX) <- cellXY[, 1]
+          terra::values(rasY) <- cellXY[, 2]
 
           centroids <- cbind(
-            zonal(rasX, gocRaster, fun = "mean"),
-            zonal(rasY, gocRaster, fun = "mean")[, 2]
+            terra::zonal(rasX, gocRaster, fun = "mean"),
+            terra::zonal(rasY, gocRaster, fun = "mean")[, 2]
           )
           centroids <- centroids[centroids[, 1] %in% as.integer(uniquePolygons), ]
           row.names(centroids) <- centroids[, 1]
@@ -300,9 +299,10 @@ setMethod("GOC",
           V(componentGraph)$centroidY <- centroids[, 2]
 
           ## Find areas of each polygon and add as a vertex attribute
-          polygonArea <- freq(gocRaster)
-          row.names(polygonArea) <- polygonArea[, 1]
-          polygonArea <- polygonArea[uniquePolygons, 2]
+          polygonFreq <- terra::freq(gocRaster, usenames = FALSE)
+          polygonArea <- polygonFreq[, "count"]
+          names(polygonArea) <- as.character(polygonFreq[, "value"])
+          polygonArea <- polygonArea[uniquePolygons]
 
           V(componentGraph)$polygonArea <- polygonArea
 

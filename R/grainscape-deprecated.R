@@ -8,9 +8,9 @@
 #'
 #' @param mpg  A `mpg` object.
 #'
-#' @param sp   Logical. If `TRUE` the `sp` package is used to create
-#'             a vector of class [sp::SpatialPolygonsDataFrame-class] describing
-#'             the finest grain of connectivity.
+#' @param sp   Logical. Previously toggled creation of `sp::SpatialPolygonsDataFrame`
+#'             output describing the finest grain of connectivity.
+#'             Ignored: outputs are now `sf`/`terra` objects.
 #'
 #' @param doPlot  Logical. If `TRUE` plots a vector visualization of the
 #'                corridor at the given scale

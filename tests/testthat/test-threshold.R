@@ -1,5 +1,4 @@
 test_that("threshold() returns expected structure with nThresh", {
-  withr::local_package("raster")
   withr::local_package("igraph")
 
   mpg <- .tinyMPG()
@@ -13,7 +12,6 @@ test_that("threshold() returns expected structure with nThresh", {
 })
 
 test_that("threshold() returns expected structure with doThresh", {
-  withr::local_package("raster")
   withr::local_package("igraph")
 
   mpg <- .tinyMPG()
@@ -25,7 +23,6 @@ test_that("threshold() returns expected structure with doThresh", {
 })
 
 test_that("threshold() graphs are igraph objects", {
-  withr::local_package("raster")
   withr::local_package("igraph")
 
   mpg <- .tinyMPG()
@@ -37,7 +34,6 @@ test_that("threshold() graphs are igraph objects", {
 })
 
 test_that("threshold() graphs have decreasing component counts as threshold increases", {
-  withr::local_package("raster")
   withr::local_package("igraph")
 
   mpg <- .tinyMPG()
@@ -49,7 +45,6 @@ test_that("threshold() graphs have decreasing component counts as threshold incr
 })
 
 test_that("threshold() summary has expected columns", {
-  withr::local_package("raster")
   withr::local_package("igraph")
 
   mpg <- .tinyMPG()

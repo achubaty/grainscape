@@ -1,19 +1,17 @@
 test_that("grain() returns a grain object with the correct slots", {
-  withr::local_package("raster")
   withr::local_package("igraph")
 
   goc <- .tinyGOC()
   gr <- grain(goc, whichThresh = 1)
 
   expect_s4_class(gr, "grain")
-  expect_s4_class(gr@voronoi, "RasterLayer")
+  expect_s4_class(gr@voronoi, "SpatRaster")
   expect_s3_class(gr@summary, "data.frame")
-  expect_s4_class(gr@centroids, "SpatialPoints")
+  expect_true(inherits(gr@centroids, "sf"))
   expect_true(is_igraph(gr@th))
 })
 
 test_that("grain() extracts the correct threshold", {
-  withr::local_package("raster")
   withr::local_package("igraph")
 
   goc <- .tinyGOC()
@@ -26,7 +24,6 @@ test_that("grain() extracts the correct threshold", {
 })
 
 test_that("grain() errors on invalid whichThresh", {
-  withr::local_package("raster")
   withr::local_package("igraph")
 
   goc <- .tinyGOC()
@@ -39,7 +36,6 @@ test_that("grain() errors on invalid whichThresh", {
 })
 
 test_that("grain() show() runs without error", {
-  withr::local_package("raster")
   withr::local_package("igraph")
 
   goc <- .tinyGOC()
@@ -49,11 +45,10 @@ test_that("grain() show() runs without error", {
 })
 
 test_that("grain() centroids match the number of polygons", {
-  withr::local_package("raster")
   withr::local_package("igraph")
 
   goc <- .tinyGOC()
   gr <- grain(goc, whichThresh = 3)  ## threshold 3 is defined (nPolygon not NA)
 
-  expect_equal(length(gr@centroids), vcount(gr@th))
+  expect_equal(nrow(gr@centroids), vcount(gr@th))
 })

@@ -8,10 +8,9 @@ Description: Given a landscape resistance surface, creates minimum planar graph
     Documentation is provided by several vignettes, and a paper
     (Chubaty, Galpern & Doctolero (2020) <doi:10.1111/2041-210X.13350>).
 URL:
-    https://www.alexchubaty.com/grainscape/,
+    https://alexchubaty.com/grainscape/,
     https://github.com/achubaty/grainscape
-Version: 0.5.1
-Date: 2026-04-01
+Version: 1.0.0
 Authors@R: c(
     person("Paul", "Galpern", email = "pgalpern@gmail.com", role = c("aut", "cph"),
            comment = c(ORCID = "0000-0003-0099-3981")),
@@ -28,13 +27,11 @@ Imports:
     grDevices,
     igraph,
     methods,
-    raster,
     Rcpp (>= 0.12.11.4),
     sf,
-    sp,
     stats,
+    terra,
     utils
-LinkingTo: Rcpp
 Suggests:
     covr,
     cowplot,
@@ -48,6 +45,7 @@ Suggests:
     testthat,
     webshot2,
     withr
+LinkingTo: Rcpp
 VignetteBuilder: knitr, rmarkdown
 BugReports: https://github.com/achubaty/grainscape/issues
 ByteCompile: yes
@@ -74,5 +72,7 @@ Collate:
     'zzz.R'
 Encoding: UTF-8
 Language: en-CA
-RoxygenNote: 7.3.3
 Roxygen: list(markdown = TRUE)
+Config/Needs/website: pkgdown
+Config/roxygen2/version: 8.0.0
+Config/testthat/edition: 3

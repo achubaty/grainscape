@@ -10,20 +10,20 @@ corridor(x, ...)
 \S4method{corridor}{goc}(x, whichThresh, coords, weight = "meanWeight", ...)
 }
 \arguments{
-\item{x}{A \linkS4class{goc} object created by \code{\link[=GOC]{GOC()}}.}
+\item{x}{A \link[=goc-class]{goc} object created by \code{\link[=GOC]{GOC()}}.}
 
 \item{...}{Additional arguments (not used).}
 
 \item{whichThresh}{Integer giving the index of the threshold to visualize.}
 
-\item{coords}{A two column matrix or a \link[sp:SpatialPoints-class]{sp::SpatialPoints} object
+\item{coords}{A two-column matrix or an \code{sf} (POINT) object
 giving coordinates at the end points of the corridor.}
 
 \item{weight}{The GOC graph link weight to use in calculating the distance.
 Please see details in \code{\link[=distance]{distance()}}.}
 }
 \value{
-An object of class \linkS4class{corridor}.
+An object of class \link[=corridor-class]{corridor}.
 }
 \description{
 Given a series of GOC models built at different scales, visualize the corridor
@@ -32,10 +32,10 @@ Given a series of GOC models built at different scales, visualize the corridor
 }
 \examples{
 ## Load raster landscape
-tiny <- raster::raster(system.file("extdata/tiny.asc", package = "grainscape"))
+tiny <- terra::rast(system.file("extdata/tiny.asc", package = "grainscape"))
 
 ## Create a resistance surface from a raster using an is-becomes reclassification
-tinyCost <- raster::reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
+tinyCost <- terra::classify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
 ## Produce a patch-based MPG where patches are resistance features=1
 tinyPatchMPG <- MPG(cost = tinyCost, patch = tinyCost == 1)
 ## Extract a representative subset of 5 grains of connectivity

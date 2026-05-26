@@ -24,10 +24,10 @@ A list object containing the following elements:
 \item{\code{summary}}{gives the properties of the specified scale/grain \code{whichThresh}
 of the GOC model;}
 
-\item{\code{voronoi}}{a \code{RasterLayer} giving the Voronoi tessellation the
+\item{\code{voronoi}}{a \code{SpatRaster} giving the Voronoi tessellation the
 specified scale/grain \code{whichThresh} of the GOC model;}
 
-\item{\code{centroids}}{a \code{SpatialPoints} objects giving the centroids
+\item{\code{centroids}}{an \code{sf} object giving the centroids
 of the polygons in the Voronoi tessellation at the specified scale/grain \code{whichThresh};}
 
 \item{\code{th}}{a \code{igraph} object giving the graph describing the relationship
@@ -39,10 +39,10 @@ Extract a grain (i.e. a scaled version of a Voronoi tessellation) from a GOC mod
 }
 \examples{
 ## Load raster landscape
-tiny <- raster::raster(system.file("extdata/tiny.asc", package = "grainscape"))
+tiny <- terra::rast(system.file("extdata/tiny.asc", package = "grainscape"))
 
 ## Create a resistance surface from a raster using an is-becomes reclassification
-tinyCost <- raster::reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
+tinyCost <- terra::classify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
 ## Produce a patch-based MPG where patches are resistance features=1
 tinyPatchMPG <- MPG(cost = tinyCost, patch = tinyCost == 1)
 ## Extract a representative subset of 5 grains of connectivity

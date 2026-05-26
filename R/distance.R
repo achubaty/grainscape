@@ -5,7 +5,7 @@
 #'
 #' @param x        A `goc` object produced by [GOC()].
 #'
-#' @param  y       A two column matrix or a [sp::SpatialPoints-class] object
+#' @param  y       A two-column matrix or an `sf` (POINT) object
 #'                 giving the coordinates of points of interest.
 #'
 #' @param ...      Additional arguments (not used).
@@ -47,14 +47,29 @@
 #' @example inst/examples/example_distance.R
 #'
 setGeneric("distance", function(x, y, ...) {
-  raster::distance(x, y, ...)
+  terra::distance(x, y, ...)
 })
+
+#' @export
+#' @importFrom sf st_coordinates
+#' @rdname distance
+setMethod("distance",
+  signature = c(x = "goc", y = "sf"),
+  definition = function(x, y, weight = "meanWeight", ...) {
+    coords <- sf::st_coordinates(y)[, 1:2, drop = FALSE]
+    distance(x, coords, weight, ...)
+  }
+)
 
 #' @export
 #' @rdname distance
 setMethod("distance",
-  signature = c(x = "goc", y = "SpatialPoints"),
+  signature = c(x = "goc", y = "matrix"),
   definition = function(x, y, weight = "meanWeight", ...) {
+    if (ncol(y) != 2) {
+      stop("y must be a matrix of two columns giving X and Y coordinates")
+    }
+
     if (!(weight %in% names(edge_attr(x@th[[1]]$goc)))) {
       stop("link weight attribute with this name doesn't exist in GOC object")
     }
@@ -83,20 +98,6 @@ setMethod("distance",
   }
 )
 
-#' @importFrom sp SpatialPoints
-#' @export
-#' @rdname distance
-setMethod("distance",
-  signature = c(x = "goc", y = "matrix"),
-  definition = function(x, y, weight = "meanWeight", ...) {
-    if (ncol(y) != 2) {
-      stop("y must be a matrix of two columns giving X and Y coordinates")
-    }
-
-    distance(x, SpatialPoints(y), weight, ...)
-  }
-)
-
 #' @export
 #' @rdname distance
 setMethod("distance",
@@ -105,3 +106,4 @@ setMethod("distance",
     distance(x, t(as.matrix(y)), weight, ...)
   }
 )
+

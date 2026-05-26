@@ -11,7 +11,7 @@ utils::globalVariables(".")
 #' @return An object of class [hce-class].
 #'
 #' @author Alex Chubaty
-#' @importFrom raster extent getValues ncol nrow raster unique
+#' @importFrom terra ncol nrow values
 #' @include classes.R
 #' @keywords internal
 #' @rdname habConnEngine
@@ -19,27 +19,27 @@ utils::globalVariables(".")
 #'
 .habConnEngine <- function(cost, patches) {
   stopifnot(
-    inherits(cost, "RasterLayer"),
-    inherits(patches, "RasterLayer"),
-    extent(cost) == extent(patches),
-    ncol(cost) == ncol(patches),
-    nrow(cost) == nrow(patches)
+    inherits(cost, "SpatRaster"),
+    inherits(patches, "SpatRaster"),
+    terra::ext(cost) == terra::ext(patches),
+    terra::ncol(cost) == terra::ncol(patches),
+    terra::nrow(cost) == terra::nrow(patches)
   )
 
   hce <- .habConnRcpp(
-    cost = getValues(cost),
-    patches = getValues(patches),
-    nrow = nrow(cost),
-    ncol = ncol(cost)
+    cost = as.numeric(terra::values(cost)[, 1]),
+    patches = as.numeric(terra::values(patches)[, 1]),
+    nrow = terra::nrow(cost),
+    ncol = terra::ncol(cost)
   )
 
   ## convert `VoronoiVector` to a raster of identical dimensions etc. as `patches`
   voronoi <- patches
-  voronoi[] <- hce$VoronoiVector
+  terra::values(voronoi) <- hce$VoronoiVector
 
   ## convert `PatchLinkIDsVector` to a raster of identical dimensions etc. as `cost`
   patchLinks <- cost
-  patchLinks[] <- hce$PatchLinkIDsVector
+  terra::values(patchLinks) <- hce$PatchLinkIDsVector
   patchLinks[patchLinks == 0] <- NA
 
   ## convert `LinkData` to a data.frame

@@ -10,11 +10,11 @@ point(x, ...)
 \S4method{point}{goc}(x, coords, ...)
 }
 \arguments{
-\item{x}{A \linkS4class{goc} object produced by \code{\link[=GOC]{GOC()}}.}
+\item{x}{A \link[=goc-class]{goc} object produced by \code{\link[=GOC]{GOC()}}.}
 
 \item{...}{Additional arguments (not used).}
 
-\item{coords}{A two column matrix or a \link[sp:SpatialPoints-class]{sp::SpatialPoints} object giving
+\item{coords}{A two-column matrix or an \code{sf} (POINT) object giving
 the coordinates of points of interest.}
 }
 \value{
@@ -45,10 +45,10 @@ See \code{\link[=MPG]{MPG()}} for warning related to areal measurements.
 }
 \examples{
 ## Load raster landscape
-tiny <- raster::raster(system.file("extdata/tiny.asc", package = "grainscape"))
+tiny <- terra::rast(system.file("extdata/tiny.asc", package = "grainscape"))
 
 ## Create a resistance surface from a raster using an is-becomes reclassification
-tinyCost <- raster::reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
+tinyCost <- terra::classify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
 ## Produce a patch-based MPG where patches are resistance features=1
 tinyPatchMPG <- MPG(cost = tinyCost, patch = tinyCost == 1)
 ## Extract a representative subset of 5 grains of connectivity

@@ -23,7 +23,7 @@ vignette: >
   %\VignetteKeyword{resistance surface}
   %\VignetteKeyword{spatial graph}
   %\VignetteKeyword{Voronoi tessellation}
-  %\VignetteDepends{cowplot, dplyr, ggplot2, igraph, raster}
+  %\VignetteDepends{cowplot, dplyr, ggplot2, igraph, terra}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
@@ -36,10 +36,10 @@ editor_options:
 library(knitr)
 library(igraph)
 library(grainscape)
-library(raster)
+library(terra)
 library(ggplot2)
 
-opts_chunk$set(cache = TRUE)
+opts_chunk$set(cache = FALSE)
 opts_chunk$set(echo = TRUE)
 
 opts_chunk$set(fig.height = 3)
@@ -107,13 +107,13 @@ This raster must contain cells with `value >= 1`, where values are real or integ
 If data are missing, cells must have `value == NA` (*e.g*, commonly in the boundary cells of an irregularly shaped region of interest).
 
 The following are key packages required to complete analyses with `grainscape`.
-The `igraph` package provides network analytical functions, while `raster` provides the the data structure and raster analytical functions upon which `grainscape` depends to manage data.
+The `igraph` package provides network analytical functions, while `terra` provides the data structure and raster analytical functions upon which `grainscape` depends to manage data.
 Finally model and analytical products are compatible with visualizing using the popular `ggplot2` idiom.
 
 ```{r initial_stuff, include=FALSE}
 library(igraph)
 library(grainscape)
-library(raster)
+library(terra)
 library(ggplot2)
 
 set.seed(674)
@@ -153,11 +153,11 @@ Euclidean links can be produced by passing a uniform cost surface (a constant ra
 An example of this is given later in the document.
 
 We begin by loading a landscape raster distributed with the package.
-Note that any raster format readable using the `raster` package can be used here.
+Note that any raster format readable using the `terra` package can be used here.
 The `.asc` format rasters distributed with the package are *ESRI ArcASCII* format.
 
 ```{r, results="hide"}
-patchy <- raster(system.file("extdata/patchy.asc", package = "grainscape"))
+patchy <- rast(system.file("extdata/patchy.asc", package = "grainscape"))
 ```
 
 Then, for convenience, we use R to turn this raster into a resistance surface.
@@ -172,7 +172,7 @@ The result is shown in \autoref{fig:patchycost}.
 ```{r figure_03, fig.cap='\\label{fig:patchycost}Input raster resistance surface to create the minimum planar graph (MPG). Features with value of 1 (red) will be the patches in the network. A river (light blue) has the highest resistance in this example.'}
 ## Create an is-becomes matrix for reclassification
 isBecomes <- cbind(c(1, 2, 3, 4, 5), c(1, 10, 8, 3, 6))
-patchyCost <- reclassify(patchy, rcl = isBecomes)
+patchyCost <- classify(patchy, rcl = isBecomes)
 patchyCost_df <- ggGS(patchyCost)
 patchyCost_df$value <- as.factor(patchyCost_df$value)
 
@@ -349,11 +349,11 @@ Any of the variations imaginable for the MPG modelling can provide a valid basis
 
 ```{r model_02_step_01}
 ## Load the patchy raster distributed with grainscape
-patchy <- raster(system.file("extdata/patchy.asc", package = "grainscape"))
+patchy <- rast(system.file("extdata/patchy.asc", package = "grainscape"))
 
 ## Create an is-becomes matrix for reclassification
 isBecomes <- cbind(c(1, 2, 3, 4, 5), c(1, 10, 8, 3, 6))
-patchyCost <- reclassify(patchy, rcl = isBecomes)
+patchyCost <- classify(patchy, rcl = isBecomes)
 
 ## Create the MPG model using cells = 1 as patches
 patchyMPG <- MPG(patchyCost, patch = (patchyCost == 1))
@@ -374,7 +374,7 @@ A plot with the Voronoi tessellation and the patches superimposed is shown in \a
 
 ```{r figure_07, fig.cap='\\label{fig:voronoitessellation}A Voronoi tessellation. This is the complement of the MPG. The patches (darkest blue) are used as generators, and regions of proximity (polygons of different colours) are found in cost or resistance units. The method was first described by @Fall:2007eo.'}
 patchPlusVoronoi <- patchyMPG@voronoi
-patchPlusVoronoi[patchyMPG@patchId] <- 0
+patchPlusVoronoi[patchyMPG@patchId > 0] <- 0
 
 ggplot() +
   geom_raster(data = ggGS(patchPlusVoronoi), aes(x = x, y = y, fill = value))
@@ -392,7 +392,7 @@ An additional step is that the links connecting a pair of polygons are the mean 
 The function `GOC()` builds GOC models at multiple thresholds.
 As with `threshold()` we can specify the number of thresholds, or grains of connectivity models, we want to create using the `nThresh` parameter.
 
-```{r, results="hide"}
+```{r, results="hide", warning=FALSE}
 patchyGOC <- GOC(patchyMPG, nThresh = 10)
 ```
 
@@ -427,7 +427,7 @@ In `grainscape` a Euclidean resistance surface is simply a resistance surface wh
 ```{r figure_09, fig.cap="A planar network with one-dimensional point nodes extracted using `grainscape`. Nodes are represented as points and labelled with their `patchId`. Links are line segments among nodes.", warning=FALSE}
 ## Make a new resistance raster of 400 by 400 cells
 ## with a coordinate system that corresponds to cells
-res <- raster(xmn = 0, xmx = 100, ymn = 0, ymx = 100, resolution = 1)
+res <- rast(xmin = 0, xmax = 100, ymin = 0, ymax = 100, resolution = 1)
 
 ## Assign all values to 1
 res[] <- 1
@@ -542,13 +542,13 @@ The following example uses a more realistic resistance surface based on a simula
 
 ```{r figure_11, fig.cap="A minimum planar graph (MPG) of a simulated resistance surface. Focal patches are grey regions and green lines indicate spatially-explicit links among patches. Several patches are labelled with their numerical `patchId`."}
 ## Load a land cover raster distributed with grainscape
-frag <- raster(system.file("extdata/fragmented.asc", package = "grainscape"))
+frag <- rast(system.file("extdata/fragmented.asc", package = "grainscape"))
 
 ## Convert land cover to resistance units
 ## Use an "is-becomes" reclassification
 isBecomes <- cbind(c(1, 2, 3, 4), c(1, 5, 10, 12))
 
-fragRes <- reclassify(frag, rcl = isBecomes)
+fragRes <- classify(frag, rcl = isBecomes)
 
 ## Extract a network using cells = 1 on original raster
 ## as the focal patches or nodes
@@ -989,7 +989,7 @@ We could examine the resulting lattice grains of connectivity at any of these fi
 We choose the third to illustrate an intermediate level of scaling.
 
 
-```{r figure_21, fig.cap="A scaled lattice grains of connectivity (GOC) model showing the outline of Voronoi polygons in grey, and the network connections among polygons as links plotted from adjacent polygon centroids.", results="hide"}
+```{r figure_21, fig.cap="A scaled lattice grains of connectivity (GOC) model showing the outline of Voronoi polygons in grey, and the network connections among polygons as links plotted from adjacent polygon centroids.", results="hide", warning=FALSE}
 ## Extract a minimum planar graph and complementary
 ## Voronoi polygons from the fragmented resistance surface
 ## Note the use of an integer for the 'patch' parameter, which
@@ -1027,7 +1027,7 @@ In a later example we show how grains of connectivity can be used to identify po
 
 This patch grains of connectivity model uses the familiar resistance surface and the same patches (`=1`) used in many earlier examples.
 
-```{r figure_22, fig.cap="A scaled patch grains of connectivity (GOC) model showing the outline of Voronoi polygons in grey, and the network connections among polygons as links plotted from adjacent polygon centroids.", results= "hide"}
+```{r figure_22, fig.cap="A scaled patch grains of connectivity (GOC) model showing the outline of Voronoi polygons in grey, and the network connections among polygons as links plotted from adjacent polygon centroids.", results= "hide", warning=FALSE}
 ## Use the MPG extracted in previous examples to find a
 ## patch grains of connectivity model, where patches
 ## are cells on the resistance surface equal to 1
