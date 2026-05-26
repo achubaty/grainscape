@@ -38,6 +38,11 @@
   was an unresolved link endpoint and all of its links were silently dropped. Every cell's id
   is now seeded from the voronoi map at initialization, so such patches are linked correctly
   (#72);
+* Fixed an infinite loop (hang) in `MPG()`: a resistance surface whose first cell is `NA` left
+  the C++ engine's internal cost range as `NaN`, so every patch cell was assigned a `NaN`
+  resistance and never "settled", spinning forever. The engine now derives the cost range while
+  skipping `NA` cells, and fully initializes its spreading-state struct, hardening it against
+  this class of hang (#72);
 * Fixed a Voronoi tessellation bias on high-variance resistance surfaces: patch (source) cells
   now begin spreading at the uniform minimum cost rather than the resistance of the cell they
   happen to overlap. Previously a patch sitting on a high-resistance cell spread late and lost

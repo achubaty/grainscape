@@ -51,7 +51,10 @@ typedef std::vector<boolCol> boolMap;
 struct ActiveCell
    :Cell  // inherits from Cell structure
 {
-   float time, distance, resistance, parentResistance;
+   // default-initialise to 0 so a cell can never enter the spreading algorithm with
+   // garbage (e.g. NaN) values; a NaN resistance/time makes `time >= resistance` always
+   // false, so the cell never settles and Engine::start() loops forever (#72)
+   float time = 0.0f, distance = 0.0f, resistance = 0.0f, parentResistance = 0.0f;
    Cell originCell;
 };
 

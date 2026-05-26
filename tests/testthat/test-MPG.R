@@ -297,3 +297,24 @@ test_that("MPG link weights equal independent least-cost paths", {
   expect_true(all(abs(edges$lcpPerimWeight - independent) <= 1))
   expect_true(mean(abs(edges$lcpPerimWeight - independent)) < 0.05) # essentially all exact
 })
+
+test_that("MPG() does not hang when the resistance surface starts with NA (#72)", {
+  ## A leading NA cell previously left the engine's costRes/maxCost as NaN (the running
+  ## min/max was seeded from cost_vec[0] with NaN-unsafe comparisons), so every patch cell
+  ## received resistance = NaN and never "settled" -- Engine::start() then looped forever.
+  ## Reaching the expectations below at all confirms MPG() returns; a regression would hang
+  ## here until the test process times out.
+  r <- terra::rast(
+    nrows = 12, ncols = 12, xmin = 0, xmax = 12, ymin = 0, ymax = 12,
+    crs = "EPSG:3857"
+  )
+  terra::values(r) <- 1
+  r[1, 1] <- NA
+  patches <- terra::setValues(r, 0)
+  patches[5, 5] <- 1
+  patches[9, 9] <- 1
+
+  mpg <- MPG(r, patch = patches)
+  expect_s4_class(mpg, "mpg")
+  expect_gte(nrow(graphdf(mpg)[[1]]$e), 1L)
+})

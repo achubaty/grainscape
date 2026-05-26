@@ -67,16 +67,25 @@ bool Engine::initialize() {
 
   // initialize maxCost and costRes
   // (maxCost is the max resistance value in the raster and costRes is the minimum)
-  costRes = in_data->cost_vec[0];
-  maxCost = in_data->cost_vec[0];
-  for (unsigned int i = 1; i < in_data->cost_vec.size(); i++) {
-    // if the i'th element of cost_vec is smaller than costRes then give that to costRes
-    if (costRes > in_data->cost_vec[i])
-      costRes = in_data->cost_vec[i];
+  // Compute min/max over FINITE costs only. NaN (NA) cells must be skipped: comparisons
+  // with NaN are always false, so seeding costRes/maxCost from cost_vec[0] when the first
+  // cell is NA would leave them NaN. costRes is assigned as the resistance of every patch
+  // cell, and a NaN resistance makes `time >= resistance` always false, so patch cells
+  // never settle and Engine::start() loops forever (#72).
+  costRes = std::numeric_limits<float>::quiet_NaN();
+  maxCost = std::numeric_limits<float>::quiet_NaN();
+  for (unsigned int i = 0; i < in_data->cost_vec.size(); i++) {
+    float v = in_data->cost_vec[i];
+    if (std::isnan(v))
+      continue;
 
-    // if the i'th element of cost_vec is larger than maxCost then give that to maxCost
-    if (maxCost < in_data->cost_vec[i])
-      maxCost = in_data->cost_vec[i];
+    // if v is smaller than costRes (or costRes not yet set) then give that to costRes
+    if (std::isnan(costRes) || v < costRes)
+      costRes = v;
+
+    // if v is larger than maxCost (or maxCost not yet set) then give that to maxCost
+    if (std::isnan(maxCost) || v > maxCost)
+      maxCost = v;
   }
 
   // insert the cost values in the actual cost map
