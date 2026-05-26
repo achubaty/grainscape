@@ -52,6 +52,9 @@
   so on the package's test surfaces the MPG and its weights are unchanged, and still match
   independent least-cost paths exactly (#72);
 * Fixed `graphdf` returning a transposed (single-column) data frame for MPGs with only one link;
+* `patchFilter()` no longer errors on R < 4.6 (with recent `terra`): it masked small patches via
+  `out[out %in% rmpatch] <- NA`, which relies on `%in%` dispatching for a `SpatRaster` and fails
+  with "'match' requires vector arguments" under older R; it now uses `terra::subst()` (#76);
 * `point()` (and `distance()`, which calls it) now emit the "coords correspond to NA cells" warning once per call instead of once per coordinate-threshold combination (#50);
 * The `corridor` `plot()` method now uses the `linewidth` aesthetic (rather than the deprecated
   `size` aesthetic) for its link segments, silencing a `ggplot2` (>= 3.4.0) deprecation warning;

@@ -81,7 +81,10 @@ setMethod(
 
     out <- patch
     if (length(rmpatch) > 0) {
-      out[out %in% rmpatch] <- NA
+      ## use terra::subst() rather than `out[out %in% rmpatch] <- NA`: the `%in%` form relies on
+      ## S4 dispatch for a SpatRaster that errors ("'match' requires vector arguments") on
+      ## R < 4.6 with recent terra (#76)
+      out <- terra::subst(out, rmpatch, NA)
     }
     out <- !is.na(out)
 
