@@ -601,7 +601,7 @@ figure12 <- ggplot() +
     data = ggGS(fragMPG, "links"),
     aes(
       x = x1, y = y1, xend = x2, yend = y2,
-      colour = "forestgreen", size = 0.25
+      colour = "forestgreen", linewidth = 0.25
     )
   ) +
   geom_point(
@@ -610,6 +610,7 @@ figure12 <- ggplot() +
   ) +
   scale_colour_identity() +
   scale_size_identity() +
+  scale_linewidth_identity() +
   ggtitle("Centroid representation of nodes")
 figure12
 ```
@@ -702,11 +703,11 @@ figure16 <- ggplot() +
     data = ggGS(fragMPG, "links"),
     aes(
       x = x1, y = y1, xend = x2, yend = y2,
-      size = lcpPerimWeight / (sqrt((x2 - x1)^2 + (y2 - y1)^2))
+      linewidth = lcpPerimWeight / (sqrt((x2 - x1)^2 + (y2 - y1)^2))
     ),
     colour = "forestgreen", alpha = 0.5
   ) +
-  scale_size(range = c(0, 3), breaks = seq(1, 6, by = 0.5)) +
+  scale_linewidth(range = c(0, 3), breaks = seq(1, 6, by = 0.5)) +
   geom_point(
     data = ggGS(fragMPG, "nodes"),
     aes(x = x, y = y), size = 3, colour = "darkgreen"
@@ -930,7 +931,7 @@ figure20 <- ggplot() +
   scale_fill_identity() +
   geom_segment(
     data = shPathLinks, aes(x = x1, y = y1, xend = x2, yend = y2),
-    colour = "forestgreen", size = 1
+    colour = "forestgreen", linewidth = 1
   ) +
   geom_point(data = shPathNodes, aes(x = x, y = y), colour = "darkgreen") +
   ggtitle("Shortest-path distance between nodes") +
