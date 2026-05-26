@@ -58,4 +58,4 @@ See [`CONTRIBUTING.md`](.github/CONTRIBUTING.md) for more details.
 
 ### Code of Conduct
 
-Please note that the grainscape project is released with a [Contributor Code of Conduct](https://alexchubaty.com/grainscape/CODE_OF_CONDUCT.html). By contributing to this project, you agree to abide by its terms.
+Please note that the grainscape project is released with a [Contributor Code of Conduct](https://www.alexchubaty.com/grainscape/CODE_OF_CONDUCT.html). By contributing to this project, you agree to abide by its terms.
