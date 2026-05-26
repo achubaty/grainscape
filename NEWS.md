@@ -5,6 +5,8 @@
 * Migrated from `raster`/`sp` to `terra`/`sf` for all spatial operations:
   - `terra` and `sf` added to `Imports`;
   - `raster` and `sp` dependencies removed entirely.
+* Vignette diagrams are now generated from code with `DiagrammeRsvg` and `rsvg` (added to
+  `Suggests`); `webshot2` is no longer needed for the vignettes and was removed from `Suggests`.
 
 ## Breaking changes
 
@@ -51,6 +53,12 @@
 
 ## Vignette
 
+* The "Calculating the minimum planar graph" vignette now generates its UML class diagrams, the
+  algorithm flow chart, and the `Engine` call graphs directly from Graphviz/`DiagrammeR`
+  specifications (rendered to vector PDFs with `DiagrammeRsvg` and `rsvg`) rather than embedding
+  static images, so they stay in sync with the C++ engine; its technical reference was also
+  updated for the #72 least-cost-path changes (the `settled_map`, `createLinks()`, and the
+  `parentResistance` field) (#75);
 * Corrected the thresholded-MPG figure (Figure 6), which plotted links *above* the dispersal
   threshold instead of the retained links *below* it (so the cheap, low-resistance links
   between neighbouring patches were hidden);

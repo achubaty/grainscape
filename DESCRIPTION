@@ -36,14 +36,17 @@ Suggests:
     covr,
     cowplot,
     DiagrammeR,
+    DiagrammeRsvg,
     dplyr,
     ggthemes,
     knitr,
     parallel,
     rmarkdown,
+    rsvg,
     spelling,
+    svglite,
     testthat,
-    webshot2,
+    vdiffr,
     withr
 LinkingTo: Rcpp
 VignetteBuilder: knitr, rmarkdown
