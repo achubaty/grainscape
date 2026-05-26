@@ -62,7 +62,7 @@ Hijmans, R.J. (2023). terra: Spatial Data Analysis.
 R package, \url{https://CRAN.R-project.org/package=terra}.
 
 Pebesma, E.J. (2018). Simple features for R: Standardized support for spatial vector data.
-The R Journal 10:1, 439-446, \url{https://doi.org/10.32614/RJ-2018-009}.
+The R Journal 10:1, 439-446, \doi{10.32614/RJ-2018-009}.
 }
 \seealso{
 Useful links:
