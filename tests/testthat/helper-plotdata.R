@@ -26,7 +26,8 @@ plotTestData <- function() {
       data.frame(
         x = rep(seq(10, 90, length.out = 5), 4),
         y = seq(10, 90, length.out = 4)
-      ) + cbind(stats::runif(20) * 10, stats::runif(20) * 10)
+      ) +
+        cbind(stats::runif(20) * 10, stats::runif(20) * 10)
     })
     patchPts <- terra::setValues(res, 0)
     patchPts[terra::cellFromXY(patchPts, pts)] <- 1
@@ -45,17 +46,19 @@ plotTestData <- function() {
     fragPatchGOC <- GOC(fragMPG, nThresh = 5)
     fragPatchGrain4 <- grain(fragPatchGOC, whichThresh = 4)
 
-    fragCorridor3 <- corridor(fragPatchGOC,
-      whichThresh = 3,
-      coords = rbind(c(5, 180), c(395, 312))
-    )
+    fragCorridor3 <- corridor(fragPatchGOC, whichThresh = 3, coords = rbind(c(5, 180), c(395, 312)))
   })
 
   .plotDataCache$data <- list(
-    patchyMPG = patchyMPG, patchyGOC = patchyGOC,
-    mpgRes = mpgRes, fragRes = fragRes, fragMPG = fragMPG,
-    fragLatticeGOC = fragLatticeGOC, fragPatchGOC = fragPatchGOC,
-    fragPatchGrain4 = fragPatchGrain4, fragCorridor3 = fragCorridor3
+    patchyMPG = patchyMPG,
+    patchyGOC = patchyGOC,
+    mpgRes = mpgRes,
+    fragRes = fragRes,
+    fragMPG = fragMPG,
+    fragLatticeGOC = fragLatticeGOC,
+    fragPatchGOC = fragPatchGOC,
+    fragPatchGrain4 = fragPatchGrain4,
+    fragCorridor3 = fragCorridor3
   )
   .plotDataCache$data
 }

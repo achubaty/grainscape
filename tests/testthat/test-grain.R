@@ -17,7 +17,7 @@ test_that("grain() extracts the correct threshold", {
   goc <- .tinyGOC()
 
   gr1 <- grain(goc, whichThresh = 1)
-  gr4 <- grain(goc, whichThresh = 4)  ## threshold 5 is undefined (NA) in tiny.asc
+  gr4 <- grain(goc, whichThresh = 4) ## threshold 5 is undefined (NA) in tiny.asc
 
   ## finer grain (lower threshold) has more polygons
   expect_gte(vcount(gr1@th), vcount(gr4@th))
@@ -48,7 +48,7 @@ test_that("grain() centroids match the number of polygons", {
   withr::local_package("igraph")
 
   goc <- .tinyGOC()
-  gr <- grain(goc, whichThresh = 3)  ## threshold 3 is defined (nPolygon not NA)
+  gr <- grain(goc, whichThresh = 3) ## threshold 3 is defined (nPolygon not NA)
 
   expect_equal(nrow(gr@centroids), vcount(gr@th))
 })

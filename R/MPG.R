@@ -134,9 +134,16 @@ setMethod(
     lcpLinkId <- hce@patchLinks
     lcpLinkId[hce@patchLinks >= 0] <- NA
 
-    lcpPerimWeight <- terra::classify(lcpLinkId, rcl = matrix(c(
-      hce@linkData$LinkId, hce@linkData$PerimWeight
-    ), ncol = 2))
+    lcpPerimWeight <- terra::classify(
+      lcpLinkId,
+      rcl = matrix(
+        c(
+          hce@linkData$LinkId,
+          hce@linkData$PerimWeight
+        ),
+        ncol = 2
+      )
+    )
 
     mpgPlot <- hce@patchLinks
 
@@ -156,8 +163,10 @@ setMethod(
     patchEdgeFreq <- terra::freq(patchEdge, usenames = FALSE)
     patchEdgeArea <- patchEdgeFreq[, "count"] * terra::res(cost)[1] * terra::res(cost)[2]
     patch <- data.frame(
-      name = uniquePatches, patchId = uniquePatches,
-      patchArea = patchArea, patchEdgeArea = patchEdgeArea,
+      name = uniquePatches,
+      patchId = uniquePatches,
+      patchArea = patchArea,
+      patchEdgeArea = patchEdgeArea,
       coreArea = patchArea - patchEdgeArea
     )
 
@@ -191,9 +200,14 @@ setMethod(
     toGraphE <- toGraphE[toGraphE$v1 != -99 & toGraphE$v2 != -99, ]
     mpgIgraph <- graph_from_data_frame(toGraphE, directed = FALSE, vertices = toGraphV)
 
-    mpg <- new("mpg",
-      mpg = mpgIgraph, patchId = patchId, voronoi = voronoi,
-      lcpPerimWeight = lcpPerimWeight, lcpLinkId = lcpLinkId, mpgPlot = mpgPlot
+    mpg <- new(
+      "mpg",
+      mpg = mpgIgraph,
+      patchId = patchId,
+      voronoi = voronoi,
+      lcpPerimWeight = lcpPerimWeight,
+      lcpLinkId = lcpLinkId,
+      mpgPlot = mpgPlot
     )
 
     return(mpg)
@@ -224,4 +238,3 @@ setMethod(
     MPG(cost = cost, patch = patch, ...)
   }
 )
-

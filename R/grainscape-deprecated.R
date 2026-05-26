@@ -18,10 +18,18 @@
 #' @export gsGOC
 #' @rdname grainscape-deprecated
 #'
-gsGOC <- function(mpg, nThresh = NULL, doThresh = NULL,
-                  weight = "lcpPerimWeight", sp = FALSE, verbose = 3) {
+gsGOC <- function(
+  mpg,
+  nThresh = NULL,
+  doThresh = NULL,
+  weight = "lcpPerimWeight",
+  sp = FALSE,
+  verbose = 3
+) {
   .Deprecated("GOC", old = "gsGOC")
-  if (!is.null(sp)) warning("gsGOC(): argument 'sp' was supplied but will be ignored.")
+  if (!is.null(sp)) {
+    warning("gsGOC(): argument 'sp' was supplied but will be ignored.")
+  }
   GOC(mpg, nThresh, doThresh, weight, sp, verbose)
 }
 
@@ -30,8 +38,13 @@ gsGOC <- function(mpg, nThresh = NULL, doThresh = NULL,
 #' @param GOC  A `goc` object.
 #' @rdname grainscape-deprecated
 #'
-gsGOCCorridor <- function(GOC, whichThresh, coords, doPlot = FALSE, # nolint
-                          weight = "meanWeight") {
+gsGOCCorridor <- function(
+  GOC,
+  whichThresh,
+  coords,
+  doPlot = FALSE, # nolint
+  weight = "meanWeight"
+) {
   .Deprecated("corridor", old = "gsGOCCorridor")
   corridor(GOC, whichThresh, coords, doPlot, weight)
 }
@@ -40,7 +53,8 @@ gsGOCCorridor <- function(GOC, whichThresh, coords, doPlot = FALSE, # nolint
 #' @inheritParams distance
 #' @rdname grainscape-deprecated
 #'
-gsGOCDistance <- function(GOC, coords, weight = "meanWeight") { # nolint
+gsGOCDistance <- function(GOC, coords, weight = "meanWeight") {
+  # nolint
   .Deprecated("distance", old = "gsGOCDistance")
   corridor(GOC, coords, weight)
 }
@@ -49,7 +63,8 @@ gsGOCDistance <- function(GOC, coords, weight = "meanWeight") { # nolint
 #' @inheritParams distance
 #' @rdname grainscape-deprecated
 #'
-gsGOCPoint <- function(GOC, coords) { # nolint
+gsGOCPoint <- function(GOC, coords) {
+  # nolint
   .Deprecated("point", old = "gsGOCPoint")
   point(GOC, coords)
 }
@@ -58,7 +73,8 @@ gsGOCPoint <- function(GOC, coords) { # nolint
 #' @inheritParams grain
 #' @rdname grainscape-deprecated
 #'
-gsGOCVisualize <- function(GOC, whichThresh, sp = FALSE, doPlot = FALSE) { # nolint
+gsGOCVisualize <- function(GOC, whichThresh, sp = FALSE, doPlot = FALSE) {
+  # nolint
   .Deprecated("grain", old = "gsGOCVisualize")
   grain(GOC, whichThresh, sp, doPlot)
 }
@@ -67,9 +83,12 @@ gsGOCVisualize <- function(GOC, whichThresh, sp = FALSE, doPlot = FALSE) { # nol
 #' @inheritParams grain
 #' @rdname grainscape-deprecated
 #'
-visualize <- function(GOC, whichThresh, sp = FALSE, doPlot = FALSE) { # nolint
+visualize <- function(GOC, whichThresh, sp = FALSE, doPlot = FALSE) {
+  # nolint
   .Deprecated("grain", old = "visualize")
-  if (!is.null(sp)) warning("visualize(): argument 'sp' was supplied but will be ignored.")
+  if (!is.null(sp)) {
+    warning("visualize(): argument 'sp' was supplied but will be ignored.")
+  }
   grain(GOC, whichThresh, sp, doPlot)
 }
 
@@ -112,8 +131,11 @@ gsMPG <- function(cost, patch, sa = NULL, filterPatch = NULL, spreadFactor = 0) 
 #' @rdname grainscape-defunct
 #'
 gsMPGstitch <- function(...) {
-  .Defunct("MPG", msg = paste(
-    "'gsMPGstitch' is defunct.\n",
-    "'MPG' is now capable of handling larger rasters. Try it instead."
-  ))
+  .Defunct(
+    "MPG",
+    msg = paste(
+      "'gsMPGstitch' is defunct.\n",
+      "'MPG' is now capable of handling larger rasters. Try it instead."
+    )
+  )
 }

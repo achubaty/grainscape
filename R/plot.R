@@ -1,5 +1,15 @@
 utils::globalVariables(c(
-  "cols", "sz", "value", "x1", "x1p", "x2", "x2p", "y1", "y1p", "y2", "y2p"
+  "cols",
+  "sz",
+  "value",
+  "x1",
+  "x1p",
+  "x2",
+  "x2p",
+  "y1",
+  "y1p",
+  "y2",
+  "y2p"
 ))
 
 #' `.gFinal`
@@ -118,17 +128,19 @@ setMethod(
       L1 <- coords[, "L1"]
       starts <- coords[!duplicated(L1), c("X", "Y")]
       ends <- coords[!duplicated(L1, fromLast = TRUE), c("X", "Y")]
-      out <- data.frame(x1 = starts[, 1], y1 = starts[, 2],
-                        x2 = ends[, 1],   y2 = ends[, 2])
+      out <- data.frame(x1 = starts[, 1], y1 = starts[, 2], x2 = ends[, 1], y2 = ends[, 2])
       return(out)
     }
 
     ## Helper: convert single sf LINESTRING (path) to consecutive segments
     .pathToDF <- function(sfobj) {
       pts <- sf::st_coordinates(sfobj)[, c("X", "Y")]
-      out <- do.call(rbind, lapply(1:(nrow(pts) - 1), function(i) {
-        c(pts[i, ], pts[i + 1, ])
-      }))
+      out <- do.call(
+        rbind,
+        lapply(1:(nrow(pts) - 1), function(i) {
+          c(pts[i, ], pts[i + 1, ])
+        })
+      )
       dimnames(out) <- NULL
       out <- data.frame(out)
       names(out) <- c("x1", "y1", "x2", "y2")
@@ -185,10 +197,7 @@ setMethod(
       nVor <- max(vor$value, na.rm = TRUE)
       cols <- data.frame(
         n = 1:nVor,
-        col = rainbow(nVor,
-          s = colPar(nVor),
-          v = colPar(nVor)
-        )[sample(nVor, replace = TRUE)],
+        col = rainbow(nVor, s = colPar(nVor), v = colPar(nVor))[sample(nVor, replace = TRUE)],
         stringsAsFactors = FALSE
       )
       vor <- cbind(vor, cols = cols[match(vor$value, cols$n), "col"])
@@ -248,10 +257,16 @@ setMethod(
         (length(unique(diff(unique(ggGS(x, "patchId")$y)))) == 1)
 
       if (isLatticeMpg) {
-        fillx <- seq(terra::xmin(x@mpgPlot), terra::xmax(x@mpgPlot),
-                     length.out = terra::ncol(x@mpgPlot) + 1)
-        filly <- seq(terra::ymin(x@mpgPlot), terra::ymax(x@mpgPlot),
-                     length.out = terra::nrow(x@mpgPlot) + 1)
+        fillx <- seq(
+          terra::xmin(x@mpgPlot),
+          terra::xmax(x@mpgPlot),
+          length.out = terra::ncol(x@mpgPlot) + 1
+        )
+        filly <- seq(
+          terra::ymin(x@mpgPlot),
+          terra::ymax(x@mpgPlot),
+          length.out = terra::nrow(x@mpgPlot) + 1
+        )
 
         mpgdf <- rbind(
           ggGS(x, "patchId"),

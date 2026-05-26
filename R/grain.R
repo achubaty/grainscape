@@ -68,11 +68,14 @@ setMethod(
   signature = "goc",
   definition = function(x, whichThresh, ...) {
     dots <- list(...)
-    if (!is.null(dots$sp)) warning("Argument 'sp' is deprecated and will be ignored.")
+    if (!is.null(dots$sp)) {
+      warning("Argument 'sp' is deprecated and will be ignored.")
+    }
 
     ## Check whichThresh
     thresholds <- x@summary$id
-    if ((length(whichThresh) > 1) || (!(whichThresh %in% 1:length(thresholds)))) { # nolint
+    if ((length(whichThresh) > 1) || (!(whichThresh %in% 1:length(thresholds)))) {
+      # nolint
       stop("whichThresh must index a single threshold existing in the GOC object")
     }
 
@@ -112,9 +115,12 @@ setMethod(
       )
     }
 
-    out <- new("grain",
-      voronoi = results$voronoi, summary = results$summary,
-      centroids = results$centroids, th = threshGraph
+    out <- new(
+      "grain",
+      voronoi = results$voronoi,
+      summary = results$summary,
+      centroids = results$centroids,
+      th = threshGraph
     )
 
     return(out)

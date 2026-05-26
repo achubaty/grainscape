@@ -24,7 +24,8 @@ setOldClass("sf")
 setClass(
   "hce",
   slots = list(
-    voronoi = "SpatRaster", patchLinks = "SpatRaster",
+    voronoi = "SpatRaster",
+    patchLinks = "SpatRaster",
     linkData = "data.frame"
   )
 )
@@ -63,8 +64,11 @@ setClass(
 setClass(
   "mpg",
   slots = list(
-    mpg = "igraph", patchId = "SpatRaster", voronoi = "SpatRaster",
-    lcpPerimWeight = "SpatRaster", lcpLinkId = "SpatRaster",
+    mpg = "igraph",
+    patchId = "SpatRaster",
+    voronoi = "SpatRaster",
+    lcpPerimWeight = "SpatRaster",
+    lcpLinkId = "SpatRaster",
     mpgPlot = "SpatRaster"
   )
 )
@@ -94,7 +98,8 @@ setClass(
   "goc",
   slots = list(
     voronoi = "SpatRaster",
-    summary = "data.frame", th = "list"
+    summary = "data.frame",
+    th = "list"
   )
 )
 
@@ -108,19 +113,16 @@ setClass(
 #'
 #' @export
 #' @rdname show
-setMethod("show",
-  signature = "goc",
-  definition = function(object) {
-    cat("Slot voronoi:\n")
-    cat(show(object@voronoi))
+setMethod("show", signature = "goc", definition = function(object) {
+  cat("Slot voronoi:\n")
+  cat(show(object@voronoi))
 
-    cat("\nSlot summary:\n")
-    cat(show(object@summary))
+  cat("\nSlot summary:\n")
+  cat(show(object@summary))
 
-    cat("\nSlot th:\n")
-    cat("List of ", length(object@th), " goc elements", "\n")
-  }
-)
+  cat("\nSlot th:\n")
+  cat("List of ", length(object@th), " goc elements", "\n")
+})
 
 #' The `grain` class
 #'
@@ -144,29 +146,27 @@ setClass(
   "grain",
   slots = list(
     voronoi = "SpatRaster",
-    summary = "data.frame", centroids = "sf",
+    summary = "data.frame",
+    centroids = "sf",
     th = "igraph"
   )
 )
 
 #' @export
 #' @rdname show
-setMethod("show",
-  signature = "grain",
-  definition = function(object) {
-    cat("Slot voronoi:\n")
-    cat(show(object@voronoi))
+setMethod("show", signature = "grain", definition = function(object) {
+  cat("Slot voronoi:\n")
+  cat(show(object@voronoi))
 
-    cat("\nSlot summary:\n")
-    cat(show(object@summary))
+  cat("\nSlot summary:\n")
+  cat(show(object@summary))
 
-    cat("\nSlot centroids:\n")
-    cat("sf object with ", nrow(object@centroids), " features", "\n")
+  cat("\nSlot centroids:\n")
+  cat("sf object with ", nrow(object@centroids), " features", "\n")
 
-    cat("\nSlot th:\n")
-    cat(show(object@th))
-  }
-)
+  cat("\nSlot th:\n")
+  cat(show(object@th))
+})
 
 #' The `corridor` class
 #'
@@ -197,33 +197,33 @@ setMethod("show",
 setClass(
   "corridor",
   slots = list(
-    voronoi = "SpatRaster", linksSP = "sf",
-    nodesSP = "sf", shortestLinksSP = "sf",
-    shortestNodesSP = "sf", corridorLength = "numeric"
+    voronoi = "SpatRaster",
+    linksSP = "sf",
+    nodesSP = "sf",
+    shortestLinksSP = "sf",
+    shortestNodesSP = "sf",
+    corridorLength = "numeric"
   )
 )
 
 #' @export
 #' @rdname show
-setMethod("show",
-  signature = "corridor",
-  definition = function(object) {
-    cat("Slot voronoi:\n")
-    cat(show(object@voronoi))
+setMethod("show", signature = "corridor", definition = function(object) {
+  cat("Slot voronoi:\n")
+  cat(show(object@voronoi))
 
-    cat("\nSlot linksSP:\n")
-    cat(show(object@linksSP))
+  cat("\nSlot linksSP:\n")
+  cat(show(object@linksSP))
 
-    cat("\nSlot nodesSP:\n")
-    cat(show(object@nodesSP))
+  cat("\nSlot nodesSP:\n")
+  cat(show(object@nodesSP))
 
-    cat("\nSlot shortestLinksSP:\n")
-    cat(show(object@shortestLinksSP))
+  cat("\nSlot shortestLinksSP:\n")
+  cat(show(object@shortestLinksSP))
 
-    cat("\nSlot shortestNodesSP:\n")
-    cat(show(object@shortestNodesSP))
+  cat("\nSlot shortestNodesSP:\n")
+  cat(show(object@shortestNodesSP))
 
-    cat("\nSlot corridorLength:\n")
-    cat(show(object@corridorLength))
-  }
-)
+  cat("\nSlot corridorLength:\n")
+  cat(show(object@corridorLength))
+})

@@ -42,8 +42,10 @@ plotResistance <- function(x, maxResistance = 12L) {
   ggplot(df, aes(x = x, y = y, fill = value)) +
     geom_raster() +
     scale_fill_manual(
-      values = pal, name = "Resistance",
-      drop = TRUE, na.translate = FALSE
+      values = pal,
+      name = "Resistance",
+      drop = TRUE,
+      na.translate = FALSE
     ) +
     coord_equal() +
     theme_grainscape() +
@@ -87,12 +89,17 @@ plotResistance <- function(x, maxResistance = 12L) {
 #'
 plotWithResistance <- function(x, gg, maxResistance = 12L) {
   if (!requireNamespace("cowplot", quietly = TRUE)) {
-    stop("Package 'cowplot' is required for plotWithResistance(); please install it.",
+    stop(
+      "Package 'cowplot' is required for plotWithResistance(); please install it.",
       call. = FALSE
     )
   }
   cowplot::plot_grid(
-    plotResistance(x, maxResistance), gg,
-    nrow = 1, align = "h", axis = "tb", rel_widths = c(1.25, 1)
+    plotResistance(x, maxResistance),
+    gg,
+    nrow = 1,
+    align = "h",
+    axis = "tb",
+    rel_widths = c(1.25, 1)
   )
 }

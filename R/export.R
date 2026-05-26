@@ -8,10 +8,22 @@
 #' @keywords internal
 .abbrev <- function(x) {
   names_linksDF <- c(
-    "e1", "e2", "linkId", "lcpPerimWeight", "startPerimX", "startPerimY", "endPerimX", "endPerimY"
+    "e1",
+    "e2",
+    "linkId",
+    "lcpPerimWeight",
+    "startPerimX",
+    "startPerimY",
+    "endPerimX",
+    "endPerimY"
   )
   names_nodesDF <- c(
-    "patchId", "patchArea", "patchEdgeArea", "coreArea", "centroidX", "centroidY"
+    "patchId",
+    "patchArea",
+    "patchEdgeArea",
+    "coreArea",
+    "centroidX",
+    "centroidY"
   )
 
   names_gs <- c(names_linksDF, names_nodesDF) |>
@@ -79,8 +91,11 @@
   if (!inherits(sp, "sf")) {
     sp <- sf::st_as_sf(sp)
   }
-  sf::st_write(sp,
-    dsn = dirpath, layer = fname, driver = "ESRI Shapefile",
+  sf::st_write(
+    sp,
+    dsn = dirpath,
+    layer = fname,
+    driver = "ESRI Shapefile",
     delete_layer = overwrite
   )
 }
@@ -224,18 +239,37 @@
 #'
 setGeneric(
   "export",
-  function(x, dirname = NULL, path = ".", rasterFormat = "GTiff",
-           overwrite = FALSE, R = FALSE, vorBound = FALSE, ...) { # nolint
+  function(
+    x,
+    dirname = NULL,
+    path = ".",
+    rasterFormat = "GTiff",
+    overwrite = FALSE,
+    R = FALSE,
+    vorBound = FALSE,
+    ...
+  ) {
+    # nolint
     standardGeneric("export")
   }
 )
 
 #' @export
 #' @rdname export
-setMethod("export",
+setMethod(
+  "export",
   signature = "mpg",
-  definition = function(x, dirname = NULL, path = ".", rasterFormat = "GTiff",
-                        overwrite = FALSE, R = FALSE, vorBound = FALSE, ...) { # nolint
+  definition = function(
+    x,
+    dirname = NULL,
+    path = ".",
+    rasterFormat = "GTiff",
+    overwrite = FALSE,
+    R = FALSE,
+    vorBound = FALSE,
+    ...
+  ) {
+    # nolint
     if (!R) {
       dirpath <- .createDir("mpg", dirname, path, overwrite)
     }
@@ -258,10 +292,16 @@ setMethod("export",
     linksCentrSF <- sf::st_sf(
       linksCentr,
       geometry = sf::st_sfc(lapply(seq_len(nrow(linksCentr)), function(i) {
-        sf::st_linestring(matrix(c(
-          linksCentr$strtCtrX[i], linksCentr$strtCtrY[i],
-          linksCentr$endCtrX[i], linksCentr$endCtrY[i]
-        ), ncol = 2, byrow = TRUE))
+        sf::st_linestring(matrix(
+          c(
+            linksCentr$strtCtrX[i],
+            linksCentr$strtCtrY[i],
+            linksCentr$endCtrX[i],
+            linksCentr$endCtrY[i]
+          ),
+          ncol = 2,
+          byrow = TRUE
+        ))
       })),
       crs = crs_wkt
     )
@@ -274,10 +314,16 @@ setMethod("export",
     linksPerimSF <- sf::st_sf(
       linksPerim[, !duplicated(names(linksPerim))],
       geometry = sf::st_sfc(lapply(seq_len(nrow(linksPerim)), function(i) {
-        sf::st_linestring(matrix(c(
-          linksPerim$strtPerX[i], linksPerim$strtPerY[i],
-          linksPerim$endPerX[i], linksPerim$endPerY[i]
-        ), ncol = 2, byrow = TRUE))
+        sf::st_linestring(matrix(
+          c(
+            linksPerim$strtPerX[i],
+            linksPerim$strtPerY[i],
+            linksPerim$endPerX[i],
+            linksPerim$endPerY[i]
+          ),
+          ncol = 2,
+          byrow = TRUE
+        ))
       })),
       crs = crs_wkt
     )
@@ -304,7 +350,9 @@ setMethod("export",
       .wRas(x@voronoi, "voronoi", dirpath, rasterFormat, overwrite)
       .wRas(x@lcpPerimWeight, "lcpPerimWeight", dirpath, rasterFormat, overwrite)
       .wRas(x@lcpLinkId, "lcpLinkId", dirpath, rasterFormat, overwrite)
-      if (vorBound) .wRas(vorB, "vorBound", dirpath, rasterFormat, overwrite)
+      if (vorBound) {
+        .wRas(vorB, "vorBound", dirpath, rasterFormat, overwrite)
+      }
 
       message("Exported to:", normalizePath(dirpath))
       invisible(normalizePath(dirpath))
@@ -327,10 +375,20 @@ setMethod("export",
 
 #' @export
 #' @rdname export
-setMethod("export",
+setMethod(
+  "export",
   signature = "grain",
-  definition = function(x, dirname = NULL, path = ".", rasterFormat = "GTiff",
-                        overwrite = FALSE, R = FALSE, vorBound = FALSE, ...) { # nolint
+  definition = function(
+    x,
+    dirname = NULL,
+    path = ".",
+    rasterFormat = "GTiff",
+    overwrite = FALSE,
+    R = FALSE,
+    vorBound = FALSE,
+    ...
+  ) {
+    # nolint
     if (!R) {
       dirpath <- .createDir("grain", dirname, path, overwrite)
     }
@@ -338,8 +396,16 @@ setMethod("export",
     ## Prepare links
     linksDF <- graphdf(x@th)[[1]]$e[, -10]
     names(linksDF) <- c(
-      "e1", "e2", "maxWt", "lidMaxWt", "minWt", "lidMinWt",
-      "medWt", "meanWt", "numEWt", "eucCtrWt"
+      "e1",
+      "e2",
+      "maxWt",
+      "lidMaxWt",
+      "minWt",
+      "lidMinWt",
+      "medWt",
+      "meanWt",
+      "numEWt",
+      "eucCtrWt"
     )
     nodesDF <- graphdf(x@th)[[1]]$v[, -c(1, 9)]
     names(nodesDF) <- c("polyId", "ctrX", "ctrY", "polyA", "patchA", "patchEA", "coreA")
@@ -357,10 +423,16 @@ setMethod("export",
     linksCentrSF <- sf::st_sf(
       linksCentr,
       geometry = sf::st_sfc(lapply(seq_len(nrow(linksCentr)), function(i) {
-        sf::st_linestring(matrix(c(
-          linksCentr$strtCtrX[i], linksCentr$strtCtrY[i],
-          linksCentr$endCtrX[i], linksCentr$endCtrY[i]
-        ), ncol = 2, byrow = TRUE))
+        sf::st_linestring(matrix(
+          c(
+            linksCentr$strtCtrX[i],
+            linksCentr$strtCtrY[i],
+            linksCentr$endCtrX[i],
+            linksCentr$endCtrY[i]
+          ),
+          ncol = 2,
+          byrow = TRUE
+        ))
       })),
       crs = crs_wkt
     )
@@ -383,7 +455,9 @@ setMethod("export",
 
       ## Write rasters
       .wRas(x@voronoi, "voronoi", dirpath, rasterFormat, overwrite)
-      if (vorBound) .wRas(vorB, "vorBound", dirpath, rasterFormat, overwrite)
+      if (vorBound) {
+        .wRas(vorB, "vorBound", dirpath, rasterFormat, overwrite)
+      }
 
       message("Exported to:", normalizePath(dirpath))
       invisible(normalizePath(dirpath))
@@ -402,10 +476,19 @@ setMethod("export",
 
 #' @export
 #' @rdname export
-setMethod("export",
+setMethod(
+  "export",
   signature = "goc",
-  definition = function(x, dirname = NULL, path = ".",
-                        overwrite = FALSE, R = FALSE, vorBound = FALSE, ...) { # nolint
+  definition = function(
+    x,
+    dirname = NULL,
+    path = ".",
+    overwrite = FALSE,
+    R = FALSE,
+    vorBound = FALSE,
+    ...
+  ) {
+    # nolint
     message("Use grain() to extract a single grain of connectivity to export.")
     return(invisible())
   }

@@ -27,7 +27,10 @@ ggplot() +
   geom_segment(
     data = links_df,
     mapping = aes(
-      x = x1, y = y1, xend = x2, yend = y2,
+      x = x1,
+      y = y1,
+      xend = x2,
+      yend = y2,
       colour = as.factor(lcpPerimWeight)
     )
   ) +
@@ -37,4 +40,3 @@ ggplot() +
     mapping = aes(x = x, y = y),
     colour = "darkgreen"
   )
-

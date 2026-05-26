@@ -1,6 +1,10 @@
 ## Make a random raster with a border of NA values
-.makeRaster <- function(dim, naBorder = NULL,
-                        FUN = function() floor(stats::rgamma(dim * dim, 2.5)) + 1) { # nolint
+.makeRaster <- function(
+  dim,
+  naBorder = NULL,
+  FUN = function() floor(stats::rgamma(dim * dim, 2.5)) + 1
+) {
+  # nolint
   ras <- terra::rast(xmin = 0, xmax = dim, ymin = 0, ymax = dim, resolution = 1)
   terra::values(ras) <- FUN() # nolint
   if (!is.null(naBorder)) {
@@ -70,8 +74,11 @@ test_that("point handles NA values", {
 
   ## names of list items returned by `point`
   pntNames <- c(
-    "pointPolygon", "pointTotalPatchArea", "pointTotalCoreArea",
-    "pointECS", "pointECSCore"
+    "pointPolygon",
+    "pointTotalPatchArea",
+    "pointTotalCoreArea",
+    "pointECS",
+    "pointECSCore"
   )
 
   ## no NA coords; only column 5 of the result is NA

@@ -5,8 +5,13 @@ test_that("point() returns expected list structure", {
   loc <- cbind(c(30, 60, 90), c(30, 60, 90))
   pts <- grainscape::point(goc, loc)
 
-  expected_names <- c("pointPolygon", "pointTotalPatchArea", "pointTotalCoreArea",
-                      "pointECS", "pointECSCore")
+  expected_names <- c(
+    "pointPolygon",
+    "pointTotalPatchArea",
+    "pointTotalCoreArea",
+    "pointECS",
+    "pointECSCore"
+  )
   expect_named(pts, expected_names)
 })
 

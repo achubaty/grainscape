@@ -122,7 +122,7 @@ test_that("least-cost paths are correctly calculated (#72)", {
   )
 
   combinedMap <- resistanceMap
-  combinedMap[patchIDs] <- 1L  ## patchVal = 1
+  combinedMap[patchIDs] <- 1L ## patchVal = 1
 
   ## crop to smaller extent to better visualize the issue [416 px]
   zoomExtent1 <- .rowcol_ext(patchMap, r1 = 120, r2 = 145, c1 = 90, c2 = 105)
@@ -198,7 +198,8 @@ test_that("MPG does not drop non-redundant links via a bogus indirect path (#72)
   pts <- data.frame(
     x = rep(seq(10, 90, length.out = 5), 4),
     y = seq(10, 90, length.out = 4)
-  ) + cbind(runif(20) * 10, runif(20) * 10)
+  ) +
+    cbind(runif(20) * 10, runif(20) * 10)
   patchPts <- terra::setValues(res, 0)
   patchPts[terra::cellFromXY(patchPts, pts)] <- 1
   res2 <- res
@@ -219,13 +220,19 @@ test_that("MPG does not drop non-redundant links via a bogus indirect path (#72)
   for (i in seq_len(nr)) {
     for (j in seq_len(nc)) {
       id <- vor[i, j]
-      if (is.na(id) || id <= 0) next
+      if (is.na(id) || id <= 0) {
+        next
+      }
       for (d in list(c(0L, 1L), c(1L, 0L), c(1L, 1L), c(1L, -1L))) {
         ii <- i + d[1]
         jj <- j + d[2]
-        if (ii < 1 || ii > nr || jj < 1 || jj > nc) next
+        if (ii < 1 || ii > nr || jj < 1 || jj > nc) {
+          next
+        }
         nb <- vor[ii, jj]
-        if (is.na(nb) || nb <= 0 || nb == id) next
+        if (is.na(nb) || nb <= 0 || nb == id) {
+          next
+        }
         k <- paste(min(id, nb), max(id, nb))
         assign(k, (if (exists(k, bnd, inherits = FALSE)) get(k, bnd) else 0L) + 1L, bnd)
       }
@@ -305,7 +312,12 @@ test_that("MPG() does not hang when the resistance surface starts with NA (#72)"
   ## Reaching the expectations below at all confirms MPG() returns; a regression would hang
   ## here until the test process times out.
   r <- terra::rast(
-    nrows = 12, ncols = 12, xmin = 0, xmax = 12, ymin = 0, ymax = 12,
+    nrows = 12,
+    ncols = 12,
+    xmin = 0,
+    xmax = 12,
+    ymin = 0,
+    ymax = 12,
     crs = "EPSG:3857"
   )
   terra::values(r) <- 1

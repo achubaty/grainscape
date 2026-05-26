@@ -57,7 +57,8 @@ setGeneric("corridor", function(x, ...) {
 
 #' @export
 #' @rdname corridor
-setMethod("corridor",
+setMethod(
+  "corridor",
   signature = "goc",
   definition = function(x, whichThresh, coords, weight = "meanWeight", ...) {
     dots <- list(...)
@@ -66,7 +67,8 @@ setMethod("corridor",
     }
 
     ## Check whichThresh
-    if ((length(whichThresh) > 1) || (!(whichThresh %in% 1:length(x@th)))) { # nolint
+    if ((length(whichThresh) > 1) || (!(whichThresh %in% 1:length(x@th)))) {
+      # nolint
       stop("whichThresh must index a single threshold existing in the GOC object")
     }
 
@@ -107,12 +109,16 @@ setMethod("corridor",
       edgeNum = edgeNums,
       weight = edgeWeights,
       geometry = sf::st_sfc(lapply(seq_len(nrow(edges)), function(i) {
-        sf::st_linestring(matrix(c(
-          V(x@th[[whichThresh]]$goc)$centroidX[v1idx[i]],
-          V(x@th[[whichThresh]]$goc)$centroidY[v1idx[i]],
-          V(x@th[[whichThresh]]$goc)$centroidX[v2idx[i]],
-          V(x@th[[whichThresh]]$goc)$centroidY[v2idx[i]]
-        ), ncol = 2, byrow = TRUE))
+        sf::st_linestring(matrix(
+          c(
+            V(x@th[[whichThresh]]$goc)$centroidX[v1idx[i]],
+            V(x@th[[whichThresh]]$goc)$centroidY[v1idx[i]],
+            V(x@th[[whichThresh]]$goc)$centroidX[v2idx[i]],
+            V(x@th[[whichThresh]]$goc)$centroidY[v2idx[i]]
+          ),
+          ncol = 2,
+          byrow = TRUE
+        ))
       }))
     )
 
@@ -168,7 +174,8 @@ setMethod("corridor",
 
     voronoiBound <- terra::boundaries(grain(x, whichThresh = whichThresh)@voronoi, classes = TRUE)
 
-    result <- new("corridor",
+    result <- new(
+      "corridor",
       voronoi = voronoiBound,
       linksSP = edgesGOC,
       nodesSP = verticesGOC,

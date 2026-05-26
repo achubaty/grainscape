@@ -53,7 +53,8 @@ setGeneric("distance", function(x, y, ...) {
 #' @export
 #' @importFrom sf st_coordinates
 #' @rdname distance
-setMethod("distance",
+setMethod(
+  "distance",
   signature = c(x = "goc", y = "sf"),
   definition = function(x, y, weight = "meanWeight", ...) {
     coords <- sf::st_coordinates(y)[, 1:2, drop = FALSE]
@@ -63,7 +64,8 @@ setMethod("distance",
 
 #' @export
 #' @rdname distance
-setMethod("distance",
+setMethod(
+  "distance",
   signature = c(x = "goc", y = "matrix"),
   definition = function(x, y, weight = "meanWeight", ...) {
     if (ncol(y) != 2) {
@@ -87,9 +89,9 @@ setMethod("distance",
         vertices <- sapply(whichGrain[, iThresh], function(z) {
           if (is.na(z)) NA_integer_ else which(V(threshGraph)$polygonId == z)
         })
-        results$th[[iThresh]]$grainD <- distances(threshGraph,
-          v = na.omit(vertices)
-        )[, na.omit(vertices)]
+        results$th[[iThresh]]$grainD <- distances(threshGraph, v = na.omit(vertices))[, na.omit(
+          vertices
+        )]
       } else {
         results$th[[iThresh]] <- NA
       }
@@ -100,10 +102,10 @@ setMethod("distance",
 
 #' @export
 #' @rdname distance
-setMethod("distance",
+setMethod(
+  "distance",
   signature = c(x = "goc", y = "numeric"),
   definition = function(x, y, weight = "meanWeight", ...) {
     distance(x, t(as.matrix(y)), weight, ...)
   }
 )
-

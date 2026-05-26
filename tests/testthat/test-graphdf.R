@@ -17,8 +17,14 @@ test_that("graphdf() for mpg v has expected vertex attribute columns", {
   mpg <- .tinyMPG()
   gdf <- graphdf(mpg)
 
-  expected_v_cols <- c("patchId", "patchArea", "patchEdgeArea", "coreArea",
-                       "centroidX", "centroidY")
+  expected_v_cols <- c(
+    "patchId",
+    "patchArea",
+    "patchEdgeArea",
+    "coreArea",
+    "centroidX",
+    "centroidY"
+  )
   expect_true(all(expected_v_cols %in% names(gdf[[1]]$v)))
 })
 
@@ -93,5 +99,5 @@ test_that("graphdf() handles single-edge graphs without transposing rows/cols", 
   gdf <- graphdf(g)
 
   expect_equal(nrow(gdf[[1]]$e), 1)
-  expect_equal(ncol(gdf[[1]]$e), 3)  ## e1, e2, weight
+  expect_equal(ncol(gdf[[1]]$e), 3) ## e1, e2, weight
 })

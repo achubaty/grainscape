@@ -84,10 +84,17 @@ setGeneric("GOC", function(x, ...) {
 
 #' @export
 #' @rdname GOC
-setMethod("GOC",
+setMethod(
+  "GOC",
   signature = "mpg",
-  definition = function(x, nThresh = NULL, doThresh = NULL,
-                        weight = "lcpPerimWeight", verbose = 0, ...) {
+  definition = function(
+    x,
+    nThresh = NULL,
+    doThresh = NULL,
+    weight = "lcpPerimWeight",
+    verbose = 0,
+    ...
+  ) {
     dots <- list(...)
     if (!is.null(dots$sp)) {
       warning("Argument 'sp' is deprecated and will be ignored.")
@@ -133,7 +140,9 @@ setMethod("GOC",
     if (length(unlinkedPatches) > 0) {
       for (iPatch in unlinkedPatches) {
         warning(
-          "patchId=", iPatch, " has no connecting links in the MPG.",
+          "patchId=",
+          iPatch,
+          " has no connecting links in the MPG.",
           " This may be caused by a patch surrounded in missing values (NA cells).\n"
         )
         baseGraph <- delete_vertices(baseGraph, as.character(iPatch))
@@ -145,7 +154,9 @@ setMethod("GOC",
     th <- vector("list", length(doThresh))
 
     for (iThresh in seq_along(doThresh)) {
-      if (verbose >= 1) message("Threshold ", iThresh, " of ", length(doThresh))
+      if (verbose >= 1) {
+        message("Threshold ", iThresh, " of ", length(doThresh))
+      }
       tGraph <- delete_edges(baseGraph, which(linkWeight > doThresh[iThresh]))
 
       ## Determine the component structure of the threshold graph
@@ -158,17 +169,25 @@ setMethod("GOC",
         ## Determine which edges have endpoints in different components,
         ## and create a lookup data frame
         linkComponentLookup <- cbind(
-          linkId, edge_attr(baseGraph, weight), allLinks,
+          linkId,
+          edge_attr(baseGraph, weight),
+          allLinks,
           t(apply(allLinks, 1, function(z) {
             c(components[z[1]], components[z[2]])
           }))
         ) |>
           apply(2, as.numeric) |>
           as.data.frame(stringsAsFactors = FALSE)
-        linkComponentLookup <- linkComponentLookup[linkComponentLookup[, 5] !=
-          linkComponentLookup[, 6], ] # nolint
+        linkComponentLookup <- linkComponentLookup[
+          linkComponentLookup[, 5] != linkComponentLookup[, 6],
+        ] # nolint
         colnames(linkComponentLookup) <- c(
-          "linkId", "linkWeight", "node1", "node2", "compNode1", "compNode2"
+          "linkId",
+          "linkWeight",
+          "node1",
+          "node2",
+          "compNode1",
+          "compNode2"
         )
 
         ## Deal with the case when there are exactly 2 components
@@ -247,9 +266,15 @@ setMethod("GOC",
           ## Produce component graph with all edge attributes, and vertex attributes
           ## containing a comma-delimited string of vertex names
           componentGraph <- data.frame(
-            componentGraphNodes, maxWeight, linkIdMaxWeight,
-            minWeight, linkIdMinWeight, medianWeight,
-            meanWeight, numEdgesWeight, linkIdAll
+            componentGraphNodes,
+            maxWeight,
+            linkIdMaxWeight,
+            minWeight,
+            linkIdMinWeight,
+            medianWeight,
+            meanWeight,
+            numEdgesWeight,
+            linkIdAll
           ) |>
             graph_from_data_frame(directed = FALSE)
 
@@ -293,7 +318,6 @@ setMethod("GOC",
           centroids <- centroids[centroids[, 1] %in% as.integer(uniquePolygons), ]
           row.names(centroids) <- centroids[, 1]
           centroids <- centroids[uniquePolygons, 2:3]
-
 
           V(componentGraph)$centroidX <- centroids[, 1]
           V(componentGraph)$centroidY <- centroids[, 2]
@@ -340,8 +364,10 @@ setMethod("GOC",
             x1 <- which(uniquePolygons == z[1])
             x2 <- which(uniquePolygons == z[2])
 
-            out <- sqrt((centroids[x2, 1] - centroids[x1, 1])^2 +
-              (centroids[x2, 2] - centroids[x1, 2])^2) # nolint
+            out <- sqrt(
+              (centroids[x2, 1] - centroids[x1, 1])^2 +
+                (centroids[x2, 2] - centroids[x1, 2])^2
+            ) # nolint
             return(out)
           })
           E(componentGraph)$eucCentroidWeight <- eucCentroidWeight
@@ -371,7 +397,8 @@ setMethod("GOC",
     }))
 
     ## Find ECS (Expected cluster size; O'Brien et al, 2006) using totalPatchArea
-    summary.df$ECS <- unlist(lapply(th, function(z) { # nolint
+    summary.df$ECS <- unlist(lapply(th, function(z) {
+      # nolint
       if (is_igraph(z$goc)) {
         sum(V(z$goc)$totalPatchArea^2) / sum(V(z$goc)$totalPatchArea)
       } else {
@@ -379,7 +406,8 @@ setMethod("GOC",
       }
     }))
     ## Find ECSCore (Expected cluster size; O'Brien et al, 2006) using totalCoreArea
-    summary.df$ECSCore <- unlist(lapply(th, function(z) { # nolint
+    summary.df$ECSCore <- unlist(lapply(th, function(z) {
+      # nolint
       if (is_igraph(z$goc)) {
         sum(V(z$goc)$totalCoreArea^2) / sum(V(z$goc)$totalCoreArea)
       } else {

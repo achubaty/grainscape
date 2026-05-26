@@ -18,7 +18,9 @@ test_that("distance() grainD matrices are symmetric, square, and non-negative", 
   d <- grainscape::distance(goc, loc)
 
   for (i in seq_along(d$th)) {
-    if (!is.list(d$th[[i]])) next  ## NA for undefined thresholds
+    if (!is.list(d$th[[i]])) {
+      next
+    } ## NA for undefined thresholds
     mat <- d$th[[i]]$grainD
     if (is.matrix(mat)) {
       expect_equal(nrow(mat), ncol(mat))
@@ -53,7 +55,9 @@ test_that("distance() matrix and sf give same result", {
   d_sf <- grainscape::distance(goc, sf_pts)
 
   for (i in seq_along(d_mat$th)) {
-    if (!is.list(d_mat$th[[i]])) next
+    if (!is.list(d_mat$th[[i]])) {
+      next
+    }
     m1 <- d_mat$th[[i]]$grainD
     m2 <- d_sf$th[[i]]$grainD
     if (is.matrix(m1) && is.matrix(m2)) {

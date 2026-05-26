@@ -32,14 +32,18 @@ test_that("patchy MPG / GOC figures", {
     geom_segment(
       data = links_df,
       mapping = aes(
-        x = x1, y = y1, xend = x2, yend = y2,
+        x = x1,
+        y = y1,
+        xend = x2,
+        yend = y2,
         colour = as.factor(lcpPerimWeight)
       )
     ) +
     scale_colour_manual(values = rep("forestgreen", nrow(links_df))) +
     geom_point(
       data = ggGS(d$patchyMPG, "nodes"),
-      mapping = aes(x = x, y = y), colour = "darkgreen"
+      mapping = aes(x = x, y = y),
+      colour = "darkgreen"
     )
   vdiffr::expect_doppelganger("mpg-thresholded-links-250", figure06)
 
@@ -54,9 +58,10 @@ test_that("patchy MPG / GOC figures", {
   ## figure 08: GOC grain plot (random polygon colours -> seed)
   vdiffr::expect_doppelganger(
     "goc-grainplot-thresh6",
-    withr::with_seed(42, plot(grain(d$patchyGOC, whichThresh = 6),
-      quick = "grainPlot", print = FALSE, theme = FALSE
-    ))
+    withr::with_seed(
+      42,
+      plot(grain(d$patchyGOC, whichThresh = 6), quick = "grainPlot", print = FALSE, theme = FALSE)
+    )
   )
 })
 
@@ -151,7 +156,8 @@ test_that("frag MPG link figures", {
     ) +
     geom_point(
       data = ggGS(d$fragMPG, "nodes"),
-      aes(x = x, y = y, size = patchArea), colour = "darkgreen"
+      aes(x = x, y = y, size = patchArea),
+      colour = "darkgreen"
     ) +
     scale_size_area(max_size = 10, breaks = c(1000, 3000)) +
     ggtitle("Characteristics of nodes (weights)")
@@ -162,15 +168,21 @@ test_that("frag MPG link figures", {
     geom_segment(
       data = ggGS(d$fragMPG, "links"),
       aes(
-        x = x1, y = y1, xend = x2, yend = y2,
+        x = x1,
+        y = y1,
+        xend = x2,
+        yend = y2,
         linewidth = lcpPerimWeight / (sqrt((x2 - x1)^2 + (y2 - y1)^2))
       ),
-      colour = "forestgreen", alpha = 0.5
+      colour = "forestgreen",
+      alpha = 0.5
     ) +
     scale_linewidth(range = c(0, 3), breaks = seq(1, 6, by = 0.5)) +
     geom_point(
       data = ggGS(d$fragMPG, "nodes"),
-      aes(x = x, y = y), size = 3, colour = "darkgreen"
+      aes(x = x, y = y),
+      size = 3,
+      colour = "darkgreen"
     ) +
     ggtitle("Characteristics of links (weights)")
   vdiffr::expect_doppelganger("mpg-frag-link-weights", figure16)
@@ -189,7 +201,8 @@ test_that("frag MPG link figures", {
     scale_colour_manual(values = c("forestgreen", NA)) +
     geom_point(
       data = ggGS(d$fragMPG, "nodes"),
-      aes(x = x, y = y), colour = "darkgreen"
+      aes(x = x, y = y),
+      colour = "darkgreen"
     ) +
     ggtitle("Link thresholding by plotting")
   vdiffr::expect_doppelganger("mpg-frag-link-threshold", figure17)
@@ -224,11 +237,16 @@ test_that("frag MPG thresholded-network figures", {
     scale_colour_manual(values = c("forestgreen", NA)) +
     geom_point(
       data = fragThNodes,
-      aes(x = x, y = y), shape = 19, size = 4, colour = "darkgreen"
+      aes(x = x, y = y),
+      shape = 19,
+      size = 4,
+      colour = "darkgreen"
     ) +
     geom_text(
-      data = fragThNodes, aes(x = x, y = y, label = component),
-      colour = "white", size = 2
+      data = fragThNodes,
+      aes(x = x, y = y, label = component),
+      colour = "white",
+      size = 2
     ) +
     ggtitle("Link thresholding to show components")
   vdiffr::expect_doppelganger("mpg-frag-components", figure18)
@@ -252,7 +270,8 @@ test_that("frag MPG thresholded-network figures", {
     scale_colour_manual(values = c("forestgreen", NA)) +
     geom_point(
       data = fragThNodesD,
-      aes(x = x, y = y, size = degree), colour = "darkgreen"
+      aes(x = x, y = y, size = degree),
+      colour = "darkgreen"
     ) +
     ggtitle("Node importance metrics (degree)")
   vdiffr::expect_doppelganger("mpg-frag-degree", figure19)
@@ -266,7 +285,8 @@ test_that("frag MPG shortest path (figure 20)", {
   d <- plotTestData()
 
   startEnd <- c(1546, 94)
-  shPath <- shortest_paths(d$fragMPG$mpg,
+  shPath <- shortest_paths(
+    d$fragMPG$mpg,
     from = which(V(d$fragMPG$mpg)$patchId == startEnd[1]),
     to = which(V(d$fragMPG$mpg)$patchId == startEnd[2]),
     weights = E(d$fragMPG$mpg)$lcpPerimWeight,
@@ -276,7 +296,8 @@ test_that("frag MPG shortest path (figure 20)", {
   shPathL <- E(d$fragMPG$mpg)[shPath$epath[[1]]]$linkId
   shPathNodes <- subset(ggGS(d$fragMPG, "nodes"), patchId %in% shPathN)
   shPathLinks <- subset(ggGS(d$fragMPG, "links"), linkId %in% shPathL)
-  shPathD <- distances(d$fragMPG$mpg,
+  shPathD <- distances(
+    d$fragMPG$mpg,
     v = which(V(d$fragMPG$mpg)$patchId == startEnd[1]),
     to = which(V(d$fragMPG$mpg)$patchId == startEnd[2]),
     weights = E(d$fragMPG$mpg)$lcpPerimWeight
@@ -288,8 +309,10 @@ test_that("frag MPG shortest path (figure 20)", {
     ) +
     scale_fill_identity() +
     geom_segment(
-      data = shPathLinks, aes(x = x1, y = y1, xend = x2, yend = y2),
-      colour = "forestgreen", linewidth = 1
+      data = shPathLinks,
+      aes(x = x1, y = y1, xend = x2, yend = y2),
+      colour = "forestgreen",
+      linewidth = 1
     ) +
     geom_point(data = shPathNodes, aes(x = x, y = y), colour = "darkgreen") +
     ggtitle("Shortest-path distance between nodes") +
@@ -306,18 +329,30 @@ test_that("GOC grain and corridor figures", {
   ## figure 21: lattice GOC grain plot (seed for random colours)
   vdiffr::expect_doppelganger(
     "goc-lattice-grainplot",
-    withr::with_seed(42, plot(grain(d$fragLatticeGOC, whichThresh = 3),
-      quick = "grainPlot", print = FALSE, theme = FALSE
-    )) +
+    withr::with_seed(
+      42,
+      plot(
+        grain(d$fragLatticeGOC, whichThresh = 3),
+        quick = "grainPlot",
+        print = FALSE,
+        theme = FALSE
+      )
+    ) +
       ggtitle("Lattice grains of connectivity")
   )
 
   ## figure 22: patch GOC grain plot
   vdiffr::expect_doppelganger(
     "goc-patch-grainplot",
-    withr::with_seed(42, plot(grain(d$fragPatchGOC, whichThresh = 4),
-      quick = "grainPlot", print = FALSE, theme = FALSE
-    )) +
+    withr::with_seed(
+      42,
+      plot(
+        grain(d$fragPatchGOC, whichThresh = 4),
+        quick = "grainPlot",
+        print = FALSE,
+        theme = FALSE
+      )
+    ) +
       ggtitle("Patch grains of connectivity")
   )
 
@@ -330,23 +365,29 @@ test_that("GOC grain and corridor figures", {
     scale_fill_identity() +
     geom_segment(
       data = ggGS(d$fragPatchGrain4, "links"),
-      aes(x = x1, y = y1, xend = x2, yend = y2), colour = "forestgreen"
+      aes(x = x1, y = y1, xend = x2, yend = y2),
+      colour = "forestgreen"
     ) +
     geom_point(
       data = ggGS(d$fragPatchGrain4, "nodes"),
-      aes(x = x, y = y, size = totalCoreArea), colour = "darkgreen"
+      aes(x = x, y = y, size = totalCoreArea),
+      colour = "darkgreen"
     ) +
     ggtitle("Voronoi polygon metrics (core area)")
   vdiffr::expect_doppelganger("goc-patch-coremetrics", figure23)
 
   ## figure 25: eight focal points over the grain (seed points + grain colours)
-  pts <- withr::with_seed(355, cbind(
-    sample(seq_len(terra::ncol(d$fragRes)))[1:8],
-    sample(seq_len(terra::nrow(d$fragRes)))[1:8]
-  ))
-  figure25 <- withr::with_seed(42, plot(grain(d$fragPatchGOC, 4),
-    quick = "grainPlot", print = FALSE, theme = FALSE
-  )) +
+  pts <- withr::with_seed(
+    355,
+    cbind(
+      sample(seq_len(terra::ncol(d$fragRes)))[1:8],
+      sample(seq_len(terra::nrow(d$fragRes)))[1:8]
+    )
+  )
+  figure25 <- withr::with_seed(
+    42,
+    plot(grain(d$fragPatchGOC, 4), quick = "grainPlot", print = FALSE, theme = FALSE)
+  ) +
     annotate("text", x = pts[, 1], y = pts[, 2], label = 1:8, colour = "red") +
     ggtitle("Eight points for pairwise distances")
   vdiffr::expect_doppelganger("goc-patch-points", figure25)
@@ -354,26 +395,48 @@ test_that("GOC grain and corridor figures", {
   ## figure 24: corridor through the grain
   startEnd <- rbind(c(5, 180), c(395, 312))
   figure24 <- plot(d$fragCorridor3, print = FALSE, theme = FALSE) +
-    annotate("text",
-      x = startEnd[1, 1], y = startEnd[1, 2] - 20,
-      label = "START", colour = "red", size = 2
+    annotate(
+      "text",
+      x = startEnd[1, 1],
+      y = startEnd[1, 2] - 20,
+      label = "START",
+      colour = "red",
+      size = 2
     ) +
-    annotate("text",
-      x = startEnd[1, 1], y = startEnd[1, 2], label = "X", colour = "red", size = 2
+    annotate(
+      "text",
+      x = startEnd[1, 1],
+      y = startEnd[1, 2],
+      label = "X",
+      colour = "red",
+      size = 2
     ) +
-    annotate("text",
-      x = startEnd[2, 1], y = startEnd[2, 2] + 20,
-      label = "END", colour = "red", size = 2
+    annotate(
+      "text",
+      x = startEnd[2, 1],
+      y = startEnd[2, 2] + 20,
+      label = "END",
+      colour = "red",
+      size = 2
     ) +
-    annotate("text",
-      x = startEnd[2, 1], y = startEnd[2, 2], label = "X", colour = "red", size = 2
+    annotate(
+      "text",
+      x = startEnd[2, 1],
+      y = startEnd[2, 2],
+      label = "X",
+      colour = "red",
+      size = 2
     ) +
-    annotate("text",
-      x = 250, y = 400,
+    annotate(
+      "text",
+      x = 250,
+      y = 400,
       label = paste0(
         "Corridor length: ",
-        round(d$fragCorridor3@corridorLength, 0), " resistance units"
-      ), size = 2
+        round(d$fragCorridor3@corridorLength, 0),
+        " resistance units"
+      ),
+      size = 2
     ) +
     ggtitle("Corridor analysis; grain of connectivity")
   vdiffr::expect_doppelganger("corridor-frag-thresh3", figure24)
