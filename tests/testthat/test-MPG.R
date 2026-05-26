@@ -183,3 +183,117 @@ test_that("least-cost paths are correctly calculated (#72)", {
   expect_true(nrow(graphdf(patchyMPG)[[1]]$v) == 9)
   expect_true(nrow(graphdf(patchyMPG)[[1]]$e) == 12)
 })
+
+test_that("MPG does not drop non-redundant links via a bogus indirect path (#72)", {
+  ## Regression test: lookForIndirectPath() could use an unset Cell id (the -99 sentinel
+  ## from DataStruct.h) as a pivot patch, fabricating a cheap two-hop A -> -99 -> B that
+  ## suppressed a legitimate direct A-B link. It surfaced on noisy resistance surfaces (the
+  ## resistance-surface network in the vignette), where strongly Voronoi-adjacent patches
+  ## lost their direct link. A patch pair sharing a large Voronoi boundary has the cheapest
+  ## possible direct connection and can never be redundant, so the most-adjacent pairs must
+  ## always be directly linked.
+  set.seed(674)
+  res <- terra::rast(xmin = 0, xmax = 100, ymin = 0, ymax = 100, resolution = 1)
+  res[] <- 1
+  pts <- data.frame(
+    x = rep(seq(10, 90, length.out = 5), 4),
+    y = seq(10, 90, length.out = 4)
+  ) + cbind(runif(20) * 10, runif(20) * 10)
+  patchPts <- terra::setValues(res, 0)
+  patchPts[terra::cellFromXY(patchPts, pts)] <- 1
+  res2 <- res
+  res2[] <- floor(runif(terra::ncell(res2)) * 10 + 1) # high-variance resistance (1..10)
+
+  mpg <- MPG(res2, patch = patchPts)
+  edges <- graphdf(mpg)[[1]]$e
+
+  ## every link must connect two real patches (patch ids are positive; -99 is the Cell sentinel)
+  expect_true(all(edges$e1 > 0 & edges$e2 > 0))
+
+  ## shared Voronoi boundary length (8-neighbour) for every adjacent patch pair
+  linkset <- apply(edges[, c("e1", "e2")], 1, function(z) paste(min(z), max(z)))
+  vor <- terra::as.matrix(mpg@voronoi, wide = TRUE)
+  nr <- nrow(vor)
+  nc <- ncol(vor)
+  bnd <- new.env(parent = emptyenv())
+  for (i in seq_len(nr)) {
+    for (j in seq_len(nc)) {
+      id <- vor[i, j]
+      if (is.na(id) || id <= 0) next
+      for (d in list(c(0L, 1L), c(1L, 0L), c(1L, 1L), c(1L, -1L))) {
+        ii <- i + d[1]
+        jj <- j + d[2]
+        if (ii < 1 || ii > nr || jj < 1 || jj > nc) next
+        nb <- vor[ii, jj]
+        if (is.na(nb) || nb <= 0 || nb == id) next
+        k <- paste(min(id, nb), max(id, nb))
+        assign(k, (if (exists(k, bnd, inherits = FALSE)) get(k, bnd) else 0L) + 1L, bnd)
+      }
+    }
+  }
+  keys <- ls(bnd)
+  boundaryLen <- vapply(keys, function(k) get(k, bnd), integer(1))
+
+  ## the five most strongly Voronoi-adjacent patch pairs must all be directly linked
+  ## (before the fix, the 163-cell pair "11 19" was wrongly suppressed via pivot -99)
+  topPairs <- keys[order(-boundaryLen)][1:5]
+  expect_true(all(topPairs %in% linkset))
+
+  ## no patch is left isolated: single-cell patches whose iLinkMap id was never set (-99)
+  ## used to be unresolved link endpoints and dropped, leaving them disconnected (#72).
+  ## On this fully-connected landscape every patch must belong to one component.
+  expect_equal(igraph::count_components(mpg$mpg), 1L)
+})
+
+test_that("MPG link weights equal independent least-cost paths", {
+  ## Correctness check that does not trust the C++ engine: recompute every MPG link weight
+  ## with a standalone igraph Dijkstra in grainscape's cost convention -- 4-connected
+  ## (the engine spreads to rook neighbours only), cost = sum of the resistances of the
+  ## matrix cells entered, with the path constrained to the two patches' Voronoi corridor
+  ## (cells whose voronoi id is one of the two endpoints). The engine's lcpPerimWeight must
+  ## match this independent value for every link.
+  skip_if_not_installed("igraph")
+  withr::local_package("igraph")
+
+  tiny <- terra::rast(system.file("extdata/tiny.asc", package = "grainscape"))
+  tinyCost <- terra::classify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
+  mpg <- MPG(cost = tinyCost, patch = (tinyCost == 1))
+  edges <- graphdf(mpg)[[1]]$e
+
+  ## fixed 4-connected adjacency over the grid (entering a cell costs its resistance)
+  rr <- terra::values(tinyCost)[, 1]
+  vor <- terra::values(mpg@voronoi)[, 1]
+  pid <- terra::values(mpg@patchId)[, 1]
+  n <- terra::ncell(tinyCost)
+  adj <- terra::adjacent(tinyCost, cells = seq_len(n), directions = 4)
+  from <- rep(seq_len(n), each = 4)
+  to <- as.vector(t(adj))
+  ok <- !is.na(to) & !is.na(rr[to]) & !is.na(rr[from])
+  from <- from[ok]
+  to <- to[ok]
+
+  corridorLCP <- function(a, b) {
+    incorr <- (vor == a | vor == b)
+    incorr[is.na(incorr)] <- FALSE
+    k <- incorr[from] & incorr[to]
+    cn <- rr
+    cn[!is.na(pid) & (pid == a | pid == b)] <- 0 # source/target patch cells are free
+    aCells <- which(pid == a)
+    bCells <- which(pid == b)
+    src <- n + 1L
+    g <- make_empty_graph(n = n + 1L, directed = TRUE)
+    g <- add_edges(g, as.vector(rbind(from[k], to[k])), attr = list(weight = cn[to[k]]))
+    g <- add_edges(g, as.vector(rbind(src, aCells)), attr = list(weight = rep(0, length(aCells))))
+    suppressWarnings(min(distances(g, v = src, to = bCells, mode = "out", algorithm = "dijkstra")))
+  }
+
+  independent <- vapply(
+    seq_len(nrow(edges)),
+    function(i) corridorLCP(edges$e1[i], edges$e2[i]),
+    numeric(1)
+  )
+
+  ## allow at most a one-unit discretization difference at a single corridor-boundary cell
+  expect_true(all(abs(edges$lcpPerimWeight - independent) <= 1))
+  expect_true(mean(abs(edges$lcpPerimWeight - independent)) < 0.05) # essentially all exact
+})

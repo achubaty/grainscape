@@ -125,7 +125,11 @@ bool Engine::initialize() {
           ac.time = 0.0f;                        // set the time inside 'ac' to zero
           ac.id = c.id;                          // set the id of 'ac' to 'c' id
           ac.distance = 0.0f;                    // set the Euclidean distance from this element/cell to its origin element/cell to to zero
-          ac.resistance = cost_map[i][j];        // set the resistance of 'ac' to the value in the cost map's i'th and j'th element
+          // patch cells are sources: spread from them with the minimum (uniform) cost rather
+          // than their own cost-surface value. Using cost_map[i][j] here penalises patches that
+          // fall on high-resistance cells (they spread late and lose territory), which biases the
+          // Voronoi tessellation whenever patches are not all on the lowest-cost cells (with #72)
+          ac.resistance = costRes;
           ac.originCell = c;                     // set the origin cell of 'ac' to c's properties
           ac.row = i;                            // set ac's row to i's value
           ac.column = j;                         // set ac's column to i's value
@@ -173,6 +177,15 @@ bool Engine::initialize() {
       iLinkMap[i][j].fromCell.column = j;    // will be set properly for active cells below
       iLinkMap[i][j].originCell.row = i;     // will be set properly for active cells below
       iLinkMap[i][j].originCell.column = j;  // will be set properly for active cells below
+      // seed every cell's id from the voronoi map so that patch cells which are never added
+      // as active cells (e.g. a single-cell patch with no zero-valued neighbour at init) still
+      // trace back to their own patch id instead of the Cell default (-99).
+      // Without this, such a patch is an unresolved (-99) link endpoint and its links are
+      // silently dropped, leaving it isolated (with #72).
+      // Matrix cells (id 0 here) are overwritten by connectCell() when they are conquered during spreading.
+      iLinkMap[i][j].id = voronoi_map[i][j];
+      iLinkMap[i][j].fromCell.id = voronoi_map[i][j];
+      iLinkMap[i][j].originCell.id = voronoi_map[i][j];
     }
   }
 
@@ -747,6 +760,13 @@ void Engine::findPath(LinkCell &ac1, LinkCell &ac2, std::vector<Link> & path_lis
   // from ac2's location (or lc_temp's location) follow its connections until it reaches a path
   path.end = parseMap(lc_temp, path); // will also update path.connection to lc_temp's value
 
+  // a link must connect two real patches: patch ids are always positive, so a non-positive
+  // endpoint means an unset Cell id (-99 from DataStruct.h) leaked into the path. Drop such a
+  // malformed link so it cannot pollute path_list or the indirect-path search (with #72)
+  if (path.start.id <= 0.0f || path.end.id <= 0.0f) {
+    return;
+  }
+
   // check if a link for this patch pair already exists
   for (unsigned int i = 0; i < path_list.size(); i++) {
     if ((path_list[i].end.id == ac1.id && path_list[i].start.id == ac2.id) ||
@@ -845,6 +865,11 @@ bool Engine::lookForIndirectPath(std::vector<Link> & path_list, Link & path) {
     } else {
       continue;  // link does not touch path.start
     }
+
+    // pivot must be a real patch: patch ids are always positive, so reject the Cell default
+    // id (-99 from DataStruct.h). Without this guard a link carrying an unset endpoint forms a
+    // bogus two-hop (A -> -99 -> B) that wrongly suppresses a legitimate direct link (with #72)
+    if (pivot_id <= 0.0f) continue;
 
     float cost1 = path_list[i].cost;
     if (cost1 >= path.cost) continue;  // first hop already too expensive

@@ -66,6 +66,7 @@ Collate:
     'habitatConnectivityEngine.R'
     'patchFilter.R'
     'plot.R'
+    'plotResistance.R'
     'point.R'
     'theme_grainscape.R'
     'threshold.R'

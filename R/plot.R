@@ -90,7 +90,7 @@ utils::globalVariables(c(
 #' @export
 #' @importFrom ggplot2 ggplot aes geom_point geom_raster geom_segment
 #' @importFrom ggplot2 scale_colour_identity scale_fill_identity scale_fill_manual
-#' @importFrom ggplot2 scale_size_identity theme
+#' @importFrom ggplot2 scale_linewidth_identity scale_size_identity theme
 #' @importFrom grDevices rainbow
 #' @importFrom sf st_coordinates
 #' @importFrom terra ncol nrow xmax xmin ymax ymin
@@ -156,11 +156,12 @@ setMethod(
       scale_fill_manual(values = c("white", "grey")) +
       geom_segment(
         data = linesDF,
-        aes(x = x1, y = y1, xend = x2, yend = y2, colour = cols, size = sz)
+        aes(x = x1, y = y1, xend = x2, yend = y2, colour = cols, linewidth = sz)
       ) +
       geom_point(data = pointsDF, aes(x = x, y = y, col = cols, size = sz)) +
       scale_colour_identity() +
-      scale_size_identity()
+      scale_size_identity() +
+      scale_linewidth_identity()
     if (theme) {
       g <- g + theme_grainscape()
     }

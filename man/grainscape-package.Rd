@@ -67,7 +67,7 @@ The R Journal 10:1, 439-446, \url{https://doi.org/10.32614/RJ-2018-009}.
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://www.alexchubaty.com/grainscape/}
+  \item \url{https://alexchubaty.com/grainscape/}
   \item \url{https://github.com/achubaty/grainscape}
   \item Report bugs at \url{https://github.com/achubaty/grainscape/issues}
 }
