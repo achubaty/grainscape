@@ -5,7 +5,7 @@
 #'
 #' @param x       A [goc-class] object produced by [GOC()].
 #'
-#' @param coords  A two column matrix or a [sp::SpatialPoints-class] object giving
+#' @param coords  A two-column matrix or an `sf` (POINT) object giving
 #'                the coordinates of points of interest.
 #'
 #' @param ...     Additional arguments (not used).
@@ -54,7 +54,6 @@
 #'
 #' @author Paul Galpern and Alex Chubaty
 #' @export
-#' @importFrom raster cellFromXY
 #' @include classes.R
 #' @rdname point
 #' @seealso [GOC()], [distance()]
@@ -74,31 +73,33 @@ setMethod(
   "point",
   signature = "goc",
   definition = function(x, coords, ...) {
-    if (is.null(dim(coords)) && !inherits(coords, "SpatialPoints")) {
+    if (is.null(dim(coords)) && !inherits(coords, "sf")) {
       coords <- t(as.matrix(coords))
     }
 
-    if (!inherits(coords, "SpatialPoints") && (ncol(coords) != 2)) {
+    if (inherits(coords, "sf")) {
+      coords <- sf::st_coordinates(coords)[, 1:2, drop = FALSE]
+    }
+
+    if (ncol(coords) != 2) {
       stop(paste(
-        "coords must be a SpatialPoints object or a matrix of two columns",
+        "coords must be an sf object or a matrix of two columns",
         "giving X and Y coordinates"
       ))
     }
 
-    if (!inherits(coords, "SpatialPoints")) {
-      coords <- SpatialPoints(coords)
-    }
-
     ## Remove points that fall in NA locations
-    cellPoints <- cellFromXY(x@voronoi, coords)
-    if (suppressWarnings(sum(is.na(x@voronoi[cellPoints]))) > 0) {
-      cellPoints <- suppressWarnings(cellPoints[!is.na(x@voronoi[cellPoints])])
+    cellPoints <- terra::cellFromXY(x@voronoi, coords)
+    voroVals <- terra::values(x@voronoi)[, 1]
+    if (suppressWarnings(sum(is.na(voroVals[cellPoints]))) > 0) {
+      cellPoints <- suppressWarnings(cellPoints[!is.na(voroVals[cellPoints])])
       stop("there are coords that are not defined on the raster.")
     }
 
     grainPoints <- matrix(NA, nrow = length(cellPoints), ncol = length(x@th))
     totalPatchAreaPoints <- grainPoints
     totalCoreAreaPoints <- grainPoints
+    coordsOnNA <- FALSE
 
     for (iThresh in seq_along(x@th)) {
       if (is_igraph(x@th[[iThresh]]$goc)) {
@@ -125,22 +126,27 @@ setMethod(
 
         ## Faster method which references the cells from the stored voronoi raster
         ## and uses the graph vertex record to determine the polygonId
-        grainPoints[, iThresh] <- as.numeric(sapply(x@voronoi[cellPoints], function(z) {
-          patchIdLookup[patchIdLookup[, 2] == na.omit(z), 1]
+        grainPoints[, iThresh] <- as.numeric(sapply(voroVals[cellPoints], function(z) {
+          patchIdLookup[patchIdLookup[, 2] == stats::na.omit(z), 1]
         }))
 
+        ## a coord whose polygon is absent from this threshold's graph yields NA
+        if (anyNA(grainPoints[, iThresh])) {
+          coordsOnNA <- TRUE
+        }
+
         totalPatchAreaPoints[, iThresh] <- as.numeric(sapply(grainPoints[, iThresh], function(z) {
-          if (is.na(z)) {
-            warning("values of 'coords' correspond to cells with value 'NA'.")
-          }
-          patchAreaLookup[patchAreaLookup[, 1] == na.omit(z), 2]
+          patchAreaLookup[patchAreaLookup[, 1] == stats::na.omit(z), 2]
         }))
 
         totalCoreAreaPoints[, iThresh] <- as.numeric(sapply(grainPoints[, iThresh], function(z) {
-          ## warning provided above
-          patchAreaLookup[patchAreaLookup[, 1] == na.omit(z), 4]
+          patchAreaLookup[patchAreaLookup[, 1] == stats::na.omit(z), 4]
         }))
       }
+    }
+
+    if (coordsOnNA) {
+      warning("values of 'coords' correspond to cells with value 'NA'.")
     }
 
     results <- list()

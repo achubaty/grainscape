@@ -1,89 +1,101 @@
 # CRAN submission checklist
 
-1. ensure all tests passing locally on as many machines as possible (mac, linux, win)
+1. ensure all tests pass locally on as many machines as possible (mac, linux, win)
 
     ```r
-    devtools::check(args = c('--as-cran'), build_args = c('--compact-vignettes=both'))
+    devtools::check(args = c("--as-cran"), build_args = c("--compact-vignettes=both"))
     ```
+
+    **Extended (vdiffr) tests:** the visual-regression plot tests in
+    `tests/testthat/test-plot.R` are gated with `skip_on_cran()`, so
+    `devtools::check()` / `R CMD check` **skip them** (these tests are heavy and
+    their SVG snapshots are renderer-version-sensitive). To exercise them you must
+    either run `devtools::test()` separately, or set `NOT_CRAN=true` for the check:
+
+    ```r
+    devtools::test() ## runs the vdiffr plot tests (sets NOT_CRAN=true)
+
+    ## ...or include them in a check by forcing the env var:
+    withr::with_envvar(c(NOT_CRAN = "true"),
+      devtools::check(args = "--as-cran", build_args = "--compact-vignettes=both")
+    )
+    ```
+
+    Review any flagged plot diffs with `testthat::snapshot_review("plot/")` (or
+    `vdiffr::manage_cases()`); accept intended changes with
+    `testthat::snapshot_accept("plot")`.
 
 2. ensure passing on GitHub Actions
 
     * <https://github.com/achubaty/grainscape/actions>
 
-2. check code formatting and cleanup as needed
+3. format and lint the package
+
+    ```sh
+    # https://posit-dev.github.io/air/
+    air format .
+    ```
 
     ```r
-    # remotes::install_github("jimhester/lintr")
     lintr::lint_package()
     ```
 
-    ```r
-    # remotes::install_github("r-lib/styler")
-    styler:::style_active_pkg()
-    ```
-
-3. ensure passing win-builder oldrelease, release, and devel
+4. ensure passing on additional platforms
 
     ```r
     ## macOS
     devtools::check_mac_release(args = "--compact-vignettes=both")
-    
-    ## Windows
+
+    ## Windows (win-builder: oldrelease, release, devel)
     devtools::check_win_oldrelease(args = "--compact-vignettes=both")
     devtools::check_win_release(args = "--compact-vignettes=both")
     devtools::check_win_devel(args = "--compact-vignettes=both")
     ```
 
-    ```r
-    ## r-hub on GitHub Actions
-    # remotes::install_github("r-hub/rhub")
-    rhub::rhub_check(
-      gh_url = "https://github.com/achubaty/grainscape",
-      branch = "development"
-    )
-    ```
+    For broader coverage, run the `R-hub` workflow on GitHub Actions
+    (Actions → "R-hub" → "Run workflow"), or locally via `rhub::rhub_check()`
+    after a one-time `rhub::rhub_setup()`.
 
-4. bump version number in DESCRIPTION (use non-devel suffix -- no `.9000`)
+5. bump version number in DESCRIPTION (use non-devel suffix -- no `.9000`)
 
     ```r
     usethis::use_version() ## e.g., usethis::use_version("minor")
-    ````
+    ```
 
-5. update `NEWS.md`
+6. update `NEWS.md`
 
     ```r
     devtools::show_news()
     ```
 
-6. rebuild docs and ensure vignettes are compressed
+7. rebuild docs (vignettes are compacted automatically via `--compact-vignettes=both`)
 
-   ```r
-   devtools::document()
-   tools::compactPDF("vignettes", qpdf = Sys.which(Sys.getenv("R_QPDF", "qpdf")), gs_quality = "ebook")
-   ```
+    ```r
+    devtools::document()
+    ```
 
-7. run spell checks
+8. run spell checks
 
-   ```r
-   spelling::spell_check_package()
-   spelling::update_wordlist()
-   ```
+    ```r
+    spelling::spell_check_package()
+    spelling::update_wordlist()
+    ```
 
-8. run reverse dependency checks (see `revdep/check.R`)
+9. run reverse dependency checks (see `revdep/check.R`)
 
-9. update cran-comments (incl. versions tested)
+10. update `cran-comments.md` (incl. versions tested)
 
-10. switch to `main` branch and merge in `development`
+11. switch to `main` branch and merge in `development`
 
-11. remove `Remotes` from `DESCRIPTION` (on `main` branch)
+12. remove `Remotes` from `DESCRIPTION` (on `main` branch), if present
 
-12. submit to CRAN 
+13. submit to CRAN
 
     ```r
     devtools::release(args = "--compact-vignettes=both")
     ```
 
-13. once accepted, create a new GitHub release:
+14. once accepted, create a new GitHub release:
 
     ```r
     usethis::use_github_release()

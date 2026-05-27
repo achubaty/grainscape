@@ -38,6 +38,11 @@ private:
     flMap voronoi_map;       // A voronoi map that contains float numbers in each cell
     flMap cost_map;          // A map that contains all the costs/resistances per cell
 
+    // tracks which cells have been fully processed (appeared in spread_list and spread to
+    // neighbours); createLinks only creates links to settled cells so that iLinkMap entries
+    // are as optimal as possible before a patch-to-patch link is recorded (#72)
+    boolMap settled_map;
+
     bool initialized;        // indicates if the engine is ready to run or begin
 
     // a pointer to a character, the contents of this variable is modified if the engine does not work properly
@@ -53,6 +58,9 @@ private:
 
     // creates new active cells and stores them in the temporary active cell holder
     void createActiveCell(ActiveCell * ac, int row, int col);
+
+    // create links between nodes
+    void createLinks(ActiveCell * ac, int row, int col);
 
     // updates the output data's vectors,
     // given the vector that needs to be updated (vm) and the map that contains the new data (mm)

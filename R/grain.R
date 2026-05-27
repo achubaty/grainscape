@@ -16,10 +16,10 @@
 #'   \item{`summary`}{gives the properties of the specified scale/grain `whichThresh`
 #'   of the GOC model;}
 #'
-#'   \item{`voronoi`}{a `RasterLayer` giving the Voronoi tessellation the
+#'   \item{`voronoi`}{a `SpatRaster` giving the Voronoi tessellation the
 #'   specified scale/grain `whichThresh` of the GOC model;}
 #'
-#'   \item{`centroids`}{a `SpatialPoints` objects giving the centroids
+#'   \item{`centroids`}{an `sf` object giving the centroids
 #'   of the polygons in the Voronoi tessellation at the specified scale/grain `whichThresh`;}
 #'
 #'   \item{`th`}{a `igraph` object giving the graph describing the relationship
@@ -45,9 +45,6 @@
 #'
 #' @author Paul Galpern and Alex Chubaty
 #' @export
-#' @importFrom graphics plot
-#' @importFrom raster as.data.frame plot reclassify
-#' @importFrom sp geometry plot SpatialPoints SpatialPolygonsDataFrame
 #' @include classes.R
 #' @rdname grain
 #' @seealso [GOC()]
@@ -68,11 +65,14 @@ setMethod(
   signature = "goc",
   definition = function(x, whichThresh, ...) {
     dots <- list(...)
-    if (!is.null(dots$sp)) warning("Argument 'sp' is deprecated and will be ignored.")
+    if (!is.null(dots$sp)) {
+      warning("Argument 'sp' is deprecated and will be ignored.")
+    }
 
     ## Check whichThresh
     thresholds <- x@summary$id
-    if ((length(whichThresh) > 1) || (!(whichThresh %in% 1:length(thresholds)))) { # nolint
+    if ((length(whichThresh) > 1) || (!(whichThresh %in% 1:length(thresholds)))) {
+      # nolint
       stop("whichThresh must index a single threshold existing in the GOC object")
     }
 
@@ -100,17 +100,24 @@ setMethod(
       }
       rclTable <- rclTable[2:nrow(rclTable), ]
 
-      results$voronoi <- reclassify(x@voronoi, rcl = rclTable)
+      results$voronoi <- terra::classify(x@voronoi, rcl = rclTable)
 
-      results$centroids <- SpatialPoints(cbind(
+      centroid_coords <- cbind(
         V(threshGraph)$centroidX,
         V(threshGraph)$centroidY
-      ))
+      )
+      results$centroids <- sf::st_as_sf(
+        as.data.frame(centroid_coords),
+        coords = c("V1", "V2")
+      )
     }
 
-    out <- new("grain",
-      voronoi = results$voronoi, summary = results$summary,
-      centroids = results$centroids, th = threshGraph
+    out <- new(
+      "grain",
+      voronoi = results$voronoi,
+      summary = results$summary,
+      centroids = results$centroids,
+      th = threshGraph
     )
 
     return(out)

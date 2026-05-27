@@ -2,12 +2,12 @@
 % Please edit documentation in R/patchFilter.R
 \name{patchFilter}
 \alias{patchFilter}
-\alias{patchFilter,RasterLayer-method}
+\alias{patchFilter,SpatRaster-method}
 \title{Filter out patches smaller than a specified area}
 \usage{
 patchFilter(x, cells = NULL, area = NULL, ...)
 
-\S4method{patchFilter}{RasterLayer}(x, cells = NULL, area = NULL, ...)
+\S4method{patchFilter}{SpatRaster}(x, cells = NULL, area = NULL, ...)
 }
 \arguments{
 \item{x}{A binary raster (i.e. consisting of \code{0}, \code{1},
@@ -24,7 +24,7 @@ raster by multiplying the count of cells in patch by the x
 and y resolution of a raster cell). Default \code{NULL}.
 Only one of \code{cells} or \code{area} may be specified.}
 
-\item{...}{Additional arguments passed to \code{\link[raster:clump]{raster::clump()}}.
+\item{...}{Additional arguments passed to \code{\link[terra:patches]{terra::patches()}}.
 For example, \code{directions = 4} may be used to be more
 conservative about which cells constitute a patch.}
 }
@@ -49,26 +49,34 @@ Filtering can help in both cases.
 }
 \examples{
 ## Load raster landscape
-tiny <- raster::raster(system.file("extdata/tiny.asc", package = "grainscape"))
+tiny <- terra::rast(
+  system.file("extdata", "tiny.asc", package = "grainscape", mustWork = TRUE)
+)
 
 ## Create a resistance surface from a raster using an is-becomes reclassification
-tinyCost <- raster::reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
+tinyCost <- terra::classify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
 ## Produce a patch-based MPG where patches are resistance features = 10
 ## and all patches are greater than or equal to 2 cells in size
 filteredPatch <- patchFilter(tinyCost == 10, cells = 2)
 tinyPatchMPG <- MPG(cost = tinyCost, patch = filteredPatch)
-if (interactive()) plot(tinyPatchMPG)
+if (interactive()) {
+  plot(tinyPatchMPG)
+}
 
 ## Compare to removal of patches greater than or equal to 40 cells in size!
 filteredPatch <- patchFilter(tinyCost == 10, cells = 40)
 tinyPatchMPG <- MPG(cost = tinyCost, patch = filteredPatch)
-if (interactive()) plot(tinyPatchMPG)
+if (interactive()) {
+  plot(tinyPatchMPG)
+}
 
 ## Use a rook/castle 4-direction case rather than the queen 8-direction case
 ## to identify neighbouring cells in a patch
 filteredPatch <- patchFilter(tinyCost == 10, cells = 40, directions = 4)
 tinyPatchMPG <- MPG(cost = tinyCost, patch = filteredPatch)
-if (interactive()) plot(tinyPatchMPG)
+if (interactive()) {
+  plot(tinyPatchMPG)
+}
 }
 \seealso{
 \code{\link[=MPG]{MPG()}}

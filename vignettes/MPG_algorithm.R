@@ -14,3 +14,4 @@ opts_chunk$set(
   warning = FALSE
 )
 
+not_cran = !identical(Sys.getenv("NOT_CRAN"), "")

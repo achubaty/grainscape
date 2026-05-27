@@ -2,7 +2,7 @@
 % Please edit documentation in R/ggGS.R
 \name{ggGS}
 \alias{ggGS}
-\alias{ggGS,RasterLayer-method}
+\alias{ggGS,SpatRaster-method}
 \alias{ggGS,list-method}
 \alias{ggGS,mpg-method}
 \alias{ggGS,grain-method}
@@ -11,7 +11,7 @@
 \usage{
 ggGS(x, type = NULL, ...)
 
-\S4method{ggGS}{RasterLayer}(x, type = NULL, ...)
+\S4method{ggGS}{SpatRaster}(x, type = NULL, ...)
 
 \S4method{ggGS}{list}(x, type = NULL, ...)
 
@@ -22,12 +22,12 @@ ggGS(x, type = NULL, ...)
 \S4method{ggGS}{goc}(x, type = NULL, ...)
 }
 \arguments{
-\item{x}{A \code{mpg}, \code{grain}, or \code{RasterLayer} object.}
+\item{x}{A \code{mpg}, \code{grain}, or \code{SpatRaster} object.}
 
 \item{type}{If a \code{mpg} or \code{grain} object is supplied, this
 gives the name of the slot to prepare for plotting.
 Options are discussed below.
-Not required if a \code{RasterLayer} is supplied.}
+Not required if a \code{SpatRaster} is supplied.}
 
 \item{...}{Additional arguments (not used).}
 }
@@ -66,13 +66,13 @@ Where \code{type = 'links'} the \code{data.frame} will have the following column
 }
 \description{
 This is an informal \code{fortify}-type method that prepares either
-\code{RasterLayer} or \code{igraph} objects contained as slots within
+\code{SpatRaster} or \code{igraph} objects contained as slots within
 \code{MPG} or \code{grain} objects for easy plotting with \code{\link[ggplot2:ggplot]{ggplot2::ggplot()}}.
 }
 \note{
 \strong{Options for \code{type} parameter}
 
-If a \code{RasterLayer} is supplied \code{type} is optional.
+If a \code{SpatRaster} is supplied \code{type} is optional.
 
 For \code{mpg} \code{type} options are \code{"node"} or \code{"links"}.
 This prepares the nodes and links of the minimum planar graph network for
@@ -90,10 +90,12 @@ This is potentially time consuming for large rasters.
 }
 \examples{
 ## Load raster landscape
-tiny <- raster::raster(system.file("extdata/tiny.asc", package = "grainscape"))
+tiny <- terra::rast(
+  system.file("extdata", "tiny.asc", package = "grainscape", mustWork = TRUE)
+)
 
 ## Create a resistance surface from a raster using an is-becomes reclassification
-tinyCost <- raster::reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
+tinyCost <- terra::classify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
 ## Produce a patch-based MPG where patches are resistance features=1
 tinyPatchMPG <- MPG(cost = tinyCost, patch = tinyCost == 1)
 ## Extract a representative subset of 5 grains of connectivity
@@ -104,44 +106,34 @@ if (interactive()) {
   ## Plot the patches in a minimum planar graph
   theme_set(theme_grainscape())
   ggplot() +
-    geom_tile(data = ggGS(tinyPatchMPG, "patchId"),
-              aes(x = x, y = y, fill = value))
+    geom_tile(data = ggGS(tinyPatchMPG, "patchId"), aes(x = x, y = y, fill = value))
 
   ## Plot the grain polygons in a grain of connectivity
   ggplot() +
-    geom_tile(data = ggGS(grain(tinyPatchGOC, 3), "voronoi"),
-              aes(x = x, y = y, fill = value))
+    geom_tile(data = ggGS(grain(tinyPatchGOC, 3), "voronoi"), aes(x = x, y = y, fill = value))
 
   ## Plot the grain polygon boundaries
   ggplot() +
-    geom_tile(data = ggGS(grain(tinyPatchGOC, 3), "vorBound"),
-              aes(x = x, y = y, fill = value))
+    geom_tile(data = ggGS(grain(tinyPatchGOC, 3), "vorBound"), aes(x = x, y = y, fill = value))
 
   ## Plot the patches and perimeter links of a minimum planar graph
   ggplot() +
-    geom_tile(data = ggGS(tinyPatchMPG, "patchId"),
-              aes(x = x, y = y, fill = value)) +
-    geom_segment(data = ggGS(tinyPatchMPG, "links"),
-                 aes(x = x1p, y = y1p, xend = x2p, yend = y2p))
+    geom_tile(data = ggGS(tinyPatchMPG, "patchId"), aes(x = x, y = y, fill = value)) +
+    geom_segment(data = ggGS(tinyPatchMPG, "links"), aes(x = x1p, y = y1p, xend = x2p, yend = y2p))
 
   ## Plot the patches and linear representations of the perimeter links
   ## of a minimum planar graph
   ggplot() +
-    geom_tile(data = ggGS(tinyPatchMPG, "patchId"),
-              aes(x = x, y = y, fill = value)) +
-    geom_segment(data = ggGS(tinyPatchMPG, "links"),
-                 aes(x = x1p, y = y1p, xend = x2p, yend = y2p))
+    geom_tile(data = ggGS(tinyPatchMPG, "patchId"), aes(x = x, y = y, fill = value)) +
+    geom_segment(data = ggGS(tinyPatchMPG, "links"), aes(x = x1p, y = y1p, xend = x2p, yend = y2p))
 
   ## Plot the nodes and links of a grains of connectivity network
   ## superimposed over the grain polygons
   focalGrain <- grain(tinyPatchGOC, 3)
   ggplot() +
-    geom_tile(data = ggGS(focalGrain, "vorBound"),
-              aes(x = x, y = y, fill = value)) +
-    geom_point(data = ggGS(focalGrain, "nodes"),
-               aes(x = x, y = y)) +
-    geom_segment(data = ggGS(focalGrain, "links"),
-                 aes(x = x1, y = y1, xend = x2, yend = y2))
+    geom_tile(data = ggGS(focalGrain, "vorBound"), aes(x = x, y = y, fill = value)) +
+    geom_point(data = ggGS(focalGrain, "nodes"), aes(x = x, y = y)) +
+    geom_segment(data = ggGS(focalGrain, "links"), aes(x = x1, y = y1, xend = x2, yend = y2))
 }
 }
 \seealso{

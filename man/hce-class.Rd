@@ -11,9 +11,9 @@ Used internally.
 
 \describe{
 \item{\code{voronoi}}{The Voronoi tessellation of the patches and resistance
-surface (\code{RasterLayer}).}
+surface (\code{SpatRaster}).}
 
-\item{\code{patchLinks}}{A \code{RasterLayer} whose values indicate patch ids
+\item{\code{patchLinks}}{A \code{SpatRaster} whose values indicate patch ids
 (positive integers) and link ids (negative integers).}
 
 \item{\code{linkData}}{A \code{data.frame} of link attributes.}

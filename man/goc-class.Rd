@@ -10,7 +10,7 @@ The \code{goc} class
 \section{Slots}{
 
 \describe{
-\item{\code{voronoi}}{A \code{RasterLayer} describing the regions of proximity in
+\item{\code{voronoi}}{A \code{SpatRaster} describing the regions of proximity in
 resistance units around the focal patches or points.}
 
 \item{\code{summary}}{A summary of the the grains of connectivity generated and
@@ -19,7 +19,7 @@ their properties.}
 \item{\code{th}}{A list giving the GOC graph at each threshold.
 
 Each element of \code{th} contains a \code{goc} object giving the GOC graph as
-class \code{\link[igraph:aaa-igraph-package]{igraph::igraph()}}.
+class \code{\link[igraph:igraph]{igraph::igraph()}}.
 Vertex attributes describes qualities of each polygon including the coordinates
 of each polygon centroid, the area of these polygons, and the original patch
 IDs in the MPG that are included in each polygon.

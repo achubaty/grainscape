@@ -10,19 +10,19 @@ The \code{corridor} class
 \section{Slots}{
 
 \describe{
-\item{\code{voronoi}}{A \code{RasterLayer} representation of the boundaries
+\item{\code{voronoi}}{A \code{SpatRaster} representation of the boundaries
 of the voronoi polygons.}
 
-\item{\code{linksSP}}{A \code{SpatialLinesDataFrame} representation of links
+\item{\code{linksSP}}{An \code{sf} representation of links
 in the grains of connectivity graph.}
 
-\item{\code{nodesSP}}{A \code{SpatialPoints} representation of the nodes in
+\item{\code{nodesSP}}{An \code{sf} representation of the nodes in
 the grains of connectivity graph}
 
-\item{\code{shortestLinksSP}}{A \code{SpatialLines} representation of the links in
+\item{\code{shortestLinksSP}}{An \code{sf} representation of the links in
 the shortest path between coordinates}
 
-\item{\code{shortestNodesSP}}{A \code{SpatialPoints} representation of the nodes in
+\item{\code{shortestNodesSP}}{An \code{sf} representation of the nodes in
 the shortest path between coordinates}
 
 \item{\code{corridorLength}}{A \code{numeric} of length 1 giving the length of the

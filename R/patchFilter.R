@@ -27,7 +27,7 @@
 #'                      and y resolution of a raster cell). Default `NULL`.
 #'                      Only one of `cells` or `area` may be specified.
 #'
-#' @param ...           Additional arguments passed to [raster::clump()].
+#' @param ...           Additional arguments passed to [terra::patches()].
 #'                      For example, `directions = 4` may be used to be more
 #'                      conservative about which cells constitute a patch.
 #'
@@ -36,7 +36,6 @@
 #'
 #' @author Paul Galpern and Alex Chubaty
 #' @export
-#' @importFrom raster clump freq res
 #' @include classes.R
 #' @rdname patchFilter
 #' @seealso [MPG()]
@@ -55,28 +54,37 @@ setGeneric(
 #' @rdname patchFilter
 setMethod(
   "patchFilter",
-  signature = "RasterLayer",
+  signature = "SpatRaster",
   definition = function(x, cells, area, ...) {
     if (!xor(is.null(cells), is.null(area))) {
       stop("either the cells or area parameter must be specified, not both.")
     }
 
-    if (any(!(unique(x[]) %in% c(NA, 0, 1)))) {
+    xvals <- terra::values(x)[, 1]
+    if (any(!(unique(xvals) %in% c(NA, 0, 1)))) {
       stop("x must be a binary raster containing 0, 1 or NA values")
     }
 
     cellThresh <- if (!is.null(area)) {
-      ceiling(area / (res(x)[1] * res(x)[2]))
+      ceiling(area / (terra::res(x)[1] * terra::res(x)[2]))
     } else {
       cells
     }
 
-    patch <- clump(x, ...)
-    fp <- freq(patch)
-    rmpatch <- fp[fp[, 2] < cellThresh, 1]
+    ## terra::patches() treats 0 cells as patches; mask non-patch cells to NA first
+    xMasked <- x
+    xMasked[xMasked == 0] <- NA
+    patch <- terra::patches(xMasked, ...)
+    fp <- terra::freq(patch, usenames = FALSE)
+    rmpatch <- fp[fp[, "count"] < cellThresh, "value"]
 
     out <- patch
-    out[patch[] %in% rmpatch] <- NA
+    if (length(rmpatch) > 0) {
+      ## use terra::subst() rather than `out[out %in% rmpatch] <- NA`: the `%in%` form relies on
+      ## S4 dispatch for a SpatRaster that errors ("'match' requires vector arguments") on
+      ## R < 4.6 with recent terra (#76)
+      out <- terra::subst(out, rmpatch, NA)
+    }
     out <- !is.na(out)
 
     return(out)

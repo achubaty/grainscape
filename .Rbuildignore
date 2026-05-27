@@ -3,7 +3,7 @@
 ^\.lintr$
 ^\.Rproj\.user$
 ^_pkgdown\.yml$
-^CONTRIBUTING\.md$
+^air\.toml$
 ^CRAN-RELEASE$
 ^cran-comments\.md$
 ^cran-submission\.md$
@@ -15,3 +15,6 @@
 ^vignettes/\.pdf$
 ^codecov\.yml$
 ^pkgdown$
+^\.claude$
+^CLAUDE\.md$
+^CODE_OF_CONDUCT\.md$

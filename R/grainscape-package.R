@@ -24,8 +24,8 @@
 #'
 #' MPG calculations and generalization of the Voronoi tessellation used in GOC models
 #' is based on the routines in SELES software (Fall and Fall, 2001).
-#' Routines also depend on the \pkg{sp} (Pebesma and Bivand, 2005),
-#' \pkg{raster} (Hijmans and van Etten, 2011), and \pkg{igraph} (Csardi and Nepusz, 2006) packages.
+#' Routines depend on the \pkg{terra} (Hijmans, 2023), \pkg{sf} (Pebesma, 2018),
+#' and \pkg{igraph} (Csardi and Nepusz, 2006) packages.
 #'
 #' A paper describing the use of this package for landscape connectivity modelling is
 #' available at \doi{10.1111/2041-210X.13350}.
@@ -34,6 +34,23 @@
 #'
 #' @import igraph
 #' @import methods
+#' @importFrom ggplot2 %+replace%
+#' @importFrom ggplot2 aes
+#' @importFrom ggplot2 coord_equal
+#' @importFrom ggplot2 element_blank
+#' @importFrom ggplot2 geom_point
+#' @importFrom ggplot2 geom_raster
+#' @importFrom ggplot2 geom_segment
+#' @importFrom ggplot2 ggplot
+#' @importFrom ggplot2 scale_colour_identity
+#' @importFrom ggplot2 scale_fill_identity
+#' @importFrom ggplot2 scale_fill_manual
+#' @importFrom ggplot2 scale_linewidth_identity
+#' @importFrom ggplot2 scale_size_identity
+#' @importFrom ggplot2 theme
+#' @importFrom ggplot2 theme_bw
+#' @importFrom ggplot2 unit
+#' @importFrom graphics plot
 #' @importFrom Rcpp evalCpp
 #' @useDynLib grainscape, .registration = TRUE
 #'
@@ -61,11 +78,11 @@
 #' Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis
 #' at multiple spatial scales in landscape genetics. Molecular Ecology 21:3996-4009.
 #'
-#' Hijmans, R.J. (2023). raster: Geographic Data Analysis and Modeling.
-#' R package version 3.6-20, <https://CRAN.R-project.org/package=raster>.
+#' Hijmans, R.J. (2023). terra: Spatial Data Analysis.
+#' R package, <https://CRAN.R-project.org/package=terra>.
 #'
-#' Pebesma, E.J. and R.S. Bivand. (2005). Classes and methods for spatial data in R.
-#' R News 5 (2), <https://cran.r-project.org/doc/Rnews/>.
+#' Pebesma, E.J. (2018). Simple features for R: Standardized support for spatial vector data.
+#' The R Journal 10:1, 439-446, \doi{10.32614/RJ-2018-009}.
 #'
 #' @name grainscape-package
 #' @keywords connectivity
@@ -76,30 +93,54 @@
 
 #' Test maps included with `grainscape`
 #'
-#' Intended for users to explore the functionality of the package using simple
-#' and artificial land cover maps.
-#' These maps have four or five discrete land cover classes (integers from 1 to 5)
-#' intended to represent distinct land cover types.
-#' Typical analyses begin by reclassifying these to reflect resistance to movement.
+#' Simple, artificial land cover maps intended for users to explore the
+#' functionality of the package.
+#' Each map has discrete integer land cover classes representing distinct land
+#' cover types.
+#' Typical analyses begin by reclassifying these to reflect resistance to
+#' movement (see the examples below and the package vignette).
+#'
+#' The maps are distributed as *ESRI ArcASCII* (`.asc`) grids in the package's
+#' `extdata` directory and are read with [terra::rast()]. They use an arbitrary
+#' unprojected coordinate system (no CRS) with a unit cell size.
 #'
 #' @details
 #'
 #' \describe{
-#'   \item{`patchy.asc`}{A caricatured map of four land cover classes, where
-#'   patches are large and easy to identify polygonal regions for heuristic purposes.
-#'   This unrealistic map can be used to illustrate the method and understand how it works.
+#'   \item{`patchy.asc`}{A caricatured map of five land cover classes (integer
+#'   values 1-5), where patches are large, easy to identify polygonal regions
+#'   for heuristic purposes.
+#'   This unrealistic map can be used to illustrate the method and understand
+#'   how it works.
 #'   The map also serves a similar heuristic purpose in a review of graph-based
 #'   connectivity methods (Galpern *et al.*, 2011). (400 x 400 raster cells.)}
 #'
-#'   \item{`fragmented.asc`}{A simulated land cover map with five land cover
-#'   classes using an algorithm that produces fragmentation. (400 x 400 raster cells.)}
+#'   \item{`fragmented.asc`}{A simulated land cover map with four land cover
+#'   classes (integer values 1-4), produced using an algorithm that generates
+#'   fragmentation. (400 x 400 raster cells.)}
 #'
-#'   \item{`tiny.asc`}{Similar to `fragmented.asc` but smaller in extent
-#'   for lightning-fast computation and experimental use. (100 x 100 raster cells.)}
+#'   \item{`tiny.asc`}{Similar to `fragmented.asc` (four land cover classes,
+#'   integer values 1-4) but smaller in extent for lightning-fast computation
+#'   and experimental use. (100 x 100 raster cells.)}
 #' }
 #'
 #' @docType data
-#' @format raster
+#' @format Three *ESRI ArcASCII* (`.asc`) raster grids stored in `extdata` and
+#'   read with [terra::rast()]: `patchy.asc` and `fragmented.asc` are 400 x 400
+#'   cells, `tiny.asc` is 100 x 100 cells. Cell values are integer land cover
+#'   classes (1-5 for `patchy.asc`, 1-4 for `fragmented.asc` and `tiny.asc`),
+#'   with no associated coordinate reference system.
+#' @source Simulated, artificial land cover maps created for demonstrating
+#'   `grainscape`. `patchy.asc` also illustrates graph-based connectivity
+#'   methods in Galpern *et al.* (2011) (see references in the package
+#'   documentation, [grainscape-package]).
+#' @examples
+#' ## load a bundled map and reclassify it into a resistance surface
+#' patchy <- terra::rast(
+#'   system.file("extdata", "patchy.asc", package = "grainscape", mustWork = TRUE)
+#' )
+#' patchyCost <- terra::classify(patchy, rcl = cbind(1:5, c(1, 10, 8, 3, 6)))
+#' terra::plot(patchyCost)
 #' @keywords maps
 #' @name grainscape-maps
 #' @rdname grainscape-maps

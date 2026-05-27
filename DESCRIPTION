@@ -10,8 +10,7 @@ Description: Given a landscape resistance surface, creates minimum planar graph
 URL:
     https://www.alexchubaty.com/grainscape/,
     https://github.com/achubaty/grainscape
-Version: 0.5.0.9000
-Date: 2025-01-14
+Version: 1.0.0
 Authors@R: c(
     person("Paul", "Galpern", email = "pgalpern@gmail.com", role = c("aut", "cph"),
            comment = c(ORCID = "0000-0003-0099-3981")),
@@ -28,26 +27,28 @@ Imports:
     grDevices,
     igraph,
     methods,
-    raster,
     Rcpp (>= 0.12.11.4),
     sf,
-    sp,
     stats,
+    terra,
     utils
-LinkingTo: Rcpp
 Suggests:
     covr,
     cowplot,
     DiagrammeR,
+    DiagrammeRsvg,
     dplyr,
     ggthemes,
     knitr,
     parallel,
     rmarkdown,
+    rsvg,
     spelling,
+    svglite,
     testthat,
-    webshot2,
+    vdiffr,
     withr
+LinkingTo: Rcpp
 VignetteBuilder: knitr, rmarkdown
 BugReports: https://github.com/achubaty/grainscape/issues
 ByteCompile: yes
@@ -68,11 +69,15 @@ Collate:
     'habitatConnectivityEngine.R'
     'patchFilter.R'
     'plot.R'
+    'plotResistance.R'
     'point.R'
     'theme_grainscape.R'
     'threshold.R'
     'zzz.R'
 Encoding: UTF-8
 Language: en-CA
-RoxygenNote: 7.3.2
 Roxygen: list(markdown = TRUE)
+Config/Needs/website: pkgdown
+Config/roxygen2/version: 8.0.0
+Config/testthat/edition: 3
+Config/testthat/parallel: true
