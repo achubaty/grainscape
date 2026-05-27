@@ -13,7 +13,9 @@ plotTestData <- function() {
 
   suppressWarnings({
     ## --- patchy landscape (deterministic; bundled extdata) ---
-    patchy <- terra::rast(system.file("extdata/patchy.asc", package = "grainscape"))
+    patchy <- terra::rast(
+      system.file("extdata", "patchy.asc", package = "grainscape", mustWork = TRUE)
+    )
     patchyCost <- terra::classify(patchy, rcl = cbind(c(1, 2, 3, 4, 5), c(1, 10, 8, 3, 6)))
     patchyMPG <- MPG(patchyCost, patch = (patchyCost == 1))
     patchyGOC <- GOC(patchyMPG, nThresh = 10)
@@ -36,7 +38,9 @@ plotTestData <- function() {
     mpgRes <- MPG(res2, patchPts)
 
     ## --- fragmented landscape (deterministic; bundled extdata) ---
-    frag <- terra::rast(system.file("extdata/fragmented.asc", package = "grainscape"))
+    frag <- terra::rast(
+      system.file("extdata", "fragmented.asc", package = "grainscape", mustWork = TRUE)
+    )
     fragRes <- terra::classify(frag, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
     fragMPG <- MPG(fragRes, patch = (frag == 1))
 

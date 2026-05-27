@@ -31,7 +31,9 @@ Requires the \pkg{cowplot} package.
 \examples{
 \donttest{
 if (requireNamespace("cowplot", quietly = TRUE)) {
-  tiny <- terra::rast(system.file("extdata/tiny.asc", package = "grainscape"))
+  tiny <- terra::rast(
+    system.file("extdata", "tiny.asc", package = "grainscape", mustWork = TRUE)
+  )
   tinyCost <- terra::classify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
   tinyMPG <- MPG(tinyCost, patch = tinyCost == 1)
   plotWithResistance(tinyCost, plot(tinyMPG, quick = "mpgPlot", theme = FALSE))

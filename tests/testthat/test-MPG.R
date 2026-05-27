@@ -36,7 +36,9 @@ test_that("MPG handles NA values correctly (#28)", {
   expect_false(any(ids_l %in% NAs))
 
   ## more sophisticated case
-  tinyNA <- terra::rast(system.file("extdata/tiny.asc", package = "grainscape"))
+  tinyNA <- terra::rast(
+    system.file("extdata", "tiny.asc", package = "grainscape", mustWork = TRUE)
+  )
   tinyNA[1:95, 46:55] <- NA_integer_
 
   tinyNACost <- terra::classify(tinyNA, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
@@ -54,7 +56,7 @@ test_that("MPG handles NA values correctly (#28)", {
   expect_false(any(ids_l %in% tinyNAs))
 
   ## even more complex map with NA regions
-  naError <- terra::rast(system.file("extdata/naErrorExample.asc", package = "grainscape"))
+  naError <- terra::rast(test_path("fixtures", "naErrorExample.asc"))
   naErrorCost <- terra::classify(naError, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
   naErrorMPG <- MPG(cost = naErrorCost, patch = (naErrorCost == 1))
 
@@ -75,7 +77,9 @@ test_that("MPG contains links to all patches (#32)", {
   withr::local_package("igraph")
 
   ## simple map with no NA regions
-  tiny <- terra::rast(system.file("extdata/tiny.asc", package = "grainscape"))
+  tiny <- terra::rast(
+    system.file("extdata", "tiny.asc", package = "grainscape", mustWork = TRUE)
+  )
   tinyCost <- terra::classify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
   tinyMPG <- MPG(cost = tinyCost, patch = (tinyCost == 1))
 
@@ -83,7 +87,9 @@ test_that("MPG contains links to all patches (#32)", {
   expect_equal(count_components(g), 1)
 
   ## simple map with NA regions
-  tinyNA <- terra::rast(system.file("extdata/tiny.asc", package = "grainscape"))
+  tinyNA <- terra::rast(
+    system.file("extdata", "tiny.asc", package = "grainscape", mustWork = TRUE)
+  )
   tinyNA[1:95, 46:55] <- NA_integer_
   tinyNACost <- terra::classify(tinyNA, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
   tinyNAMPG <- MPG(cost = tinyNACost, patch = (tinyNACost == 1))
@@ -92,7 +98,9 @@ test_that("MPG contains links to all patches (#32)", {
   expect_equal(count_components(g), 1)
 
   ## simple map with non-connected subgraphs expected
-  tinyNA <- terra::rast(system.file("extdata/tiny.asc", package = "grainscape"))
+  tinyNA <- terra::rast(
+    system.file("extdata", "tiny.asc", package = "grainscape", mustWork = TRUE)
+  )
   tinyNA[1:100, 49:50] <- NA_integer_
   tinyNACost <- terra::classify(tinyNA, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
   tinyNAMPG <- MPG(cost = tinyNACost, patch = (tinyNACost == 1))
@@ -101,7 +109,7 @@ test_that("MPG contains links to all patches (#32)", {
   expect_equal(count_components(g), 2)
 
   ## more complex map with NA regions
-  naError <- terra::rast(system.file("extdata/naErrorExample.asc", package = "grainscape"))
+  naError <- terra::rast(test_path("fixtures", "naErrorExample.asc"))
   naErrorMPG <- MPG(cost = naError, patch = (naError == 1))
 
   g <- naErrorMPG$mpg
@@ -112,14 +120,12 @@ test_that("least-cost paths are correctly calculated (#72)", {
   debug_cpp <- FALSE
   # debug_cpp <- TRUE
 
-  patchMap <- terra::rast(system.file("extdata/issue72_patchID.tif", package = "grainscape"))
+  patchMap <- terra::rast(test_path("fixtures", "issue72_patchID.tif"))
   patchIDs <- which(!is.na(terra::values(patchMap)[, 1]))
   patchMap[] <- 0L
   patchMap[patchIDs] <- 1L
 
-  resistanceMap <- terra::rast(
-    system.file("extdata/issue72_resistance.tif", package = "grainscape")
-  )
+  resistanceMap <- terra::rast(test_path("fixtures", "issue72_resistance.tif"))
 
   combinedMap <- resistanceMap
   combinedMap[patchIDs] <- 1L ## patchVal = 1
@@ -262,7 +268,9 @@ test_that("MPG link weights equal independent least-cost paths", {
   skip_if_not_installed("igraph")
   withr::local_package("igraph")
 
-  tiny <- terra::rast(system.file("extdata/tiny.asc", package = "grainscape"))
+  tiny <- terra::rast(
+    system.file("extdata", "tiny.asc", package = "grainscape", mustWork = TRUE)
+  )
   tinyCost <- terra::classify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
   mpg <- MPG(cost = tinyCost, patch = (tinyCost == 1))
   edges <- graphdf(mpg)[[1]]$e

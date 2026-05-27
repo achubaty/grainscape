@@ -26,7 +26,9 @@ landscapes or when pairing a resistance surface with a network plot (see
 \code{\link[=plotWithResistance]{plotWithResistance()}}).
 }
 \examples{
-tiny <- terra::rast(system.file("extdata/tiny.asc", package = "grainscape"))
+tiny <- terra::rast(
+  system.file("extdata", "tiny.asc", package = "grainscape", mustWork = TRUE)
+)
 tinyCost <- terra::classify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
 plotResistance(tinyCost)
 

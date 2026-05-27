@@ -6,7 +6,9 @@ test_that("plotResistance returns a buildable ggplot", {
   )
   skip_if_not_installed("ggplot2")
 
-  tiny <- terra::rast(system.file("extdata/tiny.asc", package = "grainscape"))
+  tiny <- terra::rast(
+    system.file("extdata", "tiny.asc", package = "grainscape", mustWork = TRUE)
+  )
   tinyCost <- terra::classify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
 
   p <- plotResistance(tinyCost)
@@ -22,7 +24,9 @@ test_that("plotWithResistance pairs a resistance panel with a network plot", {
   skip_if_not_installed("ggplot2")
   skip_if_not_installed("cowplot")
 
-  tiny <- terra::rast(system.file("extdata/tiny.asc", package = "grainscape"))
+  tiny <- terra::rast(
+    system.file("extdata", "tiny.asc", package = "grainscape", mustWork = TRUE)
+  )
   tinyCost <- terra::classify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
   tinyMPG <- MPG(tinyCost, patch = (tinyCost == 1))
 

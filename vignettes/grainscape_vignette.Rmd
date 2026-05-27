@@ -157,7 +157,7 @@ Note that any raster format readable using the `terra` package can be used here.
 The `.asc` format rasters distributed with the package are *ESRI ArcASCII* format.
 
 ```{r, results="hide"}
-patchy <- rast(system.file("extdata/patchy.asc", package = "grainscape"))
+patchy <- rast(system.file("extdata", "patchy.asc", package = "grainscape", mustWork = TRUE))
 ```
 
 Then, for convenience, we use R to turn this raster into a resistance surface.
@@ -332,7 +332,7 @@ Any of the variations imaginable for the MPG modelling can provide a valid basis
 
 ```{r model_02_step_01}
 ## Load the patchy raster distributed with grainscape
-patchy <- rast(system.file("extdata/patchy.asc", package = "grainscape"))
+patchy <- rast(system.file("extdata", "patchy.asc", package = "grainscape", mustWork = TRUE))
 
 ## Create an is-becomes matrix for reclassification
 isBecomes <- cbind(c(1, 2, 3, 4, 5), c(1, 10, 8, 3, 6))
@@ -534,7 +534,7 @@ The following example uses a more realistic resistance surface based on a simula
 
 ```{r figure_11, fig.cap="A minimum planar graph (MPG) of a simulated resistance surface. Focal patches are grey regions and green lines indicate spatially-explicit links among patches. Several patches are labelled with their numerical `patchId`."}
 ## Load a land cover raster distributed with grainscape
-frag <- rast(system.file("extdata/fragmented.asc", package = "grainscape"))
+frag <- rast(system.file("extdata", "fragmented.asc", package = "grainscape", mustWork = TRUE))
 
 ## Convert land cover to resistance units
 ## Use an "is-becomes" reclassification

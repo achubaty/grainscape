@@ -1,5 +1,7 @@
 test_that("patchFilter() errors when neither cells nor area is given", {
-  tiny <- terra::rast(system.file("extdata/tiny.asc", package = "grainscape"))
+  tiny <- terra::rast(
+    system.file("extdata", "tiny.asc", package = "grainscape", mustWork = TRUE)
+  )
   tinyCost <- terra::classify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
   patch <- tinyCost == 10
 
@@ -7,7 +9,9 @@ test_that("patchFilter() errors when neither cells nor area is given", {
 })
 
 test_that("patchFilter() errors when both cells and area are given", {
-  tiny <- terra::rast(system.file("extdata/tiny.asc", package = "grainscape"))
+  tiny <- terra::rast(
+    system.file("extdata", "tiny.asc", package = "grainscape", mustWork = TRUE)
+  )
   tinyCost <- terra::classify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
   patch <- tinyCost == 10
 
@@ -15,14 +19,18 @@ test_that("patchFilter() errors when both cells and area are given", {
 })
 
 test_that("patchFilter() errors on non-binary raster", {
-  tiny <- terra::rast(system.file("extdata/tiny.asc", package = "grainscape"))
+  tiny <- terra::rast(
+    system.file("extdata", "tiny.asc", package = "grainscape", mustWork = TRUE)
+  )
   tinyCost <- terra::classify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
 
   expect_error(patchFilter(tinyCost, cells = 2))
 })
 
 test_that("patchFilter() with cells removes small patches", {
-  tiny <- terra::rast(system.file("extdata/tiny.asc", package = "grainscape"))
+  tiny <- terra::rast(
+    system.file("extdata", "tiny.asc", package = "grainscape", mustWork = TRUE)
+  )
   tinyCost <- terra::classify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
   patch <- tinyCost == 10
 
@@ -40,7 +48,9 @@ test_that("patchFilter() with cells removes small patches", {
 })
 
 test_that("patchFilter() with area removes patches below area threshold", {
-  tiny <- terra::rast(system.file("extdata/tiny.asc", package = "grainscape"))
+  tiny <- terra::rast(
+    system.file("extdata", "tiny.asc", package = "grainscape", mustWork = TRUE)
+  )
   tinyCost <- terra::classify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
   patch <- tinyCost == 10
 
@@ -55,7 +65,9 @@ test_that("patchFilter() with area removes patches below area threshold", {
 })
 
 test_that("patchFilter() with directions=4 is more conservative than default (8)", {
-  tiny <- terra::rast(system.file("extdata/tiny.asc", package = "grainscape"))
+  tiny <- terra::rast(
+    system.file("extdata", "tiny.asc", package = "grainscape", mustWork = TRUE)
+  )
   tinyCost <- terra::classify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
   patch <- tinyCost == 10
 
@@ -70,7 +82,9 @@ test_that("patchFilter() with directions=4 is more conservative than default (8)
 })
 
 test_that("patchFilter() output is a binary raster", {
-  tiny <- terra::rast(system.file("extdata/tiny.asc", package = "grainscape"))
+  tiny <- terra::rast(
+    system.file("extdata", "tiny.asc", package = "grainscape", mustWork = TRUE)
+  )
   tinyCost <- terra::classify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
   patch <- tinyCost == 10
 
