@@ -22,9 +22,6 @@ utils::globalVariables(c("x", "y", "value"))
 #' @author Alex M Chubaty
 #' @seealso [plotWithResistance()], [ggGS()]
 #' @export
-#' @importFrom ggplot2 ggplot aes geom_raster scale_fill_manual coord_equal theme
-#' @importFrom grDevices colorRampPalette
-#' @importFrom stats setNames
 #' @examples
 #' tiny <- terra::rast(system.file("extdata/tiny.asc", package = "grainscape"))
 #' tinyCost <- terra::classify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
@@ -35,8 +32,8 @@ plotResistance <- function(x, maxResistance = 12L) {
   vals <- round(df$value)
   n <- max(as.integer(maxResistance), max(vals, na.rm = TRUE))
   df$value <- factor(vals, levels = seq_len(n))
-  pal <- setNames(
-    colorRampPalette(c("#1a9850", "#ffffbf", "#d73027"))(n),
+  pal <- stats::setNames(
+    grDevices::colorRampPalette(c("#1a9850", "#ffffbf", "#d73027"))(n),
     as.character(seq_len(n))
   )
   ggplot(df, aes(x = x, y = y, fill = value)) +

@@ -186,7 +186,7 @@ tinyPatchMPG <- MPG(cost = tinyCost, patch = tinyCost == 1)
 ## Extract a representative subset of 5 grains of connectivity
 tinyPatchGOC <- GOC(tinyPatchMPG, nThresh = 5)
 ## Export rasters and vectors and place in an R object
-sp_tinyPatchGOC <- export(grain(tinyPatchGOC, 2), R = TRUE)  # nolint
+sp_tinyPatchGOC <- export(grain(tinyPatchGOC, 2), R = TRUE) # nolint
 sp_tinyPatchMPG <- export(tinyPatchMPG, R = TRUE) # nolint
 
 ## Export raster and vectors to a specified directory

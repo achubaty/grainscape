@@ -38,13 +38,9 @@
 #'
 #' @author Paul Galpern and Alex Chubaty
 #' @export
-#' @importFrom graphics plot
-#' @importFrom sf st_as_sf st_coordinates st_linestring st_multilinestring
-#' @importFrom sf st_sf st_sfc
-#' @importFrom terra boundaries
 #' @include classes.R grain.R
 #' @rdname corridor
-#' @seealso [GOC()], [visualize()]
+#' @seealso [GOC()], [grain()]
 #'
 #' @example inst/examples/example_preamble.R
 #' @example inst/examples/example_preamble_MPG.R
@@ -139,8 +135,8 @@ setMethod(
 
     pths <- shortest_paths(
       graph = x@th[[whichThresh]]$goc,
-      from = which(V(x@th[[whichThresh]]$goc)$polygonId == na.omit(startEndPolygons[1])),
-      to = which(V(x@th[[whichThresh]]$goc)$polygonId == na.omit(startEndPolygons[2])),
+      from = which(V(x@th[[whichThresh]]$goc)$polygonId == stats::na.omit(startEndPolygons[1])),
+      to = which(V(x@th[[whichThresh]]$goc)$polygonId == stats::na.omit(startEndPolygons[2])),
       weights = V(x@th[[whichThresh]]$goc)$meanWeight
     )
 
@@ -168,9 +164,9 @@ setMethod(
 
     pathDist <- distances(
       x@th[[whichThresh]]$goc,
-      v = V(x@th[[whichThresh]]$goc)[na.omit(startEndPath[1])],
+      v = V(x@th[[whichThresh]]$goc)[stats::na.omit(startEndPath[1])],
       weights = edge_attr(x@th[[whichThresh]]$goc, weight)
-    )[na.omit(startEndPath[length(startEndPath)])]
+    )[stats::na.omit(startEndPath[length(startEndPath)])]
 
     voronoiBound <- terra::boundaries(grain(x, whichThresh = whichThresh)@voronoi, classes = TRUE)
 

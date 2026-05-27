@@ -69,8 +69,6 @@
 #'
 #' @author Paul Galpern and Alex Chubaty
 #' @export
-#' @importFrom terra as.data.frame boundaries values
-#' @importFrom utils type.convert
 #' @include classes.R
 #' @rdname ggGS
 #' @seealso [MPG()], [GOC()]

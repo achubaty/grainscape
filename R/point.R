@@ -54,8 +54,6 @@
 #'
 #' @author Paul Galpern and Alex Chubaty
 #' @export
-#' @importFrom sf st_coordinates
-#' @importFrom terra cellFromXY values
 #' @include classes.R
 #' @rdname point
 #' @seealso [GOC()], [distance()]
@@ -129,7 +127,7 @@ setMethod(
         ## Faster method which references the cells from the stored voronoi raster
         ## and uses the graph vertex record to determine the polygonId
         grainPoints[, iThresh] <- as.numeric(sapply(voroVals[cellPoints], function(z) {
-          patchIdLookup[patchIdLookup[, 2] == na.omit(z), 1]
+          patchIdLookup[patchIdLookup[, 2] == stats::na.omit(z), 1]
         }))
 
         ## a coord whose polygon is absent from this threshold's graph yields NA
@@ -138,11 +136,11 @@ setMethod(
         }
 
         totalPatchAreaPoints[, iThresh] <- as.numeric(sapply(grainPoints[, iThresh], function(z) {
-          patchAreaLookup[patchAreaLookup[, 1] == na.omit(z), 2]
+          patchAreaLookup[patchAreaLookup[, 1] == stats::na.omit(z), 2]
         }))
 
         totalCoreAreaPoints[, iThresh] <- as.numeric(sapply(grainPoints[, iThresh], function(z) {
-          patchAreaLookup[patchAreaLookup[, 1] == na.omit(z), 4]
+          patchAreaLookup[patchAreaLookup[, 1] == stats::na.omit(z), 4]
         }))
       }
     }

@@ -11,7 +11,6 @@ utils::globalVariables(".")
 #' @return An object of class [hce-class].
 #'
 #' @author Alex Chubaty
-#' @importFrom terra ncol nrow values
 #' @include classes.R
 #' @keywords internal
 #' @rdname habConnEngine

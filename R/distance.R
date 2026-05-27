@@ -51,7 +51,6 @@ setGeneric("distance", function(x, y, ...) {
 })
 
 #' @export
-#' @importFrom sf st_coordinates
 #' @rdname distance
 setMethod(
   "distance",
@@ -89,7 +88,10 @@ setMethod(
         vertices <- sapply(whichGrain[, iThresh], function(z) {
           if (is.na(z)) NA_integer_ else which(V(threshGraph)$polygonId == z)
         })
-        results$th[[iThresh]]$grainD <- distances(threshGraph, v = na.omit(vertices))[, na.omit(
+        results$th[[iThresh]]$grainD <- distances(
+          threshGraph,
+          v = stats::na.omit(vertices)
+        )[, stats::na.omit(
           vertices
         )]
       } else {

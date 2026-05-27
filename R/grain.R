@@ -45,9 +45,6 @@
 #'
 #' @author Paul Galpern and Alex Chubaty
 #' @export
-#' @importFrom graphics plot
-#' @importFrom sf st_as_sf st_sfc st_point
-#' @importFrom terra classify
 #' @include classes.R
 #' @rdname grain
 #' @seealso [GOC()]

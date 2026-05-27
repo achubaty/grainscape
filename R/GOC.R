@@ -66,8 +66,6 @@
 #'
 #' @author Paul Galpern
 #' @export
-#' @importFrom terra classify freq ncell values xyFromCell zonal
-#' @importFrom stats median
 #' @include classes.R
 #' @rdname GOC
 #' @seealso [MPG()], [grain()],
@@ -241,7 +239,7 @@ setMethod(
           }))
           medianWeight <- as.vector(sapply(unique(lCLid), function(z) {
             ids <- linkComponentLookup$compLinkId == z
-            median(linkComponentLookup[ids, "linkWeight"])
+            stats::median(linkComponentLookup[ids, "linkWeight"])
           }))
           meanWeight <- as.vector(sapply(unique(lCLid), function(z) {
             ids <- linkComponentLookup$compLinkId == z
@@ -393,7 +391,7 @@ setMethod(
       if (is_igraph(z$goc)) mean(V(z$goc)$polygonArea) else NA
     }))
     summary.df$medianPolygonArea <- unlist(lapply(th, function(z) {
-      if (is_igraph(z$goc)) median(V(z$goc)$polygonArea) else NA
+      if (is_igraph(z$goc)) stats::median(V(z$goc)$polygonArea) else NA
     }))
 
     ## Find ECS (Expected cluster size; O'Brien et al, 2006) using totalPatchArea

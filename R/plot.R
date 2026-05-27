@@ -15,7 +15,6 @@ utils::globalVariables(c(
 #' `.gFinal`
 #'
 #' @author Paul Galpern
-#' @importFrom ggplot2 coord_equal theme
 #' @keywords internal
 #' @name .gFinal
 #' @rdname gFinal
@@ -98,12 +97,6 @@ utils::globalVariables(c(
 #'
 #' @author Alex Chubaty and Paul Galpern
 #' @export
-#' @importFrom ggplot2 ggplot aes geom_point geom_raster geom_segment
-#' @importFrom ggplot2 scale_colour_identity scale_fill_identity scale_fill_manual
-#' @importFrom ggplot2 scale_linewidth_identity scale_size_identity theme
-#' @importFrom grDevices rainbow
-#' @importFrom sf st_coordinates
-#' @importFrom terra ncol nrow xmax xmin ymax ymin
 #' @include classes.R
 #' @rdname plot
 #' @seealso [ggGS()],
@@ -197,7 +190,10 @@ setMethod(
       nVor <- max(vor$value, na.rm = TRUE)
       cols <- data.frame(
         n = 1:nVor,
-        col = rainbow(nVor, s = colPar(nVor), v = colPar(nVor))[sample(nVor, replace = TRUE)],
+        col = grDevices::rainbow(nVor, s = colPar(nVor), v = colPar(nVor))[sample(
+          nVor,
+          replace = TRUE
+        )],
         stringsAsFactors = FALSE
       )
       vor <- cbind(vor, cols = cols[match(vor$value, cols$n), "col"])

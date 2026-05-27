@@ -32,7 +32,9 @@ Given a series of GOC models built at different scales, visualize the corridor
 }
 \examples{
 ## Load raster landscape
-tiny <- terra::rast(system.file("extdata/tiny.asc", package = "grainscape"))
+tiny <- terra::rast(
+  system.file("extdata", "tiny.asc", package = "grainscape", mustWork = TRUE)
+)
 
 ## Create a resistance surface from a raster using an is-becomes reclassification
 tinyCost <- terra::classify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
@@ -43,8 +45,9 @@ tinyPatchGOC <- GOC(tinyPatchMPG, nThresh = 5)
 ## Quick visualization of a corridor
 corridorStartEnd <- rbind(c(10, 10), c(90, 90))
 tinyPatchCorridor <- corridor(tinyPatchGOC, whichThresh = 3, coords = corridorStartEnd)
-if (interactive())
+if (interactive()) {
   plot(tinyPatchCorridor)
+}
 
 ## More control over a corridor visualization
 if (interactive()) {
@@ -53,9 +56,14 @@ if (interactive()) {
   plot(tinyPatchCorridor@nodesSP, col = "darkred", pch = 21, bg = "white", add = TRUE)
   plot(tinyPatchCorridor@shortestLinksSP, col = "darkred", lty = "solid", lwd = 2, add = TRUE)
   plot(tinyPatchCorridor@shortestNodesSP, col = "darkred", pch = 21, bg = "darkred", add = TRUE)
-  mtext(paste("Corridor shortest path length:",
-              round(tinyPatchCorridor@corridorLength, 2),
-              "resistance units"), side = 1)
+  mtext(
+    paste(
+      "Corridor shortest path length:",
+      round(tinyPatchCorridor@corridorLength, 2),
+      "resistance units"
+    ),
+    side = 1
+  )
 }
 }
 \references{
@@ -76,7 +84,7 @@ Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity: analysis
 at multiple spatial scales in landscape genetics. Molecular Ecology 21:3996-4009.
 }
 \seealso{
-\code{\link[=GOC]{GOC()}}, \code{\link[=visualize]{visualize()}}
+\code{\link[=GOC]{GOC()}}, \code{\link[=grain]{grain()}}
 }
 \author{
 Paul Galpern and Alex Chubaty

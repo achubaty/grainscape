@@ -75,12 +75,6 @@ setGeneric("MPG", function(cost, patch, ...) {
 })
 
 #' @export
-#' @importFrom igraph graph_from_data_frame
-#' @importFrom terra boundaries cellFromRowCol classify compareGeom crs
-#' @importFrom terra freq mask ncol nrow res values xyFromCell xFromCol yFromRow
-#' @importFrom terra zonal
-#' @importFrom stats na.omit
-#' @importFrom utils read.table
 #' @rdname MPG
 setMethod(
   "MPG",
@@ -149,7 +143,7 @@ setMethod(
 
     ## Get additional patch information
     uniquePatches <- terra::values(voronoi)[, 1]
-    uniquePatches <- sort(unique(na.omit(uniquePatches[uniquePatches > 0])))
+    uniquePatches <- sort(unique(stats::na.omit(uniquePatches[uniquePatches > 0])))
 
     ## Patch edge
     patchEdge <- patchId
@@ -215,7 +209,6 @@ setMethod(
 )
 
 #' @export
-#' @importFrom terra cellFromRowCol ncol nrow
 #' @rdname MPG
 setMethod(
   "MPG",

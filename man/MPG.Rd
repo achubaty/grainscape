@@ -75,14 +75,16 @@ graphdf(tinyPatchMPG)
 mean(igraph::V(tinyPatchMPG@mpg)$patchArea)
 
 ## Quick visualization of the MPG
-if (interactive())
+if (interactive()) {
   plot(tinyPatchMPG, col = c("grey", "black"), legend = FALSE)
+}
 
 ## Additional graph extraction scenarios
 ## Produce a lattice MPG where focal points are spaced 10 cells apart
 tinyLatticeMPG <- MPG(cost = tinyCost, patch = 10)
-if (interactive())
+if (interactive()) {
   plot(tinyLatticeMPG)
+}
 }
 \references{
 Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien. (2007) Spatial graphs:

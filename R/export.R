@@ -70,7 +70,6 @@
 }
 
 #' @author Paul Galpern
-#' @importFrom terra writeRaster
 #' @keywords internal
 .wRas <- function(ras, fname, dirpath, rasterFormat, overwrite) {
   extensions <- data.frame(
@@ -84,7 +83,6 @@
 }
 
 #' @author Paul Galpern
-#' @importFrom sf st_write
 #' @keywords internal
 .wShp <- function(sp, fname, dirpath, overwrite) {
   ## accept both sf objects and legacy sp objects
@@ -226,8 +224,6 @@
 #'
 #' @author Paul Galpern and Alex Chubaty
 #' @export
-#' @importFrom sf st_as_sf st_crs st_linestring st_sf st_sfc st_write
-#' @importFrom terra boundaries crs writeRaster
 #' @include classes.R
 #' @rdname export
 #' @seealso [MPG()], [GOC()], [grain()]

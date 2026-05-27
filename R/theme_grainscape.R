@@ -11,7 +11,6 @@
 #'
 #' @author Paul Galpern and Alex Chubaty
 #' @export
-#' @importFrom ggplot2 %+replace% element_blank theme theme_bw unit
 #' @rdname theme_grainscape
 #' @seealso [ggGS()], [plot()], [ggthemes::theme_map()]
 #'

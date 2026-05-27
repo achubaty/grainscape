@@ -36,7 +36,6 @@
 #'
 #' @author Paul Galpern and Alex Chubaty
 #' @export
-#' @importFrom terra freq patches res values
 #' @include classes.R
 #' @rdname patchFilter
 #' @seealso [MPG()]
