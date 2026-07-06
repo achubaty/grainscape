@@ -7,18 +7,14 @@
     ```
 
     **Extended (vdiffr) tests:** the visual-regression plot tests in
-    `tests/testthat/test-plot.R` are gated with `skip_on_cran()`, so
-    `devtools::check()` / `R CMD check` **skip them** (these tests are heavy and
-    their SVG snapshots are renderer-version-sensitive). To exercise them you must
-    either run `devtools::test()` separately, or set `NOT_CRAN=true` for the check:
+    `tests/testthat/test-plot.R` are gated with `skip_on_cran()` **and**
+    `skip_on_ci()`, so both CRAN and CI (`R CMD check` on GitHub Actions) **skip
+    them**. Their SVG snapshots are renderer-sensitive (svglite/freetype/ggplot2
+    versions) and only match a controlled local environment, so they run only
+    locally, as a maintainer regression tool:
 
     ```r
-    devtools::test() ## runs the vdiffr plot tests (sets NOT_CRAN=true)
-
-    ## ...or include them in a check by forcing the env var:
-    withr::with_envvar(c(NOT_CRAN = "true"),
-      devtools::check(args = "--as-cran", build_args = "--compact-vignettes=both")
-    )
+    devtools::test() ## runs the vdiffr plot tests locally (requires CI != "true")
     ```
 
     Review any flagged plot diffs with `testthat::snapshot_review("plot/")` (or

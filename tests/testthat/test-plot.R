@@ -6,11 +6,14 @@
 ## (see R/plot.R) and figure 10 uses a random resistance surface, so those are seeded
 ## for reproducibility. Deterministic landscapes come from bundled `extdata`.
 ##
-## vdiffr auto-skips on CRAN and when the svglite/ggplot2 versions differ from the
-## recorded baseline, so these act as a local/maintainer regression tool.
+## These act as a local/maintainer regression tool: they skip on CRAN
+## (`skip_on_cran()`) and on CI (`skip_on_ci()`), since the recorded SVG baselines
+## are renderer-sensitive (svglite/freetype/ggplot2 versions) and only match a
+## controlled local environment. Run them locally with `devtools::test()`.
 
 test_that("patchy MPG / GOC figures", {
   skip_on_cran()
+  skip_on_ci()
   skip_if_not_installed("vdiffr")
   withr::local_package("ggplot2")
   d <- plotTestData()
@@ -67,6 +70,7 @@ test_that("patchy MPG / GOC figures", {
 
 test_that("scalar analysis line plot (figure 05)", {
   skip_on_cran()
+  skip_on_ci()
   skip_if_not_installed("vdiffr")
   withr::local_package("ggplot2")
   d <- plotTestData()
@@ -85,6 +89,7 @@ test_that("scalar analysis line plot (figure 05)", {
 
 test_that("1D nodes on resistance surface (figure 10)", {
   skip_on_cran()
+  skip_on_ci()
   skip_if_not_installed("vdiffr")
   withr::local_package("ggplot2")
   d <- plotTestData()
@@ -100,6 +105,7 @@ test_that("1D nodes on resistance surface (figure 10)", {
 
 test_that("frag MPG link figures", {
   skip_on_cran()
+  skip_on_ci()
   skip_if_not_installed("vdiffr")
   withr::local_package("ggplot2")
   withr::local_package("igraph")
@@ -210,6 +216,7 @@ test_that("frag MPG link figures", {
 
 test_that("frag MPG thresholded-network figures", {
   skip_on_cran()
+  skip_on_ci()
   skip_if_not_installed("vdiffr")
   withr::local_package("ggplot2")
   withr::local_package("igraph")
@@ -279,6 +286,7 @@ test_that("frag MPG thresholded-network figures", {
 
 test_that("frag MPG shortest path (figure 20)", {
   skip_on_cran()
+  skip_on_ci()
   skip_if_not_installed("vdiffr")
   withr::local_package("ggplot2")
   withr::local_package("igraph")
@@ -322,6 +330,7 @@ test_that("frag MPG shortest path (figure 20)", {
 
 test_that("GOC grain and corridor figures", {
   skip_on_cran()
+  skip_on_ci()
   skip_if_not_installed("vdiffr")
   withr::local_package("ggplot2")
   d <- plotTestData()
