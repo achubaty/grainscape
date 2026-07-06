@@ -1,0 +1,20 @@
+test_that("defunct gs* functions error via .Defunct()", {
+  expect_error(gsMPG(), class = "defunctError")
+  expect_error(gsGOC(), class = "defunctError")
+  expect_error(gsGOCCorridor(), class = "defunctError")
+  expect_error(gsGOCDistance(), class = "defunctError")
+  expect_error(gsGOCPoint(), class = "defunctError")
+  expect_error(gsGOCVisualize(), class = "defunctError")
+  expect_error(gsGraphDataFrame(), class = "defunctError")
+  expect_error(gsMPGstitch(), class = "defunctError")
+})
+
+test_that("defunct functions point to their replacement", {
+  expect_error(gsMPG(), "MPG")
+  expect_error(gsGOC(), "GOC")
+  expect_error(gsGOCCorridor(), "corridor")
+  expect_error(gsGOCDistance(), "distance")
+  expect_error(gsGOCPoint(), "point")
+  expect_error(gsGOCVisualize(), "grain")
+  expect_error(gsGraphDataFrame(), "graphdf")
+})

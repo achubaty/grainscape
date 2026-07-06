@@ -16,6 +16,9 @@
   pass a two-column matrix or `sf` object instead;
 * Slot types in `mpg`, `goc`, `grain`, and `corridor` S4 classes have changed from
   `RasterLayer`/`SpatialPoints`/`SpatialLines`/`SpatialLinesDataFrame` to `SpatRaster`/`sf`;
+* The long-deprecated `gs`-prefixed functions (`gsMPG()`, `gsGOC()`, `gsGOCCorridor()`,
+  `gsGOCDistance()`, `gsGOCPoint()`, `gsGOCVisualize()`, `gsGraphDataFrame()`, `gsMPGstitch()`)
+  are now defunct and error with a pointer to their replacement (deprecated since 0.4.0; #10);
 
 ## New features
 

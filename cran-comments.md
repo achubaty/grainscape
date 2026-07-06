@@ -1,43 +1,26 @@
-## New submission
-This release fixes CRAN check problems and issues arising from changes in dependency packages.
-See `NEWS.md` for a complete list of changes.
+## Submission notes
+
+grainscape 1.0.0 is a major release. It migrates the package's spatial stack from
+the retiring `raster`/`sp` packages to `terra`/`sf`, fixes several long-standing
+bugs in the minimum planar graph (MPG) engine (#72), and makes the long-deprecated
+`gs`-prefixed functions defunct. These changes include breaking changes to
+function inputs and to the S4 slot types of returned objects; see `NEWS.md` for the
+full list. There are no reverse dependencies to break, and downstream users were
+given advance notice of the breaking changes via a GitHub announcement (#77).
 
 ## Test environments
 
-### Previous R versions
-* Ubuntu 24.04                 (GitHub), R 4.2.3, 4.3.3
-* Windows                      (GitHub), R 4.2.3, 4.3.3
-* Windows                       (local), R 4.2.3, 4.3.3
-* Windows                 (win-builder), R 4.3.3
-
-### Current R versions
-* macOS 13.3.1            (mac-builder), R 4.4.2
-* macOS 14.7.2                 (GitHub), R 4.4.2
-* macOS 15.1.1                  (local), R 4.4.2
-* Ubuntu 24.04                 (GitHub), R 4.4.2
-* Ubuntu 24.04                  (local), R 4.4.2
-* Windows                      (GitHub), R 4.4.2
-* Windows                       (local), R 4.4.2
-* Windows                 (win-builder), R 4.4.2
-
-### Development R version
-* Ubuntu 24.04                 (GitHub), R-devel (2025-01-13 r87564)
-* Ubuntu 24.04                  (local), R-devel (2025-01-13 r87564)
-* Windows                      (GitHub), R-devel (2025-01-13 r87564 ucrt)
-* Windows                 (win-builder), R-devel (2025-01-13 r87564 ucrt)
+* local: Ubuntu 26.04, R 4.6.1 -- 0 errors | 0 warnings | 0 notes
+* GitHub Actions: Ubuntu, macOS, and Windows (R oldrel, release, devel)
+* win-builder: R oldrelease, release, and devel
+* mac-builder: R release
 
 ## R CMD check results
 
-There are no WARNINGS nor ERRORs.
+There were no ERRORs or WARNINGs.
 
-There was 1 NOTE, which appears to be spurious, as the URL works in a web browser.
+Local `R CMD check --as-cran` reported 0 NOTEs.
 
-    Found the following (possibly) invalid URLs:
-      URL: https://support.posit.co/hc/en-us/articles/200486498-Package-Development-Prerequisites
-        From: README.md
-        Status: 403
-        Message: Forbidden
-
-## Downstream dependencies
+## Reverse dependencies
 
 There are currently no reverse dependencies for this package.

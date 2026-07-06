@@ -64,7 +64,7 @@ Collate:
     'export.R'
     'extract.R'
     'ggGS.R'
-    'grainscape-deprecated.R'
+    'grainscape-defunct.R'
     'graphdf.R'
     'habitatConnectivityEngine.R'
     'patchFilter.R'
