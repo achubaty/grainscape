@@ -54,7 +54,7 @@ To make a contribution to the package, just send a [pull request](https://help.g
 When you send your PR, make sure `development` is the destination branch on the [grainscape repository](https://github.com/achubaty/grainscape).
 Your PR should pass `R CMD check --as-cran`, which will also be checked by [GitHub Actions](https://github.com/achubaty/grainscape/actions) when the PR is submitted.
 
-See [`CONTRIBUTING.md`](.github/CONTRIBUTING.md) for more details.
+See [`CONTRIBUTING.md`](https://github.com/achubaty/grainscape/blob/main/.github/CONTRIBUTING.md) for more details.
 
 ### Code of Conduct
 

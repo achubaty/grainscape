@@ -11,15 +11,27 @@ given advance notice of the breaking changes via a GitHub announcement (#77).
 ## Test environments
 
 * local: Ubuntu 26.04, R 4.6.1 -- 0 errors | 0 warnings | 0 notes
-* GitHub Actions: Ubuntu, macOS, and Windows (R oldrel, release, devel)
-* win-builder: R oldrelease, release, and devel
-* mac-builder: R release
+* GitHub Actions:
+  - Ubuntu 24.04: R-devel, R 4.6.1 (release), R 4.5.3, R 4.4.3, R 4.3.3, and
+    R 4.2.3 (the minimum R version declared in DESCRIPTION)
+  - Windows: R-devel, R 4.6.1 (release), R 4.5.3, R 4.4.3
+  - macOS: R 4.6.1 (release)
+* win-builder: R-devel, R 4.6.1 (release), R 4.5.3 (oldrelease)
+* mac-builder: R 4.6.1 (release)
 
 ## R CMD check results
 
-There were no ERRORs or WARNINGs.
+There were no ERRORs or WARNINGs. The submission tarball is built with
+`--compact-vignettes=both`, so the vignette PDFs are compacted.
 
-Local `R CMD check --as-cran` reported 0 NOTEs.
+There is 1 NOTE, from the URL check of README.md:
+
+    Found the following (possibly) invalid URLs:
+      URL: https://support.posit.co/hc/en-us/articles/200486498-Package-Development-Prerequisites
+        Status: 403
+
+This URL is valid and opens in a web browser; Posit's support site returns a 403
+to automated (non-browser) requests only.
 
 ## Reverse dependencies
 
