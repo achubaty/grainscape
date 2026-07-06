@@ -178,7 +178,7 @@ setMethod(
           as.data.frame(stringsAsFactors = FALSE)
         linkComponentLookup <- linkComponentLookup[
           linkComponentLookup[, 5] != linkComponentLookup[, 6],
-        ] # nolint
+        ]
         colnames(linkComponentLookup) <- c(
           "linkId",
           "linkWeight",
@@ -204,10 +204,10 @@ setMethod(
             if (!done[i]) {
               c1 <- linkComponentLookup[i, "compNode1"]
               c2 <- linkComponentLookup[i, "compNode2"]
-              sameLink <- (linkComponentLookup[, "compNode1"] == c1) & # nolint
+              sameLink <- (linkComponentLookup[, "compNode1"] == c1) &
                 (linkComponentLookup[, "compNode2"] == c2) |
-                ((linkComponentLookup[, "compNode1"] == c2) & # nolint
-                  (linkComponentLookup[, "compNode2"] == c1)) # nolint
+                ((linkComponentLookup[, "compNode1"] == c2) &
+                  (linkComponentLookup[, "compNode2"] == c1))
               linkComponentLookup[sameLink, "compLinkId"] <- paste(c1, c2, sep = "_")
               done[sameLink] <- TRUE
             }
@@ -365,7 +365,7 @@ setMethod(
             out <- sqrt(
               (centroids[x2, 1] - centroids[x1, 1])^2 +
                 (centroids[x2, 2] - centroids[x1, 2])^2
-            ) # nolint
+            )
             return(out)
           })
           E(componentGraph)$eucCentroidWeight <- eucCentroidWeight
@@ -396,7 +396,6 @@ setMethod(
 
     ## Find ECS (Expected cluster size; O'Brien et al, 2006) using totalPatchArea
     summary.df$ECS <- unlist(lapply(th, function(z) {
-      # nolint
       if (is_igraph(z$goc)) {
         sum(V(z$goc)$totalPatchArea^2) / sum(V(z$goc)$totalPatchArea)
       } else {
@@ -405,7 +404,6 @@ setMethod(
     }))
     ## Find ECSCore (Expected cluster size; O'Brien et al, 2006) using totalCoreArea
     summary.df$ECSCore <- unlist(lapply(th, function(z) {
-      # nolint
       if (is_igraph(z$goc)) {
         sum(V(z$goc)$totalCoreArea^2) / sum(V(z$goc)$totalCoreArea)
       } else {

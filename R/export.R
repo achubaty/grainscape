@@ -245,7 +245,6 @@ setGeneric(
     vorBound = FALSE,
     ...
   ) {
-    # nolint
     standardGeneric("export")
   }
 )
@@ -265,7 +264,6 @@ setMethod(
     vorBound = FALSE,
     ...
   ) {
-    # nolint
     if (!R) {
       dirpath <- .createDir("mpg", dirname, path, overwrite)
     }
@@ -384,7 +382,6 @@ setMethod(
     vorBound = FALSE,
     ...
   ) {
-    # nolint
     if (!R) {
       dirpath <- .createDir("grain", dirname, path, overwrite)
     }
@@ -484,7 +481,6 @@ setMethod(
     vorBound = FALSE,
     ...
   ) {
-    # nolint
     message("Use grain() to extract a single grain of connectivity to export.")
     return(invisible())
   }

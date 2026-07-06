@@ -60,10 +60,10 @@ tinyPatchMPG <- MPG(cost = tinyCost, patch = tinyCost == 1)
 ## Extract a representative subset of 5 grains of connectivity
 tinyPatchGOC <- GOC(tinyPatchMPG, nThresh = 5)
 ## Create a data.frame with the structure and attributes of a MPG object
-tinyPatchMPG_df <- graphdf(tinyPatchMPG) # nolint
+tinyPatchMPG_df <- graphdf(tinyPatchMPG)
 
 ## Create a data.frame with the structure and attributes of a GOC object
-tinyPatchGOC_df <- graphdf(tinyPatchGOC) # nolint
+tinyPatchGOC_df <- graphdf(tinyPatchGOC)
 
 ## Create a data.frame with the structure and attributes of any igraph object
 graphdf(tinyPatchGOC@th[[1]]$goc)

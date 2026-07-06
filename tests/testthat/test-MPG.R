@@ -25,14 +25,14 @@ test_that("MPG handles NA values correctly (#28)", {
 
   mpg <- MPG(cost = c, patch = p)
 
-  NAs <- which(is.na(terra::values(p)[, 1])) # nolint
+  NAs <- which(is.na(terra::values(p)[, 1]))
 
   ## no voronoi spread in the NA region
-  ids_v <- which(terra::values(mpg@voronoi)[, 1] > 0) # nolint
+  ids_v <- which(terra::values(mpg@voronoi)[, 1] > 0)
   expect_false(any(ids_v %in% NAs))
 
   ## no links in the NA region
-  ids_l <- which(terra::values(mpg@lcpLinkId)[, 1] < 0) # nolint
+  ids_l <- which(terra::values(mpg@lcpLinkId)[, 1] < 0)
   expect_false(any(ids_l %in% NAs))
 
   ## more sophisticated case
@@ -48,11 +48,11 @@ test_that("MPG handles NA values correctly (#28)", {
   tinyNAs <- which(is.na(terra::values(tinyNA)[, 1]))
 
   ## no voronoi spread in the NA region
-  ids_v <- which(terra::values(tinyPatchMPG@voronoi)[, 1] > 0) # nolint
+  ids_v <- which(terra::values(tinyPatchMPG@voronoi)[, 1] > 0)
   expect_false(any(ids_v %in% tinyNAs))
 
   ## no links in the NA region
-  ids_l <- which(terra::values(tinyPatchMPG@lcpLinkId)[, 1] < 0) # nolint
+  ids_l <- which(terra::values(tinyPatchMPG@lcpLinkId)[, 1] < 0)
   expect_false(any(ids_l %in% tinyNAs))
 
   ## even more complex map with NA regions
@@ -63,11 +63,11 @@ test_that("MPG handles NA values correctly (#28)", {
   naErrorNAs <- which(is.na(terra::values(naError)[, 1]))
 
   ## no voronoi spread in the NA region
-  ids_v <- which(terra::values(naErrorMPG@voronoi)[, 1] > 0) # nolint
+  ids_v <- which(terra::values(naErrorMPG@voronoi)[, 1] > 0)
   expect_false(any(ids_v %in% naErrorNAs))
 
   ## no links in the NA region
-  ids_l <- which(terra::values(naErrorMPG@lcpLinkId)[, 1] < 0) # nolint
+  ids_l <- which(terra::values(naErrorMPG@lcpLinkId)[, 1] < 0)
   expect_false(any(ids_l %in% naErrorNAs))
 })
 

@@ -1,6 +1,5 @@
 ^.*\.Rproj$
 ^\.github$
-^\.lintr$
 ^\.Rproj\.user$
 ^_pkgdown\.yml$
 ^air\.toml$

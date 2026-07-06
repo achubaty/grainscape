@@ -72,7 +72,6 @@ setMethod(
     ## Check whichThresh
     thresholds <- x@summary$id
     if ((length(whichThresh) > 1) || (!(whichThresh %in% 1:length(thresholds)))) {
-      # nolint
       stop("whichThresh must index a single threshold existing in the GOC object")
     }
 

@@ -64,7 +64,6 @@ setMethod(
 
     ## Check whichThresh
     if ((length(whichThresh) > 1) || (!(whichThresh %in% 1:length(x@th)))) {
-      # nolint
       stop("whichThresh must index a single threshold existing in the GOC object")
     }
 

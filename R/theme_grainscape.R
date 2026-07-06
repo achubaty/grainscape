@@ -18,7 +18,6 @@
 #' @example inst/examples/example_preamble_MPG.R
 #' @example inst/examples/example_theme.R
 theme_grainscape <- function(base_size = 9, base_family = "") {
-  # nolint
   theme_bw(base_size = base_size, base_family = base_family) %+replace%
     theme(
       axis.line = element_blank(),

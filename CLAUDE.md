@@ -24,9 +24,6 @@ devtools::test()
 # Run a single test file
 testthat::test_file("tests/testthat/test-MPG.R")
 
-# Lint the package
-lintr::lint_package()
-
 # Generate documentation from roxygen2
 devtools::document()
 ```
@@ -96,7 +93,7 @@ Slots in `mpg`, `goc`, `grain`, and `corridor` S4 classes store `SpatRaster` and
 - `src/Engine.cpp`, `src/rcpp_HabConnEngine.cpp`: C++ computation core
 - `R/ggGS.R`, `R/plot.R`: Visualization (ggplot2 and base R)
 - `R/export.R`: Export to shapefiles/rasters
-- `R/grainscape-deprecated.R`: Deprecated functions (kept for backwards compatibility)
+- `R/grainscape-defunct.R`: Defunct functions (removed; error with a pointer to their replacement)
 
 ### Rcpp Integration
 
@@ -106,8 +103,8 @@ The C++ engine is accessed via `R/RcppExports.R` (auto-generated — do not edit
 
 - Formatting via [air](https://posit-dev.github.io/air/) (`air format .`, configured in `air.toml`)
 - 2-space indentation, UTF-8 encoding, LF line endings
-- Line length limit: 100 characters (enforced by `air.toml` and `.lintr`)
-- Object names: **camelCase** (enforced by lintr's `object_name_linter`)
+- Line length limit: 100 characters (enforced by `air.toml`)
+- Object names: **camelCase** (by convention)
 - Documentation via roxygen2 with markdown enabled (`Config/roxygen2/version: 8.0.0`)
 - Tests use `withr::local_options(warnPartialMatchArgs = TRUE, warnPartialMatchAttr = TRUE, warnPartialMatchDollar = TRUE)`
 - Comments use `##` for prose comments; single `#` is reserved for commented-out code

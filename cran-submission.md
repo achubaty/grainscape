@@ -29,15 +29,11 @@
 
     * <https://github.com/achubaty/grainscape/actions>
 
-3. format and lint the package
+3. format the package
 
     ```sh
     # https://posit-dev.github.io/air/
     air format .
-    ```
-
-    ```r
-    lintr::lint_package()
     ```
 
 4. ensure passing on additional platforms

@@ -1,6 +1,6 @@
 ## Export rasters and vectors and place in an R object
-sp_tinyPatchGOC <- export(grain(tinyPatchGOC, 2), R = TRUE) # nolint
-sp_tinyPatchMPG <- export(tinyPatchMPG, R = TRUE) # nolint
+sp_tinyPatchGOC <- export(grain(tinyPatchGOC, 2), R = TRUE)
+sp_tinyPatchMPG <- export(tinyPatchMPG, R = TRUE)
 
 ## Export raster and vectors to a specified directory
 exportPath <- tempdir()
