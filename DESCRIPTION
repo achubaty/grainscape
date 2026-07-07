@@ -71,6 +71,7 @@ Collate:
     'plot.R'
     'plotResistance.R'
     'point.R'
+    'release-bullets.R'
     'theme_grainscape.R'
     'threshold.R'
     'zzz.R'
