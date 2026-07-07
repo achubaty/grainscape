@@ -1,0 +1,115 @@
+# Visualize corridors between two points using a grains of connectivity (GOC)
+
+Given a series of GOC models built at different scales, visualize the
+corridor (or shortest path) between two points using one of the
+tessellations (i.e., scales) in these models.
+
+## Usage
+
+``` r
+corridor(x, ...)
+
+# S4 method for class 'goc'
+corridor(x, whichThresh, coords, weight = "meanWeight", ...)
+```
+
+## Arguments
+
+- x:
+
+  A [goc](https://www.alexchubaty.com/grainscape/reference/goc-class.md)
+  object created by
+  [`GOC()`](https://www.alexchubaty.com/grainscape/reference/GOC.md).
+
+- ...:
+
+  Additional arguments (not used).
+
+- whichThresh:
+
+  Integer giving the index of the threshold to visualize.
+
+- coords:
+
+  A two-column matrix or an `sf` (POINT) object giving coordinates at
+  the end points of the corridor.
+
+- weight:
+
+  The GOC graph link weight to use in calculating the distance. Please
+  see details in
+  [`distance()`](https://www.alexchubaty.com/grainscape/reference/distance.md).
+
+## Value
+
+An object of class
+[corridor](https://www.alexchubaty.com/grainscape/reference/corridor-class.md).
+
+## References
+
+Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien. (2007) Spatial graphs:
+Principles and applications for habitat connectivity. Ecosystems
+10:448:461.
+
+Galpern, P., M. Manseau. (2013a) Finding the functional grain: comparing
+methods for scaling resistance surfaces. Landscape Ecology 28:1269-1291.
+
+Galpern, P., M. Manseau. (2013b) Modelling the influence of landscape
+connectivity on animal distribution: a functional grain approach.
+Ecography 36:1004-1016.
+
+Galpern, P., M. Manseau, A. Fall. (2011) Patch-based graphs of landscape
+connectivity: a guide to construction, analysis, and application for
+conservation. Biological Conservation 144:44-55.
+
+Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity:
+analysis at multiple spatial scales in landscape genetics. Molecular
+Ecology 21:3996-4009.
+
+## See also
+
+[`GOC()`](https://www.alexchubaty.com/grainscape/reference/GOC.md),
+[`grain()`](https://www.alexchubaty.com/grainscape/reference/grain.md)
+
+## Author
+
+Paul Galpern and Alex Chubaty
+
+## Examples
+
+``` r
+## Load raster landscape
+tiny <- terra::rast(
+  system.file("extdata", "tiny.asc", package = "grainscape", mustWork = TRUE)
+)
+
+## Create a resistance surface from a raster using an is-becomes reclassification
+tinyCost <- terra::classify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
+## Produce a patch-based MPG where patches are resistance features=1
+tinyPatchMPG <- MPG(cost = tinyCost, patch = tinyCost == 1)
+## Extract a representative subset of 5 grains of connectivity
+tinyPatchGOC <- GOC(tinyPatchMPG, nThresh = 5)
+## Quick visualization of a corridor
+corridorStartEnd <- rbind(c(10, 10), c(90, 90))
+tinyPatchCorridor <- corridor(tinyPatchGOC, whichThresh = 3, coords = corridorStartEnd)
+if (interactive()) {
+  plot(tinyPatchCorridor)
+}
+
+## More control over a corridor visualization
+if (interactive()) {
+  plot(tinyPatchCorridor@voronoi, col = "lightgrey", lwd = 2)
+  plot(tinyPatchCorridor@linksSP, col = "darkred", lty = "dashed", add = TRUE)
+  plot(tinyPatchCorridor@nodesSP, col = "darkred", pch = 21, bg = "white", add = TRUE)
+  plot(tinyPatchCorridor@shortestLinksSP, col = "darkred", lty = "solid", lwd = 2, add = TRUE)
+  plot(tinyPatchCorridor@shortestNodesSP, col = "darkred", pch = 21, bg = "darkred", add = TRUE)
+  mtext(
+    paste(
+      "Corridor shortest path length:",
+      round(tinyPatchCorridor@corridorLength, 2),
+      "resistance units"
+    ),
+    side = 1
+  )
+}
+```

@@ -1,0 +1,118 @@
+# Identify the polygons containing locations in grains of connectivity (GOC) tessellations
+
+Identify the polygon containing a location at multiple scales.
+
+## Usage
+
+``` r
+point(x, ...)
+
+# S4 method for class 'goc'
+point(x, coords, ...)
+```
+
+## Arguments
+
+- x:
+
+  A [goc](https://www.alexchubaty.com/grainscape/reference/goc-class.md)
+  object produced by
+  [`GOC()`](https://www.alexchubaty.com/grainscape/reference/GOC.md).
+
+- ...:
+
+  Additional arguments (not used).
+
+- coords:
+
+  A two-column matrix or an `sf` (POINT) object giving the coordinates
+  of points of interest.
+
+## Value
+
+A list with elements:
+
+- `pointPolygon`:
+
+  a matrix with elements giving the id of the polygon from the `goc`,
+  where rows give points of interest and columns give thresholds;
+
+- `pointTotalPatchArea`:
+
+  is a matrix with elements giving the area of patches in a polygon (in
+  cell counts), where rows give points of and columns give thresholds;
+
+- `pointTotalCoreArea`:
+
+  the same for core area of patches;
+
+- `pointECS`:
+
+  gives the patch area (in cell counts) averaged for all points of
+  interest (defined by O'Brien *et al.*, 2006);
+
+- `pointECSCore`:
+
+  is the same for the core area of patches.
+
+## Note
+
+See [`MPG()`](https://www.alexchubaty.com/grainscape/reference/MPG.md)
+for warning related to areal measurements.
+
+## References
+
+Fall, A., M.-J. Fortin, M. Manseau, D. O'Brien. (2007) Spatial graphs:
+Principles and applications for habitat connectivity. Ecosystems
+10:448:461.
+
+Galpern, P., M. Manseau. (2013a) Finding the functional grain: comparing
+methods for scaling resistance surfaces. Landscape Ecology 28:1269-1291.
+
+Galpern, P., M. Manseau. (2013b) Modelling the influence of landscape
+connectivity on animal distribution: a functional grain approach.
+Ecography 36:1004-1016.
+
+Galpern, P., M. Manseau, A. Fall. (2011) Patch-based graphs of landscape
+connectivity: a guide to construction, analysis, and application for
+conservation. Biological Conservation 144:44-55.
+
+Galpern, P., M. Manseau, P.J. Wilson. (2012) Grains of connectivity:
+analysis at multiple spatial scales in landscape genetics. Molecular
+Ecology 21:3996-4009.
+
+O'Brien, D., M. Manseau, A. Fall, and M.-J. Fortin. (2006) Testing the
+importance of spatial configuration of winter habitat for woodland
+caribou: An application of graph theory. Biological Conservation
+130:70-83.
+
+## See also
+
+[`GOC()`](https://www.alexchubaty.com/grainscape/reference/GOC.md),
+[`distance()`](https://www.alexchubaty.com/grainscape/reference/distance.md)
+
+## Author
+
+Paul Galpern and Alex Chubaty
+
+## Examples
+
+``` r
+## Load raster landscape
+tiny <- terra::rast(
+  system.file("extdata", "tiny.asc", package = "grainscape", mustWork = TRUE)
+)
+
+## Create a resistance surface from a raster using an is-becomes reclassification
+tinyCost <- terra::classify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
+## Produce a patch-based MPG where patches are resistance features=1
+tinyPatchMPG <- MPG(cost = tinyCost, patch = tinyCost == 1)
+## Extract a representative subset of 5 grains of connectivity
+tinyPatchGOC <- GOC(tinyPatchMPG, nThresh = 5)
+## Three sets of coordinates in the study area
+loc <- cbind(c(30, 60, 90), c(30, 60, 90))
+
+## Find the GOC polygon containing these three locations
+## for each of the 5 grains of connectivity
+tinyPts <- point(tinyPatchGOC, loc)
+```
