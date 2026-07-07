@@ -219,28 +219,28 @@ exportPath <- tempdir()
 export(grain(tinyPatchGOC, 2), dirname = "tiny_goc_thresh2", path = exportPath)
 #> writing: substituting ENGCRS["Undefined Cartesian SRS with unknown unit"] for missing CRS
 #> Writing layer `nodes' to data source 
-#>   `/tmp/RtmpjeipDm/tiny_goc_thresh2' using driver `ESRI Shapefile'
+#>   `/tmp/RtmpyCEhzp/tiny_goc_thresh2' using driver `ESRI Shapefile'
 #> Writing 28 features with 5 fields and geometry type Point.
 #> writing: substituting ENGCRS["Undefined Cartesian SRS with unknown unit"] for missing CRS
 #> Writing layer `linksCentroid' to data source 
-#>   `/tmp/RtmpjeipDm/tiny_goc_thresh2' using driver `ESRI Shapefile'
+#>   `/tmp/RtmpyCEhzp/tiny_goc_thresh2' using driver `ESRI Shapefile'
 #> Writing 56 features with 15 fields and geometry type Line String.
-#> Exported to:/tmp/RtmpjeipDm/tiny_goc_thresh2
+#> Exported to:/tmp/RtmpyCEhzp/tiny_goc_thresh2
 export(tinyPatchMPG, dirname = "tiny_mpg", path = exportPath, vorBound = TRUE)
 #> Extracting voronoi boundaries...
 #> writing: substituting ENGCRS["Undefined Cartesian SRS with unknown unit"] for missing CRS
 #> Writing layer `nodes' to data source 
-#>   `/tmp/RtmpjeipDm/tiny_mpg' using driver `ESRI Shapefile'
+#>   `/tmp/RtmpyCEhzp/tiny_mpg' using driver `ESRI Shapefile'
 #> Writing 43 features with 4 fields and geometry type Point.
 #> writing: substituting ENGCRS["Undefined Cartesian SRS with unknown unit"] for missing CRS
 #> Writing layer `linksCentroid' to data source 
-#>   `/tmp/RtmpjeipDm/tiny_mpg' using driver `ESRI Shapefile'
+#>   `/tmp/RtmpyCEhzp/tiny_mpg' using driver `ESRI Shapefile'
 #> Writing 81 features with 12 fields and geometry type Line String.
 #> writing: substituting ENGCRS["Undefined Cartesian SRS with unknown unit"] for missing CRS
 #> Writing layer `linksPerim' to data source 
-#>   `/tmp/RtmpjeipDm/tiny_mpg' using driver `ESRI Shapefile'
+#>   `/tmp/RtmpyCEhzp/tiny_mpg' using driver `ESRI Shapefile'
 #> Writing 81 features with 8 fields and geometry type Line String.
-#> Exported to:/tmp/RtmpjeipDm/tiny_mpg
+#> Exported to:/tmp/RtmpyCEhzp/tiny_mpg
 
 ## clean up
 unlink(file.path(exportPath, "tiny_goc_thresh2"), recursive = TRUE)
