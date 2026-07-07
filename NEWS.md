@@ -1,3 +1,98 @@
+# grainscape 1.0.0
+
+## Dependency changes
+
+* Migrated from `raster`/`sp` to `terra`/`sf` for all spatial operations:
+  - `terra` and `sf` added to `Imports`;
+  - `raster` and `sp` dependencies removed entirely.
+* Vignette diagrams are now generated from code with `DiagrammeRsvg` and `rsvg` (added to
+  `Suggests`); `webshot2` is no longer needed for the vignettes and was removed from `Suggests`.
+
+## Breaking changes
+
+* `MPG()`, `patchFilter()`, and `ggGS()` no longer accept `RasterLayer` inputs;
+  pass `SpatRaster` objects (from `terra`) instead;
+* `corridor()`, `distance()`, and `point()` no longer accept `SpatialPoints` inputs;
+  pass a two-column matrix or `sf` object instead;
+* Slot types in `mpg`, `goc`, `grain`, and `corridor` S4 classes have changed from
+  `RasterLayer`/`SpatialPoints`/`SpatialLines`/`SpatialLinesDataFrame` to `SpatRaster`/`sf`;
+* The long-deprecated `gs`-prefixed functions (`gsMPG()`, `gsGOC()`, `gsGOCCorridor()`,
+  `gsGOCDistance()`, `gsGOCPoint()`, `gsGOCVisualize()`, `gsGraphDataFrame()`, `gsMPGstitch()`)
+  are now defunct and error with a pointer to their replacement (deprecated since 0.4.0; #10);
+
+## New features
+
+* New exported plotting helpers `plotResistance()` and `plotWithResistance()`: draw a
+  resistance surface with a consistent colour scheme (and a discrete-value legend), and
+  place it as an equally-sized reference panel beside a network plot for visual comparison.
+  Both are demonstrated in the vignette's introductory figures (`plotWithResistance()` uses
+  `cowplot`).
+
+## Bugfixes
+
+* Fixed incorrect least-cost paths in MPG (#72);
+* Fixed a regression in the #72 work where legitimate, non-redundant MPG links were dropped on
+  high-variance resistance surfaces: the indirect-path search could treat an unset cell id
+  (the internal `-99` sentinel) as a pivot patch, fabricating a bogus two-hop route that
+  suppressed a valid direct link. Such malformed links are now rejected and non-patch pivots
+  are ignored (#72);
+* Fixed patches being left isolated in the MPG: a patch cell that was never added as an
+  active cell during spreading (e.g. a single-cell patch) kept the internal `-99` id, so it
+  was an unresolved link endpoint and all of its links were silently dropped. Every cell's id
+  is now seeded from the voronoi map at initialization, so such patches are linked correctly
+  (#72);
+* Fixed an infinite loop (hang) in `MPG()`: a resistance surface whose first cell is `NA` left
+  the C++ engine's internal cost range as `NaN`, so every patch cell was assigned a `NaN`
+  resistance and never "settled", spinning forever. The engine now derives the cost range while
+  skipping `NA` cells, and fully initializes its spreading-state struct, hardening it against
+  this class of hang (#72);
+* Fixed a Voronoi tessellation bias on high-variance resistance surfaces: patch (source) cells
+  now begin spreading at the uniform minimum cost rather than the resistance of the cell they
+  happen to overlap. Previously a patch sitting on a high-resistance cell spread late and lost
+  territory to its neighbours, distorting the tessellation (and, in the extreme, leaving a
+  patch with a single-cell region and no links). The fix changes only the tessellation: link
+  weights are accumulated from the entered cells' resistances (independent of the source cell),
+  so on the package's test surfaces the MPG and its weights are unchanged, and still match
+  independent least-cost paths exactly (#72);
+* Fixed `graphdf` returning a transposed (single-column) data frame for MPGs with only one link;
+* `patchFilter()` no longer errors on R < 4.6 (with recent `terra`): it masked small patches via
+  `out[out %in% rmpatch] <- NA`, which relies on `%in%` dispatching for a `SpatRaster` and fails
+  with "'match' requires vector arguments" under older R; it now uses `terra::subst()` (#76);
+* `point()` (and `distance()`, which calls it) now emit the "coords correspond to NA cells" warning once per call instead of once per coordinate-threshold combination (#50);
+* The `corridor` `plot()` method now uses the `linewidth` aesthetic (rather than the deprecated
+  `size` aesthetic) for its link segments, silencing a `ggplot2` (>= 3.4.0) deprecation warning;
+
+## Vignette
+
+* The "Calculating the minimum planar graph" vignette now generates its UML class diagrams, the
+  algorithm flow chart, and the `Engine` call graphs directly from Graphviz/`DiagrammeR`
+  specifications (rendered to vector PDFs with `DiagrammeRsvg` and `rsvg`) rather than embedding
+  static images, so they stay in sync with the C++ engine; its technical reference was also
+  updated for the #72 least-cost-path changes (the `settled_map`, `createLinks()`, and the
+  `parentResistance` field) (#75);
+* Corrected the thresholded-MPG figure (Figure 6), which plotted links *above* the dispersal
+  threshold instead of the retained links *below* it (so the cheap, low-resistance links
+  between neighbouring patches were hidden);
+* Made the Euclidean-vs-resistance path-distance table robust by matching rows on the node
+  pair (rather than column-binding two independently sorted tables), and the "patch 7
+  neighbours" table now filters explicitly for patch 7. The minimum-planar-graph figure above
+  that table now labels exactly node 7 and its linked neighbours, derived from the graph rather
+  than a hard-coded list of patch ids.
+
+# grainscape 0.5.0
+
+## Dependency changes
+
+* none
+
+## Bugfixes
+
+* none
+
+## New features & enhancements
+
+* none
+
 # grainscape 0.5.0
 
 ## Dependency changes
@@ -21,18 +116,18 @@
 
 ## Dependency changes
 
-* Removed retiring spatial packages `rgdal` and `rgeos` (#68)
-* Use `sf` for writing shapefiles.
+* Removed retiring spatial packages `rgdal` and `rgeos` (#68);
+* Use `sf` for writing shapefiles;
 
 ## Bugfixes
 
-* Improved plotting of lattice MPGs (#51)
-* Removed unused `eucPerimWeight` from documentation (#56)
-* Improved error messaging for undefined thresholds in `GOC()` (#57)
+* Improved plotting of lattice MPGs (#51);
+* Removed unused `eucPerimWeight` from documentation (#56);
+* Improved error messaging for undefined thresholds in `GOC()` (#57);
 
 ## New features & enhancements
 
-* None
+* none
 
 # grainscape 0.4.3
 

@@ -10,13 +10,13 @@ The \code{grain} class
 \section{Slots}{
 
 \describe{
-\item{\code{voronoi}}{A \code{RasterLayer} describing the regions of proximity in
+\item{\code{voronoi}}{A \code{SpatRaster} describing the regions of proximity in
 resistance units around the focal patches or points.}
 
 \item{\code{summary}}{A summary of the the grains of connectivity generated and
 their properties.}
 
-\item{\code{centroids}}{A \code{SpatialPoints} object indicating the grain's polygon
+\item{\code{centroids}}{An \code{sf} object indicating the grain's polygon
 centroids.}
 
 \item{\code{th}}{A list of \code{igraph} objects giving the graphs describing the relationship

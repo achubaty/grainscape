@@ -43,11 +43,18 @@ struct LinkCell
 typedef std::vector<LinkCell> lcCol;
 typedef std::vector<lcCol> LinkMap;
 
+// boolMap is used for per-cell boolean flags (e.g., settled_map)
+typedef std::vector<bool> boolCol;
+typedef std::vector<boolCol> boolMap;
+
 // ActiveCell is used in the spreading algorithm
 struct ActiveCell
    :Cell  // inherits from Cell structure
 {
-   float time, distance, resistance, parentResistance;
+   // default-initialise to 0 so a cell can never enter the spreading algorithm with
+   // garbage (e.g. NaN) values; a NaN resistance/time makes `time >= resistance` always
+   // false, so the cell never settles and Engine::start() loops forever (#72)
+   float time = 0.0f, distance = 0.0f, resistance = 0.0f, parentResistance = 0.0f;
    Cell originCell;
 };
 
@@ -70,13 +77,14 @@ struct ActiveCellHolder {
    float value;
    std::vector<ActiveCell> list;
 
-   // adds the ActiveCell c in ascending order by Euclidean distance
+   // adds the ActiveCell c in ascending order by resistance (effective distance)
    void add(ActiveCell c) {
       if (list.size() <= 0) {
          list.push_back(c);
       } else {
          for (int i = list.size() - 1; i >= 0; i--) {
-            if (list[i].distance <= c.distance) {
+            // 2025-01: changed to use resistance instead of distance (#72)
+            if (list[i].resistance <= c.resistance) {
                list.insert(list.begin() + i + 1, c);
                break;
             }
@@ -94,7 +102,7 @@ struct ActiveCellHolder {
 struct ActiveCellQueue {
    std::vector<ActiveCellHolder> holder_list;
 
-   // inserts the ActiveCellHolder h in ascending order by value (Euclidean distance)
+   // inserts the ActiveCellHolder h in ascending order by value (resistance)
    void insertH(ActiveCellHolder h) {
       int index = 0;
       bool found = false;

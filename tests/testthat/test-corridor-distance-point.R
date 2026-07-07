@@ -1,8 +1,11 @@
 ## Make a random raster with a border of NA values
-.makeRaster <- function(dim, naBorder = NULL,
-                        FUN = function() floor(stats::rgamma(dim * dim, 2.5)) + 1) { # nolint
-  ras <- raster::raster(xmn = 0, xmx = dim, ymn = 0, ymx = dim, resolution = 1)
-  ras[] <- FUN() # nolint
+.makeRaster <- function(
+  dim,
+  naBorder = NULL,
+  FUN = function() floor(stats::rgamma(dim * dim, 2.5)) + 1
+) {
+  ras <- terra::rast(xmin = 0, xmax = dim, ymin = 0, ymax = dim, resolution = 1)
+  terra::values(ras) <- FUN()
   if (!is.null(naBorder)) {
     ras[1:naBorder, ] <- NA
     ras[, 1:naBorder] <- NA
@@ -54,7 +57,7 @@ test_that("distance() handles NA values (#50)", {
 })
 
 test_that("point handles NA values", {
-  ## based on https://github.com/achubaty/grainscape/issues/50 # nolint
+  ## based on https://github.com/achubaty/grainscape/issues/50
 
   ## Create a random raster with a border of five NA cells
   cost <- .makeRaster(100, 5)
@@ -70,8 +73,11 @@ test_that("point handles NA values", {
 
   ## names of list items returned by `point`
   pntNames <- c(
-    "pointPolygon", "pointTotalPatchArea", "pointTotalCoreArea",
-    "pointECS", "pointECSCore"
+    "pointPolygon",
+    "pointTotalPatchArea",
+    "pointTotalCoreArea",
+    "pointECS",
+    "pointECSCore"
   )
 
   ## no NA coords; only column 5 of the result is NA

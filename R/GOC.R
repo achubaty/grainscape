@@ -66,9 +66,6 @@
 #'
 #' @author Paul Galpern
 #' @export
-#' @importFrom raster freq rasterToPolygons reclassify zonal
-#' @importFrom sp coordinates
-#' @importFrom stats median
 #' @include classes.R
 #' @rdname GOC
 #' @seealso [MPG()], [grain()],
@@ -85,10 +82,17 @@ setGeneric("GOC", function(x, ...) {
 
 #' @export
 #' @rdname GOC
-setMethod("GOC",
+setMethod(
+  "GOC",
   signature = "mpg",
-  definition = function(x, nThresh = NULL, doThresh = NULL,
-                        weight = "lcpPerimWeight", verbose = 0, ...) {
+  definition = function(
+    x,
+    nThresh = NULL,
+    doThresh = NULL,
+    weight = "lcpPerimWeight",
+    verbose = 0,
+    ...
+  ) {
     dots <- list(...)
     if (!is.null(dots$sp)) {
       warning("Argument 'sp' is deprecated and will be ignored.")
@@ -134,7 +138,9 @@ setMethod("GOC",
     if (length(unlinkedPatches) > 0) {
       for (iPatch in unlinkedPatches) {
         warning(
-          "patchId=", iPatch, " has no connecting links in the MPG.",
+          "patchId=",
+          iPatch,
+          " has no connecting links in the MPG.",
           " This may be caused by a patch surrounded in missing values (NA cells).\n"
         )
         baseGraph <- delete_vertices(baseGraph, as.character(iPatch))
@@ -142,11 +148,13 @@ setMethod("GOC",
     }
 
     linkId <- edge_attr(baseGraph, "linkId")
-    cellXY <- coordinates(voronoi)
+    cellXY <- terra::xyFromCell(voronoi, 1:terra::ncell(voronoi))
     th <- vector("list", length(doThresh))
 
     for (iThresh in seq_along(doThresh)) {
-      if (verbose >= 1) message("Threshold ", iThresh, " of ", length(doThresh))
+      if (verbose >= 1) {
+        message("Threshold ", iThresh, " of ", length(doThresh))
+      }
       tGraph <- delete_edges(baseGraph, which(linkWeight > doThresh[iThresh]))
 
       ## Determine the component structure of the threshold graph
@@ -159,17 +167,25 @@ setMethod("GOC",
         ## Determine which edges have endpoints in different components,
         ## and create a lookup data frame
         linkComponentLookup <- cbind(
-          linkId, edge_attr(baseGraph, weight), allLinks,
+          linkId,
+          edge_attr(baseGraph, weight),
+          allLinks,
           t(apply(allLinks, 1, function(z) {
             c(components[z[1]], components[z[2]])
           }))
         ) |>
           apply(2, as.numeric) |>
           as.data.frame(stringsAsFactors = FALSE)
-        linkComponentLookup <- linkComponentLookup[linkComponentLookup[, 5] !=
-          linkComponentLookup[, 6], ] # nolint
+        linkComponentLookup <- linkComponentLookup[
+          linkComponentLookup[, 5] != linkComponentLookup[, 6],
+        ]
         colnames(linkComponentLookup) <- c(
-          "linkId", "linkWeight", "node1", "node2", "compNode1", "compNode2"
+          "linkId",
+          "linkWeight",
+          "node1",
+          "node2",
+          "compNode1",
+          "compNode2"
         )
 
         ## Deal with the case when there are exactly 2 components
@@ -188,10 +204,10 @@ setMethod("GOC",
             if (!done[i]) {
               c1 <- linkComponentLookup[i, "compNode1"]
               c2 <- linkComponentLookup[i, "compNode2"]
-              sameLink <- (linkComponentLookup[, "compNode1"] == c1) & # nolint
+              sameLink <- (linkComponentLookup[, "compNode1"] == c1) &
                 (linkComponentLookup[, "compNode2"] == c2) |
-                ((linkComponentLookup[, "compNode1"] == c2) & # nolint
-                  (linkComponentLookup[, "compNode2"] == c1)) # nolint
+                ((linkComponentLookup[, "compNode1"] == c2) &
+                  (linkComponentLookup[, "compNode2"] == c1))
               linkComponentLookup[sameLink, "compLinkId"] <- paste(c1, c2, sep = "_")
               done[sameLink] <- TRUE
             }
@@ -223,7 +239,7 @@ setMethod("GOC",
           }))
           medianWeight <- as.vector(sapply(unique(lCLid), function(z) {
             ids <- linkComponentLookup$compLinkId == z
-            median(linkComponentLookup[ids, "linkWeight"])
+            stats::median(linkComponentLookup[ids, "linkWeight"])
           }))
           meanWeight <- as.vector(sapply(unique(lCLid), function(z) {
             ids <- linkComponentLookup$compLinkId == z
@@ -245,12 +261,18 @@ setMethod("GOC",
             strsplit("_") |>
             do.call(rbind, args = _)
 
-          ## Produce component graph with all edge attributes, and vertex attributeas.characters
+          ## Produce component graph with all edge attributes, and vertex attributes
           ## containing a comma-delimited string of vertex names
           componentGraph <- data.frame(
-            componentGraphNodes, maxWeight, linkIdMaxWeight,
-            minWeight, linkIdMinWeight, medianWeight,
-            meanWeight, numEdgesWeight, linkIdAll
+            componentGraphNodes,
+            maxWeight,
+            linkIdMaxWeight,
+            minWeight,
+            linkIdMinWeight,
+            medianWeight,
+            meanWeight,
+            numEdgesWeight,
+            linkIdAll
           ) |>
             graph_from_data_frame(directed = FALSE)
 
@@ -277,32 +299,32 @@ setMethod("GOC",
           }
           reclassifyVor <- reclassifyVor[2:nrow(reclassifyVor), ]
 
-          gocRaster <- reclassify(gocRaster, rcl = reclassifyVor)
+          gocRaster <- terra::classify(gocRaster, rcl = reclassifyVor)
 
           ## Find centroids of each polygon and add as vertex attributes
           uniquePolygons <- V(componentGraph)$polygonId
 
           rasX <- gocRaster
           rasY <- rasX
-          rasX[] <- cellXY[, 1]
-          rasY[] <- cellXY[, 2]
+          terra::values(rasX) <- cellXY[, 1]
+          terra::values(rasY) <- cellXY[, 2]
 
           centroids <- cbind(
-            zonal(rasX, gocRaster, fun = "mean"),
-            zonal(rasY, gocRaster, fun = "mean")[, 2]
+            terra::zonal(rasX, gocRaster, fun = "mean"),
+            terra::zonal(rasY, gocRaster, fun = "mean")[, 2]
           )
           centroids <- centroids[centroids[, 1] %in% as.integer(uniquePolygons), ]
           row.names(centroids) <- centroids[, 1]
           centroids <- centroids[uniquePolygons, 2:3]
 
-
           V(componentGraph)$centroidX <- centroids[, 1]
           V(componentGraph)$centroidY <- centroids[, 2]
 
           ## Find areas of each polygon and add as a vertex attribute
-          polygonArea <- freq(gocRaster)
-          row.names(polygonArea) <- polygonArea[, 1]
-          polygonArea <- polygonArea[uniquePolygons, 2]
+          polygonFreq <- terra::freq(gocRaster, usenames = FALSE)
+          polygonArea <- polygonFreq[, "count"]
+          names(polygonArea) <- as.character(polygonFreq[, "value"])
+          polygonArea <- polygonArea[uniquePolygons]
 
           V(componentGraph)$polygonArea <- polygonArea
 
@@ -340,8 +362,10 @@ setMethod("GOC",
             x1 <- which(uniquePolygons == z[1])
             x2 <- which(uniquePolygons == z[2])
 
-            out <- sqrt((centroids[x2, 1] - centroids[x1, 1])^2 +
-              (centroids[x2, 2] - centroids[x1, 2])^2) # nolint
+            out <- sqrt(
+              (centroids[x2, 1] - centroids[x1, 1])^2 +
+                (centroids[x2, 2] - centroids[x1, 2])^2
+            )
             return(out)
           })
           E(componentGraph)$eucCentroidWeight <- eucCentroidWeight
@@ -367,11 +391,11 @@ setMethod("GOC",
       if (is_igraph(z$goc)) mean(V(z$goc)$polygonArea) else NA
     }))
     summary.df$medianPolygonArea <- unlist(lapply(th, function(z) {
-      if (is_igraph(z$goc)) median(V(z$goc)$polygonArea) else NA
+      if (is_igraph(z$goc)) stats::median(V(z$goc)$polygonArea) else NA
     }))
 
     ## Find ECS (Expected cluster size; O'Brien et al, 2006) using totalPatchArea
-    summary.df$ECS <- unlist(lapply(th, function(z) { # nolint
+    summary.df$ECS <- unlist(lapply(th, function(z) {
       if (is_igraph(z$goc)) {
         sum(V(z$goc)$totalPatchArea^2) / sum(V(z$goc)$totalPatchArea)
       } else {
@@ -379,7 +403,7 @@ setMethod("GOC",
       }
     }))
     ## Find ECSCore (Expected cluster size; O'Brien et al, 2006) using totalCoreArea
-    summary.df$ECSCore <- unlist(lapply(th, function(z) { # nolint
+    summary.df$ECSCore <- unlist(lapply(th, function(z) {
       if (is_igraph(z$goc)) {
         sum(V(z$goc)$totalCoreArea^2) / sum(V(z$goc)$totalCoreArea)
       } else {

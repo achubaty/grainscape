@@ -1,8 +1,10 @@
 test_that("export() handles user-added node attributes (#71)", {
   withr::local_package("igraph")
 
-  tiny <- raster::raster(system.file("extdata/tiny.asc", package = "grainscape"))
-  tinyCost <- raster::reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
+  tiny <- terra::rast(
+    system.file("extdata", "tiny.asc", package = "grainscape", mustWork = TRUE)
+  )
+  tinyCost <- terra::classify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
   tinyPatchMPG <- MPG(cost = tinyCost, patch = tinyCost == 1)
 
   tiny_mpg_graph <- tinyPatchMPG$mpg

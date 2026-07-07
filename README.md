@@ -53,3 +53,9 @@ The [`development`](https://github.com/achubaty/grainscape/tree/development) bra
 To make a contribution to the package, just send a [pull request](https://help.github.com/articles/using-pull-requests/). 
 When you send your PR, make sure `development` is the destination branch on the [grainscape repository](https://github.com/achubaty/grainscape).
 Your PR should pass `R CMD check --as-cran`, which will also be checked by [GitHub Actions](https://github.com/achubaty/grainscape/actions) when the PR is submitted.
+
+See [`CONTRIBUTING.md`](https://github.com/achubaty/grainscape/blob/main/.github/CONTRIBUTING.md) for more details.
+
+### Code of Conduct
+
+Please note that the grainscape project is released with a [Contributor Code of Conduct](https://www.alexchubaty.com/grainscape/CODE_OF_CONDUCT.html). By contributing to this project, you agree to abide by its terms.

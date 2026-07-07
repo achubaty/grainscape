@@ -1,27 +1,31 @@
-# register the S3 `igraph` class for use with S4 methods.
+## register the S3 `igraph` class for use with S4 methods.
 setOldClass("igraph")
 selectMethod("show", "igraph")
+
+## register the S3 `sf` class for use with S4 slots.
+setOldClass("sf")
 
 #' The `hce` class
 #'
 #' Used internally.
 #'
 #' @slot voronoi     The Voronoi tessellation of the patches and resistance
-#'                   surface (`RasterLayer`).
+#'                   surface (`SpatRaster`).
 #'
-#' @slot patchLinks  A `RasterLayer` whose values indicate patch ids
+#' @slot patchLinks  A `SpatRaster` whose values indicate patch ids
 #'                   (positive integers) and link ids (negative integers).
 #'
 #' @slot linkData    A `data.frame` of link attributes.
 #'
 #' @author Alex Chubaty and Sam Doctolero
-#' @importClassesFrom raster RasterLayer
+#' @importClassesFrom terra SpatRaster
 #' @include grainscape-package.R
 #' @keywords internal
 setClass(
   "hce",
   slots = list(
-    voronoi = "RasterLayer", patchLinks = "RasterLayer",
+    voronoi = "SpatRaster",
+    patchLinks = "SpatRaster",
     linkData = "data.frame"
   )
 )
@@ -31,17 +35,17 @@ setClass(
 #' @slot mpg         The minimum planar graph as class `igraph`.
 #'
 #' @slot patchId     The input `patch` raster with patch cells assigned to
-#'                   their id (`RasterLayer`).
+#'                   their id (`SpatRaster`).
 #'
 #' @slot voronoi     The Voronoi tessellation of the patches and resistance
-#'                   surface (`RasterLayer`).
+#'                   surface (`SpatRaster`).
 #'
 #' @slot lcpPerimWeight  The paths of the links between patches and their
-#'                       accumulated costs (`RasterLayer`).
+#'                       accumulated costs (`SpatRaster`).
 #'
-#' @slot lcpLinkId   The paths of the links between patches and their id (`RasterLayer`).
+#' @slot lcpLinkId   The paths of the links between patches and their id (`SpatRaster`).
 #'
-#' @slot mpgPlot     A `RasterLayer` version of the `mpg`, which can be
+#' @slot mpgPlot     A `SpatRaster` version of the `mpg`, which can be
 #'                   easily plotted to visualize the MPG.
 #'
 #' The `mpg` slot contains useful vertex and edge attributes.
@@ -54,21 +58,24 @@ setClass(
 #' Euclidean distance, and the start and end coordinates of each link.
 #'
 #' @author Alex Chubaty and Paul Galpern
-#' @importClassesFrom raster RasterLayer
+#' @importClassesFrom terra SpatRaster
 #' @include grainscape-package.R
 #'
 setClass(
   "mpg",
   slots = list(
-    mpg = "igraph", patchId = "RasterLayer", voronoi = "RasterLayer",
-    lcpPerimWeight = "RasterLayer", lcpLinkId = "RasterLayer",
-    mpgPlot = "RasterLayer"
+    mpg = "igraph",
+    patchId = "SpatRaster",
+    voronoi = "SpatRaster",
+    lcpPerimWeight = "SpatRaster",
+    lcpLinkId = "SpatRaster",
+    mpgPlot = "SpatRaster"
   )
 )
 
 #' The `goc` class
 #'
-#' @slot voronoi    A `RasterLayer` describing the regions of proximity in
+#' @slot voronoi    A `SpatRaster` describing the regions of proximity in
 #'                  resistance units around the focal patches or points.
 #'
 #' @slot summary    A summary of the the grains of connectivity generated and
@@ -86,13 +93,13 @@ setClass(
 #' See [distance()] for more information.
 #'
 #' @author Alex Chubaty and Paul Galpern
-#' @importClassesFrom raster RasterLayer
-#' @importClassesFrom sp SpatialPolygons
+#' @importClassesFrom terra SpatRaster
 setClass(
   "goc",
   slots = list(
-    voronoi = "RasterLayer",
-    summary = "data.frame", th = "list"
+    voronoi = "SpatRaster",
+    summary = "data.frame",
+    th = "list"
   )
 )
 
@@ -106,29 +113,26 @@ setClass(
 #'
 #' @export
 #' @rdname show
-setMethod("show",
-  signature = "goc",
-  definition = function(object) {
-    cat("Slot voronoi:\n")
-    cat(show(object@voronoi))
+setMethod("show", signature = "goc", definition = function(object) {
+  cat("Slot voronoi:\n")
+  cat(show(object@voronoi))
 
-    cat("\nSlot summary:\n")
-    cat(show(object@summary))
+  cat("\nSlot summary:\n")
+  cat(show(object@summary))
 
-    cat("\nSlot th:\n")
-    cat("List of ", length(object@th), " goc elements", "\n")
-  }
-)
+  cat("\nSlot th:\n")
+  cat("List of ", length(object@th), " goc elements", "\n")
+})
 
 #' The `grain` class
 #'
-#' @slot voronoi    A `RasterLayer` describing the regions of proximity in
+#' @slot voronoi    A `SpatRaster` describing the regions of proximity in
 #'                  resistance units around the focal patches or points.
 #'
 #' @slot summary    A summary of the the grains of connectivity generated and
 #'                  their properties.
 #'
-#' @slot centroids  A `SpatialPoints` object indicating the grain's polygon
+#' @slot centroids  An `sf` object indicating the grain's polygon
 #'                  centroids.
 #'
 #' @slot th         A list of `igraph` objects giving the graphs describing the relationship
@@ -137,51 +141,48 @@ setMethod("show",
 #' See [grain()] for more information.
 #'
 #' @author Alex Chubaty and Paul Galpern
-#' @importClassesFrom raster RasterLayer
-#' @importClassesFrom sp SpatialPoints SpatialPolygonsDataFrame
+#' @importClassesFrom terra SpatRaster
 setClass(
   "grain",
   slots = list(
-    voronoi = "RasterLayer",
-    summary = "data.frame", centroids = "SpatialPoints",
+    voronoi = "SpatRaster",
+    summary = "data.frame",
+    centroids = "sf",
     th = "igraph"
   )
 )
 
 #' @export
 #' @rdname show
-setMethod("show",
-  signature = "grain",
-  definition = function(object) {
-    cat("Slot voronoi:\n")
-    cat(show(object@voronoi))
+setMethod("show", signature = "grain", definition = function(object) {
+  cat("Slot voronoi:\n")
+  cat(show(object@voronoi))
 
-    cat("\nSlot summary:\n")
-    cat(show(object@summary))
+  cat("\nSlot summary:\n")
+  cat(show(object@summary))
 
-    cat("\nSlot centroids:\n")
-    cat("SpatialPoints objects with ", length(object@centroids), " features", "\n")
+  cat("\nSlot centroids:\n")
+  cat("sf object with ", nrow(object@centroids), " features", "\n")
 
-    cat("\nSlot th:\n")
-    cat(show(object@th))
-  }
-)
+  cat("\nSlot th:\n")
+  cat(show(object@th))
+})
 
 #' The `corridor` class
 #'
-#' @slot voronoi          A `RasterLayer` representation of the boundaries
+#' @slot voronoi          A `SpatRaster` representation of the boundaries
 #'                        of the voronoi polygons.
 #'
-#' @slot linksSP          A `SpatialLinesDataFrame` representation of links
+#' @slot linksSP          An `sf` representation of links
 #'                        in the grains of connectivity graph.
 #'
-#' @slot nodesSP          A `SpatialPoints` representation of the nodes in
+#' @slot nodesSP          An `sf` representation of the nodes in
 #'                        the grains of connectivity graph
 #'
-#' @slot shortestLinksSP  A `SpatialLines` representation of the links in
+#' @slot shortestLinksSP  An `sf` representation of the links in
 #'                        the shortest path between coordinates
 #'
-#' @slot shortestNodesSP  A `SpatialPoints` representation of the nodes in
+#' @slot shortestNodesSP  An `sf` representation of the nodes in
 #'                        the shortest path between coordinates
 #'
 #' @slot corridorLength   A `numeric` of length 1 giving the length of the
@@ -191,39 +192,38 @@ setMethod("show",
 #' See [corridor()] for more information.
 #'
 #' @author Alex Chubaty and Paul Galpern
-#' @importClassesFrom raster RasterLayer
-#' @importClassesFrom sp SpatialLines SpatialLinesDataFrame SpatialPoints
+#' @importClassesFrom terra SpatRaster
 #'
 setClass(
   "corridor",
   slots = list(
-    voronoi = "RasterLayer", linksSP = "SpatialLinesDataFrame",
-    nodesSP = "SpatialPoints", shortestLinksSP = "SpatialLines",
-    shortestNodesSP = "SpatialPoints", corridorLength = "numeric"
+    voronoi = "SpatRaster",
+    linksSP = "sf",
+    nodesSP = "sf",
+    shortestLinksSP = "sf",
+    shortestNodesSP = "sf",
+    corridorLength = "numeric"
   )
 )
 
 #' @export
 #' @rdname show
-setMethod("show",
-  signature = "corridor",
-  definition = function(object) {
-    cat("Slot voronoi:\n")
-    cat(show(object@voronoi))
+setMethod("show", signature = "corridor", definition = function(object) {
+  cat("Slot voronoi:\n")
+  cat(show(object@voronoi))
 
-    cat("\nSlot linksSP:\n")
-    cat(show(object@linksSP))
+  cat("\nSlot linksSP:\n")
+  cat(show(object@linksSP))
 
-    cat("\nSlot nodesSP:\n")
-    cat(show(object@nodesSP))
+  cat("\nSlot nodesSP:\n")
+  cat(show(object@nodesSP))
 
-    cat("\nSlot shortestLinksSP:\n")
-    cat(show(object@shortestLinksSP))
+  cat("\nSlot shortestLinksSP:\n")
+  cat(show(object@shortestLinksSP))
 
-    cat("\nSlot shortestNodesSP:\n")
-    cat(show(object@shortestNodesSP))
+  cat("\nSlot shortestNodesSP:\n")
+  cat(show(object@shortestNodesSP))
 
-    cat("\nSlot corridorLength:\n")
-    cat(show(object@corridorLength))
-  }
-)
+  cat("\nSlot corridorLength:\n")
+  cat(show(object@corridorLength))
+})

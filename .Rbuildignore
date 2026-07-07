@@ -1,9 +1,8 @@
 ^.*\.Rproj$
 ^\.github$
-^\.lintr$
 ^\.Rproj\.user$
 ^_pkgdown\.yml$
-^CONTRIBUTING\.md$
+^air\.toml$
 ^CRAN-RELEASE$
 ^cran-comments\.md$
 ^cran-submission\.md$
@@ -16,3 +15,6 @@
 ^codecov\.yml$
 ^pkgdown$
 ^CRAN-SUBMISSION$
+^\.claude$
+^CLAUDE\.md$
+^CODE_OF_CONDUCT\.md$

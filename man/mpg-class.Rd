@@ -13,17 +13,17 @@ The \code{mpg} class
 \item{\code{mpg}}{The minimum planar graph as class \code{igraph}.}
 
 \item{\code{patchId}}{The input \code{patch} raster with patch cells assigned to
-their id (\code{RasterLayer}).}
+their id (\code{SpatRaster}).}
 
 \item{\code{voronoi}}{The Voronoi tessellation of the patches and resistance
-surface (\code{RasterLayer}).}
+surface (\code{SpatRaster}).}
 
 \item{\code{lcpPerimWeight}}{The paths of the links between patches and their
-accumulated costs (\code{RasterLayer}).}
+accumulated costs (\code{SpatRaster}).}
 
-\item{\code{lcpLinkId}}{The paths of the links between patches and their id (\code{RasterLayer}).}
+\item{\code{lcpLinkId}}{The paths of the links between patches and their id (\code{SpatRaster}).}
 
-\item{\code{mpgPlot}}{A \code{RasterLayer} version of the \code{mpg}, which can be
+\item{\code{mpgPlot}}{A \code{SpatRaster} version of the \code{mpg}, which can be
 easily plotted to visualize the MPG.
 
 The \code{mpg} slot contains useful vertex and edge attributes.

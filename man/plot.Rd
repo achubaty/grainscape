@@ -80,10 +80,12 @@ It is the only option available with \code{corridor} objects and the default.
 
 \examples{
 ## Load raster landscape
-tiny <- raster::raster(system.file("extdata/tiny.asc", package = "grainscape"))
+tiny <- terra::rast(
+  system.file("extdata", "tiny.asc", package = "grainscape", mustWork = TRUE)
+)
 
 ## Create a resistance surface from a raster using an is-becomes reclassification
-tinyCost <- raster::reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
+tinyCost <- terra::classify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
 ## Produce a patch-based MPG where patches are resistance features=1
 tinyPatchMPG <- MPG(cost = tinyCost, patch = tinyCost == 1)
 ## Extract a representative subset of 5 grains of connectivity
@@ -106,10 +108,13 @@ if (interactive()) {
 
   ## Capture plot output for further processing with ggplot
   g <- plot(tinyPatchMPG, print = FALSE, theme = FALSE)
-  g <- g + theme_minimal() + ggtitle("Minimum planar graph") +
+  g <- g +
+    theme_minimal() +
+    ggtitle("Minimum planar graph") +
     theme(plot.title = element_text(size = 20, hjust = 0.5)) +
     theme(legend.position = "none") +
-    xlab("Easting") + ylab("Northing")
+    xlab("Easting") +
+    ylab("Northing")
   g
 
   ## To change aesthetics it is best to build the plot from scratch
@@ -119,9 +124,9 @@ if (interactive()) {
 \seealso{
 \code{\link[=ggGS]{ggGS()}},
 \code{\link[=export]{export()}},
-\linkS4class{corridor},
-\linkS4class{grain},
-\linkS4class{mpg}
+\link[=corridor-class]{corridor},
+\link[=grain-class]{grain},
+\link[=mpg-class]{mpg}
 }
 \author{
 Alex Chubaty and Paul Galpern

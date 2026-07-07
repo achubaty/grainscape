@@ -1,0 +1,23 @@
+# Workflow derived from https://posit-dev.github.io/air/editor-github-actions.html
+# Checks that R source is formatted with air (https://posit-dev.github.io/air/)
+on:
+  push:
+    branches: [main, development]
+  pull_request:
+    branches: [main, development]
+
+name: format-check
+
+permissions: read-all
+
+jobs:
+  format-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install air
+        uses: posit-dev/setup-air@v1
+
+      - name: Check formatting
+        run: air format --check .

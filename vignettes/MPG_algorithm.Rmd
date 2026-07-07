@@ -12,7 +12,7 @@ fontsize: 11pt
 geometry: margin=1in
 vignette: >
   %\VignetteIndexEntry{Calculating the minimum planar graph}
-  %\VignetteDepends{DiagrammeR, webshot2}
+  %\VignetteDepends{DiagrammeR, DiagrammeRsvg, rsvg}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
@@ -35,7 +35,17 @@ opts_chunk$set(
   warning = FALSE
 )
 
-not_cran = !identical(Sys.getenv("NOT_CRAN"), "") && !identical(Sys.getenv("CI"), "true")
+## Render a Graphviz/DOT diagram directly from its source to a vector PDF. The class
+## diagrams, the algorithm flow chart, and the Engine call graphs in this vignette are
+## therefore generated from code (and stay in sync with it) instead of being maintained
+## as static images (#75). Uses DiagrammeRsvg + rsvg, so no headless browser is required.
+renderDot <- function(dot) {
+  svg <- DiagrammeRsvg::export_svg(DiagrammeR::grViz(dot))
+  out <- fig_path(".pdf")
+  dir.create(dirname(out), recursive = TRUE, showWarnings = FALSE)
+  rsvg::rsvg_pdf(charToRaw(svg), out)
+  include_graphics(out)
+}
 ```
 
 ## Overview
@@ -64,6 +74,11 @@ Finding the least-cost path in this way is only possible because the algorithm s
 The child cells are sorted by increasing effective distance (i.e., resistance or cost) between the child cell and their origin cell, the perimeter cell that the connection originally spawned from.
 A link or path between patches is then created at the first Voronoi boundary between two patches.
 
+Two refinements keep these least-cost paths and the tessellation accurate.
+First, every patch (source) cell begins spreading at the same minimum cost, regardless of the resistance of the cell it happens to overlap; otherwise a patch sitting on a high-resistance cell would spread late and lose territory, biasing the Voronoi tessellation.
+Second, a patch-to-patch link is only recorded once the boundary cell has *settled* — that is, once it has itself spread and its stored connection back to its origin patch is as cheap as it will get — so that an early, expensive boundary cannot lock in a sub-optimal link before a cheaper route has had a chance to form.
+When two patches meet, the stored connections are followed back to each patch to assemble the candidate path; if a link between that pair of patches already exists, the cheaper of the two is kept, and a link that merely retraces a cheaper two-step route through a third patch is discarded as redundant.
+
 The MPG algorithm has the following general steps.
 These are represented in more detail in a flow chart in Figure 1.
 
@@ -73,7 +88,27 @@ These are represented in more detail in a flow chart in Figure 1.
 4. The cells that have been recently spread in to become new Active Cells.
 5. Repeat.
 
-![Overview of the MPG algorithm.](figures/HabConnFlowchart.jpg){ height=90% }
+```{r flowchart, echo = FALSE, out.width = "62%", fig.cap = "Overview of the MPG algorithm."}
+renderDot('
+  digraph mpg_algorithm {
+    graph [fontsize = 10, rankdir = TB]
+    node [fontname = Courier, fontsize = 10]
+
+    init    [shape = oval, label = "initialize()"]
+    patches [shape = box, label = "findPatches(): seed the Voronoi map and\\liLinkMap cell ids, then build the initial\\lactive cells (patch cells spread at the\\luniform minimum cost)\\l"]
+    loop    [shape = diamond, height = 1.1, label = "active\\ncells\\nremain?"]
+    check   [shape = box, label = "activeCellSpreadChecker(): a cell whose\\lwaiting time has reached its resistance is\\lmarked settled and queued to spread (the\\lqueue is sorted by effective distance)\\l"]
+    spread  [shape = box, label = "createActiveCell(): spread into the 4 adjacent\\lunclaimed cells, assign the Voronoi id, and\\lconnectCell() back to the parent\\l"]
+    link    [shape = box, label = "createLinks() / findPath(): at a boundary\\lbetween two settled patches, record the\\lleast-cost link (keep the cheapest; drop\\lredundant indirect and malformed links)\\l"]
+    out     [shape = oval, label = "write the Voronoi map\\land links to output"]
+
+    init -> patches -> loop
+    loop -> check [label = " yes"]
+    check -> spread -> link -> loop
+    loop -> out [label = " no"]
+  }
+')
+```
 
 The linking algorithm is embedded within the spreading functions of the MPG algorithm.
 When an `ActiveCell` spreads, a link map creates a connection between the parent `ActiveCell` to the new (child) `ActiveCell`.
@@ -98,10 +133,25 @@ An interface to this code has been abstracted to R functions using the `Rcpp` pa
 ### Data Structures
 
 - `Cell`: stores its own position (row and column) and an ID.
-- `ActiveCell`: inherits the properties of a `Cell` and has its own properties such as `distance`, `originCell`, `parentCell`, `resistance`, and `time` (or iterations). This type of cell is used to keep track of which cells are currently being evaluated.
+- `ActiveCell`: inherits the properties of a `Cell` and has its own properties: `time` (an iteration index), `distance` (the Euclidean distance back to its origin cell), `resistance`, `parentResistance` (the resistance of the cell it spread from), and `originCell`. This type of cell is used to keep track of which cells are currently being evaluated.
 - `LinkCell`: inherits the properties of a `Cell` and has its own properties such as `cost`, `distance`, `fromCell`, and `originCell`. This type of cell is used to create `LinkMap`.
 
-![Schematic representation of Cell type data structures.](figures/cells_diagram.jpg)
+```{r cells_diagram, echo = FALSE, out.width = "62%", fig.cap = "Schematic representation of Cell type data structures. An open triangle denotes inheritance."}
+renderDot('
+  digraph cells {
+    graph [rankdir = BT, fontsize = 10]
+    node [shape = record, fontname = Courier, fontsize = 10]
+
+    Cell       [label = "{Cell|+ row : int\\l+ column : int\\l+ id : float\\l}"]
+    ActiveCell [label = "{ActiveCell|+ time : float\\l+ distance : float\\l+ resistance : float\\l+ parentResistance : float\\l+ originCell : Cell\\l}"]
+    LinkCell   [label = "{LinkCell|+ fromCell : Cell\\l+ originCell : Cell\\l+ distance : float\\l+ cost : float\\l}"]
+
+    edge [arrowhead = onormal]
+    ActiveCell -> Cell
+    LinkCell -> Cell
+  }
+')
+```
 
 - `ActiveCellHolder`: a type of container that stores a vector of `ActiveCell`s in an order.
 - `ActiveCellQueue`: contains an `ActiveCellHolder`. Its main purpose is to properly store the `ActiveCellHolder` in a vector in order of increasing effective distance (i.e., resistance or cost).
@@ -110,7 +160,34 @@ An interface to this code has been abstracted to R functions using the `Rcpp` pa
 - `OutputData`: similar to `InputData` but it acts as a container for all the data that are calculated by the engine and gives that data to the user.
 - `Patch`: a patch or a cluster are the habitats that are found in the resistance map, given a value for habitat.
 
-![Schematic representation of additional data structures.](figures/data_struct_diagram.jpg)
+```{r data_struct_diagram, echo = FALSE, out.width = "98%", fig.cap = "Schematic representation of additional data structures. An open diamond denotes composition (a 'has-a' relationship); dashed boxes are the Cell types shown above."}
+renderDot('
+  digraph data_struct {
+    graph [rankdir = TB, fontsize = 10]
+    node [shape = record, fontname = Courier, fontsize = 10]
+
+    InputData  [label = "{InputData|+ cost_vec : vector\\<float\\>\\l+ nrow : int\\l+ ncol : int\\l+ patch_vec : vector\\<float\\>\\l}"]
+    OutputData [label = "{OutputData|+ voronoi_map : vector\\<float\\>\\l+ patch_map : vector\\<float\\>\\l+ link_data : vector\\<Link\\>\\l+ patch_list : vector\\<Patch\\>\\l}"]
+    Link  [label = "{Link|+ start : Cell\\l+ end : Cell\\l+ connection : vector\\<Cell\\>\\l+ cost : float\\l}"]
+    Patch [label = "{Patch|+ body : vector\\<Cell\\>\\l+ id : float\\l}"]
+    ActiveCellHolder [label = "{ActiveCellHolder|+ value : float\\l+ list : vector\\<ActiveCell\\>\\l|+ add(ActiveCell)\\l+ size() : int\\l}"]
+    ActiveCellQueue  [label = "{ActiveCellQueue|+ holder_list : vector\\<ActiveCellHolder\\>\\l|+ insertH(ActiveCellHolder)\\l+ size() : int\\l}"]
+
+    node [shape = box, style = dashed]
+    Cell; ActiveCell
+
+    edge [arrowhead = odiamond, fontname = Courier, fontsize = 9]
+    ActiveCellQueue -> ActiveCellHolder [label = " holder_list"]
+    ActiveCellHolder -> ActiveCell [label = " list"]
+    OutputData -> Link [label = " link_data"]
+    OutputData -> Patch [label = " patch_list"]
+    Link -> Cell [label = " start, end,\\l connection"]
+    Patch -> Cell [label = " body"]
+  }
+')
+```
+
+\newpage
 
 ### Type Definitions
 
@@ -118,15 +195,45 @@ An interface to this code has been abstracted to R functions using the `Rcpp` pa
 - `LinkMap`: a vector of `lcCols`, which in turn creates a `Map`. This type stores the connections between cells.
 - `flCol`: a vector of floating point values.
 - `flMap`: a vector of `flCol`, which in turn creates a `Map` that contains floating point values in each element or cell.
+- `boolCol`: a vector of boolean values.
+- `boolMap`: a vector of `boolCol`, which in turn creates a `Map` of booleans. This type stores the `settled_map` (see below).
 
-![Schematic representation of type definitions.](figures/typedef_diagram.jpg)
+```{r typedef_diagram, echo = FALSE, out.width = "82%", fig.cap = "Schematic representation of type definitions."}
+renderDot('
+  digraph typedefs {
+    graph [rankdir = LR, fontsize = 10, nodesep = 0.4, ranksep = 0.7]
+    node [shape = box, fontname = Courier, fontsize = 10]
+
+    flCol   [label = "flCol\\n= vector<float>"]
+    flMap   [label = "flMap\\n= vector<flCol>"]
+    lcCol   [label = "lcCol\\n= vector<LinkCell>"]
+    LinkMap [label = "LinkMap\\n= vector<lcCol>"]
+    boolCol [label = "boolCol\\n= vector<bool>"]
+    boolMap [label = "boolMap\\n= vector<boolCol>"]
+
+    edge [arrowhead = vee, fontname = Courier, fontsize = 9]
+    flCol -> flMap     [label = " vector of"]
+    lcCol -> LinkMap   [label = " vector of"]
+    boolCol -> boolMap [label = " vector of"]
+  }
+')
+```
 
 ### The `Engine` Class
 
 The main calculator of the program.
 It creates the minimum planar graph (MPG) using the MPG algorithm, finds least cost links or paths, and finds patches or clusters.
 
-![Schematic representation of the Engine Class](figures/engine_class_diagram.jpg)
+```{r engine_class_diagram, echo = FALSE, out.width = "72%", fig.cap = "Schematic representation of the Engine class. A leading + marks a public member and - a private member; related methods are grouped on a line. Full signatures are given in the tables below."}
+renderDot('
+  digraph engine {
+    graph [fontsize = 10]
+    node [shape = record, fontname = Courier, fontsize = 10]
+
+    Engine [label = "{Engine|- in_data : InputData*\\l- out_data : OutputData*\\l- maxCost : float\\l- costRes : float\\l- active_cell_holder : ActiveCellQueue\\l- temporary_active_cell_holder : ActiveCellQueue\\l- spread_list : vector\\<ActiveCell\\>\\l- iLinkMap : LinkMap\\l- voronoi_map : flMap\\l- cost_map : flMap\\l- settled_map : boolMap\\l- initialized : bool\\l- error_message : char*\\l- error_message_size : int\\l|+ Engine() / ~Engine()\\l+ initialize() : bool\\l+ start() : void\\l+ emax() / emin() / calcDistance()  [static]\\l- findPatches() / getIndexFromList() / combinePatches()\\l- activeCellSpreadChecker() / createActiveCell()\\l- createLinks() / findPath() / parseMap() / lookForIndirectPath()\\l- connectCell() / cellIsZero() / cellsEqual() / outOfBounds()\\l- updateOutputMap() / writeErrorMessage()\\l}"]
+  }
+')
+```
 
 #### Fields/Properties
 
@@ -142,6 +249,8 @@ It creates the minimum planar graph (MPG) using the MPG algorithm, finds least c
 `iLinkMap`                       | `LinkMap`               | A map that keeps track of all the connections between cells due to the spreading and queuing functions.
 `voronoi_map`                    | `flMap`                 | A map that contains floating point values, it stores the Voronoi boundaries/polygons.
 `cost_map`                       | `flMap`                 | A map that contains the resistance or cost in each cell/element.
+`settled_map`                    | `boolMap`               | Tracks which cells have been fully processed (have appeared in `spread_list` and spread to their neighbours). `createLinks` only records a patch-to-patch link when the boundary cell is settled, so the cheapest path has a chance to form first.
+`initialized`                    | Bool                    | Indicates whether the engine has been successfully initialized and is ready to run via `start()`.
 `error_message`                  | Char Pointer            | Stores the error messages that occur in the engine. It acts as a way to diagnose problems in the engine.
 
 #### Methods/Functions
@@ -149,8 +258,8 @@ It creates the minimum planar graph (MPG) using the MPG algorithm, finds least c
 After instantiating an `Engine` object, the connectivity engine is run by first calling `initialize()` and then `start()`.
 The call graphs for each of these principal functions are presented below.
 
-```{r call_graph_engine_initialize, echo = FALSE, eval = not_cran, fig.cap = "Call diagram for Engine::initialize()"}
-DiagrammeR::grViz("
+```{r call_graph_engine_initialize, echo = FALSE, out.width = "50%", fig.cap = "Call diagram for Engine::initialize()"}
+renderDot('
   digraph initialize {
     graph [overlap = true, fontsize = 10]
     
@@ -178,11 +287,11 @@ DiagrammeR::grViz("
     findPatches->getIndexFromList
     findPatches->outOfBounds
   }
-")
+')
 ```
 
-```{r call_graph_engine_start, echo = FALSE, eval = not_cran, fig.cap = "Call diagram for Engine::start()"}
-DiagrammeR::grViz("
+```{r call_graph_engine_start, echo = FALSE, out.width = "60%", fig.cap = "Call diagram for Engine::start()"}
+renderDot('
   digraph start {
     graph [overlap = true, fontsize = 10]
     
@@ -198,25 +307,26 @@ DiagrammeR::grViz("
           shape = box, style = filled]
     
     activeCellSpreadChecker; calcDistance; cellsEqual; connectCell; createActiveCell;
-    findPath; lookForIndirectPath;
-    outOfBounds; parseMap; prunePaths;
+    createLinks; findPath; lookForIndirectPath;
+    outOfBounds; parseMap;
     updateOutputMap; writeErrorMessage;
     
     # edges
     start->activeCellSpreadChecker
     start->createActiveCell
+    start->createLinks
     start->updateOutputMap
     start->writeErrorMessage
     createActiveCell->calcDistance
     createActiveCell->connectCell
-    createActiveCell->findPath
     createActiveCell->outOfBounds
-    findPath->lookForIndirectPath
+    createLinks->findPath
+    createLinks->outOfBounds
     findPath->parseMap
-    findPath->prunePaths
+    findPath->lookForIndirectPath
     parseMap->cellsEqual
   }
-")
+')
 ```
 
 \newpage
@@ -252,11 +362,11 @@ These functions create the links between cells and finds the least cost (direct 
 
 **Function**          | **Return Type**     | **Input Arguments**               | **Description**  
 ----------------------|---------------------|-----------------------------------|---------------------------
-`findPath`            | Void                | `LinkCell` Pointer, `LinkCell` Pointer, Vector of `Links` | Finds the least cost path between two patches.
-`connectCell`         | Void                | `ActiveCell` Pointer, Integer, Integer, Float | Connects the child cell to the parent cell.
-`parseMap`            | `Cell`              | `LinkCell`, `Link` | Given a starting `Cell` it follows the connections until it reaches a patch. The last cell in the connection is returned.
-`lookForIndirectPath` | Bool                | Vector of `Links`, `Link`   | Tries to find an indirect link and updates the second argument.
-`prunePaths`          | Void                | Vector of `Links` | Removes paths  between nodes that are not the least cost ones.
+`createLinks`         | Void                | `ActiveCell` Pointer, Int, Int | At a Voronoi boundary, attempts a patch-to-patch link, but only when the neighbouring boundary cell is *settled* so the cheapest path can form first. Calls `findPath`.
+`findPath`            | Void                | `LinkCell`, `LinkCell`, Vector of `Link`s | Finds the least-cost path between two patches: assembles the candidate path and its cost, rejects malformed links (an unset `-99` endpoint), and for an existing patch pair keeps only the cheaper link.
+`connectCell`         | Void                | `ActiveCell` Pointer, Integer, Integer, Float | Connects the child cell to the parent cell in `iLinkMap`.
+`parseMap`            | `Cell`              | `LinkCell`, `Link` | Follows the connections from a starting `Cell` until it reaches a patch, accumulating the path cost; the last (patch) cell is returned.
+`lookForIndirectPath` | Bool                | Vector of `Link`s, `Link`   | Searches all pairs of existing links for a cheaper two-hop route (A to X to B), ignoring non-patch (`-99`) pivots; returns `false` and updates the path when a cheaper indirect route is found.
 
 \newpage
 
@@ -267,7 +377,7 @@ Common functions are used in almost all of the functions in the engine.
 **Function**    | **Return Type**     | **Input Arguments**           | **Description**  
 ----------------|---------------------|-------------------------------|---------------------------
 `outOfBounds`   | Bool                | Int, Int, Int, Int            | Checks to see if the given row and column is still within the resistance map's dimensions.
-`cellIsEqual`   | Bool                | `Cell`, `Cell`                    | Compares the two `Cell`s' row and column if they match.
+`cellsEqual`    | Bool                | `Cell`, `Cell`                    | Compares the two `Cell`s' row and column if they match.
 
 \newpage
 
@@ -338,3 +448,63 @@ vector<float> EngineInterface(vector<float> resistance, vector<float> patches,
 	return outObj.voronoi_map;
 }
 ```
+
+\newpage
+
+## Debugging the package `C++` code
+
+Since we are using `clang++` to compile the code locally, we need `lldb` installed.
+
+```{bash debug_rcpp, echo = TRUE, eval = FALSE}
+cd ~/GitHub/grainscape
+
+## start R in debug mode
+R -d lldb
+
+## from the lldb shell, set breakpoint(s) in functions for debugging
+# breakpoint set --name initialize
+# breakpoint set --name start
+# breakpoint set --name activeCellSpreadChecker
+breakpoint set --name createActiveCell
+breakpoint set --name createLinks
+breakpoint set --name findPath
+breakpoint set --name lookForIndirectPath
+
+## start R
+run
+
+## from the R shell, run the code needed to debug
+devtools::dev_mode()
+devtools::load_all()
+
+## RUN ADDITIONAL R CODE FOR DEBUGGING
+```
+
+Some useful `lldb` shell commands for stepping through code:
+
+```{bash debug_lldb, echo = TRUE, eval = FALSE}
+## run next line
+n
+
+## continue
+c
+
+## skip
+s
+
+## step up into the parent frame
+up
+
+## inspect variables the current frame
+frame variable
+
+## inspect a particular value or evaluate code
+expr i
+expr spread_list[23];
+```
+
+See <https://lldb.llvm.org/use/tutorial.html#controlling-your-program> for more help.
+
+## References
+
+<!-- bibliography automatically appended below -->

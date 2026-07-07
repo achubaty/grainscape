@@ -9,7 +9,7 @@
 #'
 #' @param whichThresh  Integer giving the index of the threshold to visualize.
 #'
-#' @param coords  A two column matrix or a [sp::SpatialPoints-class] object
+#' @param coords  A two-column matrix or an `sf` (POINT) object
 #'                giving coordinates at the end points of the corridor.
 #'
 #' @param weight  The GOC graph link weight to use in calculating the distance.
@@ -38,11 +38,9 @@
 #'
 #' @author Paul Galpern and Alex Chubaty
 #' @export
-#' @importFrom graphics plot
-#' @importFrom sp Line Lines SpatialLines SpatialLinesDataFrame SpatialPoints
 #' @include classes.R grain.R
 #' @rdname corridor
-#' @seealso [GOC()], [visualize()]
+#' @seealso [GOC()], [grain()]
 #'
 #' @example inst/examples/example_preamble.R
 #' @example inst/examples/example_preamble_MPG.R
@@ -55,7 +53,8 @@ setGeneric("corridor", function(x, ...) {
 
 #' @export
 #' @rdname corridor
-setMethod("corridor",
+setMethod(
+  "corridor",
   signature = "goc",
   definition = function(x, whichThresh, coords, weight = "meanWeight", ...) {
     dots <- list(...)
@@ -64,18 +63,18 @@ setMethod("corridor",
     }
 
     ## Check whichThresh
-    if ((length(whichThresh) > 1) || (!(whichThresh %in% 1:length(x@th)))) { # nolint
+    if ((length(whichThresh) > 1) || (!(whichThresh %in% 1:length(x@th)))) {
       stop("whichThresh must index a single threshold existing in the GOC object")
     }
 
-    ## Check coords
-    if (inherits(coords, c("SpatialPoints", "SpatialPointsDataFrame"))) {
-      coords <- coordinates(coords)
+    ## Check coords — accept matrix or sf
+    if (inherits(coords, "sf")) {
+      coords <- sf::st_coordinates(coords)[, 1:2, drop = FALSE]
     }
 
     if (ncol(coords) != 2) {
       stop(
-        "coords must be a SpatialPoints object or a matrix of two columns",
+        "coords must be an sf object or a matrix of two columns",
         "giving X and Y coordinates"
       )
     }
@@ -90,44 +89,41 @@ setMethod("corridor",
       stop("link weight attribute with this name doesn't exist in GOC object")
     }
 
-    ## GOC Graph
+    ## GOC Graph — build sf LINESTRING object for edges
     edges <- as_edgelist(x@th[[whichThresh]]$goc)
-    edges <- cbind(
-      edgeNum = seq_len(nrow(edges)),
-      v1 = sapply(edges[, 1], function(z) {
-        which(V(x@th[[whichThresh]]$goc)$name == z)
-      }),
-      v2 = sapply(edges[, 2], function(z) {
-        which(V(x@th[[whichThresh]]$goc)$name == z)
-      })
-    )
-    edgesGOC <- apply(edges, 1, function(i) {
-      cbind(
-        c(
-          V(x@th[[whichThresh]]$goc)$centroidX[i["v1"]],
-          V(x@th[[whichThresh]]$goc)$centroidX[i["v2"]]
-        ),
-        c(
-          V(x@th[[whichThresh]]$goc)$centroidY[i["v1"]],
-          V(x@th[[whichThresh]]$goc)$centroidY[i["v2"]]
-        )
-      ) |>
-        Line() |>
-        Lines(ID = as.character(i["edgeNum"]))
-    }) |>
-      SpatialLines() |>
-      SpatialLinesDataFrame(
-        data = data.frame(
-          edgeNum = seq_len(nrow(edges)),
-          weight = edge_attr(x@th[[whichThresh]]$goc, weight)
-        )
-      )
+    edgeNums <- seq_len(nrow(edges))
+    v1idx <- sapply(edges[, 1], function(z) {
+      which(V(x@th[[whichThresh]]$goc)$name == z)
+    })
+    v2idx <- sapply(edges[, 2], function(z) {
+      which(V(x@th[[whichThresh]]$goc)$name == z)
+    })
+    edgeWeights <- edge_attr(x@th[[whichThresh]]$goc, weight)
 
-    verticesGOC <- cbind(
-      V(x@th[[whichThresh]]$goc)$centroidX,
-      V(x@th[[whichThresh]]$goc)$centroidY
-    ) |>
-      SpatialPoints()
+    edgesGOC <- sf::st_sf(
+      edgeNum = edgeNums,
+      weight = edgeWeights,
+      geometry = sf::st_sfc(lapply(seq_len(nrow(edges)), function(i) {
+        sf::st_linestring(matrix(
+          c(
+            V(x@th[[whichThresh]]$goc)$centroidX[v1idx[i]],
+            V(x@th[[whichThresh]]$goc)$centroidY[v1idx[i]],
+            V(x@th[[whichThresh]]$goc)$centroidX[v2idx[i]],
+            V(x@th[[whichThresh]]$goc)$centroidY[v2idx[i]]
+          ),
+          ncol = 2,
+          byrow = TRUE
+        ))
+      }))
+    )
+
+    verticesGOC <- sf::st_as_sf(
+      data.frame(
+        x = V(x@th[[whichThresh]]$goc)$centroidX,
+        y = V(x@th[[whichThresh]]$goc)$centroidY
+      ),
+      coords = c("x", "y")
+    )
 
     ## Shortest path
     startEndPolygons <- point(x, coords)$pointPolygon[, whichThresh]
@@ -138,8 +134,8 @@ setMethod("corridor",
 
     pths <- shortest_paths(
       graph = x@th[[whichThresh]]$goc,
-      from = which(V(x@th[[whichThresh]]$goc)$polygonId == na.omit(startEndPolygons[1])),
-      to = which(V(x@th[[whichThresh]]$goc)$polygonId == na.omit(startEndPolygons[2])),
+      from = which(V(x@th[[whichThresh]]$goc)$polygonId == stats::na.omit(startEndPolygons[1])),
+      to = which(V(x@th[[whichThresh]]$goc)$polygonId == stats::na.omit(startEndPolygons[2])),
       weights = V(x@th[[whichThresh]]$goc)$meanWeight
     )
 
@@ -152,29 +148,29 @@ setMethod("corridor",
       stop("corridor: all 'coords' correspond to cells of value 'NA'.")
     }
 
-    shortestPathEdges <- cbind(
+    pathCoords <- cbind(
       V(x@th[[whichThresh]]$goc)$centroidX[startEndPath],
       V(x@th[[whichThresh]]$goc)$centroidY[startEndPath]
-    ) |>
-      Line() |>
-      Lines(ID = "1") |>
-      list() |>
-      SpatialLines()
+    )
+    shortestPathEdges <- sf::st_sf(
+      geometry = sf::st_sfc(sf::st_linestring(pathCoords))
+    )
 
-    shortestPathVertices <- SpatialPoints(cbind(
-      V(x@th[[whichThresh]]$goc)$centroidX[startEndPath],
-      V(x@th[[whichThresh]]$goc)$centroidY[startEndPath]
-    ))
+    shortestPathVertices <- sf::st_as_sf(
+      as.data.frame(pathCoords),
+      coords = c("V1", "V2")
+    )
 
     pathDist <- distances(
       x@th[[whichThresh]]$goc,
-      v = V(x@th[[whichThresh]]$goc)[na.omit(startEndPath[1])],
+      v = V(x@th[[whichThresh]]$goc)[stats::na.omit(startEndPath[1])],
       weights = edge_attr(x@th[[whichThresh]]$goc, weight)
-    )[na.omit(startEndPath[length(startEndPath)])]
+    )[stats::na.omit(startEndPath[length(startEndPath)])]
 
-    voronoiBound <- boundaries(grain(x, whichThresh = whichThresh)@voronoi, classes = TRUE)
+    voronoiBound <- terra::boundaries(grain(x, whichThresh = whichThresh)@voronoi, classes = TRUE)
 
-    result <- new("corridor",
+    result <- new(
+      "corridor",
       voronoi = voronoiBound,
       linksSP = edgesGOC,
       nodesSP = verticesGOC,

@@ -1,4 +1,4 @@
-#devtools::install_github("r-lib/revdepcheck")
+# pak::pkg_install("r-lib/revdepcheck")
 library("revdepcheck")
 
 revdepcheck::revdep_reset()

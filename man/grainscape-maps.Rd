@@ -5,28 +5,55 @@
 \alias{grainscape-maps}
 \title{Test maps included with \code{grainscape}}
 \format{
-raster
+Three \emph{ESRI ArcASCII} (\code{.asc}) raster grids stored in \code{extdata} and
+read with \code{\link[terra:rast]{terra::rast()}}: \code{patchy.asc} and \code{fragmented.asc} are 400 x 400
+cells, \code{tiny.asc} is 100 x 100 cells. Cell values are integer land cover
+classes (1-5 for \code{patchy.asc}, 1-4 for \code{fragmented.asc} and \code{tiny.asc}),
+with no associated coordinate reference system.
+}
+\source{
+Simulated, artificial land cover maps created for demonstrating
+\code{grainscape}. \code{patchy.asc} also illustrates graph-based connectivity
+methods in Galpern \emph{et al.} (2011) (see references in the package
+documentation, \link{grainscape-package}).
 }
 \description{
-Intended for users to explore the functionality of the package using simple
-and artificial land cover maps.
-These maps have four or five discrete land cover classes (integers from 1 to 5)
-intended to represent distinct land cover types.
-Typical analyses begin by reclassifying these to reflect resistance to movement.
+Simple, artificial land cover maps intended for users to explore the
+functionality of the package.
+Each map has discrete integer land cover classes representing distinct land
+cover types.
+Typical analyses begin by reclassifying these to reflect resistance to
+movement (see the examples below and the package vignette).
 }
 \details{
+The maps are distributed as \emph{ESRI ArcASCII} (\code{.asc}) grids in the package's
+\code{extdata} directory and are read with \code{\link[terra:rast]{terra::rast()}}. They use an arbitrary
+unprojected coordinate system (no CRS) with a unit cell size.
+
 \describe{
-\item{\code{patchy.asc}}{A caricatured map of four land cover classes, where
-patches are large and easy to identify polygonal regions for heuristic purposes.
-This unrealistic map can be used to illustrate the method and understand how it works.
+\item{\code{patchy.asc}}{A caricatured map of five land cover classes (integer
+values 1-5), where patches are large, easy to identify polygonal regions
+for heuristic purposes.
+This unrealistic map can be used to illustrate the method and understand
+how it works.
 The map also serves a similar heuristic purpose in a review of graph-based
 connectivity methods (Galpern \emph{et al.}, 2011). (400 x 400 raster cells.)}
 
-\item{\code{fragmented.asc}}{A simulated land cover map with five land cover
-classes using an algorithm that produces fragmentation. (400 x 400 raster cells.)}
+\item{\code{fragmented.asc}}{A simulated land cover map with four land cover
+classes (integer values 1-4), produced using an algorithm that generates
+fragmentation. (400 x 400 raster cells.)}
 
-\item{\code{tiny.asc}}{Similar to \code{fragmented.asc} but smaller in extent
-for lightning-fast computation and experimental use. (100 x 100 raster cells.)}
+\item{\code{tiny.asc}}{Similar to \code{fragmented.asc} (four land cover classes,
+integer values 1-4) but smaller in extent for lightning-fast computation
+and experimental use. (100 x 100 raster cells.)}
 }
+}
+\examples{
+## load a bundled map and reclassify it into a resistance surface
+patchy <- terra::rast(
+  system.file("extdata", "patchy.asc", package = "grainscape", mustWork = TRUE)
+)
+patchyCost <- terra::classify(patchy, rcl = cbind(1:5, c(1, 10, 8, 3, 6)))
+terra::plot(patchyCost)
 }
 \keyword{maps}

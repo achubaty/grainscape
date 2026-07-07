@@ -60,10 +60,8 @@ a directory with a name containing the date and time will be created.}
 \item{path}{A path to where this new directory \code{dirname} should be created.
 Defaults to the working directory.}
 
-\item{rasterFormat}{The format for exported rasters. See \code{\link[raster:writeFormats]{raster::writeFormats()}} for options.
-Defaults to GeoTiff (\code{rasterFormat='GTiff'}).
-Use \code{rasterFormat='raster'} to save \code{.grd} files in
-native \pkg{raster} package format.}
+\item{rasterFormat}{The format for exported rasters. See \code{\link[terra:writeRaster]{terra::writeRaster()}} for options.
+Defaults to GeoTiff (\code{rasterFormat='GTiff'}).}
 
 \item{overwrite}{If directory already exists will overwrite existing files inside.
 Defaults to \code{FALSE}.}
@@ -174,22 +172,24 @@ produce R spatial objects that are convenient for plotting or analysis within R.
 Use \code{R = TRUE} in which case all parameters related to file export
 are ignored. (Default \code{R = FALSE})
 
-The \code{\link[raster:writeRaster]{raster::writeRaster()}} function is used for rasters,
+The \code{\link[terra:writeRaster]{terra::writeRaster()}} function is used for rasters,
 and \code{\link[sf:st_write]{sf::st_write()}} is used to export ESRI compatible shape files.
 }
 \examples{
 ## Load raster landscape
-tiny <- raster::raster(system.file("extdata/tiny.asc", package = "grainscape"))
+tiny <- terra::rast(
+  system.file("extdata", "tiny.asc", package = "grainscape", mustWork = TRUE)
+)
 
 ## Create a resistance surface from a raster using an is-becomes reclassification
-tinyCost <- raster::reclassify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
+tinyCost <- terra::classify(tiny, rcl = cbind(c(1, 2, 3, 4), c(1, 5, 10, 12)))
 ## Produce a patch-based MPG where patches are resistance features=1
 tinyPatchMPG <- MPG(cost = tinyCost, patch = tinyCost == 1)
 ## Extract a representative subset of 5 grains of connectivity
 tinyPatchGOC <- GOC(tinyPatchMPG, nThresh = 5)
 ## Export rasters and vectors and place in an R object
-sp_tinyPatchGOC <- export(grain(tinyPatchGOC, 2), R = TRUE)  # nolint
-sp_tinyPatchMPG <- export(tinyPatchMPG, R = TRUE) # nolint
+sp_tinyPatchGOC <- export(grain(tinyPatchGOC, 2), R = TRUE)
+sp_tinyPatchMPG <- export(tinyPatchMPG, R = TRUE)
 
 ## Export raster and vectors to a specified directory
 exportPath <- tempdir()

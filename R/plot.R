@@ -1,11 +1,20 @@
 utils::globalVariables(c(
-  "cols", "sz", "value", "x1", "x1p", "x2", "x2p", "y1", "y1p", "y2", "y2p"
+  "cols",
+  "sz",
+  "value",
+  "x1",
+  "x1p",
+  "x2",
+  "x2p",
+  "y1",
+  "y1p",
+  "y2",
+  "y2p"
 ))
 
 #' `.gFinal`
 #'
 #' @author Paul Galpern
-#' @importFrom ggplot2 coord_equal theme
 #' @keywords internal
 #' @name .gFinal
 #' @rdname gFinal
@@ -88,11 +97,6 @@ utils::globalVariables(c(
 #'
 #' @author Alex Chubaty and Paul Galpern
 #' @export
-#' @importFrom ggplot2 ggplot aes geom_point geom_raster geom_segment
-#' @importFrom ggplot2 scale_colour_identity scale_fill_identity scale_fill_manual
-#' @importFrom ggplot2 scale_size_identity theme
-#' @importFrom grDevices rainbow
-#' @importFrom raster ncol nrow xmax xmin ymax ymin
 #' @include classes.R
 #' @rdname plot
 #' @seealso [ggGS()],
@@ -110,34 +114,26 @@ setMethod(
   "plot",
   signature = "corridor",
   definition = function(x, y, quick = NULL, print = TRUE, theme = TRUE, ...) {
-    .linksToDF <- function(x) {
-      out <- do.call(
-        rbind,
-        lapply(
-          lapply(slot(x, "lines"), function(x) {
-            lapply(slot(x, "Lines"), function(y) {
-              slot(y, "coords")
-            })
-          }), function(z) {
-            c(z[[1]][1, ], z[[1]][2, ])
-          }
-        )
-      )
-      dimnames(out) <- NULL
-      out <- data.frame(out)
-      names(out) <- c("x1", "y1", "x2", "y2")
+    ## Helper: convert sf LINESTRING/MULTILINESTRING to data.frame of segments
+    .linksToDF <- function(sfobj) {
+      coords <- sf::st_coordinates(sfobj)
+      ## Each feature (L1) is a line with exactly 2 points
+      L1 <- coords[, "L1"]
+      starts <- coords[!duplicated(L1), c("X", "Y")]
+      ends <- coords[!duplicated(L1, fromLast = TRUE), c("X", "Y")]
+      out <- data.frame(x1 = starts[, 1], y1 = starts[, 2], x2 = ends[, 1], y2 = ends[, 2])
       return(out)
     }
 
-    .pathToDF <- function(x) {
-      out <- lapply(slot(x, "lines"), function(x) {
-        lapply(slot(x, "Lines"), function(y) {
-          slot(y, "coords")
+    ## Helper: convert single sf LINESTRING (path) to consecutive segments
+    .pathToDF <- function(sfobj) {
+      pts <- sf::st_coordinates(sfobj)[, c("X", "Y")]
+      out <- do.call(
+        rbind,
+        lapply(1:(nrow(pts) - 1), function(i) {
+          c(pts[i, ], pts[i + 1, ])
         })
-      })[[1]][[1]]
-      out <- do.call(rbind, lapply(1:(nrow(out) - 1), function(x) {
-        c(out[x, ], out[x + 1, ])
-      }))
+      )
       dimnames(out) <- NULL
       out <- data.frame(out)
       names(out) <- c("x1", "y1", "x2", "y2")
@@ -149,11 +145,12 @@ setMethod(
       data.frame(.pathToDF(x@shortestLinksSP), cols = "black", sz = 2)
     )
 
+    nodeCoords <- sf::st_coordinates(x@nodesSP)
+    shortCoords <- sf::st_coordinates(x@shortestNodesSP)
     pointsDF <- rbind(
-      data.frame(coordinates(x@nodesSP), cols = "forestgreen", sz = 2),
-      data.frame(coordinates(x@shortestNodesSP), cols = "black", sz = 3)
+      data.frame(x = nodeCoords[, 1], y = nodeCoords[, 2], cols = "forestgreen", sz = 2),
+      data.frame(x = shortCoords[, 1], y = shortCoords[, 2], cols = "black", sz = 3)
     )
-    names(pointsDF) <- c("x", "y", "cols", "sz")
 
     message("Extracting Voronoi boundaries...")
     g <- ggplot() +
@@ -164,11 +161,12 @@ setMethod(
       scale_fill_manual(values = c("white", "grey")) +
       geom_segment(
         data = linesDF,
-        aes(x = x1, y = y1, xend = x2, yend = y2, colour = cols, size = sz)
+        aes(x = x1, y = y1, xend = x2, yend = y2, colour = cols, linewidth = sz)
       ) +
       geom_point(data = pointsDF, aes(x = x, y = y, col = cols, size = sz)) +
       scale_colour_identity() +
-      scale_size_identity()
+      scale_size_identity() +
+      scale_linewidth_identity()
     if (theme) {
       g <- g + theme_grainscape()
     }
@@ -192,10 +190,10 @@ setMethod(
       nVor <- max(vor$value, na.rm = TRUE)
       cols <- data.frame(
         n = 1:nVor,
-        col = rainbow(nVor,
-          s = colPar(nVor),
-          v = colPar(nVor)
-        )[sample(nVor, replace = TRUE)],
+        col = grDevices::rainbow(nVor, s = colPar(nVor), v = colPar(nVor))[sample(
+          nVor,
+          replace = TRUE
+        )],
         stringsAsFactors = FALSE
       )
       vor <- cbind(vor, cols = cols[match(vor$value, cols$n), "col"])
@@ -255,8 +253,16 @@ setMethod(
         (length(unique(diff(unique(ggGS(x, "patchId")$y)))) == 1)
 
       if (isLatticeMpg) {
-        fillx <- seq(xmin(x@mpgPlot), xmax(x@mpgPlot), length.out = ncol(x@mpgPlot) + 1)
-        filly <- seq(ymin(x@mpgPlot), ymax(x@mpgPlot), length.out = nrow(x@mpgPlot) + 1)
+        fillx <- seq(
+          terra::xmin(x@mpgPlot),
+          terra::xmax(x@mpgPlot),
+          length.out = terra::ncol(x@mpgPlot) + 1
+        )
+        filly <- seq(
+          terra::ymin(x@mpgPlot),
+          terra::ymax(x@mpgPlot),
+          length.out = terra::nrow(x@mpgPlot) + 1
+        )
 
         mpgdf <- rbind(
           ggGS(x, "patchId"),
@@ -280,13 +286,6 @@ setMethod(
           aes(x = x1p, y = y1p, xend = x2p, yend = y2p, colour = "forestgreen")
         ) +
         scale_colour_identity()
-
-      # Plot points at the ends of links (too crowded in most use cases)
-      # g <- g +
-      #  geom_point(data = ggGS(x, "links"),
-      #             aes(x = x1p, y = y1p, colour = "forestgreen"), size = 1) +
-      #  geom_point(data = ggGS(x, "links"),
-      #             aes(x = x2p, y = y2p, colour = "forestgreen"), size = 1)
 
       if (theme) {
         g <- g + theme_grainscape()
