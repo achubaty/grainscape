@@ -118,12 +118,12 @@ tinyThresh <- threshold(tinyPatchMPG, nThresh = 10)
 
 ## Examine the properties of one of these threshold graphs
 print(tinyThresh$th[[7]], vertex.attributes = TRUE, edge.attributes = TRUE)
-#> IGRAPH a4a9f8c UN-- 43 79 -- 
+#> IGRAPH 0f2939b UN-- 43 79 -- 
 #> + attr: name (v/c), patchId (v/n), patchArea (v/n), patchEdgeArea
 #> | (v/n), coreArea (v/n), centroidX (v/n), centroidY (v/n), linkId
 #> | (e/n), lcpPerimWeight (e/n), startPerimX (e/n), startPerimY (e/n),
 #> | endPerimX (e/n), endPerimY (e/n)
-#> + edges from a4a9f8c (vertex names):
+#> + edges from 0f2939b (vertex names):
 #>  [1] 80 --86  30 --40  29 --31  19 --29  7  --22  5  --7   73 --78  41 --48 
 #>  [9] 30 --41  37 --41  67 --85  40 --41  9  --12  62 --74  8  --28  12 --14 
 #> [17] 8  --9   95 --103 74 --84  55 --56  48 --54  5  --32  9  --28  14 --19 

@@ -13,7 +13,7 @@
 ## Citation
 
 Source:
-[`inst/CITATION`](https://github.com/achubaty/grainscape/blob/main/inst/CITATION)
+[`inst/CITATION`](https://github.com/achubaty/grainscape/blob/v1.0.0/inst/CITATION)
 
 Chubaty A, Galpern P, Doctolero S (2020). “The R toolbox grainscape for
 modelling and visualizing landscape connectivity using

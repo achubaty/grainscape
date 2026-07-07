@@ -50,7 +50,7 @@ analysis using Voronoi tessellations rather than patches (see Galpern et al., 20
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Produce a minimum planar graph (MPG) at multiple scales</h1>
-      <small class="dont-index">Source: <a href="https://github.com/achubaty/grainscape/blob/main/R/threshold.R" class="external-link"><code>R/threshold.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/achubaty/grainscape/blob/v1.0.0/R/threshold.R" class="external-link"><code>R/threshold.R</code></a></small>
       <div class="d-none name"><code>threshold.Rd</code></div>
     </div>
 
@@ -164,12 +164,12 @@ at multiple spatial scales in landscape genetics. Molecular Ecology 21:3996-4009
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Examine the properties of one of these threshold graphs</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">tinyThresh</span><span class="op">$</span><span class="va">th</span><span class="op">[[</span><span class="fl">7</span><span class="op">]</span><span class="op">]</span>, vertex.attributes <span class="op">=</span> <span class="cn">TRUE</span>, edge.attributes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> IGRAPH a4a9f8c UN-- 43 79 -- </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> IGRAPH 0f2939b UN-- 43 79 -- </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> + attr: name (v/c), patchId (v/n), patchArea (v/n), patchEdgeArea</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> | (v/n), coreArea (v/n), centroidX (v/n), centroidY (v/n), linkId</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> | (e/n), lcpPerimWeight (e/n), startPerimX (e/n), startPerimY (e/n),</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> | endPerimX (e/n), endPerimY (e/n)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> + edges from a4a9f8c (vertex names):</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> + edges from 0f2939b (vertex names):</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 80 --86  30 --40  29 --31  19 --29  7  --22  5  --7   73 --78  41 --48 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [9] 30 --41  37 --41  67 --85  40 --41  9  --12  62 --74  8  --28  12 --14 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [17] 8  --9   95 --103 74 --84  55 --56  48 --54  5  --32  9  --28  14 --19 </span>

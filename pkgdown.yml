@@ -4,7 +4,7 @@ pkgdown_sha: ~
 articles:
   grainscape_vignette: grainscape_vignette.html
   MPG_algorithm: MPG_algorithm.html
-last_built: 2026-07-07T02:07Z
+last_built: 2026-07-07T02:58Z
 urls:
   reference: https://www.alexchubaty.com/grainscape/reference
   article: https://www.alexchubaty.com/grainscape/articles
